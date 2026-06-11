@@ -7,7 +7,6 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Forms;
 using DeskLite.Models;
 using DeskLite.Services;
 using WpfColor = System.Windows.Media.Color;
@@ -91,7 +90,6 @@ public partial class SettingsWindow : Window
         InitializeComponent();
         VersionText.Text = $"版本 {AppConstants.Version}";
         FontFamilyHelper.Apply(this, _original.FontFamily);
-        ConfigureTimePickers();
         SetupModuleListTemplate();
         RbSkinDefault.Checked += (_, _) => UpdateSkinControls();
         RbSkinSolid.Checked += (_, _) => UpdateSkinControls();
@@ -198,30 +196,19 @@ public partial class SettingsWindow : Window
         return JsonSerializer.Deserialize<AppSettings>(json) ?? new AppSettings();
     }
 
-    private static void SetTimePickerValue(DateTimePicker picker, string value, string fallback)
+    private static void SetTimePickerValue(HandyControl.Controls.TimePicker picker, string value, string fallback)
     {
         var normalized = OffWorkService.TryParseTime(value, out var time)
             ? time
             : OffWorkService.TryParseTime(fallback, out var fallbackTime)
                 ? fallbackTime
                 : new TimeOnly(9, 0);
-        picker.Value = DateTime.Today.Add(normalized.ToTimeSpan());
+        picker.SelectedTime = DateTime.Today.Add(normalized.ToTimeSpan());
     }
 
-    private static string ReadTimePickerValue(DateTimePicker picker)
+    private static string ReadTimePickerValue(HandyControl.Controls.TimePicker picker)
     {
-        return picker.Value.ToString("HH:mm", CultureInfo.InvariantCulture);
-    }
-
-    private void ConfigureTimePickers()
-    {
-        WorkStartTimePicker.Format = DateTimePickerFormat.Custom;
-        WorkStartTimePicker.CustomFormat = "HH:mm";
-        WorkStartTimePicker.ShowUpDown = true;
-
-        WorkEndTimePicker.Format = DateTimePickerFormat.Custom;
-        WorkEndTimePicker.CustomFormat = "HH:mm";
-        WorkEndTimePicker.ShowUpDown = true;
+        return (picker.SelectedTime ?? DateTime.Today).ToString("HH:mm", CultureInfo.InvariantCulture);
     }
 
     private void LoadFromSettings(AppSettings s)

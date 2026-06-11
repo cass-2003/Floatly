@@ -2,6 +2,7 @@ using System.Globalization;
 using System.Windows;
 using DeskLite.Models;
 using DeskLite.Services;
+using HcTimePicker = HandyControl.Controls.TimePicker;
 using WpfButton = System.Windows.Controls.Button;
 using WpfTextBox = System.Windows.Controls.TextBox;
 
@@ -33,14 +34,16 @@ public static class TodoEditPrompt
         };
         TodoThemeHelper.StyleInput(dueBox, palette, 13);
 
-        var timeBox = new WpfTextBox
+        var timePicker = new HcTimePicker
         {
-            Text = existing?.Time ?? string.Empty,
             Margin = new Thickness(0, 6, 0, 0),
-            Padding = new Thickness(6, 4, 6, 4),
-            MinWidth = 260
+            MinWidth = 260,
+            Height = 32,
+            TimeFormat = "HH:mm",
+            SelectedTime = TryReadTime(existing?.Time, out var existingTime)
+                ? DateTime.Today.Add(existingTime.ToTimeSpan())
+                : null
         };
-        TodoThemeHelper.StyleInput(timeBox, palette, 13);
 
         var ok = false;
         Result? result = null;
@@ -57,6 +60,7 @@ public static class TodoEditPrompt
             Background = new System.Windows.Media.SolidColorBrush(palette.PanelBackground),
             Foreground = new System.Windows.Media.SolidColorBrush(palette.TextPrimary)
         };
+        MergeHandyControlResources(dialog.Resources);
 
         var panel = new System.Windows.Controls.StackPanel { Margin = new Thickness(16) };
         panel.Children.Add(MakeLabel(message, palette));
@@ -64,8 +68,8 @@ public static class TodoEditPrompt
         panel.Children.Add(titleBox);
         panel.Children.Add(MakeLabel("截止日期 (yyyy-MM-dd，可选)", palette, 11));
         panel.Children.Add(dueBox);
-        panel.Children.Add(MakeLabel("提醒时间 (HH:mm，可选)", palette, 11));
-        panel.Children.Add(timeBox);
+        panel.Children.Add(MakeLabel("提醒时间（可选）", palette, 11));
+        panel.Children.Add(timePicker);
 
         var buttons = new System.Windows.Controls.StackPanel
         {
@@ -84,7 +88,7 @@ public static class TodoEditPrompt
             }
 
             var due = NormalizeDate(dueBox.Text);
-            var time = NormalizeTime(timeBox.Text);
+            var time = NormalizeTime(timePicker);
             ok = true;
             result = new Result(parsedTitle, time, due);
             dialog!.Close();
@@ -114,6 +118,18 @@ public static class TodoEditPrompt
             Margin = size <= 11 ? new Thickness(0, 8, 0, 0) : new Thickness(0)
         };
 
+    private static void MergeHandyControlResources(ResourceDictionary resources)
+    {
+        resources.MergedDictionaries.Add(new ResourceDictionary
+        {
+            Source = new Uri("pack://application:,,,/HandyControl;component/Themes/SkinDark.xaml")
+        });
+        resources.MergedDictionaries.Add(new ResourceDictionary
+        {
+            Source = new Uri("pack://application:,,,/HandyControl;component/Themes/Theme.xaml")
+        });
+    }
+
     private static string? NormalizeDate(string text)
     {
         text = text.Trim();
@@ -135,19 +151,45 @@ public static class TodoEditPrompt
         return null;
     }
 
-    private static string? NormalizeTime(string text)
+    private static bool TryReadTime(string? text, out TimeOnly time)
     {
-        text = text.Trim();
+        time = default;
         if (string.IsNullOrWhiteSpace(text))
         {
-            return null;
+            return false;
         }
 
-        if (TimeSpan.TryParse(text, out _))
+        var trimmed = text.Trim();
+        if (TimeOnly.TryParse(trimmed, CultureInfo.InvariantCulture, DateTimeStyles.None, out time))
         {
-            return text.Length >= 5 ? text[..5] : text;
+            return true;
         }
 
-        return null;
+        return TimeSpan.TryParse(trimmed, CultureInfo.InvariantCulture, out var span)
+               && TryConvertTimeSpan(span, out time);
+    }
+
+    private static bool TryConvertTimeSpan(TimeSpan span, out TimeOnly time)
+    {
+        time = default;
+        if (span < TimeSpan.Zero || span >= TimeSpan.FromDays(1))
+        {
+            return false;
+        }
+
+        time = TimeOnly.FromTimeSpan(span);
+        return true;
+    }
+
+    private static string? NormalizeTime(HcTimePicker picker)
+    {
+        if (picker.SelectedTime is { } selectedTime)
+        {
+            return selectedTime.ToString("HH:mm", CultureInfo.InvariantCulture);
+        }
+
+        return TryReadTime(picker.Text, out var parsed)
+            ? parsed.ToString("HH:mm", CultureInfo.InvariantCulture)
+            : null;
     }
 }
