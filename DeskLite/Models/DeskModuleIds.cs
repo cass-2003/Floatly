@@ -10,11 +10,15 @@ public static class DeskModuleIds
     public const string Scratch = "scratch";
     public const string Pomodoro = "pomodoro";
     public const string Todos = "todos";
+    public const string OffWork = "offwork";
+    public const string Salary = "salary";
 
     public static readonly string[] DefaultOrder =
     [
         HuangLi,
         YearProgress,
+        OffWork,
+        Salary,
         Weather,
         Countdown,
         Pomodoro,
@@ -33,7 +37,9 @@ public static class DeskModuleIds
             [DailyQuote] = "每日一句",
             [Scratch] = "速记便签",
             [Pomodoro] = "番茄钟",
-            [Todos] = "今日待办"
+            [Todos] = "今日待办",
+            [OffWork] = "下班倒计时",
+            [Salary] = "摸鱼小助手"
         };
 
     public static List<string> Normalize(IEnumerable<string>? order)

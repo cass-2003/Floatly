@@ -7,8 +7,6 @@ namespace DeskLite.Services;
 public sealed class GlobalHotkeyService : IDisposable
 {
     private const int WmHotkey = 0x0312;
-    private const uint ModControl = 0x0002;
-    private const uint ModShift = 0x0004;
     private const int IdToggle = 1;
     private const int IdQuickTodo = 2;
 
@@ -17,6 +15,8 @@ public sealed class GlobalHotkeyService : IDisposable
     private readonly Action _onQuickTodo;
     private HwndSource? _source;
     private bool _registered;
+    private string _showHideCombo = HotkeyComboHelper.DefaultShowHide;
+    private string _quickTodoCombo = HotkeyComboHelper.DefaultQuickTodo;
 
     public GlobalHotkeyService(Window window, Action onToggleWindow, Action onQuickTodo)
     {
@@ -25,12 +25,20 @@ public sealed class GlobalHotkeyService : IDisposable
         _onQuickTodo = onQuickTodo;
     }
 
+    public void Configure(string? showHide, string? quickTodo)
+    {
+        _showHideCombo = HotkeyComboHelper.Sanitize(showHide, HotkeyComboHelper.DefaultShowHide);
+        _quickTodoCombo = HotkeyComboHelper.Sanitize(quickTodo, HotkeyComboHelper.DefaultQuickTodo);
+
+        if (HotkeyComboHelper.Conflicts(_showHideCombo, _quickTodoCombo))
+        {
+            _quickTodoCombo = HotkeyComboHelper.DefaultQuickTodo;
+        }
+    }
+
     public void Register()
     {
-        if (_registered)
-        {
-            return;
-        }
+        Unregister();
 
         var helper = new WindowInteropHelper(_window);
         if (helper.Handle == IntPtr.Zero)
@@ -41,9 +49,9 @@ public sealed class GlobalHotkeyService : IDisposable
         _source = HwndSource.FromHwnd(helper.Handle);
         _source?.AddHook(WndProc);
 
-        RegisterHotKey(helper.Handle, IdToggle, ModControl | ModShift, 0x44); // Ctrl+Shift+D
-        RegisterHotKey(helper.Handle, IdQuickTodo, ModControl | ModShift, 0x4E); // Ctrl+Shift+N
-        _registered = true;
+        var toggleOk = TryRegister(helper.Handle, IdToggle, _showHideCombo, HotkeyComboHelper.DefaultShowHide);
+        var todoOk = TryRegister(helper.Handle, IdQuickTodo, _quickTodoCombo, HotkeyComboHelper.DefaultQuickTodo);
+        _registered = toggleOk || todoOk;
     }
 
     public void Unregister()
@@ -62,6 +70,17 @@ public sealed class GlobalHotkeyService : IDisposable
 
         _source?.RemoveHook(WndProc);
         _registered = false;
+    }
+
+    private static bool TryRegister(IntPtr handle, int id, string comboText, string fallbackText)
+    {
+        if (!HotkeyComboHelper.TryParse(comboText, out var combo) &&
+            !HotkeyComboHelper.TryParse(fallbackText, out combo))
+        {
+            return false;
+        }
+
+        return RegisterHotKey(handle, id, combo.Modifiers, combo.VirtualKey);
     }
 
     private IntPtr WndProc(IntPtr hwnd, int msg, IntPtr wParam, IntPtr lParam, ref bool handled)

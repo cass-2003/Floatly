@@ -101,6 +101,7 @@ public partial class MainWindow : Window
         if (_settings.EnableGlobalHotkey)
         {
             _hotkeyService = new GlobalHotkeyService(this, ToggleWindow, QuickAddTodo);
+            ConfigureHotkeys();
             _hotkeyService.Register();
         }
     }
@@ -126,6 +127,8 @@ public partial class MainWindow : Window
         WeatherText.Visibility = _settings.ShowWeather ? Visibility.Visible : Visibility.Collapsed;
         CityText.Visibility = _settings.ShowWeather && _settings.ShowCityName ? Visibility.Visible : Visibility.Collapsed;
         YearProgressPanel.Visibility = _settings.ShowYearProgress ? Visibility.Visible : Visibility.Collapsed;
+        OffWorkPanel.Visibility = _settings.ShowOffWorkCountdown ? Visibility.Visible : Visibility.Collapsed;
+        SalaryPanel.Visibility = _settings.ShowSalaryHelper ? Visibility.Visible : Visibility.Collapsed;
         CountdownPanel.Visibility = _settings.ShowCountdown ? Visibility.Visible : Visibility.Collapsed;
         PomodoroPanel.Visibility = _settings.ShowPomodoro ? Visibility.Visible : Visibility.Collapsed;
         DailyQuoteText.Visibility = _settings.ShowDailyQuote ? Visibility.Visible : Visibility.Collapsed;
@@ -172,6 +175,8 @@ public partial class MainWindow : Window
         {
             [DeskModuleIds.HuangLi] = HuangLiPanel,
             [DeskModuleIds.YearProgress] = YearProgressPanel,
+            [DeskModuleIds.OffWork] = OffWorkPanel,
+            [DeskModuleIds.Salary] = SalaryPanel,
             [DeskModuleIds.Weather] = WeatherPanel,
             [DeskModuleIds.Countdown] = CountdownPanel,
             [DeskModuleIds.Pomodoro] = PomodoroPanel,
@@ -208,13 +213,14 @@ public partial class MainWindow : Window
     private void ApplyTheme()
     {
         _palette = AppThemePalette.For(AppThemePalette.Parse(_settings.Theme));
+        var textPrimary = FontColorHelper.ResolvePrimary(_palette.TextPrimary, _settings.PrimaryTextColor);
 
         MainBorder.Background = SkinService.CreatePanelBackground(_settings, _palette);
         MainBorder.BorderBrush = new SolidColorBrush(_palette.PanelBorder);
         ApplySkinOverlay();
         DividerBorder.Background = new SolidColorBrush(_palette.Divider);
 
-        ClockText.Foreground = Brush(_palette.TextPrimary);
+        ClockText.Foreground = Brush(textPrimary);
         DateText.Foreground = Brush(_palette.TextSecondary);
         LunarText.Foreground = Brush(_palette.TextTertiary);
         LunarSubText.Foreground = Brush(_palette.TextSubtle);
@@ -222,8 +228,9 @@ public partial class MainWindow : Window
         WeatherText.Foreground = Brush(_palette.TextSecondary);
         CityText.Foreground = Brush(_palette.TextMuted);
         WeatherExtraText.Foreground = Brush(_palette.TextSubtle);
-        ApplyProgressTheme();
-        ApplyPomodoroTheme();
+        ApplyProgressTheme(textPrimary);
+        ApplySalaryTheme();
+        ApplyPomodoroTheme(textPrimary);
         DailyQuoteText.Foreground = Brush(_palette.TextMuted);
         TodoTitleText.Foreground = Brush(_palette.TextMuted);
         EmptyTodoText.Foreground = Brush(_palette.TextEmpty);
@@ -322,6 +329,8 @@ public partial class MainWindow : Window
         switch (key)
         {
             case "yearProgress": _settings.ShowYearProgress = !_settings.ShowYearProgress; break;
+            case "offwork": _settings.ShowOffWorkCountdown = !_settings.ShowOffWorkCountdown; break;
+            case "salary": _settings.ShowSalaryHelper = !_settings.ShowSalaryHelper; break;
             case "countdown": _settings.ShowCountdown = !_settings.ShowCountdown; break;
             case "dailyQuote": _settings.ShowDailyQuote = !_settings.ShowDailyQuote; break;
             case "sunrise": _settings.ShowSunriseSunset = !_settings.ShowSunriseSunset; break;
@@ -348,6 +357,7 @@ public partial class MainWindow : Window
                 if (_settings.EnableGlobalHotkey)
                 {
                     _hotkeyService ??= new GlobalHotkeyService(this, ToggleWindow, QuickAddTodo);
+                    ConfigureHotkeys();
                     _hotkeyService.Register();
                 }
                 else
@@ -360,6 +370,11 @@ public partial class MainWindow : Window
 
         ApplySettings();
         RefreshExtras();
+        if (key is "offwork" or "salary" or "seconds")
+        {
+            ApplyClockTimerInterval();
+        }
+
         if (key is "cityName")
         {
             RefreshCityDisplay(_weatherService.LoadCache());
@@ -378,8 +393,18 @@ public partial class MainWindow : Window
         }
     }
 
-    private void ApplyClockTimerInterval() =>
-        _clockTimer.Interval = _settings.ShowSeconds ? TimeSpan.FromSeconds(1) : TimeSpan.FromMinutes(1);
+    private void ApplyClockTimerInterval()
+    {
+        var needsSecondTick = _settings.ShowSeconds ||
+                              _settings.ShowOffWorkCountdown ||
+                              _settings.ShowSalaryHelper;
+        _clockTimer.Interval = needsSecondTick ? TimeSpan.FromSeconds(1) : TimeSpan.FromMinutes(1);
+    }
+
+    private void ConfigureHotkeys()
+    {
+        _hotkeyService?.Configure(_settings.HotkeyShowHide, _settings.HotkeyQuickTodo);
+    }
 
     private string FormatClock(DateTime now) =>
         _settings.ShowSeconds
@@ -678,18 +703,71 @@ public partial class MainWindow : Window
         {
             DailyQuoteText.Text = DailyQuoteService.GetToday(DateTime.Today);
         }
+
+        if (_settings.ShowOffWorkCountdown)
+        {
+            RefreshOffWorkPanel();
+        }
+
+        if (_settings.ShowSalaryHelper)
+        {
+            RefreshSalaryPanel();
+        }
     }
 
-    private void ApplyProgressTheme()
+    private void RefreshOffWorkPanel()
+    {
+        var info = OffWorkService.GetInfo(
+            DateTime.Now,
+            _settings.WorkStartTime,
+            _settings.WorkEndTime,
+            _settings.OffWorkWeekdaysOnly,
+            _settings.ShowSeconds || _settings.ShowOffWorkCountdown);
+
+        OffWorkLabel.Text = info.Title;
+        OffWorkMainText.Text = info.MainText;
+        OffWorkDetail.Text = info.Detail ?? string.Empty;
+        OffWorkDetail.Visibility = string.IsNullOrWhiteSpace(info.Detail)
+            ? Visibility.Collapsed
+            : Visibility.Visible;
+
+        if (info.DayProgressPercent is double progress)
+        {
+            OffWorkTrack.Visibility = Visibility.Visible;
+            QueueProgressBarUpdate(OffWorkTrack, OffWorkFill, progress);
+        }
+        else
+        {
+            OffWorkTrack.Visibility = Visibility.Collapsed;
+        }
+    }
+
+    private void RefreshSalaryPanel()
+    {
+        var info = SalaryHelperService.GetInfo(DateTime.Now, _settings);
+        SalaryLabel.Text = info.Title;
+        SalaryAmount.Text = info.AmountText;
+        SalarySubtitle.Text = info.Subtitle ?? string.Empty;
+        SalarySubtitle.Visibility = string.IsNullOrWhiteSpace(info.Subtitle)
+            ? Visibility.Collapsed
+            : Visibility.Visible;
+    }
+
+    private void ApplyProgressTheme(System.Windows.Media.Color textPrimary)
     {
         var fillBrush = new LinearGradientBrush(
             _palette.ProgressFillStart,
             _palette.ProgressFillEnd,
             new System.Windows.Point(0, 0),
             new System.Windows.Point(1, 0));
+        var offWorkFillBrush = new LinearGradientBrush(
+            _palette.PomodoroBreak,
+            _palette.ProgressFillEnd,
+            new System.Windows.Point(0, 0),
+            new System.Windows.Point(1, 0));
 
         YearProgressLabel.Foreground = Brush(_palette.TextMuted);
-        YearProgressPercent.Foreground = Brush(_palette.TextPrimary);
+        YearProgressPercent.Foreground = Brush(textPrimary);
         YearProgressDetail.Foreground = Brush(_palette.TextSubtle);
         YearProgressTrack.Background = Brush(_palette.ProgressTrack);
         YearProgressFill.Background = fillBrush;
@@ -699,14 +777,29 @@ public partial class MainWindow : Window
         CountdownHint.Foreground = Brush(_palette.TextSubtle);
         CountdownTrack.Background = Brush(_palette.ProgressTrack);
         CountdownFill.Background = fillBrush;
+
+        OffWorkLabel.Foreground = Brush(_palette.TextMuted);
+        OffWorkMainText.Foreground = Brush(textPrimary);
+        OffWorkDetail.Foreground = Brush(_palette.TextSubtle);
+        OffWorkTrack.Background = Brush(_palette.ProgressTrack);
+        OffWorkFill.Background = offWorkFillBrush;
     }
 
-    private void ApplyPomodoroTheme()
+    private void ApplySalaryTheme()
+    {
+        SalaryPanel.Background = Brush(_palette.HuangLiMutedButton);
+        SalaryLabel.Foreground = Brush(_palette.TextMuted);
+        SalaryAmount.Foreground = Brush(_palette.SalaryGold);
+        SalaryAmount.FontWeight = FontWeights.SemiBold;
+        SalarySubtitle.Foreground = Brush(_palette.SalaryGoldMuted);
+    }
+
+    private void ApplyPomodoroTheme(System.Windows.Media.Color textPrimary)
     {
         PomodoroPanel.Background = Brush(_palette.HuangLiMutedButton);
         PomodoroPhaseText.Foreground = Brush(_palette.TextMuted);
         PomodoroSessionText.Foreground = Brush(_palette.TextSubtle);
-        PomodoroCountdownText.Foreground = Brush(_palette.TextPrimary);
+        PomodoroCountdownText.Foreground = Brush(textPrimary);
         PomodoroTrack.Background = Brush(_palette.ProgressTrack);
         PomodoroStartBtn.Background = Brush(_palette.TodoAccentButton);
         PomodoroStartBtn.Foreground = System.Windows.Media.Brushes.White;
@@ -1505,6 +1598,10 @@ public partial class MainWindow : Window
         var prevAutoStart = _settings.AutoStart;
         var prevClickThrough = _settings.ClickThrough;
         var prevHotkey = _settings.EnableGlobalHotkey;
+        var prevHotkeyShowHide = _settings.HotkeyShowHide;
+        var prevHotkeyQuickTodo = _settings.HotkeyQuickTodo;
+        var prevShowOffWork = _settings.ShowOffWorkCountdown;
+        var prevShowSalary = _settings.ShowSalaryHelper;
         var prevShowWeather = _settings.ShowWeather;
         var prevShowSeconds = _settings.ShowSeconds;
         var prevCity = _settings.City;
@@ -1544,6 +1641,22 @@ public partial class MainWindow : Window
         _settings.ShowTodoReminder = next.ShowTodoReminder;
         _settings.ModuleOrder = DeskModuleIds.Normalize(next.ModuleOrder);
         _settings.EnableGlobalHotkey = next.EnableGlobalHotkey;
+        _settings.HotkeyShowHide = HotkeyComboHelper.Sanitize(next.HotkeyShowHide, HotkeyComboHelper.DefaultShowHide);
+        _settings.HotkeyQuickTodo = HotkeyComboHelper.Sanitize(next.HotkeyQuickTodo, HotkeyComboHelper.DefaultQuickTodo);
+        if (HotkeyComboHelper.Conflicts(_settings.HotkeyShowHide, _settings.HotkeyQuickTodo))
+        {
+            _settings.HotkeyQuickTodo = HotkeyComboHelper.DefaultQuickTodo;
+        }
+
+        _settings.PrimaryTextColor = FontColorHelper.NormalizeHex(next.PrimaryTextColor);
+        _settings.ShowOffWorkCountdown = next.ShowOffWorkCountdown;
+        _settings.ShowSalaryHelper = next.ShowSalaryHelper;
+        _settings.WorkStartTime = next.WorkStartTime;
+        _settings.WorkEndTime = next.WorkEndTime;
+        _settings.OffWorkWeekdaysOnly = next.OffWorkWeekdaysOnly;
+        _settings.MonthlySalary = next.MonthlySalary;
+        _settings.WorkDaysPerMonth = next.WorkDaysPerMonth;
+        _settings.WorkHoursPerDay = next.WorkHoursPerDay;
         _settings.Theme = next.Theme;
         _settings.Opacity = next.Opacity;
         _settings.FontSizePt = next.FontSizePt;
@@ -1596,11 +1709,14 @@ public partial class MainWindow : Window
             }
         }
 
-        if (_settings.EnableGlobalHotkey != prevHotkey)
+        if (_settings.EnableGlobalHotkey != prevHotkey ||
+            !string.Equals(prevHotkeyShowHide, _settings.HotkeyShowHide, StringComparison.OrdinalIgnoreCase) ||
+            !string.Equals(prevHotkeyQuickTodo, _settings.HotkeyQuickTodo, StringComparison.OrdinalIgnoreCase))
         {
             if (_settings.EnableGlobalHotkey)
             {
                 _hotkeyService ??= new GlobalHotkeyService(this, ToggleWindow, QuickAddTodo);
+                ConfigureHotkeys();
                 _hotkeyService.Register();
             }
             else
@@ -1615,7 +1731,9 @@ public partial class MainWindow : Window
         ApplySettings();
         RefreshExtras();
         RefreshClock();
-        if (_settings.ShowSeconds != prevShowSeconds)
+        if (_settings.ShowSeconds != prevShowSeconds ||
+            _settings.ShowOffWorkCountdown != prevShowOffWork ||
+            _settings.ShowSalaryHelper != prevShowSalary)
         {
             ApplyClockTimerInterval();
         }

@@ -62,6 +62,20 @@ public static class JsonStore
             settings.FontFamily = FontFamilyHelper.ResolveName(settings.FontFamily);
             settings.SkinMode = SkinService.NormalizeMode(settings.SkinMode);
             settings.SkinOverlayOpacity = SkinService.ClampOverlayOpacity(settings.SkinOverlayOpacity);
+            settings.HotkeyShowHide = HotkeyComboHelper.Sanitize(settings.HotkeyShowHide, HotkeyComboHelper.DefaultShowHide);
+            settings.HotkeyQuickTodo = HotkeyComboHelper.Sanitize(settings.HotkeyQuickTodo, HotkeyComboHelper.DefaultQuickTodo);
+            if (HotkeyComboHelper.Conflicts(settings.HotkeyShowHide, settings.HotkeyQuickTodo))
+            {
+                settings.HotkeyQuickTodo = HotkeyComboHelper.DefaultQuickTodo;
+            }
+
+            settings.PrimaryTextColor = FontColorHelper.NormalizeHex(settings.PrimaryTextColor);
+            settings.WorkStartTime = OffWorkService.TryParseTime(settings.WorkStartTime, out _) ? settings.WorkStartTime : "09:00";
+            settings.WorkEndTime = OffWorkService.TryParseTime(settings.WorkEndTime, out _) ? settings.WorkEndTime : "18:00";
+            settings.WorkDaysPerMonth = Math.Clamp(settings.WorkDaysPerMonth, 1, 31);
+            settings.WorkHoursPerDay = Math.Clamp(settings.WorkHoursPerDay, 1, 24);
+            settings.MonthlySalary = Math.Max(0, settings.MonthlySalary);
+            settings.ModuleOrder = DeskModuleIds.Normalize(settings.ModuleOrder);
             return settings;
         }
         catch

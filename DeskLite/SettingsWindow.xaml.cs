@@ -1,5 +1,8 @@
+using System.Globalization;
 using System.Text.Json;
 using System.Windows;
+using System.Windows.Input;
+using System.Windows.Media;
 using DeskLite.Models;
 using DeskLite.Services;
 using Microsoft.Win32;
@@ -19,6 +22,8 @@ public partial class SettingsWindow : Window
     private bool _syncFontSize;
     private bool _syncSkinOverlay;
     private bool _isInitializing = true;
+    private System.Windows.Controls.TextBox? _recordingHotkeyBox;
+    private string? _selectedFontColor;
 
     public AppSettings? Result { get; private set; }
 
@@ -50,6 +55,14 @@ public partial class SettingsWindow : Window
         ChkAutoStart.IsChecked = s.AutoStart;
         ChkClickThrough.IsChecked = s.ClickThrough;
         ChkGlobalHotkey.IsChecked = s.EnableGlobalHotkey;
+        TxtHotkeyShowHide.Text = HotkeyComboHelper.Sanitize(s.HotkeyShowHide, HotkeyComboHelper.DefaultShowHide);
+        TxtHotkeyQuickTodo.Text = HotkeyComboHelper.Sanitize(s.HotkeyQuickTodo, HotkeyComboHelper.DefaultQuickTodo);
+        TxtWorkStartTime.Text = s.WorkStartTime;
+        TxtWorkEndTime.Text = s.WorkEndTime;
+        ChkOffWorkWeekdaysOnly.IsChecked = s.OffWorkWeekdaysOnly;
+        TxtMonthlySalary.Text = s.MonthlySalary > 0 ? s.MonthlySalary.ToString("0.##", CultureInfo.InvariantCulture) : string.Empty;
+        TxtWorkDaysPerMonth.Text = s.WorkDaysPerMonth.ToString();
+        TxtWorkHoursPerDay.Text = s.WorkHoursPerDay.ToString("0.##", CultureInfo.InvariantCulture);
         ChkTime24h.IsChecked = s.Time24h;
         ChkShowSeconds.IsChecked = s.ShowSeconds;
 
@@ -69,6 +82,7 @@ public partial class SettingsWindow : Window
         var fontPt = FontScaleHelper.ResolvePt(s);
         SetFontSizeUi(fontPt);
         LoadFontFamilies(s.FontFamily);
+        LoadFontColorSettings(s);
         LoadSkinSettings(s);
 
         ChkShowWeather.IsChecked = s.ShowWeather;
@@ -90,6 +104,8 @@ public partial class SettingsWindow : Window
         }
 
         ChkYearProgress.IsChecked = s.ShowYearProgress;
+        ChkOffWorkCountdown.IsChecked = s.ShowOffWorkCountdown;
+        ChkSalaryHelper.IsChecked = s.ShowSalaryHelper;
         ChkCountdown.IsChecked = s.ShowCountdown;
         ChkPomodoro.IsChecked = s.ShowPomodoro;
         TxtPomodoroWork.Text = s.PomodoroWorkMinutes.ToString();
@@ -124,6 +140,71 @@ public partial class SettingsWindow : Window
         }
 
         CmbFontFamily.Text = FontFamilyHelper.ResolveName(selected);
+    }
+
+    private void LoadFontColorSettings(AppSettings s)
+    {
+        FontColorPalette.Children.Clear();
+        _selectedFontColor = FontColorHelper.NormalizeHex(s.PrimaryTextColor);
+
+        foreach (var hex in FontColorHelper.PresetHexColors)
+        {
+            var color = FontColorHelper.TryParseHex(hex);
+            if (color is null)
+            {
+                continue;
+            }
+
+            var btn = new System.Windows.Controls.Button
+            {
+                Width = 28,
+                Height = 28,
+                Margin = new Thickness(0, 0, 8, 8),
+                Background = new SolidColorBrush(color.Value),
+                BorderBrush = new SolidColorBrush(System.Windows.Media.Color.FromRgb(0xD1, 0xD5, 0xDB)),
+                BorderThickness = new Thickness(1),
+                Tag = hex,
+                ToolTip = hex,
+                Cursor = System.Windows.Input.Cursors.Hand
+            };
+            btn.Click += FontColorChip_Click;
+            FontColorPalette.Children.Add(btn);
+        }
+
+        TxtCustomFontColor.Text = _selectedFontColor ?? string.Empty;
+        UpdateFontColorSelection();
+    }
+
+    private void UpdateFontColorSelection()
+    {
+        foreach (var child in FontColorPalette.Children.OfType<System.Windows.Controls.Button>())
+        {
+            var hex = child.Tag as string;
+            var selected = string.Equals(hex, _selectedFontColor, StringComparison.OrdinalIgnoreCase);
+            child.BorderThickness = new Thickness(selected ? 2 : 1);
+            child.BorderBrush = selected
+                ? new SolidColorBrush(System.Windows.Media.Color.FromRgb(0x25, 0x63, 0xEB))
+                : new SolidColorBrush(System.Windows.Media.Color.FromRgb(0xD1, 0xD5, 0xDB));
+        }
+    }
+
+    private void FontColorChip_Click(object sender, RoutedEventArgs e)
+    {
+        if (sender is not System.Windows.Controls.Button btn || btn.Tag is not string hex)
+        {
+            return;
+        }
+
+        _selectedFontColor = hex;
+        TxtCustomFontColor.Text = hex;
+        UpdateFontColorSelection();
+    }
+
+    private void BtnClearFontColor_Click(object sender, RoutedEventArgs e)
+    {
+        _selectedFontColor = null;
+        TxtCustomFontColor.Text = string.Empty;
+        UpdateFontColorSelection();
     }
 
     private void LoadSkinSettings(AppSettings s)
@@ -204,6 +285,128 @@ public partial class SettingsWindow : Window
         }
 
         return (int)SliderFontSize.Value;
+    }
+
+    private void BtnRecordShowHide_Click(object sender, RoutedEventArgs e) => BeginHotkeyRecording(TxtHotkeyShowHide);
+
+    private void BtnRecordQuickTodo_Click(object sender, RoutedEventArgs e) => BeginHotkeyRecording(TxtHotkeyQuickTodo);
+
+    private void HotkeyShowHide_GotFocus(object sender, RoutedEventArgs e) => BeginHotkeyRecording(TxtHotkeyShowHide);
+
+    private void HotkeyQuickTodo_GotFocus(object sender, RoutedEventArgs e) => BeginHotkeyRecording(TxtHotkeyQuickTodo);
+
+    private void BeginHotkeyRecording(System.Windows.Controls.TextBox box)
+    {
+        _recordingHotkeyBox = box;
+        box.Text = "请按下快捷键…";
+        HotkeyStatusText.Text = "正在录制，请按下组合键（需含 Ctrl/Alt/Shift/Win）";
+        box.Focus();
+    }
+
+    private void HotkeyTextBox_PreviewKeyDown(object sender, System.Windows.Input.KeyEventArgs e)
+    {
+        if (sender is not System.Windows.Controls.TextBox box || _recordingHotkeyBox != box)
+        {
+            return;
+        }
+
+        e.Handled = true;
+        if (e.Key == Key.Escape)
+        {
+            EndHotkeyRecording(cancel: true);
+            return;
+        }
+
+        if (!HotkeyComboHelper.TryFormatFromInput(e.Key == Key.System ? e.SystemKey : e.Key, Keyboard.Modifiers, out var display))
+        {
+            return;
+        }
+
+        box.Text = display;
+        ValidateHotkeys();
+        EndHotkeyRecording(cancel: false);
+    }
+
+    private void HotkeyTextBox_LostFocus(object sender, RoutedEventArgs e)
+    {
+        if (sender is System.Windows.Controls.TextBox box && _recordingHotkeyBox == box)
+        {
+            EndHotkeyRecording(cancel: true);
+        }
+    }
+
+    private void EndHotkeyRecording(bool cancel)
+    {
+        if (_recordingHotkeyBox is null)
+        {
+            return;
+        }
+
+        if (cancel && (string.IsNullOrWhiteSpace(_recordingHotkeyBox.Text) ||
+                       _recordingHotkeyBox.Text == "请按下快捷键…"))
+        {
+            _recordingHotkeyBox.Text = _recordingHotkeyBox == TxtHotkeyShowHide
+                ? HotkeyComboHelper.DefaultShowHide
+                : HotkeyComboHelper.DefaultQuickTodo;
+        }
+
+        _recordingHotkeyBox = null;
+        HotkeyStatusText.Text = "点击录制或聚焦输入框后按下组合键";
+        ValidateHotkeys();
+    }
+
+    private void ValidateHotkeys()
+    {
+        var showHide = HotkeyComboHelper.Sanitize(TxtHotkeyShowHide.Text, HotkeyComboHelper.DefaultShowHide);
+        var quickTodo = HotkeyComboHelper.Sanitize(TxtHotkeyQuickTodo.Text, HotkeyComboHelper.DefaultQuickTodo);
+        TxtHotkeyShowHide.Text = showHide;
+        TxtHotkeyQuickTodo.Text = quickTodo;
+
+        if (HotkeyComboHelper.Conflicts(showHide, quickTodo))
+        {
+            HotkeyStatusText.Text = "两个快捷键冲突，快速待办将恢复为 Ctrl+Shift+N";
+            TxtHotkeyQuickTodo.Text = HotkeyComboHelper.DefaultQuickTodo;
+        }
+        else if (!HotkeyComboHelper.TryParse(showHide, out _) || !HotkeyComboHelper.TryParse(TxtHotkeyQuickTodo.Text, out _))
+        {
+            HotkeyStatusText.Text = "快捷键无效，已恢复为默认值";
+        }
+        else
+        {
+            HotkeyStatusText.Text = "快捷键已设置";
+        }
+    }
+
+    private static string ReadWorkTime(string text, string fallback)
+    {
+        return OffWorkService.TryParseTime(text, out _) ? text.Trim() : fallback;
+    }
+
+    private static decimal ReadMonthlySalary(string text)
+    {
+        return decimal.TryParse(text.Trim(), NumberStyles.Number, CultureInfo.InvariantCulture, out var value)
+            ? Math.Max(0, value)
+            : 0;
+    }
+
+    private static int ReadPositiveInt(string text, int fallback, int min, int max)
+    {
+        if (int.TryParse(text.Trim(), out var value))
+        {
+            return Math.Clamp(value, min, max);
+        }
+
+        return fallback;
+    }
+
+    private static double ReadPositiveDouble(string text, double fallback, double min, double max)
+    {
+        if (double.TryParse(text.Trim(), NumberStyles.Number, CultureInfo.InvariantCulture, out var value))
+        {
+            return Math.Clamp(value, min, max);
+        }
+
+        return fallback;
     }
 
     private static int ReadPomodoroMinutes(string text, int fallback, int min, int max)
@@ -325,6 +528,19 @@ public partial class SettingsWindow : Window
         s.AutoStart = ChkAutoStart.IsChecked == true;
         s.ClickThrough = ChkClickThrough.IsChecked == true;
         s.EnableGlobalHotkey = ChkGlobalHotkey.IsChecked == true;
+        s.HotkeyShowHide = HotkeyComboHelper.Sanitize(TxtHotkeyShowHide.Text, HotkeyComboHelper.DefaultShowHide);
+        s.HotkeyQuickTodo = HotkeyComboHelper.Sanitize(TxtHotkeyQuickTodo.Text, HotkeyComboHelper.DefaultQuickTodo);
+        if (HotkeyComboHelper.Conflicts(s.HotkeyShowHide, s.HotkeyQuickTodo))
+        {
+            s.HotkeyQuickTodo = HotkeyComboHelper.DefaultQuickTodo;
+        }
+
+        s.WorkStartTime = ReadWorkTime(TxtWorkStartTime.Text, "09:00");
+        s.WorkEndTime = ReadWorkTime(TxtWorkEndTime.Text, "18:00");
+        s.OffWorkWeekdaysOnly = ChkOffWorkWeekdaysOnly.IsChecked == true;
+        s.MonthlySalary = ReadMonthlySalary(TxtMonthlySalary.Text);
+        s.WorkDaysPerMonth = ReadPositiveInt(TxtWorkDaysPerMonth.Text, 22, 1, 31);
+        s.WorkHoursPerDay = ReadPositiveDouble(TxtWorkHoursPerDay.Text, 8, 1, 24);
         s.Time24h = ChkTime24h.IsChecked == true;
         s.ShowSeconds = ChkShowSeconds.IsChecked == true;
 
@@ -334,6 +550,10 @@ public partial class SettingsWindow : Window
         s.FontSizePt = fontPt;
         s.FontScale = FontScaleHelper.PtToScale(fontPt);
         s.FontFamily = FontFamilyHelper.ResolveName(CmbFontFamily.Text);
+        var customColor = FontColorHelper.NormalizeHex(TxtCustomFontColor.Text);
+        s.PrimaryTextColor = string.IsNullOrWhiteSpace(TxtCustomFontColor.Text)
+            ? null
+            : customColor ?? _selectedFontColor;
         s.SkinMode = RbSkinImage.IsChecked == true
             ? SkinService.ModeImage
             : RbSkinSolid.IsChecked == true
@@ -369,6 +589,8 @@ public partial class SettingsWindow : Window
         s.CalendarMode = RbCalMonth.IsChecked == true ? "month" : "week";
 
         s.ShowYearProgress = ChkYearProgress.IsChecked == true;
+        s.ShowOffWorkCountdown = ChkOffWorkCountdown.IsChecked == true;
+        s.ShowSalaryHelper = ChkSalaryHelper.IsChecked == true;
         s.ShowCountdown = ChkCountdown.IsChecked == true;
         s.ShowPomodoro = ChkPomodoro.IsChecked == true;
         s.PomodoroWorkMinutes = ReadPomodoroMinutes(TxtPomodoroWork.Text, 25, 1, 120);
@@ -474,6 +696,20 @@ public partial class SettingsWindow : Window
 
     private void Save_Click(object sender, RoutedEventArgs e)
     {
+        if (!string.IsNullOrWhiteSpace(TxtCustomFontColor.Text) && FontColorHelper.NormalizeHex(TxtCustomFontColor.Text) is null)
+        {
+            System.Windows.MessageBox.Show(this, "字体颜色格式无效，请使用 #RRGGBB。", AppConstants.DisplayName,
+                MessageBoxButton.OK, MessageBoxImage.Information);
+            return;
+        }
+
+        if (!OffWorkService.TryParseTime(TxtWorkStartTime.Text, out _) || !OffWorkService.TryParseTime(TxtWorkEndTime.Text, out _))
+        {
+            System.Windows.MessageBox.Show(this, "上下班时间格式无效，请使用 HH:mm（如 09:00）。", AppConstants.DisplayName,
+                MessageBoxButton.OK, MessageBoxImage.Information);
+            return;
+        }
+
         if (string.IsNullOrWhiteSpace(TxtCity.Text) && ChkShowWeather.IsChecked == true && ChkAutoLocate.IsChecked != true)
         {
             System.Windows.MessageBox.Show(this, "请填写城市名称，或开启自动定位。", AppConstants.DisplayName, MessageBoxButton.OK, MessageBoxImage.Information);

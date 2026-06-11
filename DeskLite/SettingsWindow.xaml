@@ -3,7 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Title="Floatly 设置"
         Width="440"
-        Height="620"
+        Height="700"
         WindowStartupLocation="CenterScreen"
         ResizeMode="NoResize"
         Background="#FAFAFA"
@@ -133,7 +133,88 @@
                         <CheckBox x:Name="ChkAutoStart" Content="开机自启" />
                         <CheckBox x:Name="ChkClickThrough" Content="鼠标穿透（开启后无法拖动窗口）" />
                         <CheckBox x:Name="ChkGlobalHotkey" Content="全局快捷键" />
-                        <TextBlock Style="{StaticResource HintText}" Text="Ctrl+Shift+D 显示/隐藏 · Ctrl+Shift+N 快速待办" Margin="20,0,0,14" />
+
+                        <TextBlock Style="{StaticResource SectionTitle}" Text="快捷键" Margin="0,8,0,10" />
+                        <Grid Margin="0,0,0,6">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="88" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Text="显示/隐藏" VerticalAlignment="Center" />
+                            <TextBox x:Name="TxtHotkeyShowHide" Grid.Column="1" Margin="8,0,8,0"
+                                     Style="{StaticResource SettingsTextBox}" IsReadOnly="True"
+                                     PreviewKeyDown="HotkeyTextBox_PreviewKeyDown"
+                                     GotFocus="HotkeyShowHide_GotFocus" LostFocus="HotkeyTextBox_LostFocus" />
+                            <Button x:Name="BtnRecordShowHide" Grid.Column="2" Content="录制"
+                                    Style="{StaticResource SecondaryButton}" Padding="12,6" MinWidth="56"
+                                    Click="BtnRecordShowHide_Click" />
+                        </Grid>
+                        <Grid Margin="0,0,0,4">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="88" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Text="快速待办" VerticalAlignment="Center" />
+                            <TextBox x:Name="TxtHotkeyQuickTodo" Grid.Column="1" Margin="8,0,8,0"
+                                     Style="{StaticResource SettingsTextBox}" IsReadOnly="True"
+                                     PreviewKeyDown="HotkeyTextBox_PreviewKeyDown"
+                                     GotFocus="HotkeyQuickTodo_GotFocus" LostFocus="HotkeyTextBox_LostFocus" />
+                            <Button x:Name="BtnRecordQuickTodo" Grid.Column="2" Content="录制"
+                                    Style="{StaticResource SecondaryButton}" Padding="12,6" MinWidth="56"
+                                    Click="BtnRecordQuickTodo_Click" />
+                        </Grid>
+                        <TextBlock x:Name="HotkeyStatusText" Style="{StaticResource HintText}"
+                                   Text="点击录制或聚焦输入框后按下组合键" Margin="0,0,0,14" />
+
+                        <TextBlock Style="{StaticResource SectionTitle}" Text="工作时间" />
+                        <Grid Margin="0,0,0,6">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <StackPanel>
+                                <TextBlock Text="上班时间" FontSize="11" Margin="0,0,0,4" />
+                                <TextBox x:Name="TxtWorkStartTime" Style="{StaticResource SettingsTextBox}" Text="09:00" />
+                            </StackPanel>
+                            <TextBlock Grid.Column="1" Text="—" VerticalAlignment="Bottom" Margin="10,0,10,8" />
+                            <StackPanel Grid.Column="2">
+                                <TextBlock Text="下班时间" FontSize="11" Margin="0,0,0,4" />
+                                <TextBox x:Name="TxtWorkEndTime" Style="{StaticResource SettingsTextBox}" Text="18:00" />
+                            </StackPanel>
+                        </Grid>
+                        <CheckBox x:Name="ChkOffWorkWeekdaysOnly" Content="仅工作日显示下班倒计时" Margin="0,0,0,14" />
+
+                        <TextBlock Style="{StaticResource SectionTitle}" Text="摸鱼收入" />
+                        <Grid Margin="0,0,0,6">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Text="月薪（元）" VerticalAlignment="Center" />
+                            <TextBox x:Name="TxtMonthlySalary" Grid.Column="1" Style="{StaticResource SettingsNumericBox}"
+                                     Width="96" />
+                        </Grid>
+                        <Grid Margin="0,0,0,6">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Text="每月工作天数" VerticalAlignment="Center" />
+                            <TextBox x:Name="TxtWorkDaysPerMonth" Grid.Column="1" Style="{StaticResource SettingsNumericBox}"
+                                     Width="56" />
+                        </Grid>
+                        <Grid Margin="0,0,0,14">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Text="每日工作小时" VerticalAlignment="Center" />
+                            <TextBox x:Name="TxtWorkHoursPerDay" Grid.Column="1" Style="{StaticResource SettingsNumericBox}"
+                                     Width="56" />
+                        </Grid>
 
                         <TextBlock Style="{StaticResource SectionTitle}" Text="时钟" />
                         <CheckBox x:Name="ChkTime24h" Content="24 小时制" />
@@ -183,6 +264,21 @@
                         <ComboBox x:Name="CmbFontFamily" Style="{StaticResource SettingsComboBox}"
                                   IsEditable="True" Margin="0,0,0,4" />
                         <TextBlock Style="{StaticResource HintText}" Text="从列表选择或输入已安装字体名称" Margin="0,0,0,14" />
+
+                        <TextBlock Style="{StaticResource SectionTitle}" Text="字体颜色" />
+                        <UniformGrid x:Name="FontColorPalette" Columns="6" Margin="0,0,0,8" />
+                        <Grid Margin="0,0,0,4">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <TextBox x:Name="TxtCustomFontColor" Style="{StaticResource SettingsTextBox}"
+                                     ToolTip="留空则使用主题默认颜色，支持 #RRGGBB" />
+                            <Button x:Name="BtnClearFontColor" Grid.Column="1" Content="恢复默认"
+                                    Margin="8,0,0,0" Style="{StaticResource SecondaryButton}"
+                                    Padding="12,6" Click="BtnClearFontColor_Click" />
+                        </Grid>
+                        <TextBlock Style="{StaticResource HintText}" Text="选择预设或输入自定义十六进制颜色" Margin="0,0,0,14" />
 
                         <TextBlock Style="{StaticResource SectionTitle}" Text="皮肤" />
                         <StackPanel Orientation="Horizontal" Margin="0,0,0,8">
@@ -281,6 +377,8 @@
 
                         <TextBlock Style="{StaticResource SectionTitle}" Text="桌面模块" />
                         <CheckBox x:Name="ChkYearProgress" Content="年进度" />
+                        <CheckBox x:Name="ChkOffWorkCountdown" Content="下班倒计时" />
+                        <CheckBox x:Name="ChkSalaryHelper" Content="摸鱼小助手" />
                         <CheckBox x:Name="ChkCountdown" Content="倒数日" />
                         <CheckBox x:Name="ChkPomodoro" Content="番茄钟" />
                         <CheckBox x:Name="ChkDailyQuote" Content="每日一句" />

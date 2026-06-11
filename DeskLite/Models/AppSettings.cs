@@ -27,6 +27,17 @@ public sealed class AppSettings
     public int PomodoroSessionsBeforeLongBreak { get; set; } = 4;
     public bool ShowTodoReminder { get; set; } = true;
     public bool EnableGlobalHotkey { get; set; } = true;
+    public string HotkeyShowHide { get; set; } = "Ctrl+Shift+D";
+    public string HotkeyQuickTodo { get; set; } = "Ctrl+Shift+N";
+    public string? PrimaryTextColor { get; set; }
+    public bool ShowOffWorkCountdown { get; set; }
+    public string WorkStartTime { get; set; } = "09:00";
+    public string WorkEndTime { get; set; } = "18:00";
+    public bool OffWorkWeekdaysOnly { get; set; } = true;
+    public bool ShowSalaryHelper { get; set; }
+    public decimal MonthlySalary { get; set; }
+    public int WorkDaysPerMonth { get; set; } = 22;
+    public double WorkHoursPerDay { get; set; } = 8;
     public string Theme { get; set; } = "dark";
     public double Opacity { get; set; } = 1.0;
     public string City { get; set; } = "北京";

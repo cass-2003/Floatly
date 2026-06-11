@@ -332,6 +332,36 @@
                                    Margin="0,0,0,6" Visibility="Collapsed" />
                     </StackPanel>
 
+                    <StackPanel x:Name="OffWorkPanel" Margin="0,0,0,8" Visibility="Collapsed">
+                        <Grid Margin="0,0,0,4">
+                            <TextBlock x:Name="OffWorkLabel" Text="下班倒计时" FontSize="11"
+                                       Foreground="#8B95A5" VerticalAlignment="Center" />
+                            <TextBlock x:Name="OffWorkMainText" Text="02:15:30" FontSize="13" FontWeight="SemiBold"
+                                       Foreground="#F5F7FA" HorizontalAlignment="Right" VerticalAlignment="Center" />
+                        </Grid>
+                        <Border x:Name="OffWorkTrack" Height="7" CornerRadius="3.5"
+                                Background="#28FFFFFF" ClipToBounds="True" Margin="0,0,0,4">
+                            <Border x:Name="OffWorkFill" HorizontalAlignment="Left" CornerRadius="3.5"
+                                    Background="#22C55E" Width="0" />
+                        </Border>
+                        <TextBlock x:Name="OffWorkDetail" Text="距离下班还有 2小时15分"
+                                   FontSize="10" Foreground="#7E8A9C" />
+                    </StackPanel>
+
+                    <Border x:Name="SalaryPanel" Background="#18FFFFFF" CornerRadius="8" Padding="10,8"
+                            Margin="0,0,0,8" ClipToBounds="True" Visibility="Collapsed">
+                        <StackPanel>
+                            <Grid Margin="0,0,0,4">
+                                <TextBlock x:Name="SalaryLabel" Text="今日已赚" FontSize="11"
+                                           Foreground="#8B95A5" VerticalAlignment="Center" />
+                                <TextBlock x:Name="SalaryAmount" Text="¥0.00" FontSize="18" FontWeight="SemiBold"
+                                           Foreground="#FFD700" HorizontalAlignment="Right" VerticalAlignment="Center" />
+                            </Grid>
+                            <TextBlock x:Name="SalarySubtitle" Text="摸鱼中… 每秒都在赚钱"
+                                       FontSize="10" Foreground="#7E8A9C" />
+                        </StackPanel>
+                    </Border>
+
                     <StackPanel x:Name="CountdownPanel" Margin="0,0,0,8" Visibility="Collapsed">
                         <Grid Margin="0,0,0,4">
                             <TextBlock x:Name="CountdownLabel" Text="距离国庆还有" FontSize="11"
