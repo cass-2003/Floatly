@@ -109,14 +109,14 @@
                         <Grid VerticalAlignment="Center" ClipToBounds="False">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="Auto" />
-                                <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="*" MinWidth="72" />
+                                <ColumnDefinition Width="Auto" MinWidth="112" />
                             </Grid.ColumnDefinitions>
 
                             <!-- Left: time + date + city (no lunar — row 2 strip handles huangli) -->
                             <StackPanel Grid.Column="0" VerticalAlignment="Center" ClipToBounds="False">
                                 <StackPanel Orientation="Horizontal" VerticalAlignment="Top" ClipToBounds="False">
-                                    <TextBlock x:Name="ClockText" Text="15:03" FontSize="48" FontWeight="Bold"
+                                    <TextBlock x:Name="ClockText" Text="15:03" FontSize="48" FontWeight="SemiBold"
                                                Foreground="#FFFFFF" LineHeight="48" LineStackingStrategy="BlockLineHeight"
                                                TextTrimming="None" />
                                     <TextBlock x:Name="ClockSecondsText" Text=":54" FontSize="20" FontWeight="SemiBold"
@@ -135,20 +135,23 @@
 
                             <!-- Center: weather -->
                             <StackPanel x:Name="WeatherPanel" Grid.Column="1" VerticalAlignment="Center"
-                                        HorizontalAlignment="Center" Margin="10,0" Visibility="Collapsed">
+                                        HorizontalAlignment="Center" Margin="4,0,108,0" Visibility="Collapsed"
+                                        ClipToBounds="False">
                                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
-                                    <Image x:Name="WeatherIconImage" Width="36" Height="36" VerticalAlignment="Center"
-                                           Margin="0,0,8,0" RenderOptions.BitmapScalingMode="HighQuality" />
-                                    <TextBlock x:Name="WeatherTempText" Text="25°" FontSize="30" FontWeight="Bold"
+                                    <Image x:Name="WeatherIconImage" Width="34" Height="34" VerticalAlignment="Center"
+                                           Margin="0,0,6,0" RenderOptions.BitmapScalingMode="HighQuality" />
+                                    <TextBlock x:Name="WeatherTempText" Text="25°" FontSize="30" FontWeight="SemiBold"
                                                Foreground="#FFFFFF" VerticalAlignment="Center" />
-                                    <TextBlock x:Name="WeatherDescText" Text="多云" FontSize="14" FontWeight="SemiBold"
+                                    <TextBlock x:Name="WeatherDescText" Text="多云" FontSize="14" FontWeight="Medium"
                                                Foreground="#FFFFFF" VerticalAlignment="Center" Margin="8,0,0,2"
                                                Visibility="Collapsed" />
                                 </StackPanel>
-                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,4,0,0">
-                                    <TextBlock x:Name="WeatherRangeText" Text="17° ~ 26°" FontSize="11" Foreground="#8B95A5" />
-                                    <TextBlock x:Name="WeatherFeelsText" Text="体感 26°" FontSize="11" Foreground="#8B95A5"
-                                               Margin="10,0,0,0" />
+                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,4,0,0"
+                                            ClipToBounds="False">
+                                    <TextBlock x:Name="WeatherRangeText" Text="17° ~ 26°" FontSize="11"
+                                               Foreground="#8B95A5" TextTrimming="None" />
+                                    <TextBlock x:Name="WeatherFeelsText" Text="体感 26°" FontSize="11"
+                                               Foreground="#8B95A5" Margin="8,0,0,0" TextTrimming="None" />
                                 </StackPanel>
                                 <!-- Legacy (hidden) -->
                                 <TextBlock x:Name="WeatherIconText" Visibility="Collapsed" />
@@ -157,7 +160,8 @@
                             </StackPanel>
 
                             <!-- Right: toolbar + sun/tomorrow -->
-                            <StackPanel Grid.Column="2" VerticalAlignment="Top" HorizontalAlignment="Right" Margin="4,0,0,0">
+                            <StackPanel Grid.Column="2" VerticalAlignment="Top" HorizontalAlignment="Right"
+                                        Margin="0,0,-4,0" MinWidth="112" ClipToBounds="False">
                                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
                                     <Button x:Name="PinBtn" Content="📌" Style="{StaticResource HeaderIconBtn}"
                                             Click="PinBtn_Click" ToolTip="置顶" />
@@ -181,11 +185,11 @@
                                                VerticalAlignment="Center" TextTrimming="None" />
                                 </StackPanel>
                                 <StackPanel x:Name="TomorrowRow" Orientation="Horizontal" HorizontalAlignment="Right"
-                                            Margin="0,4,0,0" Visibility="Collapsed">
-                                    <Image x:Name="TomorrowIconImage" Width="14" Height="14" VerticalAlignment="Center"
-                                           Margin="0,0,4,0" RenderOptions.BitmapScalingMode="HighQuality" />
-                                    <TextBlock x:Name="TomorrowLineText" Text="明天 19° ~ 28°" FontSize="11" Foreground="#8B95A5"
-                                               VerticalAlignment="Center" TextTrimming="None" />
+                                            Margin="0,4,-8,0" Visibility="Collapsed" ClipToBounds="False">
+                                    <Image x:Name="TomorrowIconImage" Width="13" Height="13" VerticalAlignment="Center"
+                                           Margin="0,0,3,0" RenderOptions.BitmapScalingMode="HighQuality" />
+                                    <TextBlock x:Name="TomorrowLineText" Text="明天 19° ~ 28°" FontSize="9"
+                                               Foreground="#8B95A5" VerticalAlignment="Center" TextTrimming="None" />
                                 </StackPanel>
                             </StackPanel>
                         </Grid>

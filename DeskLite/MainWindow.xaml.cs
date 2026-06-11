@@ -1495,7 +1495,7 @@ public partial class MainWindow : Window
             : cache.IsDay;
 
         var iconSlug = ResolveIconSlug(cache);
-        WeatherIconImage.Source = WeatherIconLoader.Load(iconSlug);
+        WeatherIconImage.Source = WeatherIconLoader.Load(iconSlug, WeatherIconStyle.Fill);
 
         WeatherTempText.Text = $"{cache.Temperature}°";
         WeatherDescText.Visibility = Visibility.Collapsed;
@@ -1506,7 +1506,7 @@ public partial class MainWindow : Window
         var showSun = _settings.ShowWeather && _settings.ShowSunriseSunset;
         if (showSun && cache.Sunrise is not null)
         {
-            SunriseIconImage.Source = WeatherIconLoader.Load("sunrise");
+            SunriseIconImage.Source = WeatherIconLoader.Load("sunrise", WeatherIconStyle.Line);
             SunriseLineText.Text = $"日出 {cache.Sunrise}";
             SunriseRow.Visibility = Visibility.Visible;
         }
@@ -1517,7 +1517,7 @@ public partial class MainWindow : Window
 
         if (showSun && cache.Sunset is not null)
         {
-            SunsetIconImage.Source = WeatherIconLoader.Load("sunset");
+            SunsetIconImage.Source = WeatherIconLoader.Load("sunset", WeatherIconStyle.Line);
             SunsetLineText.Text = $"日落 {cache.Sunset}";
             SunsetRow.Visibility = Visibility.Visible;
         }
@@ -1533,7 +1533,7 @@ public partial class MainWindow : Window
                 ?? (cache.TomorrowWeatherCode is int code
                     ? WeatherIconMapper.SlugForCode(code, isDay: true)
                     : "partly-cloudy-day");
-            TomorrowIconImage.Source = WeatherIconLoader.Load(tomorrowSlug);
+            TomorrowIconImage.Source = WeatherIconLoader.Load(tomorrowSlug, WeatherIconStyle.Line);
             TomorrowLineText.Text = $"明天 {cache.TomorrowMin}° ~ {cache.TomorrowMax}°";
             TomorrowRow.Visibility = Visibility.Visible;
         }

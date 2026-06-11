@@ -1,6 +1,6 @@
 namespace DeskLite.Services;
 
-/// <summary>Maps Open-Meteo WMO weather codes to Meteocons fill icon slugs.</summary>
+/// <summary>Maps Open-Meteo WMO weather codes to Meteocons icon slugs (fill or line).</summary>
 public static class WeatherIconMapper
 {
     public static string SlugForCode(int code, bool isDay) => code switch
