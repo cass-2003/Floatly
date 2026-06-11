@@ -72,9 +72,15 @@ public static class FontScaleHelper
         Set(window.PomodoroCountdownText, 16, scale);
         Set(window.PomodoroStartBtn, 11, scale);
         Set(window.PomodoroResetBtn, 11, scale);
-        Set(window.OffWorkMainText, 28, scale);
-        Set(window.SalaryAmount, 30, scale);
-        Set(window.DailyQuoteText, 11, scale);
+        Set(window.OffWorkMainText, 36, scale);
+        Set(window.OffWorkCaption, 12, scale);
+        Set(window.OffWorkModePill, 10, scale);
+        Set(window.SalaryAmount, 38, scale);
+        Set(window.SalaryPerSecondText, 12, scale);
+        Set(window.SalaryHourlyValueText, 11, scale);
+        Set(window.SalaryWorkDurationText, 11, scale);
+        Set(window.DailyQuoteText, 20, scale);
+        Set(window.DailyQuoteSourceText, 12, scale);
         Set(window.ScratchTitleText, 12, scale);
         Set(window.ScratchCountText, 10, scale);
         Set(window.ScratchExpandText, 11, scale);

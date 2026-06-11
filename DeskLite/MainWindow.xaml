@@ -546,7 +546,7 @@
                         </Grid>
 
                         <!-- OffWork + Salary row -->
-                        <Grid Margin="0,0,0,10" MinHeight="120">
+                        <Grid Margin="0,0,0,10" MinHeight="132">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*" />
                                 <ColumnDefinition Width="14" />
@@ -556,21 +556,41 @@
                                 <Grid>
                                     <Image Source="Assets/CardBackgrounds/star-sky-dark.png"
                                            Stretch="UniformToFill"
-                                           Opacity="0.32"
+                                           Opacity="0.40"
                                            IsHitTestVisible="False"
                                            RenderOptions.BitmapScalingMode="HighQuality" />
-                                    <Border Background="#B80B1220" />
-                                    <Border Padding="14">
-                                        <StackPanel x:Name="OffWorkPanel" Visibility="Collapsed">
-                                    <TextBlock x:Name="OffWorkLabel" Text="下班倒计时" Style="{StaticResource CardTitle}" Margin="0,0,0,8" />
-                                    <TextBlock x:Name="OffWorkMainText" Text="07:56:05" FontSize="28" FontWeight="SemiBold"
-                                               FontFamily="Consolas" Foreground="#F7FAFF" Margin="0,0,0,4" />
-                                    <TextBlock Text="距离下班还有" FontSize="12" Foreground="#A6FFFFFF" Margin="0,0,0,8" />
-                                    <Border x:Name="OffWorkTrack" Height="8" CornerRadius="4" Background="#27344D" ClipToBounds="True" Margin="0,0,0,10">
-                                        <Border x:Name="OffWorkFill" HorizontalAlignment="Left" CornerRadius="4" Background="#5C6CFF" Width="0" />
-                                    </Border>
-                                    <TextBlock x:Name="OffWorkDetail" Text="" FontSize="11" Foreground="#8B95A5" />
-                                        </StackPanel>
+                                    <Border Background="#C30B1220" />
+                                    <Border Padding="18,16,18,14">
+                                        <Grid x:Name="OffWorkPanel" Visibility="Collapsed">
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="Auto" />
+                                                <RowDefinition Height="*" />
+                                                <RowDefinition Height="Auto" />
+                                            </Grid.RowDefinitions>
+                                            <StackPanel Grid.Row="0" Orientation="Horizontal" VerticalAlignment="Center">
+                                                <TextBlock Text="◷" FontSize="15" Foreground="#9BA8FF" VerticalAlignment="Center" Margin="0,0,8,0" />
+                                                <TextBlock x:Name="OffWorkLabel" Text="下班倒计时" Style="{StaticResource CardTitle}" />
+                                            </StackPanel>
+                                            <StackPanel Grid.Row="1" VerticalAlignment="Center" Margin="0,8,0,8">
+                                                <TextBlock x:Name="OffWorkMainText" Text="07:56:05" FontSize="36" FontWeight="SemiBold"
+                                                           FontFamily="Consolas" Foreground="#F7FAFF" Margin="0,0,0,2" />
+                                                <TextBlock x:Name="OffWorkCaption" Text="距离下班还有" FontSize="12" Foreground="#A6FFFFFF" Margin="0,0,0,8" />
+                                                <Border x:Name="OffWorkTrack" Height="7" CornerRadius="4" Background="#27344D" ClipToBounds="True">
+                                                    <Border x:Name="OffWorkFill" HorizontalAlignment="Left" CornerRadius="4" Background="#5C6CFF" Width="0" />
+                                                </Border>
+                                            </StackPanel>
+                                            <Grid Grid.Row="2">
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="*" />
+                                                    <ColumnDefinition Width="Auto" />
+                                                </Grid.ColumnDefinitions>
+                                                <TextBlock x:Name="OffWorkDetail" Text="下班时间 18:00" FontSize="11" Foreground="#8B95A5"
+                                                           VerticalAlignment="Center" TextTrimming="CharacterEllipsis" />
+                                                <Border Grid.Column="1" CornerRadius="12" Padding="9,3" Background="#1AFFFFFF" BorderBrush="#12FFFFFF" BorderThickness="1">
+                                                    <TextBlock x:Name="OffWorkModePill" Text="工作日模式" FontSize="10" Foreground="#C9D3E6" />
+                                                </Border>
+                                            </Grid>
+                                        </Grid>
                                     </Border>
                                 </Grid>
                             </Border>
@@ -578,38 +598,84 @@
                                 <Grid>
                                     <Image Source="Assets/CardBackgrounds/coins.png"
                                            Stretch="UniformToFill"
-                                           Opacity="0.24"
+                                           Opacity="0.42"
                                            IsHitTestVisible="False"
                                            RenderOptions.BitmapScalingMode="HighQuality" />
-                                    <Border Background="#C0151010" />
-                                    <Border Padding="14">
-                                        <StackPanel>
-                                        <TextBlock x:Name="SalaryLabel" Text="今日已赚薪水" Style="{StaticResource CardTitle}" Margin="0,0,0,8" />
-                                        <TextBlock x:Name="SalaryAmount" Text="¥0.00" FontSize="30" FontWeight="Bold"
-                                                   FontFamily="Consolas" Foreground="#F8C34A" Margin="0,0,0,4" />
-                                        <TextBlock x:Name="SalarySubtitle" Text="" FontSize="12" Foreground="#D7E4C2" Margin="0,0,0,12" />
-                                        <Border Height="1" Background="#24FFFFFF" Margin="0,0,0,10" />
-                                        <TextBlock Text="时薪与今日工作时长按设置实时计算" FontSize="11" Foreground="#A6FFFFFF" />
-                                        </StackPanel>
+                                    <Border Background="#D0161210" />
+                                    <Border Padding="18,16,18,14">
+                                        <Grid>
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="Auto" />
+                                                <RowDefinition Height="*" />
+                                                <RowDefinition Height="Auto" />
+                                            </Grid.RowDefinitions>
+                                            <StackPanel Grid.Row="0" Orientation="Horizontal" VerticalAlignment="Center">
+                                                <Border Width="18" Height="18" CornerRadius="9" Background="#22F8C34A" BorderBrush="#CCF8C34A" BorderThickness="1" Margin="0,0,8,0">
+                                                    <TextBlock Text="¥" FontSize="12" FontWeight="SemiBold" Foreground="#F8C34A"
+                                                               HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                                </Border>
+                                                <TextBlock x:Name="SalaryLabel" Text="今日已赚薪水" Style="{StaticResource CardTitle}" />
+                                            </StackPanel>
+                                            <StackPanel Grid.Row="1" VerticalAlignment="Center" Margin="0,8,0,8">
+                                                <TextBlock x:Name="SalaryAmount" Text="¥0.00" FontSize="38" FontWeight="Bold"
+                                                           FontFamily="Consolas" Foreground="#F8C34A" Margin="0,0,0,4" />
+                                                <StackPanel Orientation="Horizontal">
+                                                    <TextBlock Text="•" FontSize="16" Foreground="#6BDB74" VerticalAlignment="Center" Margin="0,0,6,0" />
+                                                    <TextBlock x:Name="SalaryPerSecondText" Text="每秒 +¥0.0000" FontSize="12"
+                                                               Foreground="#D7E4C2" VerticalAlignment="Center" />
+                                                </StackPanel>
+                                                <TextBlock x:Name="SalarySubtitle" Text="" FontSize="10" Foreground="#9DA88E" Margin="0,2,0,0"
+                                                           TextTrimming="CharacterEllipsis" />
+                                            </StackPanel>
+                                            <Grid Grid.Row="2">
+                                                <Grid.RowDefinitions>
+                                                    <RowDefinition Height="1" />
+                                                    <RowDefinition Height="Auto" />
+                                                </Grid.RowDefinitions>
+                                                <Border Background="#24FFFFFF" />
+                                                <Grid Grid.Row="1" Margin="0,10,0,0">
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="*" />
+                                                        <ColumnDefinition Width="*" />
+                                                    </Grid.ColumnDefinitions>
+                                                    <TextBlock x:Name="SalaryHourlyValueText" Text="时薪  ¥0.00" FontSize="11" Foreground="#DDE8FF"
+                                                               VerticalAlignment="Center" TextTrimming="CharacterEllipsis" />
+                                                    <TextBlock x:Name="SalaryWorkDurationText" Grid.Column="1" Text="今日工作  00:00:00" FontSize="11" Foreground="#DDE8FF"
+                                                               HorizontalAlignment="Right" VerticalAlignment="Center" TextTrimming="CharacterEllipsis" />
+                                                </Grid>
+                                            </Grid>
+                                        </Grid>
                                     </Border>
                                 </Grid>
                             </Border>
                         </Grid>
 
-                        <Border x:Name="DailyQuoteBanner" Style="{StaticResource FloatlyCard}" Margin="0,0,0,10" Padding="0" MinHeight="100" Visibility="Collapsed">
+                        <Border x:Name="DailyQuoteBanner" Style="{StaticResource FloatlyCard}" Margin="0,0,0,10" Padding="0" MinHeight="112" Visibility="Collapsed">
                             <Grid>
                                 <Image Source="Assets/CardBackgrounds/star-sky-dark.png"
                                        Stretch="UniformToFill"
-                                       Opacity="0.46"
+                                       Opacity="0.64"
                                        IsHitTestVisible="False"
                                        RenderOptions.BitmapScalingMode="HighQuality" />
-                                <Border Background="#B80E1625" />
-                                <StackPanel Margin="18,16">
-                                    <TextBlock Text="✦ 每日一句" FontSize="15" FontWeight="SemiBold" Foreground="#DDE8FF" Margin="0,0,0,10" />
-                                    <TextBlock x:Name="DailyQuoteText" FontSize="20" Foreground="#FFFFFF" FontWeight="SemiBold"
-                                               TextWrapping="Wrap" Visibility="Collapsed" />
-                                    <TextBlock Text="坚持，是比努力更重要的能力。" FontSize="12" Foreground="#A6FFFFFF" Margin="0,8,0,0" />
-                                </StackPanel>
+                                <Border Background="#A80E1625" />
+                                <Grid Margin="22,18">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+                                    <StackPanel VerticalAlignment="Center">
+                                        <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
+                                            <TextBlock Text="❝" FontSize="18" Foreground="#9BA8FF" FontWeight="Bold" VerticalAlignment="Center" Margin="0,0,8,0" />
+                                            <TextBlock Text="每日一句" FontSize="15" FontWeight="SemiBold" Foreground="#DDE8FF" VerticalAlignment="Center" />
+                                        </StackPanel>
+                                        <TextBlock x:Name="DailyQuoteText" FontSize="20" Foreground="#FFFFFF" FontWeight="SemiBold"
+                                                   TextWrapping="Wrap" Visibility="Collapsed" MaxWidth="480" />
+                                        <TextBlock x:Name="DailyQuoteSourceText" Text="—— 坚持，是比努力更重要的能力。" FontSize="12"
+                                                   Foreground="#B8C4D9" Margin="0,10,0,0" />
+                                    </StackPanel>
+                                    <TextBlock Grid.Column="1" Text="↻ 换一句" FontSize="11" Foreground="#DDE8FF"
+                                               HorizontalAlignment="Right" VerticalAlignment="Top" Opacity="0.9" />
+                                </Grid>
                             </Grid>
                         </Border>
 

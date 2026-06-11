@@ -907,6 +907,15 @@ public partial class MainWindow : Window
 
         OffWorkLabel.Text = info.Title;
         OffWorkMainText.Text = info.MainText;
+        OffWorkCaption.Text = info.State switch
+        {
+            OffWorkState.BeforeWork => "距离上班还有",
+            OffWorkState.AfterWork => "今天辛苦啦",
+            OffWorkState.Overtime => "已超过下班时间",
+            OffWorkState.Weekend => "周末好好休息",
+            _ => "距离下班还有"
+        };
+        OffWorkModePill.Text = _settings.OffWorkWeekdaysOnly ? "工作日模式" : "每日模式";
         OffWorkDetail.Text = info.Detail ?? string.Empty;
         OffWorkDetail.Visibility = string.IsNullOrWhiteSpace(info.Detail)
             ? Visibility.Collapsed
@@ -928,6 +937,9 @@ public partial class MainWindow : Window
         var info = SalaryHelperService.GetInfo(DateTime.Now, _settings);
         SalaryLabel.Text = info.Title;
         SalaryAmount.Text = info.AmountText;
+        SalaryPerSecondText.Text = info.PerSecondText;
+        SalaryHourlyValueText.Text = info.HourlyText;
+        SalaryWorkDurationText.Text = info.WorkDurationText;
         SalarySubtitle.Text = info.Subtitle ?? string.Empty;
         SalarySubtitle.Visibility = string.IsNullOrWhiteSpace(info.Subtitle)
             ? Visibility.Collapsed
@@ -973,6 +985,9 @@ public partial class MainWindow : Window
         SalaryAmount.Foreground = Brush(_palette.SalaryGold);
         SalaryAmount.FontWeight = FontWeights.SemiBold;
         SalarySubtitle.Foreground = Brush(_palette.SalaryGoldMuted);
+        SalaryPerSecondText.Foreground = Brush(_palette.SalaryGoldMuted);
+        SalaryHourlyValueText.Foreground = Brush(_palette.TextSecondary);
+        SalaryWorkDurationText.Foreground = Brush(_palette.TextSecondary);
     }
 
     private void ApplyPomodoroTheme(System.Windows.Media.Color textPrimary)
