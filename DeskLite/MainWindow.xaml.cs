@@ -1,4 +1,4 @@
-using System.Globalization;
+﻿using System.Globalization;
 using System.IO;
 using System.Windows;
 using System.Windows.Controls;
@@ -153,11 +153,11 @@ public partial class MainWindow : Window
         LunarSubText.Visibility = _settings.ShowHuangLi ? Visibility.Collapsed : Visibility.Visible;
         ApplyHuangLiCollapsedState();
 
-        Width = Math.Clamp(_settings.WindowWidth, 620, 940);
+        Width = Math.Clamp(_settings.WindowWidth, 880, 980);
         if (_settings.UserCustomSize)
         {
             _suppressSizePersist = true;
-            Height = Math.Clamp(_settings.WindowHeight, MinHeight, 1180);
+            Height = Math.Clamp(_settings.WindowHeight, MinHeight, 1320);
             _suppressSizePersist = false;
         }
         else
@@ -196,33 +196,7 @@ public partial class MainWindow : Window
 
     private void ApplyModuleOrder()
     {
-        var order = DeskModuleIds.Normalize(_settings.ModuleOrder);
-        var extraModules = new Dictionary<string, FrameworkElement>
-        {
-            [DeskModuleIds.Countdown] = CountdownCard,
-            [DeskModuleIds.YearProgress] = YearProgressCard,
-            [DeskModuleIds.OffWork] = OffWorkCard,
-            [DeskModuleIds.Salary] = SalaryPanel,
-            [DeskModuleIds.DailyQuote] = DailyQuoteBanner,
-            [DeskModuleIds.Scratch] = ScratchPanel
-        };
-
-        ExtraModuleStack.Children.Clear();
-        foreach (var id in order)
-        {
-            if (extraModules.TryGetValue(id, out var element))
-            {
-                ReparentToPanel(element, ExtraModuleStack);
-            }
-        }
-
-        foreach (var (id, element) in extraModules)
-        {
-            if (!order.Contains(id))
-            {
-                ReparentToPanel(element, ExtraModuleStack);
-            }
-        }
+        // The widget dashboard uses a fixed visual grid; settings still control visibility.
     }
 
     private static void ReparentToPanel(FrameworkElement element, System.Windows.Controls.Panel target)
@@ -810,9 +784,9 @@ public partial class MainWindow : Window
         }
 
         var headerHeight = _settings.ShowHuangLi ? 190.0 : 142.0;
-        var scrollBody = 700;
+        var scrollBody = 860;
         const double toolbarHeight = 58;
-        const double todoInput = 44;
+        const double todoInput = 0;
         const double chrome = 50;
 
         var height = headerHeight + scrollBody + toolbarHeight + todoInput + chrome;
@@ -823,7 +797,7 @@ public partial class MainWindow : Window
         }
 
         _suppressSizePersist = true;
-        Height = Math.Clamp(height, MinHeight, 1120);
+        Height = Math.Clamp(height, MinHeight, 1320);
         _settings.WindowHeight = Height;
         _suppressSizePersist = false;
     }
@@ -857,7 +831,7 @@ public partial class MainWindow : Window
             var info = CountdownService.GetInfo(_todoStore.Data.Countdowns, DateTime.Today);
             if (info is null)
             {
-                CountdownLabel.Text = "⏳ 暂无倒数日";
+                CountdownLabel.Text = "暂无倒数日";
                 CountdownDays.Text = "托盘可添加";
                 CountdownHint.Text = "在托盘菜单中添加目标日期";
                 QueueProgressBarUpdate(CountdownTrack, CountdownFill, 0);
@@ -1180,7 +1154,7 @@ public partial class MainWindow : Window
 
         var dayDisplay = isToday && preview is null && compact
             ? day.Day.ToString()
-            : isToday && preview is null ? "●" : day.Day.ToString();
+            : isToday && preview is null ? "今" : day.Day.ToString();
 
         var dayFontSize = compact ? 11 * calScale : 13 * calScale;
         var dayForeground = isToday || isPreview ? Brush(_palette.Accent) : Brush(_palette.WeekSolar);
@@ -1290,14 +1264,25 @@ public partial class MainWindow : Window
             return;
         }
 
-        var city = LocationService.HasUsableCityName(cache?.City)
-            ? cache!.City
-            : LocationService.HasUsableCityName(_settings.ResolvedCityName)
-                ? _settings.ResolvedCityName!
-                : LocationService.HasUsableCityName(_settings.City)
-                    ? _settings.City
-                    : string.Empty;
-        var region = cache?.Region ?? _settings.ResolvedRegion;
+        string city;
+        string? region;
+
+        if (!_settings.AutoLocateCity && LocationService.HasUsableCityName(_settings.City))
+        {
+            city = _settings.City;
+            region = _settings.ResolvedRegion;
+        }
+        else
+        {
+            city = LocationService.HasUsableCityName(cache?.City)
+                ? cache!.City
+                : LocationService.HasUsableCityName(_settings.ResolvedCityName)
+                    ? _settings.ResolvedCityName!
+                    : LocationService.HasUsableCityName(_settings.City)
+                        ? _settings.City
+                        : string.Empty;
+            region = cache?.Region ?? _settings.ResolvedRegion;
+        }
 
         CityText.Text = FormatCityLabel(city, region);
         CityText.Visibility = Visibility.Visible;
@@ -1396,7 +1381,9 @@ public partial class MainWindow : Window
             _settings.WeatherLatitude,
             _settings.WeatherLongitude,
             _settings.ResolvedRegion,
-            oldCache?.LocationSource ?? (_settings.AutoLocateCity ? "auto" : "manual"));
+            _settings.AutoLocateCity
+                ? oldCache?.LocationSource ?? "auto"
+                : "manual");
         _lastWeatherFetch = DateTime.Now;
 
         if (result is null)
@@ -1420,7 +1407,10 @@ public partial class MainWindow : Window
             _settings.WeatherLongitude = result.Longitude;
             _settings.ResolvedCityName = result.Cache.City;
             _settings.ResolvedRegion = result.Cache.Region;
-            _settings.City = result.Cache.City;
+            if (_settings.AutoLocateCity)
+            {
+                _settings.City = result.Cache.City;
+            }
             JsonStore.SaveSettings(_settings);
         }
 
@@ -1457,6 +1447,11 @@ public partial class MainWindow : Window
         }
 
         var loc = await _locationService.DetectAsync();
+        if (!_settings.AutoLocateCity)
+        {
+            return;
+        }
+
         if (loc is null)
         {
             if (notify)
@@ -1803,13 +1798,13 @@ public partial class MainWindow : Window
 
     public void AddCountdown()
     {
-        var title = InputPrompt.Show("添加倒数日", "事件名称：");
+        var title = InputPrompt.Show("添加倒数日", "事件名称");
         if (string.IsNullOrWhiteSpace(title))
         {
             return;
         }
 
-        var dateText = InputPrompt.Show("添加倒数日", "目标日期 (yyyy-MM-dd)：", DateTime.Today.AddDays(30).ToString("yyyy-MM-dd"));
+        var dateText = InputPrompt.Show("添加倒数日", "目标日期 (yyyy-MM-dd)", DateTime.Today.AddDays(30).ToString("yyyy-MM-dd"));
         if (!DateTime.TryParse(dateText, out var date))
         {
             return;
@@ -2107,7 +2102,7 @@ public partial class MainWindow : Window
 
     public void JumpToCalendarDate()
     {
-        var text = InputPrompt.Show("跳转日期", "输入日期 (yyyy-MM-dd)：", DateTime.Today.ToString("yyyy-MM-dd"));
+        var text = InputPrompt.Show("跳转日期", "输入日期 (yyyy-MM-dd)", DateTime.Today.ToString("yyyy-MM-dd"));
         if (!DateTime.TryParse(text, out var date))
         {
             return;
@@ -2157,7 +2152,7 @@ public partial class MainWindow : Window
 
     private void SetCity()
     {
-        var city = InputPrompt.Show("设置城市", "输入城市名称：", _settings.City);
+        var city = InputPrompt.Show("设置城市", "输入城市名称", _settings.City);
         if (string.IsNullOrWhiteSpace(city))
         {
             return;
@@ -2238,7 +2233,7 @@ public partial class MainWindow : Window
         }
         catch
         {
-            // 拖动边界偶发异常，忽略
+            // 拖动边界偶发异常，忽略。
         }
     }
 
@@ -2474,3 +2469,4 @@ public partial class MainWindow : Window
         }
     }
 }
+
