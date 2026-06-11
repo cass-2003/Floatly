@@ -795,21 +795,8 @@ public partial class MainWindow : Window
             return;
         }
 
-        var headerHeight = _settings.ShowHuangLi ? 268.0 : 154.0;
-        var scrollBody = 950;
-        const double toolbarHeight = 52;
-        const double todoInput = 0;
-        const double chrome = 38;
-
-        var height = headerHeight + scrollBody + toolbarHeight + todoInput + chrome;
-
-        if (_settings.ShowWeekStrip)
-        {
-            height += 110;
-        }
-
         _suppressSizePersist = true;
-        Height = Math.Clamp(height, MinHeight, MaxWindowHeight);
+        Height = Math.Clamp(DefaultWindowHeight, MinHeight, MaxWindowHeight);
         _settings.WindowHeight = Height;
         _suppressSizePersist = false;
     }
