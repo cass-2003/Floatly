@@ -285,6 +285,7 @@
                             <RadioButton x:Name="RbSkinDefault" Content="默认" GroupName="Skin" />
                             <RadioButton x:Name="RbSkinSolid" Content="纯色" GroupName="Skin" />
                             <RadioButton x:Name="RbSkinImage" Content="自定义图片" GroupName="Skin" />
+                            <RadioButton x:Name="RbSkinVideo" Content="视频" GroupName="Skin" />
                         </StackPanel>
                         <Grid Margin="0,0,0,4">
                             <Grid.ColumnDefinitions>
@@ -293,10 +294,24 @@
                             </Grid.ColumnDefinitions>
                             <TextBox x:Name="TxtSkinImagePath" Grid.Column="0" Height="32"
                                      Style="{StaticResource SettingsTextBox}" IsReadOnly="True" />
-                            <Button x:Name="BtnBrowseSkin" Grid.Column="1" Content="浏览…"
+                            <Button x:Name="BtnBrowseSkin" Grid.Column="1" Content="浏览图片…"
                                     Margin="8,0,0,0" Style="{StaticResource SecondaryButton}"
                                     Click="BtnBrowseSkin_Click" />
                         </Grid>
+                        <Grid Margin="0,0,0,4">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <TextBox x:Name="TxtSkinVideoPath" Grid.Column="0" Height="32"
+                                     Style="{StaticResource SettingsTextBox}" IsReadOnly="True" />
+                            <Button x:Name="BtnBrowseSkinVideo" Grid.Column="1" Content="浏览视频…"
+                                    Margin="8,0,0,0" Style="{StaticResource SecondaryButton}"
+                                    Click="BtnBrowseSkinVideo_Click" />
+                        </Grid>
+                        <TextBlock Style="{StaticResource HintText}"
+                                   Text="视频背景：建议使用短视频循环，静音播放；占用更多 CPU/GPU 资源"
+                                   TextWrapping="Wrap" Margin="0,0,0,4" />
                         <Grid Margin="0,0,0,4">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*" />
@@ -308,7 +323,7 @@
                             <TextBox x:Name="TxtSkinOverlay" Grid.Column="1" Style="{StaticResource SettingsNumericBox}"
                                      Width="56" LostFocus="TxtSkinOverlay_LostFocus" KeyDown="TxtSkinOverlay_KeyDown" />
                         </Grid>
-                        <TextBlock Style="{StaticResource HintText}" Text="图片遮罩 0–85%（提高可读性）" Margin="0,0,0,14" />
+                        <TextBlock Style="{StaticResource HintText}" Text="图片/视频遮罩 0–85%（提高可读性）" Margin="0,0,0,14" />
                         <TextBlock Style="{StaticResource HintText}" Text="拖拽窗口四边或四角可调整大小" />
                     </StackPanel>
                 </ScrollViewer>

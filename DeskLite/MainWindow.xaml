@@ -51,6 +51,16 @@
             </ContextMenu>
         </Border.ContextMenu>
         <Grid>
+            <MediaElement x:Name="SkinVideo"
+                          LoadedBehavior="Manual"
+                          UnloadedBehavior="Stop"
+                          IsMuted="True"
+                          Volume="0"
+                          Stretch="UniformToFill"
+                          Visibility="Collapsed"
+                          IsHitTestVisible="False"
+                          MediaEnded="SkinVideo_MediaEnded"
+                          Loaded="SkinVideo_Loaded" />
             <Border x:Name="SkinOverlay" Background="#73000000" CornerRadius="12" Visibility="Collapsed" IsHitTestVisible="False" />
             <Grid x:Name="ContentRoot" Margin="14" PreviewMouseLeftButtonDown="Grid_PreviewMouseLeftButtonDown" Cursor="SizeAll">
             <Grid.RowDefinitions>

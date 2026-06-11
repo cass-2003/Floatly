@@ -90,6 +90,7 @@ public partial class MainWindow : Window
             Hide();
         };
 
+        IsVisibleChanged += (_, _) => UpdateSkinVideoPlayback();
         LocationChanged += (_, _) => SaveWindowPosition();
         SizeChanged += OnWindowSizeChanged;
     }
@@ -217,6 +218,7 @@ public partial class MainWindow : Window
 
         MainBorder.Background = SkinService.CreatePanelBackground(_settings, _palette);
         MainBorder.BorderBrush = new SolidColorBrush(_palette.PanelBorder);
+        ApplySkinVideo();
         ApplySkinOverlay();
         DividerBorder.Background = new SolidColorBrush(_palette.Divider);
 
@@ -281,6 +283,63 @@ public partial class MainWindow : Window
             (byte)Math.Round(opacity * 255),
             0, 0, 0));
         SkinOverlay.Visibility = Visibility.Visible;
+    }
+
+    private void ApplySkinVideo()
+    {
+        var isVideoMode = SkinService.NormalizeMode(_settings.SkinMode) == SkinService.ModeVideo;
+        if (!isVideoMode)
+        {
+            SkinVideo.Stop();
+            SkinVideo.Source = null;
+            SkinVideo.Visibility = Visibility.Collapsed;
+            return;
+        }
+
+        var path = SkinService.ResolveVideoPath(_settings.SkinVideoPath);
+        if (path is null)
+        {
+            SkinVideo.Stop();
+            SkinVideo.Source = null;
+            SkinVideo.Visibility = Visibility.Collapsed;
+            return;
+        }
+
+        var uri = new Uri(path, UriKind.Absolute);
+        if (!Equals(SkinVideo.Source, uri))
+        {
+            SkinVideo.Source = uri;
+        }
+
+        SkinVideo.Visibility = Visibility.Visible;
+        UpdateSkinVideoPlayback();
+    }
+
+    private void UpdateSkinVideoPlayback()
+    {
+        if (SkinService.NormalizeMode(_settings.SkinMode) != SkinService.ModeVideo ||
+            SkinVideo.Visibility != Visibility.Visible ||
+            SkinVideo.Source is null)
+        {
+            return;
+        }
+
+        if (IsVisible)
+        {
+            SkinVideo.Play();
+        }
+        else
+        {
+            SkinVideo.Pause();
+        }
+    }
+
+    private void SkinVideo_Loaded(object sender, RoutedEventArgs e) => UpdateSkinVideoPlayback();
+
+    private void SkinVideo_MediaEnded(object sender, RoutedEventArgs e)
+    {
+        SkinVideo.Position = TimeSpan.Zero;
+        SkinVideo.Play();
     }
 
     private void UpdateCalendarModeButtons()
@@ -1664,6 +1723,7 @@ public partial class MainWindow : Window
         _settings.FontFamily = next.FontFamily;
         _settings.SkinMode = next.SkinMode;
         _settings.SkinImagePath = next.SkinImagePath;
+        _settings.SkinVideoPath = next.SkinVideoPath;
         _settings.SkinOverlayOpacity = next.SkinOverlayOpacity;
         _settings.City = next.City;
         _settings.CalendarMode = next.CalendarMode;

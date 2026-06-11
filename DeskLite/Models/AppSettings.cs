@@ -56,9 +56,10 @@ public sealed class AppSettings
     public string? LastAutoLocateAt { get; set; }
     public string CalendarMode { get; set; } = "week";
     public string? CalendarAnchorDate { get; set; }
-    /// <summary>default | solid | image</summary>
+    /// <summary>default | solid | image | video</summary>
     public string SkinMode { get; set; } = "default";
     public string? SkinImagePath { get; set; }
+    public string? SkinVideoPath { get; set; }
     public double SkinOverlayOpacity { get; set; } = 0.45;
     public string FontFamily { get; set; } = "Microsoft YaHei UI";
 }

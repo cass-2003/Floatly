@@ -1,4 +1,5 @@
 using System.Globalization;
+using System.IO;
 using System.Text.Json;
 using System.Windows;
 using System.Windows.Input;
@@ -39,6 +40,7 @@ public partial class SettingsWindow : Window
         RbSkinDefault.Checked += (_, _) => UpdateSkinControls();
         RbSkinSolid.Checked += (_, _) => UpdateSkinControls();
         RbSkinImage.Checked += (_, _) => UpdateSkinControls();
+        RbSkinVideo.Checked += (_, _) => UpdateSkinControls();
         LoadFromSettings(_original);
         _isInitializing = false;
     }
@@ -213,7 +215,9 @@ public partial class SettingsWindow : Window
         RbSkinDefault.IsChecked = mode == SkinService.ModeDefault;
         RbSkinSolid.IsChecked = mode == SkinService.ModeSolid;
         RbSkinImage.IsChecked = mode == SkinService.ModeImage;
+        RbSkinVideo.IsChecked = mode == SkinService.ModeVideo;
         TxtSkinImagePath.Text = s.SkinImagePath ?? string.Empty;
+        TxtSkinVideoPath.Text = s.SkinVideoPath ?? string.Empty;
         SetSkinOverlayUi((int)Math.Round(SkinService.ClampOverlayOpacity(s.SkinOverlayOpacity) * 100));
         UpdateSkinControls();
     }
@@ -221,10 +225,14 @@ public partial class SettingsWindow : Window
     private void UpdateSkinControls()
     {
         var imageMode = RbSkinImage.IsChecked == true;
+        var videoMode = RbSkinVideo.IsChecked == true;
+        var mediaOverlay = imageMode || videoMode;
         TxtSkinImagePath.IsEnabled = imageMode;
         BtnBrowseSkin.IsEnabled = imageMode;
-        SliderSkinOverlay.IsEnabled = imageMode;
-        TxtSkinOverlay.IsEnabled = imageMode;
+        TxtSkinVideoPath.IsEnabled = videoMode;
+        BtnBrowseSkinVideo.IsEnabled = videoMode;
+        SliderSkinOverlay.IsEnabled = mediaOverlay;
+        TxtSkinOverlay.IsEnabled = mediaOverlay;
     }
 
     private void SetSkinOverlayUi(int percent)
@@ -520,6 +528,47 @@ public partial class SettingsWindow : Window
         UpdateSkinControls();
     }
 
+    private void BtnBrowseSkinVideo_Click(object sender, RoutedEventArgs e)
+    {
+        var dlg = new Microsoft.Win32.OpenFileDialog
+        {
+            Title = "选择皮肤背景视频",
+            Filter = "视频文件|*.mp4;*.webm;*.wmv;*.avi;*.mov|所有文件|*.*"
+        };
+
+        if (dlg.ShowDialog(this) != true)
+        {
+            return;
+        }
+
+        if (SkinService.ShouldWarnLargeVideo(dlg.FileName))
+        {
+            var sizeMb = new FileInfo(dlg.FileName).Length / (1024.0 * 1024.0);
+            var confirm = System.Windows.MessageBox.Show(
+                this,
+                $"所选视频约 {sizeMb:F1} MB，超过 50 MB 建议值，可能占用较多资源。是否继续？",
+                AppConstants.DisplayName,
+                MessageBoxButton.YesNo,
+                MessageBoxImage.Warning);
+            if (confirm != MessageBoxResult.Yes)
+            {
+                return;
+            }
+        }
+
+        var imported = SkinService.ImportSkinVideo(dlg.FileName);
+        if (imported is null)
+        {
+            System.Windows.MessageBox.Show(this, "无法导入所选视频，请换一个 mp4/webm/wmv/avi/mov 文件。", AppConstants.DisplayName,
+                MessageBoxButton.OK, MessageBoxImage.Warning);
+            return;
+        }
+
+        TxtSkinVideoPath.Text = imported;
+        RbSkinVideo.IsChecked = true;
+        UpdateSkinControls();
+    }
+
     private AppSettings ReadToSettings()
     {
         var s = Clone(_original);
@@ -554,11 +603,13 @@ public partial class SettingsWindow : Window
         s.PrimaryTextColor = string.IsNullOrWhiteSpace(TxtCustomFontColor.Text)
             ? null
             : customColor ?? _selectedFontColor;
-        s.SkinMode = RbSkinImage.IsChecked == true
-            ? SkinService.ModeImage
-            : RbSkinSolid.IsChecked == true
-                ? SkinService.ModeSolid
-                : SkinService.ModeDefault;
+        s.SkinMode = RbSkinVideo.IsChecked == true
+            ? SkinService.ModeVideo
+            : RbSkinImage.IsChecked == true
+                ? SkinService.ModeImage
+                : RbSkinSolid.IsChecked == true
+                    ? SkinService.ModeSolid
+                    : SkinService.ModeDefault;
         s.SkinOverlayOpacity = ReadSkinOverlayPercent() / 100.0;
         if (s.SkinMode != SkinService.ModeImage)
         {
@@ -571,6 +622,19 @@ public partial class SettingsWindow : Window
         else
         {
             s.SkinImagePath = TxtSkinImagePath.Text.Trim();
+        }
+
+        if (s.SkinMode != SkinService.ModeVideo)
+        {
+            s.SkinVideoPath = string.IsNullOrWhiteSpace(TxtSkinVideoPath.Text) ? null : TxtSkinVideoPath.Text.Trim();
+        }
+        else if (string.IsNullOrWhiteSpace(TxtSkinVideoPath.Text))
+        {
+            s.SkinVideoPath = null;
+        }
+        else
+        {
+            s.SkinVideoPath = TxtSkinVideoPath.Text.Trim();
         }
 
         s.ShowWeather = ChkShowWeather.IsChecked == true;
