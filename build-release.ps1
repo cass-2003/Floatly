@@ -1,9 +1,9 @@
-# Floatly v2.0.3 Build Script
+# Floatly v2.0.7 Build Script
 # PowerShell 5.1+
 
 $ErrorActionPreference = "Stop"
 
-$Version = "2.0.3"
+$Version = "2.0.7"
 $RootDir = Split-Path -Parent $MyInvocation.MyCommand.Path
 $ProjectDir = Join-Path $RootDir "DeskLite"
 $OutputDir = Join-Path $RootDir "release\Floatly"
@@ -53,12 +53,12 @@ $Iscc = @(
 ) | Where-Object { Test-Path $_ } | Select-Object -First 1
 
 if (-not $Iscc) {
-    Write-Host "⚠️  Inno Setup not found. Skipping installer build." -ForegroundColor Yellow
+    Write-Host "[warn] Inno Setup not found. Skipping installer build." -ForegroundColor Yellow
     Write-Host "    Download: https://jrsoftware.org/isdl.php" -ForegroundColor Gray
 } else {
     & $Iscc $InstallerScript
     if ($LASTEXITCODE -eq 0) {
-        Write-Host "✅ Installer created: release\Floatly-Setup-$Version.exe" -ForegroundColor Green
+        Write-Host "[ok] Installer created: release\Floatly-Setup-$Version.exe" -ForegroundColor Green
     }
 }
 
