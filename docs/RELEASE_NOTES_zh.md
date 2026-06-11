@@ -60,4 +60,6 @@ gh release edit vX.Y.Z --repo cass-2003/Floatly --notes-file docs/releases/vX.Y.
 
 | 版本 | 说明文件 |
 |------|----------|
+| v2.0.1 | [releases/v2.0.1.md](releases/v2.0.1.md) |
+| v2.0.0 | [releases/v2.0.0.md](releases/v2.0.0.md) |
 | v1.0.1 | [releases/v1.0.1.md](releases/v1.0.1.md) |

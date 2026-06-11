@@ -3,10 +3,11 @@
 
 $ErrorActionPreference = "Stop"
 
-$Version = "2.0.0"
-$ProjectDir = "DeskLite"
-$OutputDir = "release\Floatly"
-$InstallerScript = "installer\Floatly.iss"
+$Version = "2.0.1"
+$RootDir = Split-Path -Parent $MyInvocation.MyCommand.Path
+$ProjectDir = Join-Path $RootDir "DeskLite"
+$OutputDir = Join-Path $RootDir "release\Floatly"
+$InstallerScript = Join-Path $RootDir "installer\Floatly.iss"
 
 Write-Host "=====================================" -ForegroundColor Cyan
 Write-Host "  Floatly v$Version Release Build" -ForegroundColor Cyan
@@ -23,6 +24,7 @@ New-Item -ItemType Directory -Force -Path $OutputDir | Out-Null
 
 # Build .NET project
 Write-Host "[2/4] Building .NET 8 project (win-x64)..." -ForegroundColor Yellow
+Push-Location $RootDir
 dotnet publish $ProjectDir `
     -c Release `
     -r win-x64 `
@@ -31,6 +33,8 @@ dotnet publish $ProjectDir `
     -p:IncludeNativeLibrariesForSelfExtract=true `
     -o $OutputDir
 
+Pop-Location
+
 if ($LASTEXITCODE -ne 0) {
     Write-Host "Build failed!" -ForegroundColor Red
     exit 1
@@ -38,15 +42,21 @@ if ($LASTEXITCODE -ne 0) {
 
 # Copy app icon
 Write-Host "[3/4] Copying icon..." -ForegroundColor Yellow
-Copy-Item "$ProjectDir\app.ico" $OutputDir -Force
+Copy-Item (Join-Path $ProjectDir "app.ico") $OutputDir -Force
 
 # Build installer
 Write-Host "[4/4] Building Inno Setup installer..." -ForegroundColor Yellow
-if (-not (Test-Path "C:\Program Files (x86)\Inno Setup 6\ISCC.exe")) {
+$Iscc = @(
+    "$env:LOCALAPPDATA\Programs\Inno Setup 6\ISCC.exe",
+    "C:\Program Files (x86)\Inno Setup 6\ISCC.exe",
+    "C:\Program Files\Inno Setup 6\ISCC.exe"
+) | Where-Object { Test-Path $_ } | Select-Object -First 1
+
+if (-not $Iscc) {
     Write-Host "⚠️  Inno Setup not found. Skipping installer build." -ForegroundColor Yellow
     Write-Host "    Download: https://jrsoftware.org/isdl.php" -ForegroundColor Gray
 } else {
-    & "C:\Program Files (x86)\Inno Setup 6\ISCC.exe" $InstallerScript
+    & $Iscc $InstallerScript
     if ($LASTEXITCODE -eq 0) {
         Write-Host "✅ Installer created: release\Floatly-Setup-$Version.exe" -ForegroundColor Green
     }
