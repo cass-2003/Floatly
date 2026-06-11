@@ -4,6 +4,8 @@ public partial class App : System.Windows.Application
 {
     protected override void OnStartup(System.Windows.StartupEventArgs e)
     {
+        System.Windows.Forms.Application.EnableVisualStyles();
+        System.Windows.Forms.Application.SetCompatibleTextRenderingDefault(false);
         base.OnStartup(e);
 
         if (e.Args.Any(arg => string.Equals(arg, "--settings", StringComparison.OrdinalIgnoreCase)))
