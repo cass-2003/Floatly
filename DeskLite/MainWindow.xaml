@@ -17,8 +17,8 @@
     <Window.Resources>
         <SolidColorBrush x:Key="TodoTextBrush" Color="#FFFFFF" />
         <SolidColorBrush x:Key="TodoDeleteBrush" Color="#7E8796" />
-        <SolidColorBrush x:Key="TodoCardBgBrush" Color="#18FFFFFF" />
-        <SolidColorBrush x:Key="TodoCardBorderBrush" Color="#0DFFFFFF" />
+        <SolidColorBrush x:Key="TodoCardBgBrush" Color="#18E8F4FF" />
+        <SolidColorBrush x:Key="TodoCardBorderBrush" Color="#24E4F0FF" />
         <SolidColorBrush x:Key="TodoTimeBadgeBrush" Color="#225C8DFF" />
         <SolidColorBrush x:Key="TodoPinActiveBrush" Color="#F59E0B" />
         <SolidColorBrush x:Key="TodoPinInactiveBrush" Color="#6B7280" />
@@ -29,8 +29,8 @@
         <SolidColorBrush x:Key="TodoAccentBrush" Color="#5C8DFF" />
 
         <Style x:Key="FloatlyCard" TargetType="Border">
-            <Setter Property="Background" Value="#F21E2028" />
-            <Setter Property="BorderBrush" Value="#14FFFFFF" />
+            <Setter Property="Background" Value="#A61D3450" />
+            <Setter Property="BorderBrush" Value="#2EE4F0FF" />
             <Setter Property="BorderThickness" Value="1" />
             <Setter Property="CornerRadius" Value="18" />
             <Setter Property="Padding" Value="14" />
@@ -67,9 +67,9 @@
     </Window.Resources>
 
     <Border x:Name="MainBorder"
-            Background="#F0131722"
+            Background="#FF102239"
             CornerRadius="16"
-            BorderBrush="#14FFFFFF"
+            BorderBrush="#2EE4F0FF"
             BorderThickness="1"
             ClipToBounds="True">
         <Border.ContextMenu>
@@ -97,7 +97,7 @@
                           MediaEnded="SkinVideo_MediaEnded" Loaded="SkinVideo_Loaded" />
             <Border x:Name="SkinOverlay" Background="#8C000000" CornerRadius="16" Visibility="Collapsed" IsHitTestVisible="False" />
 
-            <Border x:Name="ContentBackdrop" Background="#CC0D0F14" CornerRadius="14" Margin="8"
+            <Border x:Name="ContentBackdrop" Background="#400C1D31" CornerRadius="14" Margin="8"
                     IsHitTestVisible="False" Visibility="Visible" />
 
             <Grid x:Name="ContentRoot" Margin="30,40,30,16" PreviewMouseLeftButtonDown="Grid_PreviewMouseLeftButtonDown" Cursor="SizeAll">
@@ -211,8 +211,8 @@
                         </Grid>
 
                         <!-- Row 2: lunar / huangli compact strip (full width, below row 1) -->
-                        <Border x:Name="HeroLunarStrip" Visibility="Collapsed" BorderBrush="#14FFFFFF"
-                                BorderThickness="1" CornerRadius="14" Background="#661E2738"
+                        <Border x:Name="HeroLunarStrip" Visibility="Collapsed" BorderBrush="#2EE4F0FF"
+                                BorderThickness="1" CornerRadius="14" Background="#6A1F3855"
                                 Margin="0,24,0,0" Padding="18,14">
                             <Grid>
                                 <Grid.ColumnDefinitions>
@@ -251,7 +251,7 @@
                                     </StackPanel>
                                 </WrapPanel>
                                 <Button x:Name="HuangLiCollapseBtn" Grid.Column="4" Content="⌄" Width="42" Height="42" Padding="0"
-                                        Click="HuangLiCollapse_Click" Background="#18FFFFFF" BorderThickness="0"
+                                        Click="HuangLiCollapse_Click" Background="#20E8F4FF" BorderThickness="0"
                                         Foreground="#DDE8FF" Cursor="Hand" FontSize="18" ToolTip="展开/收起" VerticalAlignment="Center" />
                             </Grid>
                         </Border>
@@ -451,7 +451,7 @@
                                             </Border>
                                         </StackPanel>
                                         <Button Content="+" Width="28" Height="28" HorizontalAlignment="Right" VerticalAlignment="Center"
-                                                Click="AddTodo_Click" Background="#18FFFFFF" BorderThickness="0"
+                                                Click="AddTodo_Click" Background="#20E8F4FF" BorderThickness="0"
                                                 Foreground="#DDE8FF" Cursor="Hand" FontSize="20" />
                                     </Grid>
                                     <Border x:Name="DividerBorder" Height="0" Visibility="Collapsed" />
@@ -517,7 +517,7 @@
                                             <RowDefinition Height="Auto" />
                                             <RowDefinition Height="Auto" />
                                         </Grid.RowDefinitions>
-                                        <Border x:Name="TodoOverflowBtn" Grid.Row="0" Background="#18FFFFFF" CornerRadius="10" Padding="10,6" Margin="0,0,0,8" Cursor="Hand"
+                                        <Border x:Name="TodoOverflowBtn" Grid.Row="0" Background="#20E8F4FF" CornerRadius="10" Padding="10,6" Margin="0,0,0,8" Cursor="Hand"
                                                 MouseLeftButtonUp="TodoViewAll_Click" Visibility="Collapsed">
                                             <Grid>
                                                 <TextBlock x:Name="TodoOverflowText" Text="+ 2 条待办" FontSize="11" Foreground="{DynamicResource TodoLinkBrush}" />
@@ -597,7 +597,7 @@
                                            Opacity="0.40"
                                            IsHitTestVisible="False"
                                            RenderOptions.BitmapScalingMode="HighQuality" />
-                                    <Border Background="#C30B1220" />
+                                    <Border Background="#9510243B" />
                                     <Border Padding="16,11,16,11">
                                         <Grid x:Name="OffWorkPanel" Visibility="Collapsed">
                                             <Grid.RowDefinitions>
@@ -639,7 +639,7 @@
                                            Opacity="0.42"
                                            IsHitTestVisible="False"
                                            RenderOptions.BitmapScalingMode="HighQuality" />
-                                    <Border Background="#D0161210" />
+                                    <Border Background="#A0121714" />
                                     <Border Padding="16,11,16,11">
                                         <Grid>
                                             <Grid.RowDefinitions>
@@ -695,7 +695,7 @@
                                        Opacity="0.64"
                                        IsHitTestVisible="False"
                                        RenderOptions.BitmapScalingMode="HighQuality" />
-                                <Border Background="#A80E1625" />
+                                <Border Background="#8A10243D" />
                                 <Grid Margin="22,14">
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="*" />
@@ -774,7 +774,7 @@
                                             </Border>
                                         </StackPanel>
                                         <Border Width="28" Height="28" CornerRadius="14" HorizontalAlignment="Right" VerticalAlignment="Center"
-                                                Background="#18FFFFFF" Cursor="Hand" MouseLeftButtonUp="ScratchExpand_Click">
+                                                Background="#20E8F4FF" Cursor="Hand" MouseLeftButtonUp="ScratchExpand_Click">
                                             <TextBlock x:Name="ScratchExpandText" Text="+" FontSize="18" Foreground="#DDE8FF"
                                                        HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,-2,0,0" />
                                         </Border>
@@ -800,8 +800,8 @@
                             <ColumnDefinition Width="*" />
                             <ColumnDefinition Width="Auto" />
                         </Grid.ColumnDefinitions>
-                        <Border x:Name="QuickSettingsPill" CornerRadius="18" Padding="14,8" Background="#D81A1D24"
-                                BorderBrush="#14FFFFFF" BorderThickness="1">
+                        <Border x:Name="QuickSettingsPill" CornerRadius="18" Padding="14,8" Background="#96162A43"
+                                BorderBrush="#2EE4F0FF" BorderThickness="1">
                             <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                                 <TextBlock Text="⌃" FontSize="13" Foreground="#A6FFFFFF" VerticalAlignment="Center" Margin="0,0,8,0" />
                                 <TextBlock Text="快捷设置" FontSize="12" Foreground="#DDE8FF" VerticalAlignment="Center" />
@@ -818,7 +818,7 @@
                             <TextBlock x:Name="FontSizeValueText" Text="12px" FontSize="10" Foreground="#A6FFFFFF" VerticalAlignment="Center" />
                         </StackPanel>
                         <Border x:Name="QuickActionsPill" Grid.Column="2" CornerRadius="18" Padding="10,5"
-                                Background="#D81A1D24" BorderBrush="#14FFFFFF" BorderThickness="1">
+                                Background="#96162A43" BorderBrush="#2EE4F0FF" BorderThickness="1">
                             <Grid>
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="Auto" />

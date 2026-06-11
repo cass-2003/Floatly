@@ -239,8 +239,8 @@ public partial class MainWindow : Window
         _palette = AppThemePalette.For(AppThemePalette.Parse(_settings.Theme));
         var textPrimary = FontColorHelper.ResolvePrimary(_palette.TextPrimary, _settings.PrimaryTextColor);
 
-        MainBorder.Background = SkinService.CreatePanelBackground(_settings, _palette);
-        MainBorder.BorderBrush = new SolidColorBrush(_palette.PanelBorder);
+        MainBorder.Background = CreateMainPanelBackground();
+        MainBorder.BorderBrush = Brush(FloatlyDesignTokens.CardBorder);
         ApplySkinVideo();
         ApplySkinOverlay();
         ApplyContentBackdrop();
@@ -255,9 +255,9 @@ public partial class MainWindow : Window
         HeaderBlock.BorderBrush = System.Windows.Media.Brushes.Transparent;
         ApplyModuleCardTheme();
         BottomToolbar.Background = System.Windows.Media.Brushes.Transparent;
-        QuickSettingsPill.Background = Brush(FloatlyDesignTokens.ToolbarBackground);
+        QuickSettingsPill.Background = CreateToolbarBrush();
         QuickSettingsPill.BorderBrush = Brush(FloatlyDesignTokens.CardBorder);
-        QuickActionsPill.Background = Brush(FloatlyDesignTokens.ToolbarBackground);
+        QuickActionsPill.Background = CreateToolbarBrush();
         QuickActionsPill.BorderBrush = Brush(FloatlyDesignTokens.CardBorder);
         ApplyHuangLiTheme();
         WeatherTempText.Foreground = Brush(textPrimary);
@@ -305,6 +305,7 @@ public partial class MainWindow : Window
         Resources["TodoTextBrush"] = Brush(_palette.TodoText);
         Resources["TodoDeleteBrush"] = Brush(_palette.DeleteButton);
         TodoThemeHelper.ApplyResources(Resources, _palette);
+        ApplyWidgetGlassResources();
 
         RefreshCalendar();
         RefreshTodoTheme();
@@ -336,13 +337,13 @@ public partial class MainWindow : Window
         ContentBackdrop.Visibility = useBackdrop ? Visibility.Visible : Visibility.Collapsed;
         if (useBackdrop)
         {
-            ContentBackdrop.Background = new SolidColorBrush(FloatlyDesignTokens.ContentBackdrop);
+            ContentBackdrop.Background = CreateContentBackdropBrush();
         }
     }
 
     private void ApplyModuleCardTheme()
     {
-        var cardBg = Brush(FloatlyDesignTokens.CardBackground);
+        var cardBg = CreateGlassCardBrush();
         var cardBorder = Brush(FloatlyDesignTokens.CardBorder);
         var trackBg = Brush(FloatlyDesignTokens.ProgressTrack);
 
@@ -367,6 +368,95 @@ public partial class MainWindow : Window
         CountdownTrack.Height = FloatlyDesignTokens.ProgressBarHeight;
         YearProgressTrack.Height = FloatlyDesignTokens.ProgressBarHeight;
         OffWorkTrack.Height = FloatlyDesignTokens.ProgressBarHeight;
+    }
+
+    private void ApplyWidgetGlassResources()
+    {
+        Resources["TodoCardBgBrush"] = Brush(0x18, 0xE8, 0xF4, 0xFF);
+        Resources["TodoCardBorderBrush"] = Brush(0x24, 0xE4, 0xF0, 0xFF);
+        TodoOverflowBtn.Background = Brush(0x20, 0xE8, 0xF4, 0xFF);
+        TodoCountBadge.Background = Brush(0x24, 0x5C, 0x8D, 0xFF);
+        ScratchCountBadge.Background = Brush(0x24, 0x5C, 0x8D, 0xFF);
+    }
+
+    private System.Windows.Media.Brush CreateMainPanelBackground()
+    {
+        var skinMode = SkinService.NormalizeMode(_settings.SkinMode);
+        if (skinMode == SkinService.ModeImage)
+        {
+            var imageBrush = SkinService.TryCreateImageBrush(_settings.SkinImagePath);
+            if (imageBrush is not null)
+            {
+                return imageBrush;
+            }
+        }
+
+        if (skinMode is SkinService.ModeSolid or SkinService.ModeVideo)
+        {
+            var solid = FloatlyDesignTokens.PanelBackground;
+            return Brush(0xFF, solid.R, solid.G, solid.B);
+        }
+
+        return new RadialGradientBrush
+        {
+            RadiusX = 0.96,
+            RadiusY = 0.82,
+            Center = new System.Windows.Point(0.34, 0.05),
+            GradientOrigin = new System.Windows.Point(0.28, -0.05),
+            GradientStops =
+            {
+                new GradientStop(FloatlyDesignTokens.PanelGlow, 0.0),
+                new GradientStop(FloatlyDesignTokens.PanelBackground, 0.45),
+                new GradientStop(FloatlyDesignTokens.Background, 1.0)
+            }
+        };
+    }
+
+    private static System.Windows.Media.Brush CreateContentBackdropBrush() =>
+        CreateLinearBrush(
+            [
+                new GradientStop(FloatlyDesignTokens.ContentBackdrop, 0.0),
+                new GradientStop(System.Windows.Media.Color.FromArgb(0x34, 0x12, 0x2A, 0x45), 0.52),
+                new GradientStop(System.Windows.Media.Color.FromArgb(0x48, 0x07, 0x15, 0x27), 1.0)
+            ],
+            new System.Windows.Point(0, 0),
+            new System.Windows.Point(1, 1));
+
+    private static System.Windows.Media.Brush CreateGlassCardBrush() =>
+        CreateLinearBrush(
+            [
+                new GradientStop(FloatlyDesignTokens.CardBackground, 0.0),
+                new GradientStop(FloatlyDesignTokens.CardBackgroundDeep, 1.0)
+            ],
+            new System.Windows.Point(0, 0),
+            new System.Windows.Point(1, 1));
+
+    private static System.Windows.Media.Brush CreateToolbarBrush() =>
+        CreateLinearBrush(
+            [
+                new GradientStop(FloatlyDesignTokens.ToolbarBackground, 0.0),
+                new GradientStop(System.Windows.Media.Color.FromArgb(0x84, 0x0F, 0x20, 0x35), 1.0)
+            ],
+            new System.Windows.Point(0, 0),
+            new System.Windows.Point(1, 0));
+
+    private static LinearGradientBrush CreateLinearBrush(
+        IEnumerable<GradientStop> stops,
+        System.Windows.Point start,
+        System.Windows.Point end)
+    {
+        var brush = new LinearGradientBrush
+        {
+            StartPoint = start,
+            EndPoint = end
+        };
+
+        foreach (var stop in stops)
+        {
+            brush.GradientStops.Add(stop);
+        }
+
+        return brush;
     }
 
     private void ApplySkinVideo()
@@ -1474,6 +1564,9 @@ public partial class MainWindow : Window
     }
 
     private SolidColorBrush Brush(System.Windows.Media.Color color) => new(color);
+
+    private static SolidColorBrush Brush(byte a, byte r, byte g, byte b) =>
+        new(System.Windows.Media.Color.FromArgb(a, r, g, b));
 
     private static SolidColorBrush Brush(byte r, byte g, byte b) =>
         new(System.Windows.Media.Color.FromRgb(r, g, b));
