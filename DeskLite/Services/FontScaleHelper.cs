@@ -58,7 +58,12 @@ public static class FontScaleHelper
         Set(window.PomodoroStartBtn, 11, scale);
         Set(window.PomodoroResetBtn, 11, scale);
         Set(window.DailyQuoteText, 11, scale);
-        Set(window.ScratchBox, 11, scale);
+        Set(window.ScratchTitleText, 12, scale);
+        Set(window.ScratchCountText, 10, scale);
+        Set(window.ScratchExpandText, 11, scale);
+        Set(window.ScratchPreviewTitle, 11, scale);
+        Set(window.ScratchPreviewContent, 10, scale);
+        Set(window.ScratchEmptyText, 11, scale);
         Set(window.TodoTitleText, 12, scale);
         Set(window.TodoCountText, 10, scale);
         Set(window.EmptyTodoText, 12, scale);

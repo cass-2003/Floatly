@@ -31,6 +31,7 @@ public partial class MainWindow : Window
     private AppThemePalette _palette = AppThemePalette.For(ThemeMode.Dark);
     private bool _suppressSizePersist;
     private TodoListWindow? _todoListWindow;
+    private ScratchPadWindow? _scratchPadWindow;
 
     public MainWindow()
     {
@@ -51,7 +52,7 @@ public partial class MainWindow : Window
         RefreshExtras();
         RefreshCalendar();
         RefreshTodos();
-        LoadScratch();
+        RefreshScratch();
         _ = InitializeWeatherAsync();
 
         _clockTimer = new DispatcherTimer();
@@ -128,7 +129,7 @@ public partial class MainWindow : Window
         CountdownPanel.Visibility = _settings.ShowCountdown ? Visibility.Visible : Visibility.Collapsed;
         PomodoroPanel.Visibility = _settings.ShowPomodoro ? Visibility.Visible : Visibility.Collapsed;
         DailyQuoteText.Visibility = _settings.ShowDailyQuote ? Visibility.Visible : Visibility.Collapsed;
-        ScratchBox.Visibility = _settings.ShowScratch ? Visibility.Visible : Visibility.Collapsed;
+        ScratchPanel.Visibility = _settings.ShowScratch ? Visibility.Visible : Visibility.Collapsed;
 
         var showWeatherExtra = _settings.ShowWeather && (_settings.ShowSunriseSunset || _settings.ShowTomorrowWeather);
         WeatherExtraText.Visibility = showWeatherExtra ? Visibility.Visible : Visibility.Collapsed;
@@ -161,6 +162,7 @@ public partial class MainWindow : Window
         }
 
         ApplyModuleOrder();
+        RefreshScratch();
     }
 
     private void ApplyModuleOrder()
@@ -174,7 +176,7 @@ public partial class MainWindow : Window
             [DeskModuleIds.Countdown] = CountdownPanel,
             [DeskModuleIds.Pomodoro] = PomodoroPanel,
             [DeskModuleIds.DailyQuote] = DailyQuoteText,
-            [DeskModuleIds.Scratch] = ScratchBox,
+            [DeskModuleIds.Scratch] = ScratchPanel,
             [DeskModuleIds.Todos] = TodoPanel
         };
 
@@ -240,9 +242,12 @@ public partial class MainWindow : Window
         NewTodoBox.Foreground = Brush(_palette.InputText);
         AddButton.Background = Brush(_palette.TodoAccentButton);
         AddButton.Foreground = System.Windows.Media.Brushes.White;
-        ScratchBox.Background = Brush(_palette.InputBackground);
-        ScratchBox.BorderBrush = Brush(_palette.InputBorder);
-        ScratchBox.Foreground = Brush(_palette.TextTertiary);
+        ScratchTitleText.Foreground = Brush(_palette.TextMuted);
+        ScratchCountBadge.Background = Brush(_palette.TodoCountBadge);
+        ScratchCountText.Foreground = Brush(_palette.Accent);
+        ScratchExpandText.Foreground = Brush(_palette.TodoLink);
+        ScratchEmptyText.Foreground = Brush(_palette.TextEmpty);
+        RefreshScratchPreviewTheme();
 
         Resources["TodoTextBrush"] = Brush(_palette.TodoText);
         Resources["TodoDeleteBrush"] = Brush(_palette.DeleteButton);
@@ -1263,17 +1268,91 @@ public partial class MainWindow : Window
         _todoListWindow?.RefreshFromOutside();
     }
 
-    private void LoadScratch()
+    private void RefreshScratch()
     {
-        if (_settings.ShowScratch)
+        if (!_settings.ShowScratch)
         {
-            ScratchBox.Text = _todoStore.Data.Scratch;
+            return;
         }
+
+        var notes = _todoStore.GetScratchNotes();
+        ScratchCountText.Text = notes.Count.ToString();
+        ScratchCountBadge.Visibility = notes.Count > 0 ? Visibility.Visible : Visibility.Collapsed;
+
+        var preview = _todoStore.GetScratchPreviewNote();
+        if (preview is null)
+        {
+            ScratchPreviewCard.Visibility = Visibility.Collapsed;
+            ScratchEmptyText.Visibility = Visibility.Visible;
+            return;
+        }
+
+        ScratchPreviewCard.Visibility = Visibility.Visible;
+        ScratchEmptyText.Visibility = Visibility.Collapsed;
+        ScratchPreviewTitle.Text = string.IsNullOrWhiteSpace(preview.Title) ? "无标题" : preview.Title;
+        if (preview.Pinned)
+        {
+            ScratchPreviewTitle.Text = "★ " + ScratchPreviewTitle.Text;
+        }
+
+        var content = preview.Content.Replace('\r', ' ').Replace('\n', ' ').Trim();
+        ScratchPreviewContent.Text = string.IsNullOrEmpty(content) ? "（空便签）" : content;
+        RefreshScratchPreviewTheme(preview);
     }
 
-    private void SaveScratch()
+    private void RefreshScratchPreviewTheme(ScratchNote? note = null)
     {
-        _todoStore.SaveScratch(ScratchBox.Text.Trim());
+        note ??= _todoStore.GetScratchPreviewNote();
+        var theme = AppThemePalette.Parse(_settings.Theme);
+        if (note is null)
+        {
+            ScratchPreviewCard.Background = Brush(_palette.TodoCardBackground);
+            ScratchPreviewCard.BorderBrush = Brush(_palette.TodoCardBorder);
+            ScratchPreviewTitle.Foreground = Brush(_palette.TextSecondary);
+            ScratchPreviewContent.Foreground = Brush(_palette.TextSubtle);
+            return;
+        }
+
+        ScratchPreviewCard.Background = new SolidColorBrush(
+            ScratchColorHelper.GetCardBackground(note.Color, theme));
+        ScratchPreviewCard.BorderBrush = Brush(_palette.TodoCardBorder);
+        ScratchPreviewTitle.Foreground = Brush(_palette.TextPrimary);
+        ScratchPreviewContent.Foreground = Brush(_palette.TextSubtle);
+    }
+
+    public void OpenScratchPadWindow()
+    {
+        if (_scratchPadWindow is { IsVisible: true })
+        {
+            _scratchPadWindow.Activate();
+            return;
+        }
+
+        var selectId = _todoStore.GetScratchPreviewNote()?.Id;
+        _scratchPadWindow = new ScratchPadWindow(_todoStore, _settings, RefreshScratch, selectId)
+        {
+            Owner = this
+        };
+        _scratchPadWindow.Closed += (_, _) => _scratchPadWindow = null;
+        _scratchPadWindow.Show();
+        Show();
+        Activate();
+    }
+
+    private void ScratchExpand_Click(object sender, MouseButtonEventArgs e)
+    {
+        e.Handled = true;
+        OpenScratchPadWindow();
+    }
+
+    private void ScratchPanel_Click(object sender, MouseButtonEventArgs e)
+    {
+        if (e.OriginalSource is System.Windows.Controls.TextBlock { Name: "ScratchExpandText" })
+        {
+            return;
+        }
+
+        OpenScratchPadWindow();
     }
 
     private void AddTodoFromInput()
@@ -1762,17 +1841,6 @@ public partial class MainWindow : Window
         if (e.Key == System.Windows.Input.Key.Enter)
         {
             AddTodoFromInput();
-        }
-    }
-
-    private void ScratchBox_LostFocus(object sender, RoutedEventArgs e) => SaveScratch();
-
-    private void ScratchBox_KeyDown(object sender, System.Windows.Input.KeyEventArgs e)
-    {
-        if (e.Key == System.Windows.Input.Key.Enter)
-        {
-            SaveScratch();
-            e.Handled = true;
         }
     }
 

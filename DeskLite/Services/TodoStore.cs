@@ -5,11 +5,13 @@ namespace DeskLite.Services;
 public sealed class TodoStore
 {
     private const int MainPanelLimit = 5;
+    public const int ScratchNoteLimit = 20;
     private AppDataFile _data;
 
     public TodoStore()
     {
         _data = JsonStore.LoadData();
+        MigrateLegacyScratch();
     }
 
     public AppDataFile Data => _data;
@@ -174,9 +176,133 @@ public sealed class TodoStore
         Save();
     }
 
-    public void SaveScratch(string scratch)
+    private void MigrateLegacyScratch()
     {
-        _data.Scratch = scratch;
+        if (_data.Notes.Count > 0 || string.IsNullOrWhiteSpace(_data.Scratch))
+        {
+            return;
+        }
+
+        var now = DateTime.Now;
+        _data.Notes.Add(new ScratchNote
+        {
+            Content = _data.Scratch.Trim(),
+            Title = ScratchColorHelper.DeriveTitle(_data.Scratch, 1),
+            CreatedAt = now,
+            UpdatedAt = now
+        });
+        _data.Scratch = string.Empty;
+        Save();
+    }
+
+    public IReadOnlyList<ScratchNote> GetScratchNotes() =>
+        _data.Notes
+            .OrderByDescending(n => n.Pinned)
+            .ThenByDescending(n => n.UpdatedAt)
+            .ToList();
+
+    public ScratchNote? GetScratchNote(string id) =>
+        _data.Notes.FirstOrDefault(n => n.Id == id);
+
+    public ScratchNote? GetScratchPreviewNote()
+    {
+        var notes = GetScratchNotes();
+        return notes.FirstOrDefault(n => n.Pinned) ?? notes.FirstOrDefault();
+    }
+
+    public bool CanAddScratchNote() => _data.Notes.Count < ScratchNoteLimit;
+
+    public ScratchNote AddScratchNote(string? title = null, string? content = null)
+    {
+        if (!CanAddScratchNote())
+        {
+            throw new InvalidOperationException($"最多 {ScratchNoteLimit} 条便签");
+        }
+
+        var now = DateTime.Now;
+        var index = _data.Notes.Count + 1;
+        var note = new ScratchNote
+        {
+            Title = string.IsNullOrWhiteSpace(title)
+                ? ScratchColorHelper.DeriveTitle(content, index)
+                : title.Trim(),
+            Content = content?.Trim() ?? string.Empty,
+            CreatedAt = now,
+            UpdatedAt = now
+        };
+        _data.Notes.Add(note);
+        Save();
+        return note;
+    }
+
+    public void UpdateScratchNote(string id, string title, string content)
+    {
+        var note = GetScratchNote(id);
+        if (note is null)
+        {
+            return;
+        }
+
+        note.Title = string.IsNullOrWhiteSpace(title)
+            ? ScratchColorHelper.DeriveTitle(content, _data.Notes.IndexOf(note) + 1)
+            : title.Trim();
+        note.Content = content;
+        note.UpdatedAt = DateTime.Now;
+        Save();
+    }
+
+    public void SetScratchPinned(string id, bool pinned)
+    {
+        var note = GetScratchNote(id);
+        if (note is null)
+        {
+            return;
+        }
+
+        note.Pinned = pinned;
+        note.UpdatedAt = DateTime.Now;
+        Save();
+    }
+
+    public void SetScratchColor(string id, string color)
+    {
+        var note = GetScratchNote(id);
+        if (note is null)
+        {
+            return;
+        }
+
+        note.Color = ScratchNoteColors.All.Contains(color) ? color : ScratchNoteColors.Default;
+        note.UpdatedAt = DateTime.Now;
+        Save();
+    }
+
+    public ScratchNote? DuplicateScratchNote(string id)
+    {
+        var source = GetScratchNote(id);
+        if (source is null || !CanAddScratchNote())
+        {
+            return null;
+        }
+
+        var now = DateTime.Now;
+        var copy = new ScratchNote
+        {
+            Title = source.Title + " (副本)",
+            Content = source.Content,
+            Color = source.Color,
+            Pinned = false,
+            CreatedAt = now,
+            UpdatedAt = now
+        };
+        _data.Notes.Add(copy);
+        Save();
+        return copy;
+    }
+
+    public void RemoveScratchNote(string id)
+    {
+        _data.Notes.RemoveAll(n => n.Id == id);
         Save();
     }
 
