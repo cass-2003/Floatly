@@ -1,6 +1,7 @@
 using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Interop;
+using System.Windows.Media;
 
 namespace DeskLite.Services;
 
@@ -18,6 +19,8 @@ public static class WindowHelper
     private const int HtBottom = 15;
     private const int HtBottomLeft = 16;
     private const int HtBottomRight = 17;
+
+    private static readonly HashSet<IntPtr> ResizeHookedWindows = [];
 
     [DllImport("user32.dll")]
     private static extern int GetWindowLong(IntPtr hwnd, int index);
@@ -46,10 +49,22 @@ public static class WindowHelper
 
     public static void EnableBorderlessResize(Window window, int grip = 8)
     {
-        window.SourceInitialized += (_, _) =>
+        void AttachHook()
         {
-            var source = HwndSource.FromHwnd(new WindowInteropHelper(window).Handle);
-            source?.AddHook((IntPtr hwnd, int msg, IntPtr wParam, IntPtr lParam, ref bool handled) =>
+            var helper = new WindowInteropHelper(window);
+            if (helper.Handle == IntPtr.Zero || !ResizeHookedWindows.Add(helper.Handle))
+            {
+                return;
+            }
+
+            var source = HwndSource.FromHwnd(helper.Handle);
+            if (source is null)
+            {
+                ResizeHookedWindows.Remove(helper.Handle);
+                return;
+            }
+
+            source.AddHook((IntPtr hwnd, int msg, IntPtr wParam, IntPtr lParam, ref bool handled) =>
             {
                 if (msg != WmNchitTest)
                 {
@@ -62,15 +77,19 @@ public static class WindowHelper
                 var w = window.ActualWidth;
                 var h = window.ActualHeight;
 
-                if (point.X < 0 || point.Y < 0 || point.X > w || point.Y > h)
+                if (w <= 0 || h <= 0 || point.X < 0 || point.Y < 0 || point.X > w || point.Y > h)
                 {
                     return IntPtr.Zero;
                 }
 
-                var onLeft = point.X <= grip;
-                var onRight = point.X >= w - grip;
-                var onTop = point.Y <= grip;
-                var onBottom = point.Y >= h - grip;
+                var dpi = VisualTreeHelper.GetDpi(window);
+                var gripX = grip * dpi.DpiScaleX;
+                var gripY = grip * dpi.DpiScaleY;
+
+                var onLeft = point.X <= gripX;
+                var onRight = point.X >= w - gripX;
+                var onTop = point.Y <= gripY;
+                var onBottom = point.Y >= h - gripY;
 
                 handled = true;
                 if (onTop && onLeft)
@@ -116,6 +135,16 @@ public static class WindowHelper
                 handled = false;
                 return (IntPtr)HtClient;
             });
-        };
+        }
+
+        var helper = new WindowInteropHelper(window);
+        if (helper.Handle != IntPtr.Zero)
+        {
+            AttachHook();
+        }
+        else
+        {
+            window.SourceInitialized += (_, _) => AttachHook();
+        }
     }
 }
