@@ -116,8 +116,8 @@
 
 | 文件 | 说明 |
 |------|------|
-| `Floatly-Setup-1.0.1.exe` | 中文安装向导（Inno Setup） |
-| `Floatly-1.0.1-win-x64.zip` | 绿色版（需已安装 .NET 8 桌面运行时） |
+| `Floatly-Setup-2.0.1.exe` | 中文安装向导（Inno Setup） |
+| `Floatly-win-x64.zip` | 绿色版（需已安装 .NET 8 桌面运行时） |
 
 ### 从源码运行
 
@@ -144,7 +144,7 @@ dotnet publish -c Release -r win-x64 --self-contained false
 # 1. 将 publish 输出复制到 release/Floatly/
 # 2. 编译安装脚本
 iscc installer\Floatly.iss
-# 输出：release\Floatly-Setup-1.0.1.exe
+# 输出：release\Floatly-Setup-2.0.1.exe
 ```
 
 ### 首次使用
