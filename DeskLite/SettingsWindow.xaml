@@ -92,6 +92,17 @@
             <Setter Property="Cursor" Value="Hand" />
             <Setter Property="MinWidth" Value="88" />
         </Style>
+        <Style x:Key="ModuleOrderListBox" TargetType="ListBox">
+            <Setter Property="Background" Value="{StaticResource SettingsInputBg}" />
+            <Setter Property="Foreground" Value="{StaticResource SettingsText}" />
+            <Setter Property="BorderBrush" Value="{StaticResource SettingsBorder}" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="Padding" Value="4" />
+        </Style>
+        <Style x:Key="ModuleOrderButton" TargetType="Button" BasedOn="{StaticResource SecondaryButton}">
+            <Setter Property="MinWidth" Value="64" />
+            <Setter Property="Padding" Value="12,6" />
+        </Style>
     </Window.Resources>
 
     <Grid Margin="16" Background="{StaticResource SettingsBg}">
@@ -182,6 +193,24 @@
             <TabItem Header="模块">
                 <ScrollViewer VerticalScrollBarVisibility="Auto" Padding="4,12,4,0" Background="{StaticResource SettingsBg}">
                     <StackPanel>
+                        <TextBlock Style="{StaticResource SectionTitle}" Text="显示顺序" />
+                        <TextBlock Style="{StaticResource HintText}" Text="使用上移/下移调整桌面模块排列顺序" Margin="0,0,0,8" />
+                        <Grid Margin="0,0,0,14">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <ListBox x:Name="ModuleOrderList" Grid.Column="0" Height="196"
+                                     Style="{StaticResource ModuleOrderListBox}"
+                                     SelectionChanged="ModuleOrderList_SelectionChanged" />
+                            <StackPanel Grid.Column="1" Margin="8,0,0,0" VerticalAlignment="Center">
+                                <Button x:Name="BtnModuleUp" Content="上移" Style="{StaticResource ModuleOrderButton}"
+                                        Click="BtnModuleUp_Click" />
+                                <Button x:Name="BtnModuleDown" Content="下移" Margin="0,6,0,0"
+                                        Style="{StaticResource ModuleOrderButton}" Click="BtnModuleDown_Click" />
+                            </StackPanel>
+                        </Grid>
+
                         <TextBlock Style="{StaticResource SectionTitle}" Text="桌面模块" />
                         <CheckBox x:Name="ChkYearProgress" Content="年进度" />
                         <CheckBox x:Name="ChkCountdown" Content="倒数日" />

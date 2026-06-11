@@ -2,6 +2,7 @@ namespace DeskLite.Models;
 
 public sealed class AppSettings
 {
+    public List<string> ModuleOrder { get; set; } = [.. DeskModuleIds.DefaultOrder];
     public bool Time24h { get; set; } = true;
     public bool ShowSeconds { get; set; } = true;
     public bool AlwaysOnTop { get; set; } = true;

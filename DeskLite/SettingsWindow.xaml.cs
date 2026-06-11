@@ -7,6 +7,7 @@ namespace DeskLite;
 
 public partial class SettingsWindow : Window
 {
+    private sealed record ModuleOrderItem(string Id, string DisplayName);
     private static readonly (string Label, double Value)[] OpacityPresets =
     [
         ("不透明 (100%)", 1.0),
@@ -122,6 +123,7 @@ public partial class SettingsWindow : Window
         ChkDailyQuote.IsChecked = s.ShowDailyQuote;
         ChkScratch.IsChecked = s.ShowScratch;
         ChkTodoReminder.IsChecked = s.ShowTodoReminder;
+        LoadModuleOrder(s.ModuleOrder);
     }
 
     private AppSettings ReadToSettings()
@@ -161,8 +163,73 @@ public partial class SettingsWindow : Window
         s.ShowDailyQuote = ChkDailyQuote.IsChecked == true;
         s.ShowScratch = ChkScratch.IsChecked == true;
         s.ShowTodoReminder = ChkTodoReminder.IsChecked == true;
+        s.ModuleOrder = ReadModuleOrder();
 
         return s;
+    }
+
+    private void LoadModuleOrder(IEnumerable<string>? order)
+    {
+        ModuleOrderList.Items.Clear();
+        foreach (var id in DeskModuleIds.Normalize(order))
+        {
+            ModuleOrderList.Items.Add(new ModuleOrderItem(id, DeskModuleIds.DisplayNames[id]));
+        }
+
+        ModuleOrderList.DisplayMemberPath = nameof(ModuleOrderItem.DisplayName);
+        if (ModuleOrderList.Items.Count > 0)
+        {
+            ModuleOrderList.SelectedIndex = 0;
+        }
+
+        UpdateModuleOrderButtons();
+    }
+
+    private List<string> ReadModuleOrder()
+    {
+        return ModuleOrderList.Items
+            .Cast<ModuleOrderItem>()
+            .Select(item => item.Id)
+            .ToList();
+    }
+
+    private void UpdateModuleOrderButtons()
+    {
+        var index = ModuleOrderList.SelectedIndex;
+        var count = ModuleOrderList.Items.Count;
+        BtnModuleUp.IsEnabled = index > 0;
+        BtnModuleDown.IsEnabled = index >= 0 && index < count - 1;
+    }
+
+    private void ModuleOrderList_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
+    {
+        UpdateModuleOrderButtons();
+    }
+
+    private void BtnModuleUp_Click(object sender, RoutedEventArgs e)
+    {
+        MoveSelectedModule(-1);
+    }
+
+    private void BtnModuleDown_Click(object sender, RoutedEventArgs e)
+    {
+        MoveSelectedModule(1);
+    }
+
+    private void MoveSelectedModule(int delta)
+    {
+        var index = ModuleOrderList.SelectedIndex;
+        var newIndex = index + delta;
+        if (index < 0 || newIndex < 0 || newIndex >= ModuleOrderList.Items.Count)
+        {
+            return;
+        }
+
+        var item = ModuleOrderList.Items[index];
+        ModuleOrderList.Items.RemoveAt(index);
+        ModuleOrderList.Items.Insert(newIndex, item);
+        ModuleOrderList.SelectedIndex = newIndex;
+        UpdateModuleOrderButtons();
     }
 
     private async void BtnDetectLocation_Click(object sender, RoutedEventArgs e)
