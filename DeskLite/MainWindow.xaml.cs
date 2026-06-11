@@ -333,8 +333,8 @@ public partial class MainWindow : Window
 
         PopulateHuangLiTimeGrid(huangLi.TimeSlots);
 
-        HuangLiJiShenText.Text = $"吉神宜趋 {string.Join(" ", huangLi.JiShen)}";
-        HuangLiXiongShaText.Text = $"凶神宜忌 {string.Join(" ", huangLi.XiongShen)}";
+        PopulateHuangLiNeutralChips(HuangLiJiShenWrap, huangLi.JiShen);
+        PopulateHuangLiNeutralChips(HuangLiXiongWrap, huangLi.XiongShen);
         HuangLiSecondaryText.Text = $"胎神 {huangLi.TaiShen} · 彭祖 {huangLi.PengZu} · 星宿 {huangLi.Xiu}";
 
         if (!string.IsNullOrEmpty(huangLi.CurrentTimeSummary))
