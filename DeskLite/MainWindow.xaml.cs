@@ -13,8 +13,8 @@ namespace DeskLite;
 
 public partial class MainWindow : Window
 {
-    private const double DefaultWindowWidth = 420;
-    private const double DefaultWindowHeight = 620;
+    private const double DefaultWindowWidth = 720;
+    private const double DefaultWindowHeight = 980;
     private const double MaxWindowWidth = 980;
     private const double MaxWindowHeight = 1320;
     private const double LegacyForcedMinWidth = 880;
@@ -794,9 +794,9 @@ public partial class MainWindow : Window
             return;
         }
 
-        var headerHeight = _settings.ShowHuangLi ? 176.0 : 132.0;
-        var scrollBody = 330;
-        const double toolbarHeight = 58;
+        var headerHeight = _settings.ShowHuangLi ? 214.0 : 154.0;
+        var scrollBody = 690;
+        const double toolbarHeight = 52;
         const double todoInput = 0;
         const double chrome = 38;
 

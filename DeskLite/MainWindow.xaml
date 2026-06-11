@@ -5,8 +5,8 @@
         Title="Floatly"
         MinWidth="360"
         MinHeight="420"
-        Width="420"
-        Height="620"
+        Width="720"
+        Height="980"
         WindowStyle="None"
         AllowsTransparency="True"
         Background="Transparent"
@@ -126,11 +126,11 @@
                                         <ColumnDefinition Width="Auto" />
                                         <ColumnDefinition Width="Auto" />
                                     </Grid.ColumnDefinitions>
-                                    <TextBlock x:Name="ClockText" Grid.Column="0" Text="15:03" FontSize="40" FontWeight="Medium"
-                                               Foreground="#FFFFFF" LineHeight="42" LineStackingStrategy="BlockLineHeight"
+                                    <TextBlock x:Name="ClockText" Grid.Column="0" Text="15:03" FontSize="58" FontWeight="Medium"
+                                               Foreground="#FFFFFF" LineHeight="62" LineStackingStrategy="BlockLineHeight"
                                                TextTrimming="None" />
-                                    <TextBlock x:Name="ClockSecondsText" Grid.Column="1" Text="54" FontSize="14" FontWeight="Medium"
-                                               Foreground="#A6FFFFFF" VerticalAlignment="Bottom" Margin="2,0,0,4"
+                                    <TextBlock x:Name="ClockSecondsText" Grid.Column="1" Text="54" FontSize="18" FontWeight="Medium"
+                                               Foreground="#A6FFFFFF" VerticalAlignment="Bottom" Margin="4,0,0,8"
                                                TextTrimming="None" Visibility="Visible" />
                                 </Grid>
                                 <TextBlock x:Name="DateText" Text="2026年6月1日 周四" FontSize="11"
