@@ -6,7 +6,7 @@ public static class AppConstants
 {
     public const string DisplayName = "Floatly";
     public const string DisplayNameChinese = "浮岛";
-    public const string Version = "2.0.11";
+    public const string Version = "2.0.12";
     public const string AppDataFolderName = "Floatly";
     public const string LegacyAppDataFolderName = "DeskLite";
     public const string BackupFilePrefix = "floatly-backup";

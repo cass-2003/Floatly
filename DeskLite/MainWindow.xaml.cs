@@ -794,8 +794,8 @@ public partial class MainWindow : Window
             return;
         }
 
-        var headerHeight = _settings.ShowHuangLi ? 214.0 : 154.0;
-        var scrollBody = 690;
+        var headerHeight = _settings.ShowHuangLi ? 268.0 : 154.0;
+        var scrollBody = 650;
         const double toolbarHeight = 52;
         const double todoInput = 0;
         const double chrome = 38;
