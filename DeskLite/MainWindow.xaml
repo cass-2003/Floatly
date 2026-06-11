@@ -633,27 +633,27 @@
                                 <Grid>
                                     <Image Source="Assets/CardBackgrounds/coins.png"
                                            Stretch="UniformToFill"
-                                           Opacity="0.42"
+                                           Opacity="0.62"
                                            IsHitTestVisible="False"
                                            RenderOptions.BitmapScalingMode="HighQuality" />
-                                    <Border Background="#A0121714" />
-                                    <Border Padding="16,11,16,11">
+                                    <Border Background="#7A15100C" />
+                                    <Border Padding="18,13,18,13">
                                         <Grid>
                                             <Grid.RowDefinitions>
                                                 <RowDefinition Height="Auto" />
-                                                <RowDefinition Height="Auto" />
+                                                <RowDefinition Height="*" />
                                                 <RowDefinition Height="Auto" />
                                             </Grid.RowDefinitions>
                                             <StackPanel Grid.Row="0" Orientation="Horizontal" VerticalAlignment="Center">
-                                                <Border Width="18" Height="18" CornerRadius="9" Background="#22F8C34A" BorderBrush="#CCF8C34A" BorderThickness="1" Margin="0,0,8,0">
+                                                <Border Width="18" Height="18" CornerRadius="9" Background="#26F8C34A" BorderBrush="#DDF8C34A" BorderThickness="1" Margin="0,0,8,0">
                                                     <TextBlock Text="¥" FontSize="12" FontWeight="SemiBold" Foreground="#F8C34A"
                                                                HorizontalAlignment="Center" VerticalAlignment="Center" />
                                                 </Border>
                                                 <TextBlock x:Name="SalaryLabel" Text="今日已赚薪水" Style="{StaticResource CardTitle}" />
                                             </StackPanel>
-                                            <StackPanel Grid.Row="1" VerticalAlignment="Center" Margin="0,3,0,4">
-                                                <TextBlock x:Name="SalaryAmount" Text="¥0.00" FontSize="28" FontWeight="Bold"
-                                                           FontFamily="Consolas" Foreground="#F8C34A" Margin="0,0,0,4" />
+                                            <StackPanel Grid.Row="1" VerticalAlignment="Center" Margin="0,1,0,5">
+                                                <TextBlock x:Name="SalaryAmount" Text="¥0.00" FontSize="32" FontWeight="Bold"
+                                                           FontFamily="Consolas" Foreground="#F8C34A" Margin="0,0,0,2" />
                                                 <StackPanel Orientation="Horizontal">
                                                     <TextBlock Text="•" FontSize="16" Foreground="#6BDB74" VerticalAlignment="Center" Margin="0,0,6,0" />
                                                     <TextBlock x:Name="SalaryPerSecondText" Text="每秒 +¥0.0000" FontSize="12"
@@ -667,8 +667,8 @@
                                                     <RowDefinition Height="1" />
                                                     <RowDefinition Height="Auto" />
                                                 </Grid.RowDefinitions>
-                                                <Border Background="#24FFFFFF" />
-                                                <Grid Grid.Row="1" Margin="0,6,0,0">
+                                                <Border Background="#30F8D46A" />
+                                                <Grid Grid.Row="1" Margin="0,8,0,0">
                                                     <Grid.ColumnDefinitions>
                                                         <ColumnDefinition Width="*" />
                                                         <ColumnDefinition Width="*" />

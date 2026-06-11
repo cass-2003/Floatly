@@ -1058,14 +1058,13 @@ public partial class MainWindow : Window
 
     private void ApplySalaryTheme()
     {
-        SalaryPanel.Background = Brush(_palette.HuangLiMutedButton);
-        SalaryLabel.Foreground = Brush(_palette.TextMuted);
-        SalaryAmount.Foreground = Brush(_palette.SalaryGold);
-        SalaryAmount.FontWeight = FontWeights.SemiBold;
+        SalaryLabel.Foreground = Brush(0xDD, 0xE8, 0xEC, 0xF4);
+        SalaryAmount.Foreground = Brush(0xFF, 0xF8, 0xC3, 0x4A);
+        SalaryAmount.FontWeight = FontWeights.Bold;
         SalarySubtitle.Foreground = Brush(_palette.SalaryGoldMuted);
-        SalaryPerSecondText.Foreground = Brush(_palette.SalaryGoldMuted);
-        SalaryHourlyValueText.Foreground = Brush(_palette.TextSecondary);
-        SalaryWorkDurationText.Foreground = Brush(_palette.TextSecondary);
+        SalaryPerSecondText.Foreground = Brush(0xFF, 0xF4, 0xD8, 0x72);
+        SalaryHourlyValueText.Foreground = Brush(0xE6, 0xFF, 0xF5, 0xD6);
+        SalaryWorkDurationText.Foreground = Brush(0xE6, 0xFF, 0xF5, 0xD6);
     }
 
     private void ApplyPomodoroTheme(System.Windows.Media.Color textPrimary)
