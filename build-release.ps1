@@ -1,9 +1,9 @@
-# Floatly v2.0.9 Build Script
+# Floatly v2.0.10 Build Script
 # PowerShell 5.1+
 
 $ErrorActionPreference = "Stop"
 
-$Version = "2.0.9"
+$Version = "2.0.10"
 $RootDir = Split-Path -Parent $MyInvocation.MyCommand.Path
 $ProjectDir = Join-Path $RootDir "DeskLite"
 $OutputDir = Join-Path $RootDir "release\Floatly"
