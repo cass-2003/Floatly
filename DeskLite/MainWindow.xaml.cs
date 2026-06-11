@@ -572,7 +572,7 @@ public partial class MainWindow : Window
         ClockText.Text = now.ToString(timeFormat, CultureInfo.InvariantCulture);
         if (_settings.ShowSeconds)
         {
-            ClockSecondsText.Text = ":" + now.ToString("ss", CultureInfo.InvariantCulture);
+            ClockSecondsText.Text = now.ToString("ss", CultureInfo.InvariantCulture);
             ClockSecondsText.Visibility = Visibility.Visible;
         }
         else
@@ -1392,6 +1392,8 @@ public partial class MainWindow : Window
         {
             WeatherIconImage.Source = null;
             WeatherTempText.Text = string.Empty;
+            WeatherDescText.Text = string.Empty;
+            WeatherDescText.Visibility = Visibility.Collapsed;
             WeatherRangeText.Text = string.Empty;
             WeatherFeelsText.Text = "加载失败";
             RefreshCityDisplay();
@@ -1498,7 +1500,10 @@ public partial class MainWindow : Window
         WeatherIconImage.Source = WeatherIconLoader.Load(iconSlug, WeatherIconStyle.Fill);
 
         WeatherTempText.Text = $"{cache.Temperature}°";
-        WeatherDescText.Visibility = Visibility.Collapsed;
+        WeatherDescText.Text = cache.Description;
+        WeatherDescText.Visibility = string.IsNullOrWhiteSpace(cache.Description)
+            ? Visibility.Collapsed
+            : Visibility.Visible;
         WeatherRangeText.Text = $"{cache.TempMin}° ~ {cache.TempMax}°";
         var feels = cache.FeelsLike ?? cache.Temperature;
         WeatherFeelsText.Text = $"体感 {feels}°";

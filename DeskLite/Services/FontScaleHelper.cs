@@ -46,8 +46,8 @@ public static class FontScaleHelper
         Set(window.YearProgressDetail, 10, scale);
         window.YearProgressTrack.Height = FloatlyDesignTokens.ProgressBarHeight * scale;
         Set(window.CityText, 11, scale);
-        window.WeatherIconImage.Width = 34 * scale;
-        window.WeatherIconImage.Height = 34 * scale;
+        window.WeatherIconImage.Width = 42 * scale;
+        window.WeatherIconImage.Height = 42 * scale;
         window.SunriseIconImage.Width = 14 * scale;
         window.SunriseIconImage.Height = 14 * scale;
         window.SunsetIconImage.Width = 14 * scale;
@@ -55,6 +55,7 @@ public static class FontScaleHelper
         window.TomorrowIconImage.Width = 13 * scale;
         window.TomorrowIconImage.Height = 13 * scale;
         Set(window.WeatherTempText, 30, scale);
+        Set(window.WeatherDescText, 11, scale);
         Set(window.WeatherRangeText, 11, scale);
         Set(window.WeatherFeelsText, 11, scale);
         Set(window.SunriseLineText, 11, scale);
