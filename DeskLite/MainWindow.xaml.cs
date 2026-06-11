@@ -441,7 +441,7 @@ public partial class MainWindow : Window
     private void PopulateHuangLiTimeGrid(IReadOnlyList<HuangLiTimeSlot> slots)
     {
         HuangLiTimeGrid.Children.Clear();
-        foreach (var slot in slots)
+        foreach (var slot in slots.Take(12))
         {
             var luckBrush = slot.Luck == "吉"
                 ? Brush(_palette.HuangLiLuckGood)
@@ -453,8 +453,8 @@ public partial class MainWindow : Window
             {
                 Background = slot.IsCurrent ? Brush(_palette.Accent) : Brush(_palette.HuangLiTimeCell),
                 CornerRadius = new CornerRadius(3),
-                Padding = new Thickness(1, 2, 1, 2),
-                Margin = new Thickness(1),
+                Padding = new Thickness(2, 3, 2, 3),
+                Margin = new Thickness(0),
                 Child = new StackPanel
                 {
                     HorizontalAlignment = System.Windows.HorizontalAlignment.Center,

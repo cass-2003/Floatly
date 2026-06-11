@@ -63,9 +63,10 @@
             <ScrollViewer x:Name="MainScrollViewer" Grid.Row="1" VerticalScrollBarVisibility="Auto"
                           HorizontalScrollBarVisibility="Disabled" Margin="0,0,0,6">
                 <StackPanel>
-                    <Border x:Name="HuangLiPanel" Background="#18FFFFFF" CornerRadius="8" Padding="8,6" Margin="0,0,0,8"
-                            Visibility="Collapsed">
-                        <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" MaxHeight="180">
+                    <Border x:Name="HuangLiPanel" Background="#FF222830" CornerRadius="8" Padding="8,6" Margin="0,0,0,8"
+                            ClipToBounds="True" Visibility="Collapsed">
+                        <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled"
+                                      MaxHeight="260" ClipToBounds="True">
                         <StackPanel>
                             <Grid Margin="0,0,0,4">
                                 <Grid.ColumnDefinitions>
@@ -131,8 +132,12 @@
                                 </Border>
                             </StackPanel>
 
-                            <TextBlock x:Name="HuangLiTimeTitle" Text="时辰吉凶" FontSize="9" Foreground="#6B7280" Margin="0,0,0,3" />
-                            <UniformGrid x:Name="HuangLiTimeGrid" Rows="2" Columns="6" Margin="0,0,0,5" />
+                            <StackPanel Margin="0,0,0,8">
+                                <TextBlock x:Name="HuangLiTimeTitle" Text="时辰吉凶" FontSize="9" Foreground="#6B7280" Margin="0,0,0,3" />
+                                <Border ClipToBounds="True" MinHeight="50">
+                                    <UniformGrid x:Name="HuangLiTimeGrid" Rows="2" Columns="6" VerticalAlignment="Top" />
+                                </Border>
+                            </StackPanel>
 
                             <Grid Margin="0,0,0,3">
                                 <Grid.ColumnDefinitions>

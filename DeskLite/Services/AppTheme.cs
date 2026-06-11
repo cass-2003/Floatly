@@ -29,7 +29,7 @@ public sealed class AppThemePalette
     public required WpfColor WeekLunar { get; init; }
     public WpfColor Accent { get; init; } = WpfColor.FromRgb(0x3B, 0x82, 0xF6);
     public WpfColor Mark { get; init; } = WpfColor.FromRgb(0xF5, 0x9E, 0x0B);
-    public WpfColor HuangLiBackground { get; init; } = WpfColor.FromArgb(0x18, 0xFF, 0xFF, 0xFF);
+    public WpfColor HuangLiBackground { get; init; } = WpfColor.FromRgb(0x22, 0x28, 0x30);
     public WpfColor HuangLiMetaCell { get; init; } = WpfColor.FromArgb(0x14, 0xFF, 0xFF, 0xFF);
     public WpfColor HuangLiYi { get; init; } = WpfColor.FromRgb(0x4A, 0xDE, 0x80);
     public WpfColor HuangLiJi { get; init; } = WpfColor.FromRgb(0xF8, 0x71, 0x71);
@@ -71,7 +71,7 @@ public sealed class AppThemePalette
         WeekLabel = WpfColor.FromRgb(0x8B, 0x95, 0xA5),
         WeekSolar = WpfColor.FromRgb(0xB8, 0xC0, 0xCC),
         WeekLunar = WpfColor.FromRgb(0x6B, 0x72, 0x80),
-        HuangLiBackground = WpfColor.FromArgb(0x18, 0xFF, 0xFF, 0xFF),
+        HuangLiBackground = WpfColor.FromRgb(0x22, 0x28, 0x30),
         HuangLiMetaCell = WpfColor.FromArgb(0x14, 0xFF, 0xFF, 0xFF),
         HuangLiYi = WpfColor.FromRgb(0x4A, 0xDE, 0x80),
         HuangLiJi = WpfColor.FromRgb(0xF8, 0x71, 0x71),
@@ -105,7 +105,7 @@ public sealed class AppThemePalette
         WeekLabel = WpfColor.FromRgb(0x64, 0x74, 0x8B),
         WeekSolar = WpfColor.FromRgb(0x47, 0x55, 0x69),
         WeekLunar = WpfColor.FromRgb(0x94, 0xA3, 0xB8),
-        HuangLiBackground = WpfColor.FromArgb(0x12, 0x15, 0x23, 0x42),
+        HuangLiBackground = WpfColor.FromRgb(0xF1, 0xF5, 0xF9),
         HuangLiMetaCell = WpfColor.FromArgb(0x0C, 0x15, 0x23, 0x42),
         HuangLiYi = WpfColor.FromRgb(0x16, 0xA3, 0x4A),
         HuangLiJi = WpfColor.FromRgb(0xDC, 0x26, 0x26),
