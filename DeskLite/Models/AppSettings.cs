@@ -14,13 +14,13 @@ public sealed class AppSettings
     public bool ShowWeekStrip { get; set; } = true;
     public bool ShowHuangLi { get; set; } = true;
     public bool HuangLiCollapsed { get; set; }
-    public bool ShowYearProgress { get; set; }
+    public bool ShowYearProgress { get; set; } = true;
     public bool ShowCountdown { get; set; } = true;
     public bool ShowDailyQuote { get; set; } = true;
     public bool ShowSunriseSunset { get; set; } = true;
     public bool ShowTomorrowWeather { get; set; } = true;
-    public bool ShowScratch { get; set; }
-    public bool ShowPomodoro { get; set; }
+    public bool ShowScratch { get; set; } = true;
+    public bool ShowPomodoro { get; set; } = true;
     public int PomodoroWorkMinutes { get; set; } = 25;
     public int PomodoroBreakMinutes { get; set; } = 5;
     public int PomodoroLongBreakMinutes { get; set; } = 15;
@@ -30,12 +30,12 @@ public sealed class AppSettings
     public string HotkeyShowHide { get; set; } = "Ctrl+Shift+D";
     public string HotkeyQuickTodo { get; set; } = "Ctrl+Shift+N";
     public string? PrimaryTextColor { get; set; }
-    public bool ShowOffWorkCountdown { get; set; }
+    public bool ShowOffWorkCountdown { get; set; } = true;
     public string WorkStartTime { get; set; } = "09:00";
     public string WorkEndTime { get; set; } = "18:00";
     public bool OffWorkWeekdaysOnly { get; set; } = true;
-    public bool ShowSalaryHelper { get; set; }
-    public decimal MonthlySalary { get; set; }
+    public bool ShowSalaryHelper { get; set; } = true;
+    public decimal MonthlySalary { get; set; } = 10000;
     public int WorkDaysPerMonth { get; set; } = 22;
     public double WorkHoursPerDay { get; set; } = 8;
     public string Theme { get; set; } = "dark";
@@ -43,8 +43,8 @@ public sealed class AppSettings
     public string City { get; set; } = "北京";
     public double Left { get; set; } = 100;
     public double Top { get; set; } = 100;
-    public double WindowWidth { get; set; } = 380;
-    public double WindowHeight { get; set; } = 540;
+    public double WindowWidth { get; set; } = 900;
+    public double WindowHeight { get; set; } = 1040;
     public bool UserCustomSize { get; set; }
     public double FontScale { get; set; } = 1.0;
     /// <summary>UI font size in pt (10–16). Null in older settings files — migrate from <see cref="FontScale"/>.</summary>

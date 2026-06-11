@@ -130,11 +130,13 @@ public partial class MainWindow : Window
         CityText.Visibility = _settings.ShowWeather && _settings.ShowCityName ? Visibility.Visible : Visibility.Collapsed;
         YearProgressPanel.Visibility = _settings.ShowYearProgress ? Visibility.Visible : Visibility.Collapsed;
         YearProgressCard.Visibility = _settings.ShowYearProgress ? Visibility.Visible : Visibility.Collapsed;
+        OffWorkCard.Visibility = _settings.ShowOffWorkCountdown ? Visibility.Visible : Visibility.Collapsed;
         OffWorkPanel.Visibility = _settings.ShowOffWorkCountdown ? Visibility.Visible : Visibility.Collapsed;
         SalaryPanel.Visibility = _settings.ShowSalaryHelper ? Visibility.Visible : Visibility.Collapsed;
         CountdownPanel.Visibility = _settings.ShowCountdown ? Visibility.Visible : Visibility.Collapsed;
         CountdownCard.Visibility = _settings.ShowCountdown ? Visibility.Visible : Visibility.Collapsed;
         PomodoroPanel.Visibility = _settings.ShowPomodoro ? Visibility.Visible : Visibility.Collapsed;
+        DailyQuoteBanner.Visibility = _settings.ShowDailyQuote ? Visibility.Visible : Visibility.Collapsed;
         DailyQuoteText.Visibility = _settings.ShowDailyQuote ? Visibility.Visible : Visibility.Collapsed;
         ScratchPanel.Visibility = _settings.ShowScratch ? Visibility.Visible : Visibility.Collapsed;
 
@@ -151,11 +153,11 @@ public partial class MainWindow : Window
         LunarSubText.Visibility = _settings.ShowHuangLi ? Visibility.Collapsed : Visibility.Visible;
         ApplyHuangLiCollapsedState();
 
-        Width = Math.Clamp(_settings.WindowWidth, 320, 480);
+        Width = Math.Clamp(_settings.WindowWidth, 620, 940);
         if (_settings.UserCustomSize)
         {
             _suppressSizePersist = true;
-            Height = Math.Clamp(_settings.WindowHeight, MinHeight, 900);
+            Height = Math.Clamp(_settings.WindowHeight, MinHeight, 1180);
             _suppressSizePersist = false;
         }
         else
@@ -197,9 +199,12 @@ public partial class MainWindow : Window
         var order = DeskModuleIds.Normalize(_settings.ModuleOrder);
         var extraModules = new Dictionary<string, FrameworkElement>
         {
-            [DeskModuleIds.OffWork] = OffWorkPanel,
+            [DeskModuleIds.Countdown] = CountdownCard,
+            [DeskModuleIds.YearProgress] = YearProgressCard,
+            [DeskModuleIds.OffWork] = OffWorkCard,
             [DeskModuleIds.Salary] = SalaryPanel,
-            [DeskModuleIds.DailyQuote] = DailyQuoteText
+            [DeskModuleIds.DailyQuote] = DailyQuoteBanner,
+            [DeskModuleIds.Scratch] = ScratchPanel
         };
 
         ExtraModuleStack.Children.Clear();
@@ -357,7 +362,7 @@ public partial class MainWindow : Window
 
         foreach (var card in new[]
                  {
-                     CountdownCard, YearProgressCard, SalaryPanel, HuangLiPanel, ScratchPanel
+                     CountdownCard, YearProgressCard, OffWorkCard, SalaryPanel, HuangLiPanel, ScratchPanel
                  })
         {
             card.Background = cardBg;
@@ -804,11 +809,11 @@ public partial class MainWindow : Window
             return;
         }
 
-        var headerHeight = _settings.ShowHuangLi ? 168.0 : 128.0;
-        var scrollBody = 480;
-        const double toolbarHeight = 132;
+        var headerHeight = _settings.ShowHuangLi ? 190.0 : 142.0;
+        var scrollBody = 700;
+        const double toolbarHeight = 58;
         const double todoInput = 44;
-        const double chrome = 44;
+        const double chrome = 50;
 
         var height = headerHeight + scrollBody + toolbarHeight + todoInput + chrome;
 
@@ -818,7 +823,7 @@ public partial class MainWindow : Window
         }
 
         _suppressSizePersist = true;
-        Height = Math.Clamp(height, MinHeight, 720);
+        Height = Math.Clamp(height, MinHeight, 1120);
         _settings.WindowHeight = Height;
         _suppressSizePersist = false;
     }

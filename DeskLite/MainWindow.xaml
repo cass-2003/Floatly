@@ -3,9 +3,9 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:local="clr-namespace:DeskLite"
         Title="Floatly"
-        MinWidth="320"
-        MinHeight="420"
-        Width="380"
+        MinWidth="620"
+        MinHeight="720"
+        Width="900"
         WindowStyle="None"
         AllowsTransparency="True"
         Background="Transparent"
@@ -94,7 +94,7 @@
             <Border x:Name="ContentBackdrop" Background="#CC0D0F14" CornerRadius="14" Margin="8"
                     IsHitTestVisible="False" Visibility="Visible" />
 
-            <Grid x:Name="ContentRoot" Margin="14,12,20,12" PreviewMouseLeftButtonDown="Grid_PreviewMouseLeftButtonDown" Cursor="SizeAll">
+            <Grid x:Name="ContentRoot" Margin="22,22,22,16" PreviewMouseLeftButtonDown="Grid_PreviewMouseLeftButtonDown" Cursor="SizeAll">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="*" MinHeight="200" />
@@ -390,7 +390,7 @@
                         <Grid Margin="0,0,0,10">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="6" />
+                                <ColumnDefinition Width="14" />
                                 <ColumnDefinition Width="*" />
                             </Grid.ColumnDefinitions>
                             <Border Grid.Column="0" x:Name="CountdownCard" Style="{StaticResource FloatlyCard}" Padding="10">
@@ -415,32 +415,11 @@
                             </Border>
                         </Grid>
 
-                        <!-- OffWork + Salary (hidden cards, parent panels referenced by code) -->
-                        <StackPanel x:Name="OffWorkPanel" Visibility="Collapsed" Margin="0,0,0,8">
-                            <Grid Margin="0,0,0,4">
-                                <TextBlock x:Name="OffWorkLabel" Text="下班倒计时" FontSize="11" Foreground="#8B95A5" VerticalAlignment="Center" />
-                                <TextBlock x:Name="OffWorkMainText" Text="02:15:30" FontSize="13" FontWeight="SemiBold" Foreground="#FFFFFF" HorizontalAlignment="Right" />
-                            </Grid>
-                            <Border x:Name="OffWorkTrack" Height="8" CornerRadius="4" Background="#38FFFFFF" ClipToBounds="True" Margin="0,0,0,4">
-                                <Border x:Name="OffWorkFill" HorizontalAlignment="Left" CornerRadius="4" Background="#55D38A" Width="0" />
-                            </Border>
-                            <TextBlock x:Name="OffWorkDetail" Text="" FontSize="10" Foreground="#8B95A5" />
-                        </StackPanel>
-                        <Border x:Name="SalaryPanel" Style="{StaticResource FloatlyCard}" Margin="0,0,0,8" Visibility="Collapsed">
-                            <StackPanel>
-                                <Grid Margin="0,0,0,4">
-                                    <TextBlock x:Name="SalaryLabel" Text="今日已赚" FontSize="11" Foreground="#8B95A5" />
-                                    <TextBlock x:Name="SalaryAmount" Text="¥0.00" FontSize="16" FontWeight="SemiBold" Foreground="#F59E0B" HorizontalAlignment="Right" />
-                                </Grid>
-                                <TextBlock x:Name="SalarySubtitle" Text="" FontSize="10" Foreground="#8B95A5" />
-                            </StackPanel>
-                        </Border>
-
                         <!-- Todo + Pomodoro row -->
                         <Grid Margin="0,0,0,10">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="6" />
+                                <ColumnDefinition Width="14" />
                                 <ColumnDefinition Width="*" />
                             </Grid.ColumnDefinitions>
                             <Border Grid.Column="0" Style="{StaticResource FloatlyCard}" Padding="10">
@@ -551,8 +530,76 @@
                             </Border>
                         </Grid>
 
-                        <TextBlock x:Name="DailyQuoteText" FontSize="11" Foreground="#8B95A5" FontStyle="Italic"
-                                   TextWrapping="Wrap" Margin="0,0,0,8" Visibility="Collapsed" />
+                        <!-- OffWork + Salary row -->
+                        <Grid Margin="0,0,0,10">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="14" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <Border Grid.Column="0" x:Name="OffWorkCard" Style="{StaticResource FloatlyCard}" Padding="0">
+                                <Grid>
+                                    <Image Source="Assets/CardBackgrounds/star-sky-dark.png"
+                                           Stretch="UniformToFill"
+                                           Opacity="0.32"
+                                           IsHitTestVisible="False"
+                                           RenderOptions.BitmapScalingMode="HighQuality" />
+                                    <Border Background="#B80B1220" />
+                                    <Border Padding="14">
+                                        <StackPanel x:Name="OffWorkPanel" Visibility="Collapsed">
+                                    <TextBlock x:Name="OffWorkLabel" Text="下班倒计时" Style="{StaticResource CardTitle}" Margin="0,0,0,8" />
+                                    <TextBlock x:Name="OffWorkMainText" Text="07:56:05" FontSize="34" FontWeight="SemiBold"
+                                               FontFamily="Consolas" Foreground="#F7FAFF" Margin="0,0,0,4" />
+                                    <TextBlock Text="距离下班还有" FontSize="12" Foreground="#A6FFFFFF" Margin="0,0,0,8" />
+                                    <Border x:Name="OffWorkTrack" Height="8" CornerRadius="4" Background="#27344D" ClipToBounds="True" Margin="0,0,0,10">
+                                        <Border x:Name="OffWorkFill" HorizontalAlignment="Left" CornerRadius="4" Background="#5C6CFF" Width="0" />
+                                    </Border>
+                                    <TextBlock x:Name="OffWorkDetail" Text="" FontSize="11" Foreground="#8B95A5" />
+                                        </StackPanel>
+                                    </Border>
+                                </Grid>
+                            </Border>
+                            <Border Grid.Column="2" x:Name="SalaryPanel" Style="{StaticResource FloatlyCard}" Padding="0" Visibility="Collapsed">
+                                <Grid>
+                                    <Image Source="Assets/CardBackgrounds/coins.png"
+                                           Stretch="UniformToFill"
+                                           Opacity="0.24"
+                                           IsHitTestVisible="False"
+                                           RenderOptions.BitmapScalingMode="HighQuality" />
+                                    <Border Background="#C0151010" />
+                                    <Border Padding="14">
+                                        <StackPanel>
+                                        <TextBlock x:Name="SalaryLabel" Text="今日已赚薪水" Style="{StaticResource CardTitle}" Margin="0,0,0,8" />
+                                        <TextBlock x:Name="SalaryAmount" Text="¥0.00" FontSize="34" FontWeight="Bold"
+                                                   FontFamily="Consolas" Foreground="#F8C34A" Margin="0,0,0,4" />
+                                        <TextBlock x:Name="SalarySubtitle" Text="" FontSize="12" Foreground="#D7E4C2" Margin="0,0,0,12" />
+                                        <Border Height="1" Background="#24FFFFFF" Margin="0,0,0,10" />
+                                        <TextBlock Text="时薪与今日工作时长按设置实时计算" FontSize="11" Foreground="#A6FFFFFF" />
+                                        </StackPanel>
+                                    </Border>
+                                </Grid>
+                            </Border>
+                        </Grid>
+
+                        <Border x:Name="DailyQuoteBanner" Style="{StaticResource FloatlyCard}" Margin="0,0,0,10" Padding="18,16" Visibility="Collapsed">
+                            <Grid>
+                                <Border CornerRadius="14" Opacity="0.42">
+                                    <Border.Background>
+                                        <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
+                                            <GradientStop Color="#324673" Offset="0" />
+                                            <GradientStop Color="#614A5D" Offset="0.65" />
+                                            <GradientStop Color="#0F1827" Offset="1" />
+                                        </LinearGradientBrush>
+                                    </Border.Background>
+                                </Border>
+                                <StackPanel Margin="0">
+                                    <TextBlock Text="“  每日一句" FontSize="15" FontWeight="SemiBold" Foreground="#DDE8FF" Margin="0,0,0,10" />
+                                    <TextBlock x:Name="DailyQuoteText" FontSize="20" Foreground="#FFFFFF" FontWeight="SemiBold"
+                                               TextWrapping="Wrap" Visibility="Collapsed" />
+                                    <TextBlock Text="坚持，是比努力更重要的能力。" FontSize="12" Foreground="#A6FFFFFF" Margin="0,8,0,0" />
+                                </StackPanel>
+                            </Grid>
+                        </Border>
 
                         <!-- Scratch notes -->
                         <Border x:Name="ScratchPanel" Style="{StaticResource FloatlyCard}" Margin="0,0,0,10" Padding="10"
@@ -584,7 +631,7 @@
                         <Grid x:Name="CalendarSection" Margin="0,0,0,0" Visibility="Collapsed">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="6" />
+                                <ColumnDefinition Width="14" />
                                 <ColumnDefinition Width="*" />
                             </Grid.ColumnDefinitions>
                             <Border Grid.Column="0" Style="{StaticResource FloatlyCard}" Padding="8">
@@ -620,21 +667,28 @@
                 </ScrollViewer>
 
                 <!-- Bottom toolbar -->
-                <Border Grid.Row="2" x:Name="BottomToolbar" Background="#D81A1D24" CornerRadius="12" Padding="12,10" Margin="0,10,0,6">
-                    <StackPanel>
-                        <Grid Margin="0,0,0,4">
+                <Border Grid.Row="2" x:Name="BottomToolbar" Background="#D81A1D24" CornerRadius="18" Padding="14,8" Margin="0,10,0,6">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                            <TextBlock Text="⌃" FontSize="14" Foreground="#A6FFFFFF" VerticalAlignment="Center" Margin="0,0,8,0" />
+                            <TextBlock Text="快捷设置" FontSize="12" Foreground="#DDE8FF" VerticalAlignment="Center" />
+                        </StackPanel>
+                        <StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Center" Visibility="Collapsed">
                             <TextBlock Text="透明度" FontSize="10" Foreground="#8B95A5" VerticalAlignment="Center" />
-                            <TextBlock x:Name="OpacityValueText" Text="100%" FontSize="10" Foreground="#A6FFFFFF" HorizontalAlignment="Right" />
-                        </Grid>
-                        <Slider x:Name="OpacitySlider" Minimum="30" Maximum="100" Value="100"
-                                ValueChanged="OpacitySlider_ValueChanged" Margin="0,0,0,10" />
-                        <Grid Margin="0,0,0,4">
-                            <TextBlock Text="字体大小" FontSize="10" Foreground="#8B95A5" VerticalAlignment="Center" />
-                            <TextBlock x:Name="FontSizeValueText" Text="12px" FontSize="10" Foreground="#A6FFFFFF" HorizontalAlignment="Right" />
-                        </Grid>
-                        <Slider x:Name="FontSizeSlider" Minimum="10" Maximum="16" Value="12" TickFrequency="1" IsSnapToTickEnabled="True"
-                                ValueChanged="FontSizeSlider_ValueChanged" Margin="0,0,0,10" />
-                        <Grid>
+                            <Slider x:Name="OpacitySlider" Width="120" Minimum="30" Maximum="100" Value="100"
+                                    ValueChanged="OpacitySlider_ValueChanged" Margin="8,0,10,0" />
+                            <TextBlock x:Name="OpacityValueText" Text="100%" FontSize="10" Foreground="#A6FFFFFF" VerticalAlignment="Center" />
+                            <TextBlock Text="字体大小" FontSize="10" Foreground="#8B95A5" VerticalAlignment="Center" Margin="18,0,0,0" />
+                            <Slider x:Name="FontSizeSlider" Width="120" Minimum="10" Maximum="16" Value="12" TickFrequency="1" IsSnapToTickEnabled="True"
+                                    ValueChanged="FontSizeSlider_ValueChanged" Margin="8,0,10,0" />
+                            <TextBlock x:Name="FontSizeValueText" Text="12px" FontSize="10" Foreground="#A6FFFFFF" VerticalAlignment="Center" />
+                        </StackPanel>
+                        <Grid Grid.Column="2">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="Auto" /><ColumnDefinition Width="*" /><ColumnDefinition Width="Auto" />
                             </Grid.ColumnDefinitions>
@@ -649,7 +703,7 @@
                                 <CheckBox x:Name="ClickThroughToggle" VerticalAlignment="Center" Click="ClickThroughToggle_Click" />
                             </StackPanel>
                         </Grid>
-                    </StackPanel>
+                    </Grid>
                 </Border>
 
                 <!-- Todo input -->
