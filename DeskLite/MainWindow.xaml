@@ -59,6 +59,11 @@
             <Setter Property="FontWeight" Value="SemiBold" />
             <Setter Property="Foreground" Value="#A6FFFFFF" />
         </Style>
+        <Style x:Key="ResizeGripThumb" TargetType="{x:Type Thumb}">
+            <Setter Property="Opacity" Value="0" />
+            <Setter Property="Focusable" Value="False" />
+            <Setter Property="Background" Value="Transparent" />
+        </Style>
     </Window.Resources>
 
     <Border x:Name="MainBorder"
@@ -720,6 +725,17 @@
                     <Button x:Name="AddButton" Grid.Column="1" Content="添加" Width="52" Height="30" Margin="6,0,0,0"
                             Click="AddTodo_Click" Background="#5C8DFF" Foreground="White" BorderThickness="0" Cursor="Hand" FontSize="11" />
                 </Grid>
+            </Grid>
+
+            <Grid x:Name="ResizeGripLayer">
+                <Thumb Style="{StaticResource ResizeGripThumb}" Width="12" HorizontalAlignment="Left" Cursor="SizeWE" DragDelta="ResizeLeft_DragDelta" />
+                <Thumb Style="{StaticResource ResizeGripThumb}" Width="12" HorizontalAlignment="Right" Cursor="SizeWE" DragDelta="ResizeRight_DragDelta" />
+                <Thumb Style="{StaticResource ResizeGripThumb}" Height="12" VerticalAlignment="Top" Cursor="SizeNS" DragDelta="ResizeTop_DragDelta" />
+                <Thumb Style="{StaticResource ResizeGripThumb}" Height="12" VerticalAlignment="Bottom" Cursor="SizeNS" DragDelta="ResizeBottom_DragDelta" />
+                <Thumb Style="{StaticResource ResizeGripThumb}" Width="18" Height="18" HorizontalAlignment="Left" VerticalAlignment="Top" Cursor="SizeNWSE" DragDelta="ResizeTopLeft_DragDelta" />
+                <Thumb Style="{StaticResource ResizeGripThumb}" Width="18" Height="18" HorizontalAlignment="Right" VerticalAlignment="Top" Cursor="SizeNESW" DragDelta="ResizeTopRight_DragDelta" />
+                <Thumb Style="{StaticResource ResizeGripThumb}" Width="18" Height="18" HorizontalAlignment="Left" VerticalAlignment="Bottom" Cursor="SizeNESW" DragDelta="ResizeBottomLeft_DragDelta" />
+                <Thumb Style="{StaticResource ResizeGripThumb}" Width="18" Height="18" HorizontalAlignment="Right" VerticalAlignment="Bottom" Cursor="SizeNWSE" DragDelta="ResizeBottomRight_DragDelta" />
             </Grid>
         </Grid>
     </Border>

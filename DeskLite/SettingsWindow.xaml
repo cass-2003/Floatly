@@ -1304,7 +1304,7 @@
                                 <TextBlock Text="关于" VerticalAlignment="Center" />
                             </StackPanel>
                         </Button>
-                        <TextBlock x:Name="VersionText" Text="版本 2.0.8"
+                        <TextBlock x:Name="VersionText" Text="版本 2.0.9"
                                    FontSize="11" Foreground="#66FFFFFF" VerticalAlignment="Center" />
                     </StackPanel>
 

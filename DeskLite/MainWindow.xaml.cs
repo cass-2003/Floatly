@@ -2,6 +2,7 @@
 using System.IO;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Threading;
@@ -2261,6 +2262,59 @@ public partial class MainWindow : Window
         {
             // 拖动边界偶发异常，忽略。
         }
+    }
+
+    private void ResizeLeft_DragDelta(object sender, DragDeltaEventArgs e) => ResizeWindow(leftDelta: e.HorizontalChange);
+
+    private void ResizeRight_DragDelta(object sender, DragDeltaEventArgs e) => ResizeWindow(rightDelta: e.HorizontalChange);
+
+    private void ResizeTop_DragDelta(object sender, DragDeltaEventArgs e) => ResizeWindow(topDelta: e.VerticalChange);
+
+    private void ResizeBottom_DragDelta(object sender, DragDeltaEventArgs e) => ResizeWindow(bottomDelta: e.VerticalChange);
+
+    private void ResizeTopLeft_DragDelta(object sender, DragDeltaEventArgs e) =>
+        ResizeWindow(leftDelta: e.HorizontalChange, topDelta: e.VerticalChange);
+
+    private void ResizeTopRight_DragDelta(object sender, DragDeltaEventArgs e) =>
+        ResizeWindow(rightDelta: e.HorizontalChange, topDelta: e.VerticalChange);
+
+    private void ResizeBottomLeft_DragDelta(object sender, DragDeltaEventArgs e) =>
+        ResizeWindow(leftDelta: e.HorizontalChange, bottomDelta: e.VerticalChange);
+
+    private void ResizeBottomRight_DragDelta(object sender, DragDeltaEventArgs e) =>
+        ResizeWindow(rightDelta: e.HorizontalChange, bottomDelta: e.VerticalChange);
+
+    private void ResizeWindow(
+        double leftDelta = 0,
+        double rightDelta = 0,
+        double topDelta = 0,
+        double bottomDelta = 0)
+    {
+        if (_settings.ClickThrough || WindowState != WindowState.Normal)
+        {
+            return;
+        }
+
+        var oldLeft = Left;
+        var oldTop = Top;
+        var oldWidth = ActualWidth > 0 ? ActualWidth : Width;
+        var oldHeight = ActualHeight > 0 ? ActualHeight : Height;
+        var targetWidth = Math.Clamp(oldWidth + rightDelta - leftDelta, MinWidth, MaxWindowWidth);
+        var targetHeight = Math.Clamp(oldHeight + bottomDelta - topDelta, MinHeight, MaxWindowHeight);
+
+        if (Math.Abs(leftDelta) > double.Epsilon)
+        {
+            Left = oldLeft + (oldWidth - targetWidth);
+        }
+
+        if (Math.Abs(topDelta) > double.Epsilon)
+        {
+            Top = oldTop + (oldHeight - targetHeight);
+        }
+
+        Width = targetWidth;
+        Height = targetHeight;
+        _settings.UserCustomSize = true;
     }
 
     private bool IsInHeaderArea(DependencyObject? source)
