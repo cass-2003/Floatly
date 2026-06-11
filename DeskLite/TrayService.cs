@@ -100,6 +100,7 @@ public sealed class TrayService : IDisposable
         menu.Items.Add(CreateCheckItem("鼠标穿透", _settings.ClickThrough, _onToggleClickThrough));
         menu.Items.Add(CreateCheckItem("显示天气", _settings.ShowWeather, _onToggleWeather));
         menu.Items.Add(CreateCheckItem("显示城市", _settings.ShowCityName, () => _onToggleModule("cityName")));
+        menu.Items.Add(CreateCheckItem("自动定位城市", _settings.AutoLocateCity, () => _onToggleModule("autoLocate")));
         menu.Items.Add(CreateCheckItem("显示日历", _settings.ShowWeekStrip, _onToggleWeekStrip));
         menu.Items.Add("设置城市...", null, (_, _) => _onSetCity());
         menu.Items.Add("定位当前城市", null, (_, _) => _onDetectLocation());

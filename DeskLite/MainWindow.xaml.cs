@@ -47,7 +47,7 @@ public partial class MainWindow : Window
         RefreshCalendar();
         RefreshTodos();
         LoadScratch();
-        _ = RefreshWeatherAsync();
+        _ = InitializeWeatherAsync();
 
         _clockTimer = new DispatcherTimer();
         ApplyClockTimerInterval();
@@ -56,7 +56,11 @@ public partial class MainWindow : Window
             RefreshClock();
             RefreshExtras();
             CheckTodoReminders();
-            if (DateTime.Now - _lastWeatherFetch >= TimeSpan.FromMinutes(60))
+            if (_settings.AutoLocateCity && ShouldRefreshAutoLocate())
+            {
+                _ = AutoLocateCityAsync(notify: false);
+            }
+            else if (DateTime.Now - _lastWeatherFetch >= TimeSpan.FromMinutes(60))
             {
                 _ = RefreshWeatherAsync();
             }
@@ -233,6 +237,13 @@ public partial class MainWindow : Window
             case "tomorrow": _settings.ShowTomorrowWeather = !_settings.ShowTomorrowWeather; break;
             case "scratch": _settings.ShowScratch = !_settings.ShowScratch; break;
             case "cityName": _settings.ShowCityName = !_settings.ShowCityName; break;
+            case "autoLocate":
+                _settings.AutoLocateCity = !_settings.AutoLocateCity;
+                if (_settings.AutoLocateCity)
+                {
+                    _ = AutoLocateCityAsync(notify: true);
+                }
+                break;
             case "seconds":
                 _settings.ShowSeconds = !_settings.ShowSeconds;
                 ApplyClockTimerInterval();
@@ -260,6 +271,7 @@ public partial class MainWindow : Window
         {
             RefreshCityDisplay(_weatherService.LoadCache());
         }
+
         JsonStore.SaveSettings(_settings);
         _tray?.RefreshMenu();
         if (key is "sunrise" or "tomorrow")
@@ -443,12 +455,12 @@ public partial class MainWindow : Window
 
         var city = cache?.City ?? _settings.ResolvedCityName ?? _settings.City;
         var region = cache?.Region ?? _settings.ResolvedRegion;
-        var source = cache?.LocationSource ?? "manual";
-        var sourceLabel = source == "ip" ? "IP定位" : "手动";
+        var source = cache?.LocationSource ?? (_settings.AutoLocateCity ? "ip" : "manual");
+        var sourceLabel = _settings.AutoLocateCity ? "自动定位" : source == "ip" ? "IP定位" : "手动";
 
         CityText.Text = string.IsNullOrWhiteSpace(region)
             ? $"📍 {city}（{sourceLabel}）"
-            : $"📍 {city} · {region}";
+            : $"📍 {city} · {region}（{sourceLabel}）";
         CityText.Visibility = Visibility.Visible;
     }
 
@@ -493,7 +505,7 @@ public partial class MainWindow : Window
             _settings.WeatherLatitude,
             _settings.WeatherLongitude,
             _settings.ResolvedRegion,
-            oldCache?.LocationSource);
+            _settings.AutoLocateCity ? "ip" : oldCache?.LocationSource ?? "manual");
         _lastWeatherFetch = DateTime.Now;
 
         if (result is null)
@@ -516,6 +528,78 @@ public partial class MainWindow : Window
 
         ApplyWeather(result.Cache);
         RefreshCityDisplay(result.Cache);
+    }
+
+    private async Task InitializeWeatherAsync()
+    {
+        if (_settings.AutoLocateCity)
+        {
+            await AutoLocateCityAsync(notify: false);
+            return;
+        }
+
+        await RefreshWeatherAsync();
+    }
+
+    private bool ShouldRefreshAutoLocate()
+    {
+        if (!DateTime.TryParse(_settings.LastAutoLocateAt, out var last))
+        {
+            return true;
+        }
+
+        return DateTime.Now - last >= TimeSpan.FromHours(24);
+    }
+
+    private async Task AutoLocateCityAsync(bool notify)
+    {
+        if (!_settings.ShowWeather)
+        {
+            return;
+        }
+
+        var loc = await _locationService.DetectByIpAsync();
+        if (loc is null)
+        {
+            if (notify)
+            {
+                _tray?.ShowBalloon("自动定位失败，请检查网络或手动设置城市");
+            }
+
+            await RefreshWeatherAsync();
+            return;
+        }
+
+        await ApplyDetectedLocationAsync(loc, notify);
+    }
+
+    private async Task ApplyDetectedLocationAsync(LocationService.DetectedLocation loc, bool notify)
+    {
+        _settings.City = loc.City;
+        _settings.ResolvedCityName = loc.City;
+        _settings.ResolvedRegion = loc.Region;
+        _settings.WeatherLatitude = loc.Latitude;
+        _settings.WeatherLongitude = loc.Longitude;
+        _settings.LastAutoLocateAt = DateTime.Now.ToString("O");
+        JsonStore.SaveSettings(_settings);
+
+        var result = await _weatherService.FetchAsync(loc.City, loc.Latitude, loc.Longitude, loc.Region, "ip");
+        _lastWeatherFetch = DateTime.Now;
+
+        if (result is not null)
+        {
+            ApplyWeather(result.Cache);
+            RefreshCityDisplay(result.Cache);
+        }
+        else
+        {
+            RefreshCityDisplay();
+        }
+
+        if (notify)
+        {
+            _tray?.ShowBalloon($"已定位到 {loc.City}");
+        }
     }
 
     private void ApplyWeather(WeatherCache cache)
@@ -729,35 +813,7 @@ public partial class MainWindow : Window
         _tray?.RefreshMenu();
     }
 
-    public async void DetectLocationByIp()
-    {
-        var loc = await _locationService.DetectByIpAsync();
-        if (loc is null)
-        {
-            _tray?.ShowBalloon("定位失败，请检查网络或手动设置城市");
-            return;
-        }
-
-        _settings.City = loc.City;
-        _settings.ResolvedCityName = loc.City;
-        _settings.ResolvedRegion = loc.Region;
-        _settings.WeatherLatitude = loc.Latitude;
-        _settings.WeatherLongitude = loc.Longitude;
-        JsonStore.SaveSettings(_settings);
-
-        var result = await _weatherService.FetchAsync(loc.City, loc.Latitude, loc.Longitude, loc.Region, "ip");
-        if (result is not null)
-        {
-            ApplyWeather(result.Cache);
-            RefreshCityDisplay(result.Cache);
-        }
-        else
-        {
-            RefreshCityDisplay();
-        }
-
-        _tray?.ShowBalloon($"已定位到 {loc.City}");
-    }
+    public void DetectLocationByIp() => _ = AutoLocateCityAsync(notify: true);
 
     public void SetCalendarWeek() => SetCalendarMode(CalendarViewMode.Week);
 
@@ -834,7 +890,9 @@ public partial class MainWindow : Window
         _settings.ResolvedRegion = null;
         _settings.WeatherLatitude = null;
         _settings.WeatherLongitude = null;
+        _settings.AutoLocateCity = false;
         JsonStore.SaveSettings(_settings);
+        _tray?.RefreshMenu();
         _ = RefreshWeatherAsync();
     }
 

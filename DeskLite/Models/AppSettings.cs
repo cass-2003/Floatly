@@ -9,6 +9,7 @@ public sealed class AppSettings
     public bool ClickThrough { get; set; }
     public bool ShowWeather { get; set; } = true;
     public bool ShowCityName { get; set; } = true;
+    public bool AutoLocateCity { get; set; } = true;
     public bool ShowWeekStrip { get; set; } = true;
     public bool ShowYearProgress { get; set; }
     public bool ShowCountdown { get; set; } = true;
@@ -27,6 +28,7 @@ public sealed class AppSettings
     public double? WeatherLongitude { get; set; }
     public string? ResolvedCityName { get; set; }
     public string? ResolvedRegion { get; set; }
+    public string? LastAutoLocateAt { get; set; }
     public string CalendarMode { get; set; } = "week";
     public string? CalendarAnchorDate { get; set; }
 }
