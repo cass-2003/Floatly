@@ -12,9 +12,9 @@
   [![Platform](https://img.shields.io/badge/Platform-Windows-0078D6?logo=windows)](https://www.microsoft.com/windows)
   [![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
   [![WPF](https://img.shields.io/badge/UI-WPF-blue)](https://github.com/dotnet/wpf)
-  [![Release](https://img.shields.io/github/v/release/cass-2003/Floatly?label=release)](https://github.com/cass-2003/Floatly/releases/tag/v2.0.1)
+  [![Release](https://img.shields.io/github/v/release/cass-2003/Floatly?label=release)](https://github.com/cass-2003/Floatly/releases/tag/v2.0.2)
   
-  [下载 v2.0.1](https://github.com/cass-2003/Floatly/releases/tag/v2.0.1) · [快速开始](#-快速开始) · [功能特性](#-核心功能) · [路线图](#-路线图)
+  [下载 v2.0.2](https://github.com/cass-2003/Floatly/releases/tag/v2.0.2) · [快速开始](#-快速开始) · [功能特性](#-核心功能) · [路线图](#-路线图)
   
 </div>
 
@@ -112,11 +112,11 @@
 
 ### 下载安装（推荐）
 
-从 [Releases v2.0.1](https://github.com/cass-2003/Floatly/releases/tag/v2.0.1) 下载：
+从 [Releases v2.0.2](https://github.com/cass-2003/Floatly/releases/tag/v2.0.2) 下载：
 
 | 文件 | 说明 |
 |------|------|
-| `Floatly-Setup-2.0.1.exe` | 中文安装向导（Inno Setup） |
+| `Floatly-Setup-2.0.2.exe` | 中文安装向导（Inno Setup） |
 | `Floatly-win-x64.zip` | 绿色版（需已安装 .NET 8 桌面运行时） |
 
 ### 从源码运行
@@ -144,7 +144,7 @@ dotnet publish -c Release -r win-x64 --self-contained false
 # 1. 将 publish 输出复制到 release/Floatly/
 # 2. 编译安装脚本
 iscc installer\Floatly.iss
-# 输出：release\Floatly-Setup-2.0.1.exe
+# 输出：release\Floatly-Setup-2.0.2.exe
 ```
 
 ### 首次使用

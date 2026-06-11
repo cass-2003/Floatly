@@ -182,6 +182,26 @@
                 </Setter.Value>
             </Setter>
         </Style>
+        <Style x:Key="SecondaryToggleButton" TargetType="ToggleButton">
+            <Setter Property="Background" Value="#1E2430" />
+            <Setter Property="Foreground" Value="{StaticResource SettingsText}" />
+            <Setter Property="BorderBrush" Value="{StaticResource SettingsBorder}" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="Padding" Value="16,9" />
+            <Setter Property="Cursor" Value="Hand" />
+            <Setter Property="MinWidth" Value="72" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ToggleButton">
+                        <Border Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="8"
+                                Padding="{TemplateBinding Padding}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
         <Style x:Key="LinkButton" TargetType="Button">
             <Setter Property="Background" Value="Transparent" />
             <Setter Property="Foreground" Value="{StaticResource SettingsMuted}" />
@@ -533,7 +553,7 @@
                             <StackPanel>
                                 <TextBlock Style="{StaticResource CardTitle}" Text="皮肤系统" />
                                 <UniformGrid Columns="4" Margin="0,0,0,14">
-                                    <ToggleButton x:Name="TbSkinDefault" Margin="0,0,6,0" Padding="8" Style="{StaticResource SecondaryButton}"
+                                    <ToggleButton x:Name="TbSkinDefault" Margin="0,0,6,0" Padding="8" Style="{StaticResource SecondaryToggleButton}"
                                                   Click="SkinToggle_Click" Tag="default">
                                         <StackPanel HorizontalAlignment="Center">
                                             <TextBlock Text="&#xE771;" FontFamily="Segoe MDL2 Assets" FontSize="18" HorizontalAlignment="Center" />
@@ -541,14 +561,14 @@
                                             <TextBlock Text="毛玻璃" FontSize="9" Foreground="{StaticResource SettingsMuted}" HorizontalAlignment="Center" />
                                         </StackPanel>
                                     </ToggleButton>
-                                    <ToggleButton x:Name="TbSkinSolid" Margin="0,0,6,0" Padding="8" Style="{StaticResource SecondaryButton}"
+                                    <ToggleButton x:Name="TbSkinSolid" Margin="0,0,6,0" Padding="8" Style="{StaticResource SecondaryToggleButton}"
                                                   Click="SkinToggle_Click" Tag="solid">
                                         <StackPanel HorizontalAlignment="Center">
                                             <TextBlock Text="&#xE790;" FontFamily="Segoe MDL2 Assets" FontSize="18" HorizontalAlignment="Center" />
                                             <TextBlock Text="纯色" FontSize="10" Margin="0,4,0,0" HorizontalAlignment="Center" />
                                         </StackPanel>
                                     </ToggleButton>
-                                    <ToggleButton x:Name="TbSkinImage" Margin="0,0,6,0" Padding="8" Style="{StaticResource SecondaryButton}"
+                                    <ToggleButton x:Name="TbSkinImage" Margin="0,0,6,0" Padding="8" Style="{StaticResource SecondaryToggleButton}"
                                                   Click="SkinToggle_Click" Tag="image">
                                         <StackPanel HorizontalAlignment="Center">
                                             <TextBlock Text="&#xEB9F;" FontFamily="Segoe MDL2 Assets" FontSize="18" HorizontalAlignment="Center" />
@@ -556,7 +576,7 @@
                                             <TextBlock Text="背景" FontSize="9" Foreground="{StaticResource SettingsMuted}" HorizontalAlignment="Center" />
                                         </StackPanel>
                                     </ToggleButton>
-                                    <ToggleButton x:Name="TbSkinVideo" Padding="8" Style="{StaticResource SecondaryButton}"
+                                    <ToggleButton x:Name="TbSkinVideo" Padding="8" Style="{StaticResource SecondaryToggleButton}"
                                                   Click="SkinToggle_Click" Tag="video">
                                         <StackPanel HorizontalAlignment="Center">
                                             <TextBlock Text="&#xE714;" FontFamily="Segoe MDL2 Assets" FontSize="18" HorizontalAlignment="Center" />
@@ -751,3 +771,5 @@
         </Border>
     </Grid>
 </Window>
+
+
