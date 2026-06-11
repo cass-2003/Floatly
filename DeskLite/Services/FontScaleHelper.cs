@@ -74,10 +74,10 @@ public static class FontScaleHelper
         Set(window.PomodoroStartBtn, 15, scale);
         Set(window.PomodoroHintText, 11, scale);
         Set(window.PomodoroResetBtn, 11, scale);
-        Set(window.OffWorkMainText, 28, scale);
+        Set(window.OffWorkMainText, 26, scale);
         Set(window.OffWorkCaption, 10, scale);
         Set(window.OffWorkModePill, 10, scale);
-        Set(window.SalaryAmount, 30, scale);
+        Set(window.SalaryAmount, 28, scale);
         Set(window.SalaryPerSecondText, 12, scale);
         Set(window.SalaryHourlyValueText, 11, scale);
         Set(window.SalaryWorkDurationText, 11, scale);

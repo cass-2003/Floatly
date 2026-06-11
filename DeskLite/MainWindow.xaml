@@ -427,7 +427,7 @@
                         </Grid>
 
                         <!-- Todo + Pomodoro row -->
-                        <Grid Margin="0,0,0,10" MinHeight="158">
+                        <Grid Margin="0,0,0,10" Height="224">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*" />
                                 <ColumnDefinition Width="14" />
@@ -541,7 +541,7 @@
                                     </Grid>
                                 </Grid>
                             </Border>
-                            <Border Grid.Column="2" x:Name="PomodoroCard" Style="{StaticResource FloatlyCard}" Padding="20,18">
+                            <Border Grid.Column="2" x:Name="PomodoroCard" Style="{StaticResource FloatlyCard}" Padding="18,16">
                                 <Grid x:Name="PomodoroPanel" Visibility="Collapsed">
                                     <Grid.RowDefinitions>
                                         <RowDefinition Height="Auto" />
@@ -554,9 +554,9 @@
                                         <TextBlock x:Name="PomodoroSessionText" Text="准备开始" FontSize="10" Foreground="#8B95A5"
                                                    HorizontalAlignment="Right" VerticalAlignment="Center" />
                                     </Grid>
-                                    <Grid Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,4,0,12">
-                                        <Ellipse x:Name="PomodoroRingTrack" Width="118" Height="118" Stroke="#28FFFFFF" StrokeThickness="7" Fill="Transparent" />
-                                        <Ellipse x:Name="PomodoroRingProgress" Width="118" Height="118" Stroke="#5C8DFF" StrokeThickness="7" Fill="Transparent"
+                                    <Grid Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,2,0,10">
+                                        <Ellipse x:Name="PomodoroRingTrack" Width="108" Height="108" Stroke="#28FFFFFF" StrokeThickness="7" Fill="Transparent" />
+                                        <Ellipse x:Name="PomodoroRingProgress" Width="108" Height="108" Stroke="#5C8DFF" StrokeThickness="7" Fill="Transparent"
                                                  StrokeDashCap="Round" RenderTransformOrigin="0.5,0.5">
                                             <Ellipse.RenderTransform>
                                                 <RotateTransform Angle="-90" />
@@ -570,7 +570,7 @@
                                     <Border x:Name="PomodoroTrack" Height="0" Width="0" Visibility="Collapsed">
                                         <Border x:Name="PomodoroFill" Width="0" />
                                     </Border>
-                                    <Button x:Name="PomodoroStartBtn" Grid.Row="2" Content="开始专注" Height="32" Padding="0" Width="200"
+                                    <Button x:Name="PomodoroStartBtn" Grid.Row="2" Content="开始专注" Height="30" Padding="0" Width="190"
                                             Click="PomodoroStart_Click" Background="#5C8DFF" Foreground="White"
                                             BorderThickness="0" Cursor="Hand" FontSize="15" FontWeight="SemiBold" HorizontalAlignment="Center" />
                                     <TextBlock x:Name="PomodoroHintText" Grid.Row="3" Text="专注更高效，休息更放松" FontSize="11" Foreground="#8B95A5"
@@ -584,7 +584,7 @@
                         </Grid>
 
                         <!-- OffWork + Salary row -->
-                        <Grid Margin="0,0,0,10" Height="166">
+                        <Grid Margin="0,0,0,10" Height="154">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*" />
                                 <ColumnDefinition Width="14" />
@@ -598,7 +598,7 @@
                                            IsHitTestVisible="False"
                                            RenderOptions.BitmapScalingMode="HighQuality" />
                                     <Border Background="#C30B1220" />
-                                    <Border Padding="16,12,16,12">
+                                    <Border Padding="16,11,16,11">
                                         <Grid x:Name="OffWorkPanel" Visibility="Collapsed">
                                             <Grid.RowDefinitions>
                                                 <RowDefinition Height="Auto" />
@@ -610,7 +610,7 @@
                                                 <TextBlock x:Name="OffWorkLabel" Text="下班倒计时" Style="{StaticResource CardTitle}" />
                                             </StackPanel>
                                             <StackPanel Grid.Row="1" VerticalAlignment="Center" Margin="0,3,0,4">
-                                                <TextBlock x:Name="OffWorkMainText" Text="07:56:05" FontSize="28" FontWeight="SemiBold"
+                                                <TextBlock x:Name="OffWorkMainText" Text="07:56:05" FontSize="26" FontWeight="SemiBold"
                                                            FontFamily="Consolas" Foreground="#F7FAFF" Margin="0,0,0,2" />
                                                 <TextBlock x:Name="OffWorkCaption" Text="距离下班还有" FontSize="10" Foreground="#A6FFFFFF" Margin="0,0,0,4" />
                                                 <Border x:Name="OffWorkTrack" Height="7" CornerRadius="4" Background="#27344D" ClipToBounds="True">
@@ -640,7 +640,7 @@
                                            IsHitTestVisible="False"
                                            RenderOptions.BitmapScalingMode="HighQuality" />
                                     <Border Background="#D0161210" />
-                                    <Border Padding="16,12,16,12">
+                                    <Border Padding="16,11,16,11">
                                         <Grid>
                                             <Grid.RowDefinitions>
                                                 <RowDefinition Height="Auto" />
@@ -655,7 +655,7 @@
                                                 <TextBlock x:Name="SalaryLabel" Text="今日已赚薪水" Style="{StaticResource CardTitle}" />
                                             </StackPanel>
                                             <StackPanel Grid.Row="1" VerticalAlignment="Center" Margin="0,3,0,4">
-                                                <TextBlock x:Name="SalaryAmount" Text="¥0.00" FontSize="30" FontWeight="Bold"
+                                                <TextBlock x:Name="SalaryAmount" Text="¥0.00" FontSize="28" FontWeight="Bold"
                                                            FontFamily="Consolas" Foreground="#F8C34A" Margin="0,0,0,4" />
                                                 <StackPanel Orientation="Horizontal">
                                                     <TextBlock Text="•" FontSize="16" Foreground="#6BDB74" VerticalAlignment="Center" Margin="0,0,6,0" />
@@ -755,7 +755,7 @@
                         </Grid>
 
                         <!-- Scratch notes remain available, but sit after the salary-dashboard flow. -->
-                        <Border x:Name="ScratchPanel" Style="{StaticResource FloatlyCard}" Margin="0,0,0,0" Padding="0" MinHeight="124"
+                        <Border x:Name="ScratchPanel" Style="{StaticResource FloatlyCard}" Margin="0,22,0,0" Padding="0" MinHeight="124"
                                 Cursor="Hand" MouseLeftButtonUp="ScratchPanel_Click" Visibility="Collapsed">
                             <Grid ClipToBounds="False">
                                 <Border Width="4" HorizontalAlignment="Left" Margin="0,14,0,0" CornerRadius="0,4,4,0"

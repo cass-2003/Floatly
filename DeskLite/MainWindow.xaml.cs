@@ -1070,7 +1070,7 @@ public partial class MainWindow : Window
             : _palette.PomodoroWork;
         PomodoroFill.Background = Brush(fillColor);
         PomodoroRingProgress.Stroke = Brush(fillColor);
-        PomodoroRingHelper.Update(PomodoroRingProgress, _pomodoro.ProgressPercent, 118, 7);
+        PomodoroRingHelper.Update(PomodoroRingProgress, _pomodoro.ProgressPercent, 108, 7);
     }
 
     private void OnPomodoroCompleted(PomodoroPhase phase)
