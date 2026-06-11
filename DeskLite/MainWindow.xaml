@@ -108,9 +108,9 @@
                         <!-- Row 1: clock | weather | controls -->
                         <Grid VerticalAlignment="Center" ClipToBounds="False">
                             <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" MinWidth="155" />
+                                <ColumnDefinition Width="*" MinWidth="80" />
                                 <ColumnDefinition Width="Auto" />
-                                <ColumnDefinition Width="*" MinWidth="72" />
-                                <ColumnDefinition Width="Auto" MinWidth="112" />
                             </Grid.ColumnDefinitions>
 
                             <!-- Left: time + date + city (no lunar — row 2 strip handles huangli) -->
@@ -135,7 +135,7 @@
 
                             <!-- Center: weather -->
                             <StackPanel x:Name="WeatherPanel" Grid.Column="1" VerticalAlignment="Center"
-                                        HorizontalAlignment="Center" Margin="4,0,108,0" Visibility="Collapsed"
+                                        HorizontalAlignment="Center" Margin="8,0,8,0" Visibility="Collapsed"
                                         ClipToBounds="False">
                                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
                                     <Image x:Name="WeatherIconImage" Width="34" Height="34" VerticalAlignment="Center"
@@ -161,7 +161,7 @@
 
                             <!-- Right: toolbar + sun/tomorrow -->
                             <StackPanel Grid.Column="2" VerticalAlignment="Top" HorizontalAlignment="Right"
-                                        Margin="0,0,-4,0" MinWidth="112" ClipToBounds="False">
+                                        Margin="0,0,-4,0" ClipToBounds="False">
                                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
                                     <Button x:Name="PinBtn" Content="📌" Style="{StaticResource HeaderIconBtn}"
                                             Click="PinBtn_Click" ToolTip="置顶" />
