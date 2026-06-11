@@ -1,9 +1,9 @@
-# Floatly v2.0.7 Build Script
+# Floatly v2.0.8 Build Script
 # PowerShell 5.1+
 
 $ErrorActionPreference = "Stop"
 
-$Version = "2.0.7"
+$Version = "2.0.8"
 $RootDir = Split-Path -Parent $MyInvocation.MyCommand.Path
 $ProjectDir = Join-Path $RootDir "DeskLite"
 $OutputDir = Join-Path $RootDir "release\Floatly"
@@ -56,7 +56,7 @@ if (-not $Iscc) {
     Write-Host "[warn] Inno Setup not found. Skipping installer build." -ForegroundColor Yellow
     Write-Host "    Download: https://jrsoftware.org/isdl.php" -ForegroundColor Gray
 } else {
-    & $Iscc $InstallerScript
+    & $Iscc "/DMyAppVersion=$Version" $InstallerScript
     if ($LASTEXITCODE -eq 0) {
         Write-Host "[ok] Installer created: release\Floatly-Setup-$Version.exe" -ForegroundColor Green
     }
@@ -70,7 +70,7 @@ Write-Host ""
 Write-Host "Output: $OutputDir" -ForegroundColor Cyan
 Write-Host ""
 Write-Host "Next steps:" -ForegroundColor Yellow
-Write-Host "  1. Test the build: .\$OutputDir\Floatly.exe"
+Write-Host "  1. Test the build: $OutputDir\Floatly.exe"
 Write-Host "  2. Create git tag: git tag v$Version"
 Write-Host "  3. Push tag: git push origin v$Version"
 Write-Host "  4. Upload installer to GitHub Releases"

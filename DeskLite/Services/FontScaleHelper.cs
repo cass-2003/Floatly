@@ -37,10 +37,11 @@ public static class FontScaleHelper
         scale = ClampScale(scale);
 
         Set(window.ClockText, FloatlyDesignTokens.ClockFontSize, scale);
+        window.ClockText.LineHeight = FloatlyDesignTokens.ClockLineHeight * scale;
         Set(window.ClockSecondsText, FloatlyDesignTokens.ClockSecondsFontSize, scale);
-        Set(window.DateText, 12, scale);
-        Set(window.LunarText, 12, scale);
-        Set(window.LunarSubText, 11, scale);
+        Set(window.DateText, FloatlyDesignTokens.DateFontSize, scale);
+        Set(window.LunarText, 10, scale);
+        Set(window.LunarSubText, 9, scale);
         Set(window.YearProgressLabel, 11, scale);
         Set(window.YearProgressPercent, 13, scale);
         Set(window.YearProgressDetail, 10, scale);
@@ -71,6 +72,8 @@ public static class FontScaleHelper
         Set(window.PomodoroCountdownText, 16, scale);
         Set(window.PomodoroStartBtn, 11, scale);
         Set(window.PomodoroResetBtn, 11, scale);
+        Set(window.OffWorkMainText, 28, scale);
+        Set(window.SalaryAmount, 30, scale);
         Set(window.DailyQuoteText, 11, scale);
         Set(window.ScratchTitleText, 12, scale);
         Set(window.ScratchCountText, 10, scale);

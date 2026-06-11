@@ -121,20 +121,20 @@
                                         <ColumnDefinition Width="Auto" />
                                         <ColumnDefinition Width="Auto" />
                                     </Grid.ColumnDefinitions>
-                                    <TextBlock x:Name="ClockText" Grid.Column="0" Text="15:03" FontSize="48" FontWeight="Medium"
-                                               Foreground="#FFFFFF" LineHeight="48" LineStackingStrategy="BlockLineHeight"
+                                    <TextBlock x:Name="ClockText" Grid.Column="0" Text="15:03" FontSize="40" FontWeight="Medium"
+                                               Foreground="#FFFFFF" LineHeight="42" LineStackingStrategy="BlockLineHeight"
                                                TextTrimming="None" />
-                                    <TextBlock x:Name="ClockSecondsText" Grid.Column="1" Text="54" FontSize="18" FontWeight="Medium"
-                                               Foreground="#A6FFFFFF" VerticalAlignment="Bottom" Margin="2,0,0,5"
+                                    <TextBlock x:Name="ClockSecondsText" Grid.Column="1" Text="54" FontSize="14" FontWeight="Medium"
+                                               Foreground="#A6FFFFFF" VerticalAlignment="Bottom" Margin="2,0,0,4"
                                                TextTrimming="None" Visibility="Visible" />
                                 </Grid>
-                                <TextBlock x:Name="DateText" Text="2026年6月1日 周四" FontSize="12"
+                                <TextBlock x:Name="DateText" Text="2026年6月1日 周四" FontSize="11"
                                            Foreground="#A6FFFFFF" Margin="0,2,0,0" TextTrimming="None" />
                                 <TextBlock x:Name="CityText" Text="📍 东京 Tokyo" FontSize="11" Foreground="#8B95A5"
                                            Margin="0,2,0,0" Visibility="Collapsed" TextTrimming="CharacterEllipsis" />
-                                <TextBlock x:Name="LunarText" Text="农历五月初六 · 芒种" FontSize="11" Foreground="#8B95A5"
+                                <TextBlock x:Name="LunarText" Text="农历五月初六 · 芒种" FontSize="10" Foreground="#8B95A5"
                                            Margin="0,2,0,0" Visibility="Collapsed" TextTrimming="CharacterEllipsis" />
-                                <TextBlock x:Name="LunarSubText" Text="乙巳年 · 属蛇" FontSize="10" Foreground="#6B7280"
+                                <TextBlock x:Name="LunarSubText" Text="乙巳年 · 属蛇" FontSize="9" Foreground="#6B7280"
                                            Margin="0,1,0,0" Visibility="Collapsed" TextTrimming="CharacterEllipsis" />
                             </StackPanel>
 
@@ -553,7 +553,7 @@
                                     <Border Padding="14">
                                         <StackPanel x:Name="OffWorkPanel" Visibility="Collapsed">
                                     <TextBlock x:Name="OffWorkLabel" Text="下班倒计时" Style="{StaticResource CardTitle}" Margin="0,0,0,8" />
-                                    <TextBlock x:Name="OffWorkMainText" Text="07:56:05" FontSize="34" FontWeight="SemiBold"
+                                    <TextBlock x:Name="OffWorkMainText" Text="07:56:05" FontSize="28" FontWeight="SemiBold"
                                                FontFamily="Consolas" Foreground="#F7FAFF" Margin="0,0,0,4" />
                                     <TextBlock Text="距离下班还有" FontSize="12" Foreground="#A6FFFFFF" Margin="0,0,0,8" />
                                     <Border x:Name="OffWorkTrack" Height="8" CornerRadius="4" Background="#27344D" ClipToBounds="True" Margin="0,0,0,10">
@@ -575,7 +575,7 @@
                                     <Border Padding="14">
                                         <StackPanel>
                                         <TextBlock x:Name="SalaryLabel" Text="今日已赚薪水" Style="{StaticResource CardTitle}" Margin="0,0,0,8" />
-                                        <TextBlock x:Name="SalaryAmount" Text="¥0.00" FontSize="34" FontWeight="Bold"
+                                        <TextBlock x:Name="SalaryAmount" Text="¥0.00" FontSize="30" FontWeight="Bold"
                                                    FontFamily="Consolas" Foreground="#F8C34A" Margin="0,0,0,4" />
                                         <TextBlock x:Name="SalarySubtitle" Text="" FontSize="12" Foreground="#D7E4C2" Margin="0,0,0,12" />
                                         <Border Height="1" Background="#24FFFFFF" Margin="0,0,0,10" />
