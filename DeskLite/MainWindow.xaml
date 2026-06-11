@@ -584,7 +584,7 @@
                         </Grid>
 
                         <!-- OffWork + Salary row -->
-                        <Grid Margin="0,0,0,10" MinHeight="96">
+                        <Grid Margin="0,0,0,10" Height="166">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*" />
                                 <ColumnDefinition Width="14" />
@@ -688,7 +688,7 @@
                             </Border>
                         </Grid>
 
-                        <Border x:Name="DailyQuoteBanner" Style="{StaticResource FloatlyCard}" Margin="0,0,0,10" Padding="0" MinHeight="94" Visibility="Collapsed">
+                        <Border x:Name="DailyQuoteBanner" Style="{StaticResource FloatlyCard}" Margin="0,0,0,10" Padding="0" Height="114" Visibility="Collapsed">
                             <Grid>
                                 <Image Source="Assets/CardBackgrounds/star-sky-dark.png"
                                        Stretch="UniformToFill"
