@@ -58,7 +58,7 @@
             <Border Grid.Row="0" Background="Transparent" Margin="0,0,0,6">
                 <StackPanel>
                     <Grid>
-                        <TextBlock x:Name="ClockText" Text="14:32" FontSize="28" FontWeight="SemiBold" Foreground="#F5F7FA" />
+                        <TextBlock x:Name="ClockText" Text="14:32:08" FontSize="26" FontWeight="SemiBold" Foreground="#F5F7FA" />
                         <TextBlock x:Name="DateText" Text="周四 6月11日" FontSize="13" Foreground="#B8C0CC"
                                    HorizontalAlignment="Right" VerticalAlignment="Center" />
                     </Grid>

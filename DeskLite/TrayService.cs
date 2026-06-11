@@ -134,6 +134,7 @@ public sealed class TrayService : IDisposable
         modules.DropDownItems.Add(CreateCheckItem("日出日落", _settings.ShowSunriseSunset, () => _onToggleModule("sunrise")));
         modules.DropDownItems.Add(CreateCheckItem("明日天气", _settings.ShowTomorrowWeather, () => _onToggleModule("tomorrow")));
         modules.DropDownItems.Add(CreateCheckItem("速记便签", _settings.ShowScratch, () => _onToggleModule("scratch")));
+        modules.DropDownItems.Add(CreateCheckItem("显示秒", _settings.ShowSeconds, () => _onToggleModule("seconds")));
         modules.DropDownItems.Add(CreateCheckItem("待办到时提醒", _settings.ShowTodoReminder, () => _onToggleModule("todoReminder")));
         modules.DropDownItems.Add(CreateCheckItem("全局快捷键", _settings.EnableGlobalHotkey, () => _onToggleModule("hotkey")));
         return modules;

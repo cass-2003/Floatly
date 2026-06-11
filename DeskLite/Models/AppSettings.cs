@@ -3,6 +3,7 @@ namespace DeskLite.Models;
 public sealed class AppSettings
 {
     public bool Time24h { get; set; } = true;
+    public bool ShowSeconds { get; set; } = true;
     public bool AlwaysOnTop { get; set; } = true;
     public bool AutoStart { get; set; }
     public bool ClickThrough { get; set; }

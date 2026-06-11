@@ -44,7 +44,8 @@ public partial class MainWindow : Window
         LoadScratch();
         _ = RefreshWeatherAsync();
 
-        _clockTimer = new DispatcherTimer { Interval = TimeSpan.FromMinutes(1) };
+        _clockTimer = new DispatcherTimer();
+        ApplyClockTimerInterval();
         _clockTimer.Tick += (_, _) =>
         {
             RefreshClock();
@@ -227,6 +228,11 @@ public partial class MainWindow : Window
             case "tomorrow": _settings.ShowTomorrowWeather = !_settings.ShowTomorrowWeather; break;
             case "scratch": _settings.ShowScratch = !_settings.ShowScratch; break;
             case "cityName": _settings.ShowCityName = !_settings.ShowCityName; break;
+            case "seconds":
+                _settings.ShowSeconds = !_settings.ShowSeconds;
+                ApplyClockTimerInterval();
+                RefreshClock();
+                break;
             case "todoReminder": _settings.ShowTodoReminder = !_settings.ShowTodoReminder; break;
             case "hotkey":
                 _settings.EnableGlobalHotkey = !_settings.EnableGlobalHotkey;
@@ -257,10 +263,18 @@ public partial class MainWindow : Window
         }
     }
 
+    private void ApplyClockTimerInterval() =>
+        _clockTimer.Interval = _settings.ShowSeconds ? TimeSpan.FromSeconds(1) : TimeSpan.FromMinutes(1);
+
+    private string FormatClock(DateTime now) =>
+        _settings.ShowSeconds
+            ? now.ToString(_settings.Time24h ? "HH:mm:ss" : "hh:mm:ss", CultureInfo.InvariantCulture)
+            : now.ToString(_settings.Time24h ? "HH:mm" : "hh:mm", CultureInfo.InvariantCulture);
+
     private void RefreshClock()
     {
         var now = DateTime.Now;
-        ClockText.Text = now.ToString(_settings.Time24h ? "HH:mm" : "hh:mm", CultureInfo.InvariantCulture);
+        ClockText.Text = FormatClock(now);
 
         var displayDate = _calendarPreviewDate ?? now;
         var info = LunarCalendar.Get(displayDate);
