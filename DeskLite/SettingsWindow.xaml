@@ -107,50 +107,51 @@
             <Setter Property="Foreground" Value="{StaticResource SettingsText}" />
             <Setter Property="BorderBrush" Value="{StaticResource SettingsBorder}" />
             <Setter Property="BorderThickness" Value="1" />
-            <Setter Property="Padding" Value="12,6" />
+            <Setter Property="Padding" Value="12,0,34,0" />
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="ComboBox">
-                        <Grid>
-                            <ToggleButton x:Name="ToggleButton"
-                                          Focusable="False"
-                                          IsChecked="{Binding Path=IsDropDownOpen, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}"
-                                          ClickMode="Press"
-                                          Background="{TemplateBinding Background}"
-                                          BorderBrush="{TemplateBinding BorderBrush}"
-                                          BorderThickness="{TemplateBinding BorderThickness}">
-                                <ToggleButton.Template>
-                                    <ControlTemplate TargetType="ToggleButton">
-                                        <Border Background="{TemplateBinding Background}"
-                                                BorderBrush="{TemplateBinding BorderBrush}"
-                                                BorderThickness="{TemplateBinding BorderThickness}"
-                                                CornerRadius="10">
-                                            <Grid>
-                                                <TextBlock Text="&#xE70D;" FontFamily="Segoe MDL2 Assets"
-                                                           Foreground="{StaticResource SettingsMuted}"
-                                                           HorizontalAlignment="Right" VerticalAlignment="Center"
-                                                           Margin="0,0,10,0" FontSize="10" />
-                                            </Grid>
-                                        </Border>
-                                    </ControlTemplate>
-                                </ToggleButton.Template>
-                            </ToggleButton>
+                        <Grid SnapsToDevicePixels="True">
+                            <Border x:Name="Chrome"
+                                    Background="{TemplateBinding Background}"
+                                    BorderBrush="{TemplateBinding BorderBrush}"
+                                    BorderThickness="{TemplateBinding BorderThickness}"
+                                    CornerRadius="10" />
                             <ContentPresenter x:Name="ContentSite"
                                               IsHitTestVisible="False"
                                               Content="{TemplateBinding SelectionBoxItem}"
                                               ContentTemplate="{TemplateBinding SelectionBoxItemTemplate}"
                                               ContentStringFormat="{TemplateBinding SelectionBoxItemStringFormat}"
-                                              Margin="12,0,32,0"
+                                              Margin="{TemplateBinding Padding}"
                                               VerticalAlignment="Center" />
                             <TextBox x:Name="PART_EditableTextBox"
                                      Style="{x:Null}"
                                      Background="Transparent"
                                      Foreground="{StaticResource SettingsText}"
                                      BorderThickness="0"
-                                     Margin="12,0,32,0"
+                                     Margin="{TemplateBinding Padding}"
                                      VerticalContentAlignment="Center"
                                      Visibility="Hidden"
                                      IsReadOnly="{TemplateBinding IsReadOnly}" />
+                            <ToggleButton x:Name="ToggleButton"
+                                          Width="32"
+                                          HorizontalAlignment="Right"
+                                          Focusable="False"
+                                          IsChecked="{Binding Path=IsDropDownOpen, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}"
+                                          ClickMode="Press"
+                                          Background="Transparent"
+                                          BorderThickness="0">
+                                <ToggleButton.Template>
+                                    <ControlTemplate TargetType="ToggleButton">
+                                        <TextBlock Text="&#xE70D;"
+                                                   FontFamily="Segoe MDL2 Assets"
+                                                   Foreground="{StaticResource SettingsMuted}"
+                                                   FontSize="10"
+                                                   HorizontalAlignment="Center"
+                                                   VerticalAlignment="Center" />
+                                    </ControlTemplate>
+                                </ToggleButton.Template>
+                            </ToggleButton>
                             <Popup x:Name="Popup"
                                    Placement="Bottom"
                                    IsOpen="{TemplateBinding IsDropDownOpen}"
@@ -174,6 +175,9 @@
                                 <Setter TargetName="PART_EditableTextBox" Property="Visibility" Value="Visible" />
                                 <Setter TargetName="ContentSite" Property="Visibility" Value="Hidden" />
                             </Trigger>
+                            <Trigger Property="IsKeyboardFocusWithin" Value="True">
+                                <Setter TargetName="Chrome" Property="BorderBrush" Value="{StaticResource SettingsAccent}" />
+                            </Trigger>
                         </ControlTemplate.Triggers>
                     </ControlTemplate>
                 </Setter.Value>
@@ -189,32 +193,33 @@
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="Slider">
-                        <Grid>
-                            <Track x:Name="PART_Track">
+                        <Grid Height="22" VerticalAlignment="Center">
+                            <Border Height="4"
+                                    Margin="7,0"
+                                    CornerRadius="2"
+                                    Background="#354154"
+                                    VerticalAlignment="Center" />
+                            <Track x:Name="PART_Track" Margin="7,0">
                                 <Track.DecreaseRepeatButton>
                                     <RepeatButton Command="Slider.DecreaseLarge"
-                                                  Background="{StaticResource SettingsAccent}"
                                                   BorderThickness="0"
-                                                  Height="5"
-                                                  VerticalAlignment="Center"
+                                                  Background="Transparent"
                                                   IsTabStop="False">
                                         <RepeatButton.Template>
                                             <ControlTemplate TargetType="RepeatButton">
-                                                <Border Background="{TemplateBinding Background}" CornerRadius="2" />
+                                                <Border Background="Transparent" />
                                             </ControlTemplate>
                                         </RepeatButton.Template>
                                     </RepeatButton>
                                 </Track.DecreaseRepeatButton>
                                 <Track.IncreaseRepeatButton>
                                     <RepeatButton Command="Slider.IncreaseLarge"
-                                                  Background="#354154"
                                                   BorderThickness="0"
-                                                  Height="5"
-                                                  VerticalAlignment="Center"
+                                                  Background="Transparent"
                                                   IsTabStop="False">
                                         <RepeatButton.Template>
                                             <ControlTemplate TargetType="RepeatButton">
-                                                <Border Background="{TemplateBinding Background}" CornerRadius="2" />
+                                                <Border Background="Transparent" />
                                             </ControlTemplate>
                                         </RepeatButton.Template>
                                     </RepeatButton>
@@ -998,12 +1003,13 @@
                                     <Grid Margin="0,0,0,12">
                                         <Grid.ColumnDefinitions>
                                             <ColumnDefinition Width="Auto" />
-                                            <ColumnDefinition Width="1.1*" />
+                                            <ColumnDefinition Width="1.08*" />
                                             <ColumnDefinition Width="12" />
-                                            <ColumnDefinition Width="0.9*" />
+                                            <ColumnDefinition Width="0.92*" />
                                         </Grid.ColumnDefinitions>
                                         <TextBlock Style="{StaticResource FieldLabel}" Text="字体" FontWeight="SemiBold" Foreground="{StaticResource SettingsText}" Margin="0,0,18,0" />
-                                        <ComboBox x:Name="CmbFontFamily" Grid.Column="1" Style="{StaticResource SettingsComboBox}" IsEditable="True" />
+                                        <ComboBox x:Name="CmbFontFamily" Grid.Column="1" Style="{StaticResource SettingsComboBox}" IsEditable="True"
+                                                  MaxDropDownHeight="260" />
                                         <Grid Grid.Column="3">
                                             <TextBox x:Name="TxtFontSearch" Style="{StaticResource SettingsTextBox}"
                                                      TextChanged="TxtFontSearch_TextChanged"
@@ -1021,17 +1027,18 @@
                                         <Grid.ColumnDefinitions>
                                             <ColumnDefinition Width="Auto" />
                                             <ColumnDefinition Width="Auto" />
-                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="136" />
                                             <ColumnDefinition Width="Auto" />
                                         </Grid.ColumnDefinitions>
                                         <TextBlock Style="{StaticResource FieldLabel}" Text="字体颜色" FontWeight="SemiBold" Foreground="{StaticResource SettingsText}" Margin="0,0,18,0" />
                                         <UniformGrid x:Name="FontColorPalette" Grid.Column="1" Columns="6" VerticalAlignment="Center" />
                                         <Grid Grid.Column="2" Margin="10,0,0,0">
                                             <TextBox x:Name="TxtCustomFontColor" Style="{StaticResource SettingsTextBox}"
-                                                     ToolTip="支持 #RRGGBB" Padding="12,0,34,0" />
+                                                     ToolTip="支持 #RRGGBB" Padding="12,0,42,0" />
                                             <TextBlock Text="&#xE70F;" FontFamily="Segoe MDL2 Assets"
                                                        Foreground="{StaticResource SettingsMuted}"
-                                                       HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,12,0" />
+                                                       HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,14,0"
+                                                       IsHitTestVisible="False" />
                                         </Grid>
                                         <Button x:Name="BtnClearFontColor" Grid.Column="3" Content="恢复默认"
                                                 Margin="10,0,0,0" Style="{StaticResource SecondaryButton}"
@@ -1116,16 +1123,18 @@
                                     </Grid>
 
                                     <Border Height="1" Background="#14FFFFFF" Margin="0,0,0,8" />
-                                    <TextBlock Style="{StaticResource CardTitle}" Text="窗口大小" Margin="0,0,0,4" />
                                     <Grid>
                                         <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="Auto" />
+                                            <ColumnDefinition Width="12" />
                                             <ColumnDefinition Width="*" />
                                             <ColumnDefinition Width="128" />
                                         </Grid.ColumnDefinitions>
-                                        <TextBlock Style="{StaticResource HintText}"
+                                        <TextBlock Style="{StaticResource CardTitle}" Text="窗口大小" Margin="0" VerticalAlignment="Center" />
+                                        <TextBlock Grid.Column="2" Style="{StaticResource HintText}"
                                                    Text="拖拽窗口四边或四角可调整大小"
                                                    VerticalAlignment="Center" />
-                                        <Border Grid.Column="1" Height="42" CornerRadius="8" BorderBrush="{StaticResource SettingsBorder}" BorderThickness="1"
+                                        <Border Grid.Column="3" Height="42" CornerRadius="8" BorderBrush="{StaticResource SettingsBorder}" BorderThickness="1"
                                                 Background="#121820" HorizontalAlignment="Right" Width="112">
                                             <Grid>
                                                 <Border Margin="14,10" BorderBrush="#44FFFFFF" BorderThickness="1" CornerRadius="4" />
