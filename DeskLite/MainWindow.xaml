@@ -554,19 +554,11 @@
                                         <TextBlock x:Name="PomodoroSessionText" Text="准备开始" FontSize="10" Foreground="#8B95A5"
                                                    HorizontalAlignment="Right" VerticalAlignment="Center" />
                                     </Grid>
-                                    <Grid Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,-2,0,0">
-                                        <Ellipse x:Name="PomodoroRingTrack" Width="124" Height="124" Stroke="#28FFFFFF" StrokeThickness="7" Fill="Transparent"
-                                                 StrokeDashCap="Round" RenderTransformOrigin="0.5,0.5">
-                                            <Ellipse.RenderTransform>
-                                                <RotateTransform Angle="-126" />
-                                            </Ellipse.RenderTransform>
-                                        </Ellipse>
-                                        <Ellipse x:Name="PomodoroRingProgress" Width="124" Height="124" Stroke="#5C8DFF" StrokeThickness="7" Fill="Transparent"
-                                                 StrokeDashCap="Round" RenderTransformOrigin="0.5,0.5">
-                                            <Ellipse.RenderTransform>
-                                                <RotateTransform Angle="-126" />
-                                            </Ellipse.RenderTransform>
-                                        </Ellipse>
+                                    <Grid Grid.Row="1" Width="124" Height="124" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,-2,0,0">
+                                        <Path x:Name="PomodoroRingTrack" Stroke="#28FFFFFF" StrokeThickness="7" Fill="Transparent"
+                                              StrokeStartLineCap="Round" StrokeEndLineCap="Round" />
+                                        <Path x:Name="PomodoroRingProgress" Stroke="#5C8DFF" StrokeThickness="7" Fill="Transparent"
+                                              StrokeStartLineCap="Round" StrokeEndLineCap="Round" />
                                         <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
                                             <TextBlock x:Name="PomodoroCountdownText" Text="25:00" FontSize="28" FontWeight="SemiBold" Foreground="#FFFFFF" HorizontalAlignment="Center" />
                                             <TextBlock x:Name="PomodoroCenterStatusText" Text="准备开始" FontSize="12" Foreground="#A6FFFFFF" HorizontalAlignment="Center" Margin="0,3,0,0" />
