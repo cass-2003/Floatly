@@ -1,7 +1,7 @@
 #define MyAppName "Floatly"
 #define MyAppDisplayName "Floatly（浮岛）"
 #ifndef MyAppVersion
-#define MyAppVersion "2.0.15"
+#define MyAppVersion "2.0.18"
 #endif
 #define MyAppPublisher "cass-2003"
 #define MyAppURL "https://github.com/cass-2003/Floatly"
