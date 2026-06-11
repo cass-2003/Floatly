@@ -1717,6 +1717,11 @@ public partial class MainWindow : Window
     {
         var dlg = new SettingsWindow(_settings);
         dlg.Owner = this;
+        dlg.SettingsApplied += (_, next) =>
+        {
+            CommitSettings(next);
+            JsonStore.SaveSettings(_settings);
+        };
         if (dlg.ShowDialog() == true && dlg.Result is not null)
         {
             CommitSettings(dlg.Result);
