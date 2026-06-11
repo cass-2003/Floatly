@@ -250,8 +250,8 @@ public partial class MainWindow : Window
         DateText.Foreground = Brush(_palette.TextSecondary);
         LunarText.Foreground = Brush(_palette.TextTertiary);
         LunarSubText.Foreground = Brush(_palette.TextSubtle);
-        HeaderBlock.Background = Brush(FloatlyDesignTokens.CardBackground);
-        HeaderBlock.BorderBrush = Brush(FloatlyDesignTokens.CardBorder);
+        HeaderBlock.Background = System.Windows.Media.Brushes.Transparent;
+        HeaderBlock.BorderBrush = System.Windows.Media.Brushes.Transparent;
         ApplyModuleCardTheme();
         BottomToolbar.Background = Brush(FloatlyDesignTokens.ToolbarBackground);
         ApplyHuangLiTheme();

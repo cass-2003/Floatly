@@ -47,11 +47,11 @@
             <Setter Property="FontSize" Value="13" />
         </Style>
         <Style x:Key="HeroCard" TargetType="Border">
-            <Setter Property="Background" Value="#F21E2028" />
-            <Setter Property="BorderBrush" Value="#14FFFFFF" />
-            <Setter Property="BorderThickness" Value="1" />
-            <Setter Property="CornerRadius" Value="18" />
-            <Setter Property="Padding" Value="16,14" />
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="BorderBrush" Value="Transparent" />
+            <Setter Property="BorderThickness" Value="0" />
+            <Setter Property="CornerRadius" Value="0" />
+            <Setter Property="Padding" Value="4,2" />
             <Setter Property="ClipToBounds" Value="False" />
         </Style>
         <Style x:Key="CardTitle" TargetType="TextBlock">
@@ -104,13 +104,13 @@
                 </Grid.RowDefinitions>
 
                 <!-- Hero Header (fixed above scroll - Row 0) -->
-                <Border Grid.Row="0" x:Name="HeaderBlock" Style="{StaticResource HeroCard}" Margin="0,0,0,10">
+                <Border Grid.Row="0" x:Name="HeaderBlock" Style="{StaticResource HeroCard}" Margin="0,0,0,8">
                     <StackPanel ClipToBounds="False">
                         <!-- Row 1: clock | weather | controls -->
-                        <Grid MinHeight="92" VerticalAlignment="Stretch" ClipToBounds="False">
+                        <Grid VerticalAlignment="Stretch" ClipToBounds="False">
                             <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="Auto" MinWidth="155" />
-                                <ColumnDefinition Width="*" MinWidth="80" />
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="*" />
                                 <ColumnDefinition Width="Auto" />
                             </Grid.ColumnDefinitions>
 
@@ -207,12 +207,12 @@
 
                         <!-- Row 2: lunar / huangli compact strip (full width, below row 1) -->
                         <Border x:Name="HeroLunarStrip" Visibility="Collapsed" BorderBrush="#14FFFFFF"
-                                BorderThickness="0,1,0,0" Margin="0,12,0,0" Padding="0,10,0,0">
+                                BorderThickness="0,1,0,0" Margin="0,8,0,0" Padding="0,8,0,0">
                             <Grid>
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="Auto" />
-                                    <ColumnDefinition Width="*" MinWidth="80" />
-                                    <ColumnDefinition Width="Auto" MaxWidth="200" />
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
                                 </Grid.ColumnDefinitions>
                                 <TextBlock Grid.Column="0" Text="📅" FontSize="14" VerticalAlignment="Top" Margin="0,0,8,0" />
                                 <StackPanel Grid.Column="1" VerticalAlignment="Center">
