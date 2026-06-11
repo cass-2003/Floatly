@@ -59,6 +59,7 @@ public partial class SettingsWindow : Window
 
     public AppSettings? Result { get; private set; }
     public event EventHandler<AppSettings>? SettingsApplied;
+    public event EventHandler<AppSettings>? SettingsSaved;
 
     public SettingsWindow(AppSettings settings)
     {
@@ -192,11 +193,17 @@ public partial class SettingsWindow : Window
             return;
         }
 
-        PanelGeneral.Visibility = tag == "general" ? Visibility.Visible : Visibility.Collapsed;
-        PanelAppearance.Visibility = tag == "appearance" ? Visibility.Visible : Visibility.Collapsed;
-        PanelWeather.Visibility = tag == "weather" ? Visibility.Visible : Visibility.Collapsed;
-        PanelCalendar.Visibility = tag == "calendar" ? Visibility.Visible : Visibility.Collapsed;
-        PanelModules.Visibility = tag == "modules" ? Visibility.Visible : Visibility.Collapsed;
+        var target = tag switch
+        {
+            "general" => SectionGeneral as FrameworkElement,
+            "appearance" => SectionAppearance as FrameworkElement,
+            "weather" => SectionWeather as FrameworkElement,
+            "calendar" => SectionCalendar as FrameworkElement,
+            "modules" => SectionModules as FrameworkElement,
+            _ => null
+        };
+
+        target?.BringIntoView();
     }
 
     private void ThemeDarkCard_Click(object sender, MouseButtonEventArgs e)
@@ -288,25 +295,36 @@ public partial class SettingsWindow : Window
         var method = s.AutoLocateCity
             ? LocationService.DescribeSource(string.IsNullOrWhiteSpace(source) ? "auto" : source)
             : LocationService.DescribeSource("manual");
+        var showIpWarning = s.AutoLocateCity && string.Equals(source, "ip", StringComparison.OrdinalIgnoreCase);
+        LocationIpWarningText.Visibility = showIpWarning ? Visibility.Visible : Visibility.Collapsed;
 
         if (!string.IsNullOrWhiteSpace(s.ResolvedCityName))
         {
             LocationStatusText.Text = string.IsNullOrWhiteSpace(s.ResolvedRegion)
-                ? $"定位状态：{s.ResolvedCityName}（{method}）"
-                : $"定位状态：{s.ResolvedCityName}, {s.ResolvedRegion}（{method}）";
+                ? $"定位方式：{method} · {s.ResolvedCityName}"
+                : $"定位方式：{method} · {s.ResolvedCityName}, {s.ResolvedRegion}";
         }
         else if (!string.IsNullOrWhiteSpace(s.City))
         {
             LocationStatusText.Text = s.AutoLocateCity
-                ? $"定位状态：{s.City}（{method}）"
-                : $"定位状态：手动城市 {s.City}";
+                ? $"定位方式：{method} · {s.City}"
+                : $"定位方式：手动 · {s.City}";
         }
         else
         {
             LocationStatusText.Text = s.AutoLocateCity
-                ? "定位状态：等待自动定位"
-                : "定位状态：请输入城市";
+                ? "定位方式：等待自动定位"
+                : "定位方式：手动 · 请输入城市";
         }
+    }
+
+    private void UpdateLocationStatus(LocationService.DetectedLocation loc)
+    {
+        var method = LocationService.DescribeSource(loc.Source);
+        LocationIpWarningText.Visibility = loc.IpFallbackWarning ? Visibility.Visible : Visibility.Collapsed;
+        LocationStatusText.Text = string.IsNullOrWhiteSpace(loc.Region)
+            ? $"定位方式：{method} · {loc.City}"
+            : $"定位方式：{method} · {loc.City}, {loc.Region}";
     }
 
     private void SetOpacityUi(int percent)
@@ -998,23 +1016,31 @@ public partial class SettingsWindow : Window
     private async void BtnDetectLocation_Click(object sender, RoutedEventArgs e)
     {
         BtnDetectLocation.IsEnabled = false;
-        LocationStatusText.Text = "定位状态：正在定位（系统位置 / IP）…";
+        LocationIpWarningText.Visibility = Visibility.Collapsed;
+        LocationStatusText.Text = "定位方式：正在使用 Windows 定位…";
         try
         {
-            var loc = await _locationService.DetectAsync();
+            var loc = await _locationService.TryDetectByWindowsAsync();
             if (loc is null)
             {
-                LocationStatusText.Text = "定位状态：定位失败，请检查位置权限或网络连接";
+                LocationStatusText.Text = "定位方式：Windows 定位不可用，正在尝试 IP 定位（备用）…";
+                loc = await _locationService.DetectByIpAsync();
+                if (loc is not null)
+                {
+                    loc = loc with { IpFallbackWarning = true };
+                }
+            }
+
+            if (loc is null)
+            {
+                LocationStatusText.Text = "定位失败：请检查 Windows 位置权限、网络连接，或改用手动输入城市";
                 return;
             }
 
             TxtCity.Text = loc.City;
             RbAutoLocate.IsChecked = true;
             UpdateCityControls();
-            var method = LocationService.DescribeSource(loc.Source);
-            LocationStatusText.Text = string.IsNullOrWhiteSpace(loc.Region)
-                ? $"定位状态：{loc.City}（{method}）"
-                : $"定位状态：{loc.City}, {loc.Region}（{method}）";
+            UpdateLocationStatus(loc);
         }
         finally
         {
@@ -1068,13 +1094,13 @@ public partial class SettingsWindow : Window
         }
 
         Result = ReadToSettings();
-        DialogResult = true;
+        _original = Clone(Result);
+        SettingsSaved?.Invoke(this, Result);
         Close();
     }
 
     private void Cancel_Click(object sender, RoutedEventArgs e)
     {
-        DialogResult = false;
         Close();
     }
 

@@ -8,17 +8,22 @@ public sealed class LocationService
 {
     private static readonly HttpClient Http = new() { Timeout = TimeSpan.FromSeconds(10) };
 
-    /// <summary>Try Windows location first, then IP geolocation.</summary>
+    /// <summary>Windows device location first, then IP geolocation as fallback.</summary>
     public async Task<DetectedLocation?> DetectAsync(CancellationToken ct = default)
     {
-        var device = await TryDetectByDeviceAsync(ct);
+        var device = await TryDetectByWindowsAsync(ct);
         if (device is not null)
         {
             return device;
         }
 
-        return await DetectByIpAsync(ct);
+        var ip = await DetectByIpAsync(ct);
+        return ip is null ? null : ip with { IpFallbackWarning = true };
     }
+
+    /// <summary>Try Windows Geolocation API only (Wi‑Fi / GPS, not VPN IP).</summary>
+    public Task<DetectedLocation?> TryDetectByWindowsAsync(CancellationToken ct = default) =>
+        TryDetectByDeviceAsync(ct);
 
     public async Task<DetectedLocation?> DetectByIpAsync(CancellationToken ct = default)
     {
@@ -61,13 +66,13 @@ public sealed class LocationService
 
             var geolocator = new Geolocator
             {
-                DesiredAccuracy = PositionAccuracy.Default,
-                DesiredAccuracyInMeters = 1000
+                DesiredAccuracy = PositionAccuracy.High,
+                DesiredAccuracyInMeters = 500
             };
 
             var position = await geolocator.GetGeopositionAsync(
-                maximumAge: TimeSpan.FromMinutes(30),
-                timeout: TimeSpan.FromSeconds(12));
+                maximumAge: TimeSpan.FromMinutes(15),
+                timeout: TimeSpan.FromSeconds(15));
 
             var lat = position.Coordinate.Latitude;
             var lon = position.Coordinate.Longitude;
@@ -125,12 +130,13 @@ public sealed class LocationService
         string? Region,
         double Latitude,
         double Longitude,
-        string Source = "ip");
+        string Source = "ip",
+        bool IpFallbackWarning = false);
 
     public static string DescribeSource(string? source) => source switch
     {
-        "device" => "系统定位",
-        "ip" => "IP定位",
+        "device" => "Windows 定位",
+        "ip" => "IP 定位（备用）",
         "manual" => "手动",
         _ => "自动定位"
     };

@@ -5,7 +5,8 @@
         Width="940"
         Height="720"
         MinWidth="920"
-        MinHeight="680"
+        MinHeight="700"
+        ShowInTaskbar="True"
         WindowStartupLocation="CenterScreen"
         ResizeMode="CanResize"
         Background="#0F1419"
@@ -321,11 +322,13 @@
             </Grid>
         </Border>
 
-        <!-- Content panels -->
-        <Grid Grid.Row="0" Grid.Column="1" Margin="20,20,20,0">
+        <!-- All sections on one scrollable page -->
+        <ScrollViewer x:Name="ContentScrollViewer" Grid.Row="0" Grid.Column="1"
+                      Margin="20,20,20,0" VerticalScrollBarVisibility="Auto">
+            <StackPanel>
             <!-- 常规 -->
-            <ScrollViewer x:Name="PanelGeneral" VerticalScrollBarVisibility="Auto">
-                <Grid>
+            <Border x:Name="SectionGeneral" Height="0" Visibility="Collapsed" />
+            <Grid Margin="0,0,0,12">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*" />
                         <ColumnDefinition Width="*" />
@@ -454,11 +457,10 @@
                         </Border>
                     </StackPanel>
                 </Grid>
-            </ScrollViewer>
 
             <!-- 外观 -->
-            <ScrollViewer x:Name="PanelAppearance" VerticalScrollBarVisibility="Auto" Visibility="Collapsed">
-                <Grid>
+            <Border x:Name="SectionAppearance" Height="0" Visibility="Collapsed" Margin="0,8,0,0" />
+            <Grid Margin="0,0,0,12">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*" />
                         <ColumnDefinition Width="*" />
@@ -641,11 +643,10 @@
                         </Border>
                     </StackPanel>
                 </Grid>
-            </ScrollViewer>
 
             <!-- 天气 -->
-            <ScrollViewer x:Name="PanelWeather" VerticalScrollBarVisibility="Auto" Visibility="Collapsed">
-                <Border Style="{StaticResource SettingsCard}" HorizontalAlignment="Stretch">
+            <Border x:Name="SectionWeather" Height="0" Visibility="Collapsed" />
+            <Border Style="{StaticResource SettingsCard}" HorizontalAlignment="Stretch" Margin="0,0,12,12">
                     <StackPanel>
                         <TextBlock Style="{StaticResource CardTitle}" Text="天气" />
                         <CheckBox x:Name="ChkShowWeather" Style="{StaticResource FloatlyToggle}" Content="显示天气" Margin="0,0,0,12" />
@@ -653,7 +654,7 @@
                         <CheckBox x:Name="ChkShowSunrise" Style="{StaticResource FloatlyToggle}" Content="显示日出日落" Margin="0,0,0,12" />
                         <CheckBox x:Name="ChkShowTomorrow" Style="{StaticResource FloatlyToggle}" Content="显示明日天气" Margin="0,0,0,20" />
                         <TextBlock Style="{StaticResource CardTitle}" Text="城市定位" />
-                        <TextBlock Style="{StaticResource HintText}" Text="自动定位优先使用 Windows 位置服务，不可用时回退到 IP 定位；也可手动输入城市。" Margin="0,0,0,12" />
+                        <TextBlock Style="{StaticResource HintText}" Text="自动定位优先使用 Windows 位置服务（Wi‑Fi/GPS，不受 VPN 影响）；不可用时回退 IP 定位。也可手动输入城市。" Margin="0,0,0,12" />
                         <StackPanel Orientation="Horizontal" Margin="0,0,0,12">
                             <RadioButton x:Name="RbAutoLocate" Content="自动定位城市" GroupName="CityLocate" />
                             <RadioButton x:Name="RbManualCity" Content="手动输入" GroupName="CityLocate" Margin="16,0,0,0" />
@@ -668,17 +669,19 @@
                                     Margin="8,0,0,0" Style="{StaticResource SecondaryButton}"
                                     Click="BtnDetectLocation_Click" />
                         </Grid>
-                        <StackPanel Orientation="Horizontal">
+                        <StackPanel Orientation="Horizontal" Margin="0,0,0,6">
                             <Ellipse Width="8" Height="8" Fill="{StaticResource SettingsGreen}" Margin="0,0,8,0" VerticalAlignment="Center" />
                             <TextBlock x:Name="LocationStatusText" Style="{StaticResource HintText}" Text="定位状态：等待定位" VerticalAlignment="Center" />
                         </StackPanel>
+                        <TextBlock x:Name="LocationIpWarningText" Style="{StaticResource HintText}"
+                                   Text="代理可能影响 IP 定位结果，建议开启 Windows 位置服务。"
+                                   Foreground="#FFB86C" Visibility="Collapsed" />
                     </StackPanel>
                 </Border>
-            </ScrollViewer>
 
             <!-- 日历 -->
-            <ScrollViewer x:Name="PanelCalendar" VerticalScrollBarVisibility="Auto" Visibility="Collapsed">
-                <Border Style="{StaticResource SettingsCard}" MaxWidth="480" HorizontalAlignment="Left">
+            <Border x:Name="SectionCalendar" Height="0" Visibility="Collapsed" />
+            <Border Style="{StaticResource SettingsCard}" MaxWidth="480" HorizontalAlignment="Left" Margin="0,0,12,12">
                     <StackPanel>
                         <TextBlock Style="{StaticResource CardTitle}" Text="日历" />
                         <CheckBox x:Name="ChkShowWeekStrip" Style="{StaticResource FloatlyToggle}" Content="显示万年历" Margin="0,0,0,12" />
@@ -690,11 +693,10 @@
                         </StackPanel>
                     </StackPanel>
                 </Border>
-            </ScrollViewer>
 
             <!-- 模块 -->
-            <ScrollViewer x:Name="PanelModules" VerticalScrollBarVisibility="Auto" Visibility="Collapsed">
-                <Grid>
+            <Border x:Name="SectionModules" Height="0" Visibility="Collapsed" />
+            <Grid Margin="0,0,0,12">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*" />
                         <ColumnDefinition Width="280" />
@@ -755,8 +757,8 @@
                         </Border>
                     </StackPanel>
                 </Grid>
-            </ScrollViewer>
-        </Grid>
+            </StackPanel>
+        </ScrollViewer>
 
         <!-- Footer -->
         <Border Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Background="#0A0E14"

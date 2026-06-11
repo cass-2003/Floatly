@@ -32,6 +32,7 @@ public partial class MainWindow : Window
     private bool _suppressSizePersist;
     private TodoListWindow? _todoListWindow;
     private ScratchPadWindow? _scratchPadWindow;
+    private SettingsWindow? _settingsWindow;
 
     public MainWindow()
     {
@@ -1742,17 +1743,34 @@ public partial class MainWindow : Window
 
     public void OpenSettings()
     {
-        var dlg = new SettingsWindow(_settings);
-        dlg.Owner = this;
-        dlg.SettingsApplied += (_, next) =>
+        if (_settingsWindow is { IsLoaded: true })
+        {
+            if (_settingsWindow.WindowState == WindowState.Minimized)
+            {
+                _settingsWindow.WindowState = WindowState.Normal;
+            }
+
+            _settingsWindow.Activate();
+            return;
+        }
+
+        _settingsWindow = new SettingsWindow(_settings)
+        {
+            Owner = this,
+            ShowInTaskbar = true
+        };
+        _settingsWindow.SettingsApplied += (_, next) =>
         {
             CommitSettings(next);
             JsonStore.SaveSettings(_settings);
         };
-        if (dlg.ShowDialog() == true && dlg.Result is not null)
+        _settingsWindow.SettingsSaved += (_, next) =>
         {
-            CommitSettings(dlg.Result);
-        }
+            CommitSettings(next);
+            JsonStore.SaveSettings(_settings);
+        };
+        _settingsWindow.Closed += (_, _) => _settingsWindow = null;
+        _settingsWindow.Show();
     }
 
     private void OpenSettings_Click(object sender, RoutedEventArgs e) => OpenSettings();
