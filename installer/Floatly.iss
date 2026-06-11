@@ -1,6 +1,6 @@
 ﻿#define MyAppName "Floatly"
 #define MyAppDisplayName "Floatly（浮岛）"
-#define MyAppVersion "1.0.0"
+#define MyAppVersion "1.0.2"
 #define MyAppPublisher "cass-2003"
 #define MyAppURL "https://github.com/cass-2003/Floatly"
 #define MyAppExeName "Floatly.exe"
@@ -31,21 +31,19 @@ ShowLanguageDialog=no
 
 [Languages]
 Name: "chinesesimp"; MessagesFile: "ChineseSimplified.isl"
-Name: "english"; MessagesFile: "compiler:Default.isl"
 
 [CustomMessages]
 chinesesimp.LaunchProgram=安装完成后运行 {#MyAppDisplayName}
-english.LaunchProgram=Launch {#MyAppDisplayName} after installation
 
 [Tasks]
-Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked
+Name: "desktopicon"; Description: "创建桌面快捷方式"; GroupDescription: "附加任务："; Flags: unchecked
 
 [Files]
 Source: "..\release\Floatly\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
 
 [Icons]
 Name: "{group}\{#MyAppDisplayName}"; Filename: "{app}\{#MyAppExeName}"
-Name: "{group}\{cm:UninstallProgram,{#MyAppDisplayName}}"; Filename: "{uninstallexe}"
+Name: "{group}\卸载 {#MyAppDisplayName}"; Filename: "{uninstallexe}"
 Name: "{autodesktop}\{#MyAppDisplayName}"; Filename: "{app}\{#MyAppExeName}"; Tasks: desktopicon
 
 [Run]
@@ -83,21 +81,10 @@ begin
   Result := True;
   if not IsDotNet8DesktopInstalled then
   begin
-    if ActiveLanguage = 'chinesesimp' then
-    begin
-      if MsgBox('浮岛（Floatly）需要安装 .NET 8 桌面运行时（x64）。' + #13#10 + #13#10 +
-        '下载地址：https://dotnet.microsoft.com/zh-cn/download/dotnet/8.0' + #13#10 + #13#10 +
-        '是否仍要继续安装？',
-        mbConfirmation, MB_YESNO) = IDNO then
-        Result := False;
-    end
-    else
-    begin
-      if MsgBox('Floatly requires the .NET 8 Desktop Runtime (x64).' + #13#10 + #13#10 +
-        'Download: https://dotnet.microsoft.com/en-us/download/dotnet/8.0' + #13#10 + #13#10 +
-        'Continue installation anyway?',
-        mbConfirmation, MB_YESNO) = IDNO then
-        Result := False;
-    end;
+    if MsgBox('浮岛（Floatly）需要安装 .NET 8 桌面运行时（x64）。' + #13#10 + #13#10 +
+      '下载地址：https://dotnet.microsoft.com/zh-cn/download/dotnet/8.0' + #13#10 + #13#10 +
+      '是否仍要继续安装？',
+      mbConfirmation, MB_YESNO) = IDNO then
+      Result := False;
   end;
 end;
