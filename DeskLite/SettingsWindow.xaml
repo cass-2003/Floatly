@@ -1,31 +1,42 @@
 <Window x:Class="DeskLite.SettingsWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:shell="clr-namespace:System.Windows.Shell;assembly=PresentationFramework"
         Title="Floatly 设置"
-        Width="940"
-        Height="720"
-        MinWidth="920"
-        MinHeight="700"
+        Width="1500"
+        Height="960"
+        MinWidth="1180"
+        MinHeight="760"
         ShowInTaskbar="True"
         WindowStartupLocation="CenterScreen"
+        WindowStyle="None"
         ResizeMode="CanResize"
-        Background="#0F1419"
+        Background="#0B111A"
         Foreground="#FFFFFF"
         FontFamily="Microsoft YaHei UI"
         FontSize="13">
+    <shell:WindowChrome.WindowChrome>
+        <shell:WindowChrome CaptionHeight="0"
+                            ResizeBorderThickness="6"
+                            CornerRadius="0"
+                            GlassFrameThickness="0"
+                            UseAeroCaptionButtons="False" />
+    </shell:WindowChrome.WindowChrome>
+
     <Window.Resources>
-        <SolidColorBrush x:Key="SettingsBg" Color="#0F1419" />
-        <SolidColorBrush x:Key="SettingsSidebarBg" Color="#0A0E14" />
-        <SolidColorBrush x:Key="SettingsCardBg" Color="#161922" />
-        <SolidColorBrush x:Key="SettingsCardBorder" Color="#14FFFFFF" />
-        <SolidColorBrush x:Key="SettingsText" Color="#FFFFFF" />
-        <SolidColorBrush x:Key="SettingsMuted" Color="#A6FFFFFF" />
-        <SolidColorBrush x:Key="SettingsInputBg" Color="#1E2430" />
-        <SolidColorBrush x:Key="SettingsBorder" Color="#24FFFFFF" />
-        <SolidColorBrush x:Key="SettingsAccent" Color="#5C8DFF" />
+        <SolidColorBrush x:Key="SettingsBg" Color="#0B111A" />
+        <SolidColorBrush x:Key="SettingsShellBg" Color="#E60E1724" />
+        <SolidColorBrush x:Key="SettingsSidebarBg" Color="#99121B2A" />
+        <SolidColorBrush x:Key="SettingsCardBg" Color="#B51A2433" />
+        <SolidColorBrush x:Key="SettingsCardBorder" Color="#22FFFFFF" />
+        <SolidColorBrush x:Key="SettingsText" Color="#F7FAFF" />
+        <SolidColorBrush x:Key="SettingsMuted" Color="#A6B3C6" />
+        <SolidColorBrush x:Key="SettingsInputBg" Color="#A61B2534" />
+        <SolidColorBrush x:Key="SettingsBorder" Color="#2EFFFFFF" />
+        <SolidColorBrush x:Key="SettingsAccent" Color="#4D82FF" />
         <SolidColorBrush x:Key="SettingsAccentDim" Color="#335C8DFF" />
         <SolidColorBrush x:Key="SettingsGreen" Color="#55D38A" />
-        <SolidColorBrush x:Key="SettingsRecord" Color="#EF4444" />
+        <SolidColorBrush x:Key="SettingsRecord" Color="#F05252" />
 
         <Style x:Key="CardTitle" TargetType="TextBlock">
             <Setter Property="FontSize" Value="14" />
@@ -48,43 +59,163 @@
             <Setter Property="Background" Value="{StaticResource SettingsCardBg}" />
             <Setter Property="BorderBrush" Value="{StaticResource SettingsCardBorder}" />
             <Setter Property="BorderThickness" Value="1" />
-            <Setter Property="CornerRadius" Value="14" />
-            <Setter Property="Padding" Value="16" />
+            <Setter Property="CornerRadius" Value="12" />
+            <Setter Property="Padding" Value="18" />
             <Setter Property="Margin" Value="0,0,12,12" />
         </Style>
 
         <Style x:Key="SettingsTextBox" TargetType="TextBox">
+            <Setter Property="Height" Value="34" />
             <Setter Property="Background" Value="{StaticResource SettingsInputBg}" />
             <Setter Property="Foreground" Value="{StaticResource SettingsText}" />
             <Setter Property="BorderBrush" Value="{StaticResource SettingsBorder}" />
             <Setter Property="BorderThickness" Value="1" />
             <Setter Property="Padding" Value="10,6" />
             <Setter Property="CaretBrush" Value="{StaticResource SettingsText}" />
+            <Setter Property="VerticalContentAlignment" Value="Center" />
         </Style>
         <Style x:Key="SettingsComboBox" TargetType="ComboBox">
+            <Setter Property="Height" Value="34" />
             <Setter Property="Background" Value="{StaticResource SettingsInputBg}" />
             <Setter Property="Foreground" Value="{StaticResource SettingsText}" />
             <Setter Property="BorderBrush" Value="{StaticResource SettingsBorder}" />
             <Setter Property="BorderThickness" Value="1" />
-            <Setter Property="Padding" Value="10,6" />
+            <Setter Property="Padding" Value="10,5" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ComboBox">
+                        <Grid>
+                            <ToggleButton x:Name="ToggleButton"
+                                          Focusable="False"
+                                          IsChecked="{Binding Path=IsDropDownOpen, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}"
+                                          ClickMode="Press"
+                                          Background="{TemplateBinding Background}"
+                                          BorderBrush="{TemplateBinding BorderBrush}"
+                                          BorderThickness="{TemplateBinding BorderThickness}">
+                                <ToggleButton.Template>
+                                    <ControlTemplate TargetType="ToggleButton">
+                                        <Border Background="{TemplateBinding Background}"
+                                                BorderBrush="{TemplateBinding BorderBrush}"
+                                                BorderThickness="{TemplateBinding BorderThickness}"
+                                                CornerRadius="6">
+                                            <Grid>
+                                                <TextBlock Text="&#xE70D;" FontFamily="Segoe MDL2 Assets"
+                                                           Foreground="{StaticResource SettingsMuted}"
+                                                           HorizontalAlignment="Right" VerticalAlignment="Center"
+                                                           Margin="0,0,10,0" FontSize="10" />
+                                            </Grid>
+                                        </Border>
+                                    </ControlTemplate>
+                                </ToggleButton.Template>
+                            </ToggleButton>
+                            <ContentPresenter x:Name="ContentSite"
+                                              IsHitTestVisible="False"
+                                              Content="{TemplateBinding SelectionBoxItem}"
+                                              ContentTemplate="{TemplateBinding SelectionBoxItemTemplate}"
+                                              ContentStringFormat="{TemplateBinding SelectionBoxItemStringFormat}"
+                                              Margin="10,0,30,0"
+                                              VerticalAlignment="Center" />
+                            <TextBox x:Name="PART_EditableTextBox"
+                                     Style="{x:Null}"
+                                     Background="Transparent"
+                                     Foreground="{StaticResource SettingsText}"
+                                     BorderThickness="0"
+                                     Margin="10,0,30,0"
+                                     VerticalContentAlignment="Center"
+                                     Visibility="Hidden"
+                                     IsReadOnly="{TemplateBinding IsReadOnly}" />
+                            <Popup x:Name="Popup"
+                                   Placement="Bottom"
+                                   IsOpen="{TemplateBinding IsDropDownOpen}"
+                                   AllowsTransparency="True"
+                                   Focusable="False"
+                                   PopupAnimation="Fade">
+                                <Border Background="#F01A2433"
+                                        BorderBrush="{StaticResource SettingsBorder}"
+                                        BorderThickness="1"
+                                        CornerRadius="6"
+                                        MinWidth="{TemplateBinding ActualWidth}"
+                                        MaxHeight="{TemplateBinding MaxDropDownHeight}">
+                                    <ScrollViewer Margin="2" SnapsToDevicePixels="True">
+                                        <ItemsPresenter />
+                                    </ScrollViewer>
+                                </Border>
+                            </Popup>
+                        </Grid>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsEditable" Value="True">
+                                <Setter TargetName="PART_EditableTextBox" Property="Visibility" Value="Visible" />
+                                <Setter TargetName="ContentSite" Property="Visibility" Value="Hidden" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
         </Style>
         <Style x:Key="SettingsSlider" TargetType="Slider">
             <Setter Property="Minimum" Value="0" />
             <Setter Property="Maximum" Value="100" />
+            <Setter Property="Height" Value="22" />
             <Setter Property="VerticalAlignment" Value="Center" />
             <Setter Property="Margin" Value="0,0,10,0" />
             <Setter Property="Foreground" Value="{StaticResource SettingsAccent}" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Slider">
+                        <Grid>
+                            <Track x:Name="PART_Track">
+                                <Track.DecreaseRepeatButton>
+                                    <RepeatButton Command="Slider.DecreaseLarge"
+                                                  Background="{StaticResource SettingsAccent}"
+                                                  BorderThickness="0"
+                                                  Height="4"
+                                                  VerticalAlignment="Center"
+                                                  IsTabStop="False">
+                                        <RepeatButton.Template>
+                                            <ControlTemplate TargetType="RepeatButton">
+                                                <Border Background="{TemplateBinding Background}" CornerRadius="2" />
+                                            </ControlTemplate>
+                                        </RepeatButton.Template>
+                                    </RepeatButton>
+                                </Track.DecreaseRepeatButton>
+                                <Track.IncreaseRepeatButton>
+                                    <RepeatButton Command="Slider.IncreaseLarge"
+                                                  Background="#354154"
+                                                  BorderThickness="0"
+                                                  Height="4"
+                                                  VerticalAlignment="Center"
+                                                  IsTabStop="False">
+                                        <RepeatButton.Template>
+                                            <ControlTemplate TargetType="RepeatButton">
+                                                <Border Background="{TemplateBinding Background}" CornerRadius="2" />
+                                            </ControlTemplate>
+                                        </RepeatButton.Template>
+                                    </RepeatButton>
+                                </Track.IncreaseRepeatButton>
+                                <Track.Thumb>
+                                    <Thumb Width="14" Height="14">
+                                        <Thumb.Template>
+                                            <ControlTemplate TargetType="Thumb">
+                                                <Border Background="#F8FAFF" BorderBrush="#80FFFFFF" BorderThickness="1" CornerRadius="7" />
+                                            </ControlTemplate>
+                                        </Thumb.Template>
+                                    </Thumb>
+                                </Track.Thumb>
+                            </Track>
+                        </Grid>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
         </Style>
         <Style x:Key="SettingsNumericBox" TargetType="TextBox" BasedOn="{StaticResource SettingsTextBox}">
-            <Setter Property="Width" Value="56" />
-            <Setter Property="Height" Value="30" />
-            <Setter Property="VerticalContentAlignment" Value="Center" />
+            <Setter Property="Width" Value="72" />
             <Setter Property="TextAlignment" Value="Center" />
         </Style>
 
         <Style x:Key="FloatlyToggle" TargetType="CheckBox">
             <Setter Property="Foreground" Value="{StaticResource SettingsText}" />
             <Setter Property="Cursor" Value="Hand" />
+            <Setter Property="MinHeight" Value="30" />
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="CheckBox">
@@ -97,7 +228,7 @@
                             <Border x:Name="Track" Grid.Column="1" Width="40" Height="22" CornerRadius="11"
                                     Background="#2A3140" BorderBrush="#33FFFFFF" BorderThickness="1" Margin="12,0,0,0">
                                 <Border x:Name="Thumb" Width="16" Height="16" CornerRadius="8"
-                                        Background="#8892A4" HorizontalAlignment="Left" Margin="3,0,0,0" />
+                                        Background="#E9EEF7" HorizontalAlignment="Left" Margin="3,0,0,0" />
                             </Border>
                         </Grid>
                         <ControlTemplate.Triggers>
@@ -117,8 +248,8 @@
         </Style>
 
         <Style x:Key="NavItemStyle" TargetType="ListBoxItem">
-            <Setter Property="Padding" Value="16,11" />
-            <Setter Property="Margin" Value="8,2" />
+            <Setter Property="Padding" Value="16,12" />
+            <Setter Property="Margin" Value="8,3" />
             <Setter Property="Foreground" Value="{StaticResource SettingsMuted}" />
             <Setter Property="Cursor" Value="Hand" />
             <Setter Property="Template">
@@ -149,14 +280,14 @@
             <Setter Property="Background" Value="{StaticResource SettingsAccent}" />
             <Setter Property="Foreground" Value="White" />
             <Setter Property="BorderThickness" Value="0" />
-            <Setter Property="Padding" Value="20,9" />
+            <Setter Property="Padding" Value="22,10" />
             <Setter Property="Cursor" Value="Hand" />
-            <Setter Property="MinWidth" Value="96" />
+            <Setter Property="MinWidth" Value="108" />
             <Setter Property="FontWeight" Value="SemiBold" />
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="Button">
-                        <Border Background="{TemplateBinding Background}" CornerRadius="8" Padding="{TemplateBinding Padding}">
+                        <Border Background="{TemplateBinding Background}" CornerRadius="6" Padding="{TemplateBinding Padding}">
                             <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
                         </Border>
                     </ControlTemplate>
@@ -164,18 +295,18 @@
             </Setter>
         </Style>
         <Style x:Key="SecondaryButton" TargetType="Button">
-            <Setter Property="Background" Value="#1E2430" />
+            <Setter Property="Background" Value="#B51D2736" />
             <Setter Property="Foreground" Value="{StaticResource SettingsText}" />
             <Setter Property="BorderBrush" Value="{StaticResource SettingsBorder}" />
             <Setter Property="BorderThickness" Value="1" />
             <Setter Property="Padding" Value="16,9" />
             <Setter Property="Cursor" Value="Hand" />
-            <Setter Property="MinWidth" Value="72" />
+            <Setter Property="MinWidth" Value="80" />
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="Button">
                         <Border Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}"
-                                BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="8"
+                                BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="6"
                                 Padding="{TemplateBinding Padding}">
                             <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
                         </Border>
@@ -184,18 +315,18 @@
             </Setter>
         </Style>
         <Style x:Key="SecondaryToggleButton" TargetType="ToggleButton">
-            <Setter Property="Background" Value="#1E2430" />
+            <Setter Property="Background" Value="#B51D2736" />
             <Setter Property="Foreground" Value="{StaticResource SettingsText}" />
             <Setter Property="BorderBrush" Value="{StaticResource SettingsBorder}" />
             <Setter Property="BorderThickness" Value="1" />
-            <Setter Property="Padding" Value="16,9" />
+            <Setter Property="Padding" Value="14,9" />
             <Setter Property="Cursor" Value="Hand" />
-            <Setter Property="MinWidth" Value="72" />
+            <Setter Property="MinWidth" Value="78" />
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="ToggleButton">
                         <Border Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}"
-                                BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="8"
+                                BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="6"
                                 Padding="{TemplateBinding Padding}">
                             <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
                         </Border>
@@ -225,6 +356,13 @@
                 </Trigger>
             </Style.Triggers>
         </Style>
+        <Style x:Key="TitleButton" TargetType="Button" BasedOn="{StaticResource LinkButton}">
+            <Setter Property="Width" Value="42" />
+            <Setter Property="Height" Value="34" />
+            <Setter Property="Padding" Value="0" />
+            <Setter Property="HorizontalContentAlignment" Value="Center" />
+            <Setter Property="VerticalContentAlignment" Value="Center" />
+        </Style>
         <Style x:Key="ModuleOrderListBox" TargetType="ListBox">
             <Setter Property="Background" Value="{StaticResource SettingsInputBg}" />
             <Setter Property="Foreground" Value="{StaticResource SettingsText}" />
@@ -246,533 +384,557 @@
         </Style>
     </Window.Resources>
 
-    <Grid Background="{StaticResource SettingsBg}">
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="200" />
-            <ColumnDefinition Width="*" />
-        </Grid.ColumnDefinitions>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="*" />
-            <RowDefinition Height="Auto" />
-        </Grid.RowDefinitions>
+    <Border Background="{StaticResource SettingsShellBg}" BorderBrush="#26FFFFFF" BorderThickness="1">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="50" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="74" />
+            </Grid.RowDefinitions>
 
-        <!-- Sidebar -->
-        <Border Grid.Row="0" Grid.Column="0" Background="{StaticResource SettingsSidebarBg}"
-                BorderBrush="#14FFFFFF" BorderThickness="0,0,1,0">
-            <Grid Margin="0,20,0,16">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="*" />
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="Auto" />
-                </Grid.RowDefinitions>
-
-                <StackPanel Grid.Row="0" Margin="20,0,16,20">
-                    <TextBlock Text="Floatly 设置" FontSize="18" FontWeight="SemiBold" Foreground="{StaticResource SettingsText}" />
-                    <TextBlock Text="Floatly 2.0 · 版本 2.0.0" FontSize="11" Foreground="{StaticResource SettingsMuted}" Margin="0,4,0,0" />
+            <Grid x:Name="TitleBar" Grid.Row="0" Background="#B80D1521" MouseLeftButtonDown="TitleBar_MouseLeftButtonDown">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="22,0,0,0">
+                    <TextBlock Text="&#xE713;" FontFamily="Segoe MDL2 Assets" FontSize="17" Foreground="#D8E5FF" Margin="0,0,12,0" />
+                    <TextBlock Text="Floatly 2.0 - 设置" FontSize="15" Foreground="{StaticResource SettingsText}" VerticalAlignment="Center" />
                 </StackPanel>
-
-                <ListBox x:Name="NavList" Grid.Row="1" Background="Transparent" BorderThickness="0"
-                         ItemContainerStyle="{StaticResource NavItemStyle}"
-                         SelectionChanged="NavList_SelectionChanged">
-                    <ListBoxItem Tag="general">
-                        <StackPanel Orientation="Horizontal">
-                            <TextBlock Text="&#xE713;" FontFamily="Segoe MDL2 Assets" FontSize="14" Margin="0,0,10,0" VerticalAlignment="Center" />
-                            <TextBlock Text="常规" VerticalAlignment="Center" />
-                        </StackPanel>
-                    </ListBoxItem>
-                    <ListBoxItem Tag="appearance">
-                        <StackPanel Orientation="Horizontal">
-                            <TextBlock Text="&#xE790;" FontFamily="Segoe MDL2 Assets" FontSize="14" Margin="0,0,10,0" VerticalAlignment="Center" />
-                            <TextBlock Text="外观" VerticalAlignment="Center" />
-                        </StackPanel>
-                    </ListBoxItem>
-                    <ListBoxItem Tag="weather">
-                        <StackPanel Orientation="Horizontal">
-                            <TextBlock Text="&#xE706;" FontFamily="Segoe MDL2 Assets" FontSize="14" Margin="0,0,10,0" VerticalAlignment="Center" />
-                            <TextBlock Text="天气" VerticalAlignment="Center" />
-                        </StackPanel>
-                    </ListBoxItem>
-                    <ListBoxItem Tag="calendar">
-                        <StackPanel Orientation="Horizontal">
-                            <TextBlock Text="&#xE787;" FontFamily="Segoe MDL2 Assets" FontSize="14" Margin="0,0,10,0" VerticalAlignment="Center" />
-                            <TextBlock Text="日历" VerticalAlignment="Center" />
-                        </StackPanel>
-                    </ListBoxItem>
-                    <ListBoxItem Tag="modules">
-                        <StackPanel Orientation="Horizontal">
-                            <TextBlock Text="&#xE80F;" FontFamily="Segoe MDL2 Assets" FontSize="14" Margin="0,0,10,0" VerticalAlignment="Center" />
-                            <TextBlock Text="模块" VerticalAlignment="Center" />
-                        </StackPanel>
-                    </ListBoxItem>
-                </ListBox>
-
-                <Button x:Name="BtnRestoreDefaults" Grid.Row="2" Style="{StaticResource LinkButton}"
-                        Margin="12,8,12,0" Click="BtnRestoreDefaults_Click">
-                    <StackPanel Orientation="Horizontal">
-                        <TextBlock Text="&#xE777;" FontFamily="Segoe MDL2 Assets" FontSize="12" Margin="0,0,8,0" VerticalAlignment="Center" />
-                        <TextBlock Text="恢复默认设置" VerticalAlignment="Center" />
-                    </StackPanel>
-                </Button>
-
-                <StackPanel Grid.Row="3" Margin="20,16,16,0">
-                    <TextBlock Text="关于 Floatly 2.0" FontSize="11" Foreground="{StaticResource SettingsMuted}" />
-                    <TextBlock Text="版本 2.0.0" FontSize="11" Foreground="#66FFFFFF" Margin="0,2,0,0" />
+                <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center" Margin="0,0,10,0">
+                    <Button Style="{StaticResource TitleButton}" Click="TitleMinimize_Click" ToolTip="最小化">
+                        <TextBlock Text="&#xE921;" FontFamily="Segoe MDL2 Assets" />
+                    </Button>
+                    <Button Style="{StaticResource TitleButton}" Click="TitleMaximize_Click" ToolTip="最大化">
+                        <TextBlock x:Name="MaximizeIcon" Text="&#xE922;" FontFamily="Segoe MDL2 Assets" />
+                    </Button>
+                    <Button Style="{StaticResource TitleButton}" Click="TitleClose_Click" ToolTip="关闭">
+                        <TextBlock Text="&#xE8BB;" FontFamily="Segoe MDL2 Assets" />
+                    </Button>
                 </StackPanel>
             </Grid>
-        </Border>
 
-        <!-- All sections on one scrollable page -->
-        <ScrollViewer x:Name="ContentScrollViewer" Grid.Row="0" Grid.Column="1"
-                      Margin="20,20,20,0" VerticalScrollBarVisibility="Auto">
-            <StackPanel>
-            <!-- 常规 -->
-            <Border x:Name="SectionGeneral" Height="0" Visibility="Collapsed" />
-            <Grid Margin="0,0,0,12">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*" />
-                        <ColumnDefinition Width="*" />
-                    </Grid.ColumnDefinitions>
-                    <StackPanel Grid.Column="0">
-                        <Border Style="{StaticResource SettingsCard}">
-                            <StackPanel>
-                                <TextBlock Style="{StaticResource CardTitle}" Text="窗口行为" />
-                                <CheckBox x:Name="ChkAlwaysOnTop" Style="{StaticResource FloatlyToggle}" Content="窗口置顶" Margin="0,0,0,12" />
-                                <CheckBox x:Name="ChkAutoStart" Style="{StaticResource FloatlyToggle}" Content="开机自动启动" Margin="0,0,0,12" />
-                                <CheckBox x:Name="ChkClickThrough" Style="{StaticResource FloatlyToggle}" Content="鼠标穿透" Margin="0,0,0,12" />
-                                <CheckBox x:Name="ChkGlobalHotkey" Style="{StaticResource FloatlyToggle}" Content="启用全局快捷键" />
-                            </StackPanel>
-                        </Border>
-                        <Border Style="{StaticResource SettingsCard}">
-                            <StackPanel>
-                                <TextBlock Style="{StaticResource CardTitle}" Text="工作时间" />
-                                <Grid Margin="0,0,0,10">
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="*" />
-                                        <ColumnDefinition Width="12" />
-                                        <ColumnDefinition Width="*" />
-                                    </Grid.ColumnDefinitions>
-                                    <StackPanel>
-                                        <TextBlock Style="{StaticResource FieldLabel}" Text="上班时间" Margin="0,0,0,6" />
-                                        <TextBox x:Name="TxtWorkStartTime" Style="{StaticResource SettingsTextBox}" Text="09:00" />
-                                    </StackPanel>
-                                    <StackPanel Grid.Column="2">
-                                        <TextBlock Style="{StaticResource FieldLabel}" Text="下班时间" Margin="0,0,0,6" />
-                                        <TextBox x:Name="TxtWorkEndTime" Style="{StaticResource SettingsTextBox}" Text="18:00" />
-                                    </StackPanel>
-                                </Grid>
-                                <CheckBox x:Name="ChkOffWorkWeekdaysOnly" Content="仅在工作日显示下班倒计时"
-                                          Foreground="{StaticResource SettingsText}" />
-                            </StackPanel>
-                        </Border>
-                        <Border Style="{StaticResource SettingsCard}" Margin="0,0,0,12">
-                            <StackPanel>
-                                <TextBlock Style="{StaticResource CardTitle}" Text="时钟显示" />
-                                <TextBlock Style="{StaticResource FieldLabel}" Text="时间格式" Margin="0,0,0,8" />
-                                <StackPanel Orientation="Horizontal" Margin="0,0,0,12">
-                                    <RadioButton x:Name="RbTime24h" Content="24 小时制" GroupName="TimeFormat" />
-                                    <RadioButton x:Name="RbTime12h" Content="12 小时制" GroupName="TimeFormat" />
-                                </StackPanel>
-                                <CheckBox x:Name="ChkShowSeconds" Style="{StaticResource FloatlyToggle}" Content="显示秒" />
-                            </StackPanel>
-                        </Border>
-                    </StackPanel>
-                    <StackPanel Grid.Column="1">
-                        <Border Style="{StaticResource SettingsCard}">
-                            <StackPanel>
-                                <TextBlock Style="{StaticResource CardTitle}" Text="快捷键设置" />
-                                <Grid Margin="0,0,0,10">
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="*" />
-                                        <ColumnDefinition Width="Auto" />
-                                    </Grid.ColumnDefinitions>
-                                    <StackPanel>
-                                        <TextBlock Style="{StaticResource FieldLabel}" Text="显示 / 隐藏快捷键" Margin="0,0,0,6" />
-                                        <TextBox x:Name="TxtHotkeyShowHide" Style="{StaticResource SettingsTextBox}" IsReadOnly="True"
-                                                 PreviewKeyDown="HotkeyTextBox_PreviewKeyDown"
-                                                 GotFocus="HotkeyShowHide_GotFocus" LostFocus="HotkeyTextBox_LostFocus" />
-                                    </StackPanel>
-                                    <Button x:Name="BtnRecordShowHide" Grid.Column="1" Margin="8,20,0,0" VerticalAlignment="Bottom"
-                                            Style="{StaticResource SecondaryButton}" Padding="10,6" MinWidth="40"
-                                            Click="BtnRecordShowHide_Click" ToolTip="编辑">
-                                        <TextBlock Text="&#xE70F;" FontFamily="Segoe MDL2 Assets" />
-                                    </Button>
-                                </Grid>
-                                <Grid Margin="0,0,0,10">
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="*" />
-                                        <ColumnDefinition Width="Auto" />
-                                    </Grid.ColumnDefinitions>
-                                    <StackPanel>
-                                        <TextBlock Style="{StaticResource FieldLabel}" Text="快速待办快捷键" Margin="0,0,0,6" />
-                                        <TextBox x:Name="TxtHotkeyQuickTodo" Style="{StaticResource SettingsTextBox}" IsReadOnly="True"
-                                                 PreviewKeyDown="HotkeyTextBox_PreviewKeyDown"
-                                                 GotFocus="HotkeyQuickTodo_GotFocus" LostFocus="HotkeyTextBox_LostFocus" />
-                                    </StackPanel>
-                                    <Button x:Name="BtnRecordQuickTodo" Grid.Column="1" Margin="8,20,0,0" VerticalAlignment="Bottom"
-                                            Style="{StaticResource SecondaryButton}" Padding="10,6" MinWidth="40"
-                                            Click="BtnRecordQuickTodo_Click" ToolTip="编辑">
-                                        <TextBlock Text="&#xE70F;" FontFamily="Segoe MDL2 Assets" />
-                                    </Button>
-                                </Grid>
-                                <StackPanel Orientation="Horizontal" Margin="0,4,0,0">
-                                    <Button x:Name="BtnRecordMode" Style="{StaticResource SecondaryButton}" Padding="0" Width="28" Height="28"
-                                            Background="{StaticResource SettingsRecord}" BorderThickness="0"
-                                            Click="BtnRecordShowHide_Click" ToolTip="录制模式">
-                                        <Ellipse Width="10" Height="10" Fill="White" />
-                                    </Button>
-                                    <TextBlock x:Name="HotkeyStatusText" Style="{StaticResource HintText}"
-                                               Text="录制模式：点击红色按钮或聚焦输入框后按下组合键" Margin="10,0,0,0" VerticalAlignment="Center" />
-                                </StackPanel>
-                            </StackPanel>
-                        </Border>
-                        <Border Style="{StaticResource SettingsCard}" Margin="0,0,0,12">
-                            <StackPanel>
-                                <TextBlock Style="{StaticResource CardTitle}" Text="摸鱼收入助手" />
-                                <Grid Margin="0,0,0,10">
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="*" />
-                                        <ColumnDefinition Width="Auto" />
-                                    </Grid.ColumnDefinitions>
-                                    <TextBlock Style="{StaticResource FieldLabel}" Text="月薪设置 (元)" />
-                                    <TextBox x:Name="TxtMonthlySalary" Grid.Column="1" Style="{StaticResource SettingsNumericBox}" Width="96" />
-                                </Grid>
-                                <Grid Margin="0,0,0,10">
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="*" />
-                                        <ColumnDefinition Width="Auto" />
-                                    </Grid.ColumnDefinitions>
-                                    <TextBlock Style="{StaticResource FieldLabel}" Text="每月工作天数" />
-                                    <TextBox x:Name="TxtWorkDaysPerMonth" Grid.Column="1" Style="{StaticResource SettingsNumericBox}" />
-                                </Grid>
-                                <Grid>
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="*" />
-                                        <ColumnDefinition Width="Auto" />
-                                    </Grid.ColumnDefinitions>
-                                    <TextBlock Style="{StaticResource FieldLabel}" Text="每日工作小时" />
-                                    <TextBox x:Name="TxtWorkHoursPerDay" Grid.Column="1" Style="{StaticResource SettingsNumericBox}" />
-                                </Grid>
-                            </StackPanel>
-                        </Border>
-                    </StackPanel>
-                </Grid>
+            <Grid Grid.Row="1">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="190" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
 
-            <!-- 外观 -->
-            <Border x:Name="SectionAppearance" Height="0" Visibility="Collapsed" Margin="0,8,0,0" />
-            <Grid Margin="0,0,0,12">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*" />
-                        <ColumnDefinition Width="*" />
-                    </Grid.ColumnDefinitions>
-                    <StackPanel Grid.Column="0">
-                        <Border Style="{StaticResource SettingsCard}">
-                            <StackPanel>
-                                <TextBlock Style="{StaticResource CardTitle}" Text="主题" />
-                                <Grid Margin="0,0,0,16">
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="*" />
-                                        <ColumnDefinition Width="12" />
-                                        <ColumnDefinition Width="*" />
-                                    </Grid.ColumnDefinitions>
-                                    <Border x:Name="ThemeDarkCard" CornerRadius="10" BorderThickness="2" BorderBrush="{StaticResource SettingsAccent}"
-                                            Background="#1A2030" Padding="12" Cursor="Hand" MouseLeftButtonUp="ThemeDarkCard_Click">
-                                        <Grid>
-                                            <Border Height="48" CornerRadius="6" Background="#131722" Margin="0,0,0,8" />
-                                            <TextBlock Text="深色" Foreground="{StaticResource SettingsText}" VerticalAlignment="Bottom" />
-                                            <TextBlock x:Name="ThemeDarkCheck" Text="&#xE73E;" FontFamily="Segoe MDL2 Assets"
-                                                       Foreground="{StaticResource SettingsAccent}" HorizontalAlignment="Right" VerticalAlignment="Top" />
-                                        </Grid>
-                                    </Border>
-                                    <Border x:Name="ThemeLightCard" Grid.Column="2" CornerRadius="10" BorderThickness="2" BorderBrush="#24FFFFFF"
-                                            Background="#E8ECF1" Padding="12" Cursor="Hand" MouseLeftButtonUp="ThemeLightCard_Click">
-                                        <Grid>
-                                            <Border Height="48" CornerRadius="6" Background="#F5F7FA" Margin="0,0,0,8" />
-                                            <TextBlock Text="浅色" Foreground="#1F2937" VerticalAlignment="Bottom" />
-                                            <TextBlock x:Name="ThemeLightCheck" Text="&#xE73E;" FontFamily="Segoe MDL2 Assets"
-                                                       Foreground="{StaticResource SettingsAccent}" HorizontalAlignment="Right" VerticalAlignment="Top"
-                                                       Visibility="Collapsed" />
-                                        </Grid>
-                                    </Border>
-                                    <RadioButton x:Name="RbThemeDark" GroupName="Theme" Visibility="Collapsed" />
-                                    <RadioButton x:Name="RbThemeLight" GroupName="Theme" Visibility="Collapsed" />
-                                </Grid>
-                                <TextBlock Style="{StaticResource FieldLabel}" Text="窗口透明度" Margin="0,0,0,8" />
-                                <Grid Margin="0,0,0,4">
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="*" />
-                                        <ColumnDefinition Width="Auto" />
-                                    </Grid.ColumnDefinitions>
-                                    <Slider x:Name="SliderOpacity" Style="{StaticResource SettingsSlider}"
-                                            Minimum="30" Maximum="100" IsSnapToTickEnabled="True" TickFrequency="1"
-                                            ValueChanged="SliderOpacity_ValueChanged" />
-                                    <TextBox x:Name="TxtOpacity" Grid.Column="1" Style="{StaticResource SettingsNumericBox}" Width="64"
-                                             LostFocus="TxtOpacity_LostFocus" KeyDown="TxtOpacity_KeyDown" />
-                                </Grid>
-                                <TextBlock Style="{StaticResource HintText}" Text="30% – 100%" Margin="0,0,0,14" />
-                                <TextBlock Style="{StaticResource FieldLabel}" Text="字号大小" Margin="0,0,0,8" />
-                                <Grid Margin="0,0,0,4">
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="*" />
-                                        <ColumnDefinition Width="Auto" />
-                                    </Grid.ColumnDefinitions>
-                                    <Slider x:Name="SliderFontSize" Style="{StaticResource SettingsSlider}"
-                                            Minimum="10" Maximum="16" IsSnapToTickEnabled="True" TickFrequency="1"
-                                            ValueChanged="SliderFontSize_ValueChanged" />
-                                    <TextBox x:Name="TxtFontSize" Grid.Column="1" Style="{StaticResource SettingsNumericBox}" Width="64"
-                                             LostFocus="TxtFontSize_LostFocus" KeyDown="TxtFontSize_KeyDown" />
-                                </Grid>
-                                <TextBlock Style="{StaticResource HintText}" Text="10 – 16 pt" Margin="0,0,0,14" />
-                                <TextBlock Style="{StaticResource FieldLabel}" Text="字体" Margin="0,0,0,8" />
-                                <ComboBox x:Name="CmbFontFamily" Style="{StaticResource SettingsComboBox}" IsEditable="True" />
+                <Border Grid.Column="0" Background="{StaticResource SettingsSidebarBg}"
+                        BorderBrush="#14FFFFFF" BorderThickness="0,0,1,0">
+                    <Grid Margin="0,20,0,16">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="*" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+
+                        <ListBox x:Name="NavList" Grid.Row="1" Background="Transparent" BorderThickness="0"
+                                 ItemContainerStyle="{StaticResource NavItemStyle}"
+                                 SelectionChanged="NavList_SelectionChanged">
+                            <ListBoxItem Tag="general">
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="&#xE713;" FontFamily="Segoe MDL2 Assets" FontSize="14" Margin="0,0,10,0" VerticalAlignment="Center" />
+                                    <TextBlock Text="常规" VerticalAlignment="Center" />
+                                </StackPanel>
+                            </ListBoxItem>
+                            <ListBoxItem Tag="appearance">
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="&#xE790;" FontFamily="Segoe MDL2 Assets" FontSize="14" Margin="0,0,10,0" VerticalAlignment="Center" />
+                                    <TextBlock Text="外观" VerticalAlignment="Center" />
+                                </StackPanel>
+                            </ListBoxItem>
+                            <ListBoxItem Tag="weather">
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="&#xE706;" FontFamily="Segoe MDL2 Assets" FontSize="14" Margin="0,0,10,0" VerticalAlignment="Center" />
+                                    <TextBlock Text="天气" VerticalAlignment="Center" />
+                                </StackPanel>
+                            </ListBoxItem>
+                            <ListBoxItem Tag="calendar">
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="&#xE787;" FontFamily="Segoe MDL2 Assets" FontSize="14" Margin="0,0,10,0" VerticalAlignment="Center" />
+                                    <TextBlock Text="日历" VerticalAlignment="Center" />
+                                </StackPanel>
+                            </ListBoxItem>
+                            <ListBoxItem Tag="modules">
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="&#xE80F;" FontFamily="Segoe MDL2 Assets" FontSize="14" Margin="0,0,10,0" VerticalAlignment="Center" />
+                                    <TextBlock Text="模块" VerticalAlignment="Center" />
+                                </StackPanel>
+                            </ListBoxItem>
+                        </ListBox>
+
+                        <Button x:Name="BtnRestoreDefaults" Grid.Row="2" Style="{StaticResource LinkButton}"
+                                Margin="12,8,12,0" Click="BtnRestoreDefaults_Click">
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="&#xE777;" FontFamily="Segoe MDL2 Assets" FontSize="12" Margin="0,0,8,0" VerticalAlignment="Center" />
+                                <TextBlock Text="恢复默认设置" VerticalAlignment="Center" />
                             </StackPanel>
-                        </Border>
-                        <Border Style="{StaticResource SettingsCard}" Margin="0,0,0,12">
-                            <StackPanel>
-                                <TextBlock Style="{StaticResource CardTitle}" Text="字体颜色" />
-                                <UniformGrid x:Name="FontColorPalette" Columns="6" Margin="0,0,0,10" />
-                                <Grid>
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="*" />
-                                        <ColumnDefinition Width="Auto" />
-                                        <ColumnDefinition Width="Auto" />
-                                    </Grid.ColumnDefinitions>
-                                    <TextBox x:Name="TxtCustomFontColor" Style="{StaticResource SettingsTextBox}"
-                                             ToolTip="支持 #RRGGBB" />
-                                    <Button Grid.Column="1" Style="{StaticResource SecondaryButton}" Padding="10,6" MinWidth="40" Margin="8,0,0,0"
-                                            ToolTip="编辑">
-                                        <TextBlock Text="&#xE70F;" FontFamily="Segoe MDL2 Assets" />
-                                    </Button>
-                                    <Button x:Name="BtnClearFontColor" Grid.Column="2" Content="恢复默认"
-                                            Margin="8,0,0,0" Style="{StaticResource SecondaryButton}"
-                                            Padding="12,6" Click="BtnClearFontColor_Click" />
-                                </Grid>
-                            </StackPanel>
-                        </Border>
-                    </StackPanel>
-                    <StackPanel Grid.Column="1">
-                        <Border Style="{StaticResource SettingsCard}">
-                            <StackPanel>
-                                <TextBlock Style="{StaticResource CardTitle}" Text="皮肤系统" />
-                                <UniformGrid Columns="4" Margin="0,0,0,14">
-                                    <ToggleButton x:Name="TbSkinDefault" Margin="0,0,6,0" Padding="8" Style="{StaticResource SecondaryToggleButton}"
-                                                  Click="SkinToggle_Click" Tag="default">
-                                        <StackPanel HorizontalAlignment="Center">
-                                            <TextBlock Text="&#xE771;" FontFamily="Segoe MDL2 Assets" FontSize="18" HorizontalAlignment="Center" />
-                                            <TextBlock Text="默认" FontSize="10" Margin="0,4,0,0" HorizontalAlignment="Center" />
-                                            <TextBlock Text="毛玻璃" FontSize="9" Foreground="{StaticResource SettingsMuted}" HorizontalAlignment="Center" />
+                        </Button>
+
+                        <StackPanel Grid.Row="3" Margin="20,16,16,0">
+                            <TextBlock Text="关于 Floatly 2.0" FontSize="11" Foreground="{StaticResource SettingsMuted}" />
+                            <TextBlock x:Name="VersionText" Text="版本 2.0.2" FontSize="11" Foreground="#66FFFFFF" Margin="0,2,0,0" />
+                        </StackPanel>
+                    </Grid>
+                </Border>
+
+                <ScrollViewer x:Name="ContentScrollViewer" Grid.Column="1"
+                              Margin="20,18,20,0" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+                    <Grid MaxWidth="1320" HorizontalAlignment="Stretch">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="0.9*" MinWidth="280" />
+                            <ColumnDefinition Width="0.85*" MinWidth="270" />
+                            <ColumnDefinition Width="1.35*" MinWidth="390" />
+                        </Grid.ColumnDefinitions>
+
+                        <StackPanel Grid.Column="0">
+                            <Border x:Name="SectionGeneral" Height="0" Visibility="Collapsed" />
+                            <Border Style="{StaticResource SettingsCard}">
+                                <StackPanel>
+                                    <TextBlock Style="{StaticResource CardTitle}" Text="窗口行为" />
+                                    <CheckBox x:Name="ChkAlwaysOnTop" Style="{StaticResource FloatlyToggle}" Content="窗口置顶" Margin="0,0,0,12" />
+                                    <CheckBox x:Name="ChkAutoStart" Style="{StaticResource FloatlyToggle}" Content="开机自动启动" Margin="0,0,0,12" />
+                                    <CheckBox x:Name="ChkClickThrough" Style="{StaticResource FloatlyToggle}" Content="鼠标穿透（开启后无法拖动窗口）" Margin="0,0,0,12" />
+                                    <CheckBox x:Name="ChkGlobalHotkey" Style="{StaticResource FloatlyToggle}" Content="启用全局快捷键" />
+                                </StackPanel>
+                            </Border>
+                            <Border Style="{StaticResource SettingsCard}">
+                                <StackPanel>
+                                    <TextBlock Style="{StaticResource CardTitle}" Text="工作时间" />
+                                    <Grid Margin="0,0,0,12">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="1.2*" />
+                                            <ColumnDefinition Width="12" />
+                                            <ColumnDefinition Width="1.2*" />
+                                        </Grid.ColumnDefinitions>
+                                        <StackPanel>
+                                            <TextBlock Style="{StaticResource FieldLabel}" Text="上班时间" Margin="0,0,0,6" />
+                                            <TextBox x:Name="TxtWorkStartTime" Style="{StaticResource SettingsTextBox}" Text="09:00" />
                                         </StackPanel>
-                                    </ToggleButton>
-                                    <ToggleButton x:Name="TbSkinSolid" Margin="0,0,6,0" Padding="8" Style="{StaticResource SecondaryToggleButton}"
-                                                  Click="SkinToggle_Click" Tag="solid">
-                                        <StackPanel HorizontalAlignment="Center">
-                                            <TextBlock Text="&#xE790;" FontFamily="Segoe MDL2 Assets" FontSize="18" HorizontalAlignment="Center" />
-                                            <TextBlock Text="纯色" FontSize="10" Margin="0,4,0,0" HorizontalAlignment="Center" />
+                                        <StackPanel Grid.Column="2">
+                                            <TextBlock Style="{StaticResource FieldLabel}" Text="下班时间" Margin="0,0,0,6" />
+                                            <TextBox x:Name="TxtWorkEndTime" Style="{StaticResource SettingsTextBox}" Text="18:00" />
                                         </StackPanel>
-                                    </ToggleButton>
-                                    <ToggleButton x:Name="TbSkinImage" Margin="0,0,6,0" Padding="8" Style="{StaticResource SecondaryToggleButton}"
-                                                  Click="SkinToggle_Click" Tag="image">
-                                        <StackPanel HorizontalAlignment="Center">
-                                            <TextBlock Text="&#xEB9F;" FontFamily="Segoe MDL2 Assets" FontSize="18" HorizontalAlignment="Center" />
-                                            <TextBlock Text="图片" FontSize="10" Margin="0,4,0,0" HorizontalAlignment="Center" />
-                                            <TextBlock Text="背景" FontSize="9" Foreground="{StaticResource SettingsMuted}" HorizontalAlignment="Center" />
-                                        </StackPanel>
-                                    </ToggleButton>
-                                    <ToggleButton x:Name="TbSkinVideo" Padding="8" Style="{StaticResource SecondaryToggleButton}"
-                                                  Click="SkinToggle_Click" Tag="video">
-                                        <StackPanel HorizontalAlignment="Center">
-                                            <TextBlock Text="&#xE714;" FontFamily="Segoe MDL2 Assets" FontSize="18" HorizontalAlignment="Center" />
-                                            <TextBlock Text="视频" FontSize="10" Margin="0,4,0,0" HorizontalAlignment="Center" />
-                                            <TextBlock Text="背景" FontSize="9" Foreground="{StaticResource SettingsMuted}" HorizontalAlignment="Center" />
-                                        </StackPanel>
-                                    </ToggleButton>
-                                </UniformGrid>
-                                <RadioButton x:Name="RbSkinDefault" GroupName="Skin" Visibility="Collapsed" />
-                                <RadioButton x:Name="RbSkinSolid" GroupName="Skin" Visibility="Collapsed" />
-                                <RadioButton x:Name="RbSkinImage" GroupName="Skin" Visibility="Collapsed" />
-                                <RadioButton x:Name="RbSkinVideo" GroupName="Skin" Visibility="Collapsed" />
-                                <Grid Margin="0,0,0,8">
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="*" />
-                                        <ColumnDefinition Width="Auto" />
-                                    </Grid.ColumnDefinitions>
-                                    <TextBox x:Name="TxtSkinImagePath" Style="{StaticResource SettingsTextBox}" IsReadOnly="True" />
-                                    <Button x:Name="BtnBrowseSkin" Grid.Column="1" Content="浏览图片…"
-                                            Margin="8,0,0,0" Style="{StaticResource SecondaryButton}"
-                                            Click="BtnBrowseSkin_Click" />
-                                </Grid>
-                                <Grid Margin="0,0,0,8">
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="*" />
-                                        <ColumnDefinition Width="Auto" />
-                                    </Grid.ColumnDefinitions>
-                                    <TextBox x:Name="TxtSkinVideoPath" Style="{StaticResource SettingsTextBox}" IsReadOnly="True" />
-                                    <Button x:Name="BtnBrowseSkinVideo" Grid.Column="1" Content="浏览视频…"
-                                            Margin="8,0,0,0" Style="{StaticResource SecondaryButton}"
-                                            Click="BtnBrowseSkinVideo_Click" />
-                                </Grid>
-                                <TextBlock Style="{StaticResource FieldLabel}" Text="背景遮罩透明度" Margin="0,0,0,8" />
-                                <Grid>
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="*" />
-                                        <ColumnDefinition Width="Auto" />
-                                    </Grid.ColumnDefinitions>
-                                    <Slider x:Name="SliderSkinOverlay" Style="{StaticResource SettingsSlider}"
-                                            Minimum="0" Maximum="85" IsSnapToTickEnabled="True" TickFrequency="1"
-                                            ValueChanged="SliderSkinOverlay_ValueChanged" />
-                                    <TextBox x:Name="TxtSkinOverlay" Grid.Column="1" Style="{StaticResource SettingsNumericBox}" Width="64"
-                                             LostFocus="TxtSkinOverlay_LostFocus" KeyDown="TxtSkinOverlay_KeyDown" />
-                                </Grid>
-                                <TextBlock Style="{StaticResource HintText}" Text="0% – 85%" Margin="0,6,0,0" />
-                            </StackPanel>
-                        </Border>
-                        <Border Style="{StaticResource SettingsCard}" Margin="0,0,0,12">
-                            <StackPanel>
-                                <TextBlock Style="{StaticResource CardTitle}" Text="窗口大小" />
-                                <TextBlock Style="{StaticResource HintText}"
-                                           Text="拖拽主窗口四边或四角可自由调整大小。建议保持适中宽度以便一眼获取今日信息。" Margin="0,0,0,12" />
-                                <Border Height="80" CornerRadius="8" BorderBrush="{StaticResource SettingsBorder}" BorderThickness="1"
-                                        Background="#121820" HorizontalAlignment="Left" Width="140">
-                                    <Grid>
-                                        <Border Margin="16,12" BorderBrush="#44FFFFFF" BorderThickness="1" CornerRadius="4" />
-                                        <TextBlock Text="&#xE71B;" FontFamily="Segoe MDL2 Assets" FontSize="10"
-                                                   Foreground="{StaticResource SettingsMuted}" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="6" />
                                     </Grid>
+                                    <CheckBox x:Name="ChkOffWorkWeekdaysOnly" Content="仅在工作日显示下班倒计时"
+                                              Foreground="{StaticResource SettingsText}" />
+                                </StackPanel>
+                            </Border>
+                            <Border Style="{StaticResource SettingsCard}">
+                                <StackPanel>
+                                    <TextBlock Style="{StaticResource CardTitle}" Text="时钟显示" />
+                                    <TextBlock Style="{StaticResource FieldLabel}" Text="时间格式" Margin="0,0,0,8" />
+                                    <StackPanel Orientation="Horizontal" Margin="0,0,0,12">
+                                        <RadioButton x:Name="RbTime24h" Content="24 小时制" GroupName="TimeFormat" />
+                                        <RadioButton x:Name="RbTime12h" Content="12 小时制" GroupName="TimeFormat" />
+                                    </StackPanel>
+                                    <CheckBox x:Name="ChkShowSeconds" Style="{StaticResource FloatlyToggle}" Content="显示秒" />
+                                </StackPanel>
+                            </Border>
+                            <Border x:Name="SectionWeather" Height="0" Visibility="Collapsed" />
+                            <Border Style="{StaticResource SettingsCard}">
+                                <StackPanel>
+                                    <TextBlock Style="{StaticResource CardTitle}" Text="天气" />
+                                    <CheckBox x:Name="ChkShowWeather" Style="{StaticResource FloatlyToggle}" Content="显示天气" Margin="0,0,0,12" />
+                                    <CheckBox x:Name="ChkShowCityName" Style="{StaticResource FloatlyToggle}" Content="显示城市名称" Margin="0,0,0,12" />
+                                    <CheckBox x:Name="ChkShowSunrise" Style="{StaticResource FloatlyToggle}" Content="显示日出日落" Margin="0,0,0,12" />
+                                    <CheckBox x:Name="ChkShowTomorrow" Style="{StaticResource FloatlyToggle}" Content="显示明日天气" Margin="0,0,0,18" />
+                                    <TextBlock Style="{StaticResource CardTitle}" Text="城市定位" />
+                                    <TextBlock Style="{StaticResource HintText}" Text="自动定位优先使用 Windows 位置服务；不可用时回退 IP 定位，也可手动输入城市。" Margin="0,0,0,12" />
+                                    <StackPanel Orientation="Horizontal" Margin="0,0,0,12">
+                                        <RadioButton x:Name="RbAutoLocate" Content="自动定位城市" GroupName="CityLocate" />
+                                        <RadioButton x:Name="RbManualCity" Content="手动输入城市" GroupName="CityLocate" Margin="16,0,0,0" />
+                                    </StackPanel>
+                                    <Grid Margin="0,0,0,10">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="Auto" />
+                                        </Grid.ColumnDefinitions>
+                                        <TextBox x:Name="TxtCity" Style="{StaticResource SettingsTextBox}" />
+                                        <Button x:Name="BtnDetectLocation" Grid.Column="1" Content="立即定位"
+                                                Margin="8,0,0,0" Style="{StaticResource SecondaryButton}"
+                                                Click="BtnDetectLocation_Click" />
+                                    </Grid>
+                                    <StackPanel Orientation="Horizontal" Margin="0,0,0,6">
+                                        <Ellipse Width="8" Height="8" Fill="{StaticResource SettingsGreen}" Margin="0,0,8,0" VerticalAlignment="Center" />
+                                        <TextBlock x:Name="LocationStatusText" Style="{StaticResource HintText}" Text="定位状态：等待定位" VerticalAlignment="Center" />
+                                    </StackPanel>
+                                    <TextBlock x:Name="LocationIpWarningText" Style="{StaticResource HintText}"
+                                               Text="代理可能影响 IP 定位结果，建议开启 Windows 位置服务。"
+                                               Foreground="#FFB86C" Visibility="Collapsed" />
+                                </StackPanel>
+                            </Border>
+                        </StackPanel>
+
+                        <StackPanel Grid.Column="1">
+                            <Border Style="{StaticResource SettingsCard}">
+                                <StackPanel>
+                                    <TextBlock Style="{StaticResource CardTitle}" Text="快捷键设置" />
+                                    <Grid Margin="0,0,0,10">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="Auto" />
+                                        </Grid.ColumnDefinitions>
+                                        <StackPanel>
+                                            <TextBlock Style="{StaticResource FieldLabel}" Text="显示 / 隐藏快捷键" Margin="0,0,0,6" />
+                                            <TextBox x:Name="TxtHotkeyShowHide" Style="{StaticResource SettingsTextBox}" IsReadOnly="True"
+                                                     PreviewKeyDown="HotkeyTextBox_PreviewKeyDown"
+                                                     GotFocus="HotkeyShowHide_GotFocus" LostFocus="HotkeyTextBox_LostFocus" />
+                                        </StackPanel>
+                                        <Button x:Name="BtnRecordShowHide" Grid.Column="1" Margin="8,20,0,0" VerticalAlignment="Bottom"
+                                                Style="{StaticResource SecondaryButton}" Padding="10,6" MinWidth="40"
+                                                Click="BtnRecordShowHide_Click" ToolTip="编辑">
+                                            <TextBlock Text="&#xE70F;" FontFamily="Segoe MDL2 Assets" />
+                                        </Button>
+                                    </Grid>
+                                    <Grid Margin="0,0,0,12">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="Auto" />
+                                        </Grid.ColumnDefinitions>
+                                        <StackPanel>
+                                            <TextBlock Style="{StaticResource FieldLabel}" Text="快速待办快捷键" Margin="0,0,0,6" />
+                                            <TextBox x:Name="TxtHotkeyQuickTodo" Style="{StaticResource SettingsTextBox}" IsReadOnly="True"
+                                                     PreviewKeyDown="HotkeyTextBox_PreviewKeyDown"
+                                                     GotFocus="HotkeyQuickTodo_GotFocus" LostFocus="HotkeyTextBox_LostFocus" />
+                                        </StackPanel>
+                                        <Button x:Name="BtnRecordQuickTodo" Grid.Column="1" Margin="8,20,0,0" VerticalAlignment="Bottom"
+                                                Style="{StaticResource SecondaryButton}" Padding="10,6" MinWidth="40"
+                                                Click="BtnRecordQuickTodo_Click" ToolTip="编辑">
+                                            <TextBlock Text="&#xE70F;" FontFamily="Segoe MDL2 Assets" />
+                                        </Button>
+                                    </Grid>
+                                    <StackPanel Orientation="Horizontal" Margin="0,2,0,0">
+                                        <Button x:Name="BtnRecordMode" Style="{StaticResource SecondaryButton}" Padding="0" Width="44" Height="34"
+                                                Background="{StaticResource SettingsRecord}" BorderThickness="0"
+                                                Click="BtnRecordShowHide_Click" ToolTip="录制模式">
+                                            <Ellipse Width="10" Height="10" Fill="White" />
+                                        </Button>
+                                        <TextBlock x:Name="HotkeyStatusText" Style="{StaticResource HintText}"
+                                                   Text="录制模式：点击红色按钮或聚焦输入框后按下组合键" Margin="10,0,0,0" VerticalAlignment="Center" />
+                                    </StackPanel>
+                                </StackPanel>
+                            </Border>
+                            <Border Style="{StaticResource SettingsCard}">
+                                <StackPanel>
+                                    <TextBlock Style="{StaticResource CardTitle}" Text="摸鱼收入助手" />
+                                    <Grid Margin="0,0,0,12">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="Auto" />
+                                        </Grid.ColumnDefinitions>
+                                        <TextBlock Style="{StaticResource FieldLabel}" Text="月薪设置（元）" />
+                                        <TextBox x:Name="TxtMonthlySalary" Grid.Column="1" Style="{StaticResource SettingsNumericBox}" Width="110" />
+                                    </Grid>
+                                    <Grid Margin="0,0,0,12">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="Auto" />
+                                        </Grid.ColumnDefinitions>
+                                        <TextBlock Style="{StaticResource FieldLabel}" Text="每月工作天数" />
+                                        <TextBox x:Name="TxtWorkDaysPerMonth" Grid.Column="1" Style="{StaticResource SettingsNumericBox}" />
+                                    </Grid>
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="Auto" />
+                                        </Grid.ColumnDefinitions>
+                                        <TextBlock Style="{StaticResource FieldLabel}" Text="每日工作小时" />
+                                        <TextBox x:Name="TxtWorkHoursPerDay" Grid.Column="1" Style="{StaticResource SettingsNumericBox}" />
+                                    </Grid>
+                                </StackPanel>
+                            </Border>
+                            <Border x:Name="SectionCalendar" Height="0" Visibility="Collapsed" />
+                            <Border Style="{StaticResource SettingsCard}">
+                                <StackPanel>
+                                    <TextBlock Style="{StaticResource CardTitle}" Text="日历" />
+                                    <CheckBox x:Name="ChkShowWeekStrip" Style="{StaticResource FloatlyToggle}" Content="显示万年历" Margin="0,0,0,12" />
+                                    <CheckBox x:Name="ChkShowHuangLi" Style="{StaticResource FloatlyToggle}" Content="显示黄历详情（宜忌、神煞、时辰）" Margin="0,0,0,18" />
+                                    <TextBlock Style="{StaticResource FieldLabel}" Text="默认视图" Margin="0,0,0,10" />
+                                    <StackPanel Orientation="Horizontal">
+                                        <RadioButton x:Name="RbCalWeek" Content="周历" GroupName="Calendar" />
+                                        <RadioButton x:Name="RbCalMonth" Content="月历" GroupName="Calendar" />
+                                    </StackPanel>
+                                </StackPanel>
+                            </Border>
+                        </StackPanel>
+
+                        <StackPanel Grid.Column="2">
+                            <Border x:Name="SectionAppearance" Height="0" Visibility="Collapsed" />
+                            <Border Style="{StaticResource SettingsCard}">
+                                <StackPanel>
+                                    <TextBlock Style="{StaticResource CardTitle}" Text="主题" />
+                                    <Grid Margin="0,0,0,16">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="1.2*" />
+                                            <ColumnDefinition Width="14" />
+                                            <ColumnDefinition Width="0.85*" />
+                                        </Grid.ColumnDefinitions>
+                                        <Border x:Name="ThemeDarkCard" CornerRadius="8" BorderThickness="2" BorderBrush="{StaticResource SettingsAccent}"
+                                                Background="#172238" Padding="12" Cursor="Hand" MouseLeftButtonUp="ThemeDarkCard_Click">
+                                            <Grid>
+                                                <Border Height="34" CornerRadius="6" Background="#111827" Margin="0,0,0,8" />
+                                                <TextBlock Text="深色" Foreground="{StaticResource SettingsText}" VerticalAlignment="Bottom" />
+                                                <TextBlock x:Name="ThemeDarkCheck" Text="&#xE73E;" FontFamily="Segoe MDL2 Assets"
+                                                           Foreground="{StaticResource SettingsAccent}" HorizontalAlignment="Right" VerticalAlignment="Top" />
+                                            </Grid>
+                                        </Border>
+                                        <Border x:Name="ThemeLightCard" Grid.Column="2" CornerRadius="8" BorderThickness="2" BorderBrush="#24FFFFFF"
+                                                Background="#E8ECF1" Padding="12" Cursor="Hand" MouseLeftButtonUp="ThemeLightCard_Click">
+                                            <Grid>
+                                                <Border Height="34" CornerRadius="6" Background="#F5F7FA" Margin="0,0,0,8" />
+                                                <TextBlock Text="浅色" Foreground="#1F2937" VerticalAlignment="Bottom" />
+                                                <TextBlock x:Name="ThemeLightCheck" Text="&#xE73E;" FontFamily="Segoe MDL2 Assets"
+                                                           Foreground="{StaticResource SettingsAccent}" HorizontalAlignment="Right" VerticalAlignment="Top"
+                                                           Visibility="Collapsed" />
+                                            </Grid>
+                                        </Border>
+                                        <RadioButton x:Name="RbThemeDark" GroupName="Theme" Visibility="Collapsed" />
+                                        <RadioButton x:Name="RbThemeLight" GroupName="Theme" Visibility="Collapsed" />
+                                    </Grid>
+
+                                    <Grid Margin="0,0,0,6">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="Auto" />
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="Auto" />
+                                        </Grid.ColumnDefinitions>
+                                        <TextBlock Style="{StaticResource FieldLabel}" Text="窗口透明度" />
+                                        <TextBlock Grid.Column="2" Text="75%" Foreground="{StaticResource SettingsText}" FontWeight="SemiBold" />
+                                    </Grid>
+                                    <Grid Margin="0,0,0,4">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="Auto" />
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="Auto" />
+                                        </Grid.ColumnDefinitions>
+                                        <TextBlock Text="30%" Style="{StaticResource HintText}" VerticalAlignment="Center" />
+                                        <Slider x:Name="SliderOpacity" Grid.Column="1" Style="{StaticResource SettingsSlider}"
+                                                Minimum="30" Maximum="100" IsSnapToTickEnabled="True" TickFrequency="1"
+                                                ValueChanged="SliderOpacity_ValueChanged" Margin="16,0" />
+                                        <TextBox x:Name="TxtOpacity" Grid.Column="2" Style="{StaticResource SettingsNumericBox}" Width="70"
+                                                 LostFocus="TxtOpacity_LostFocus" KeyDown="TxtOpacity_KeyDown" />
+                                    </Grid>
+
+                                    <Grid Margin="0,14,0,6">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="Auto" />
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="Auto" />
+                                        </Grid.ColumnDefinitions>
+                                        <TextBlock Style="{StaticResource FieldLabel}" Text="字号大小" />
+                                        <TextBlock Grid.Column="2" Text="13 pt" Foreground="{StaticResource SettingsText}" FontWeight="SemiBold" />
+                                    </Grid>
+                                    <Grid Margin="0,0,0,14">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="Auto" />
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="Auto" />
+                                        </Grid.ColumnDefinitions>
+                                        <TextBlock Text="10 pt" Style="{StaticResource HintText}" VerticalAlignment="Center" />
+                                        <Slider x:Name="SliderFontSize" Grid.Column="1" Style="{StaticResource SettingsSlider}"
+                                                Minimum="10" Maximum="16" IsSnapToTickEnabled="True" TickFrequency="1"
+                                                ValueChanged="SliderFontSize_ValueChanged" Margin="16,0" />
+                                        <TextBox x:Name="TxtFontSize" Grid.Column="2" Style="{StaticResource SettingsNumericBox}" Width="70"
+                                                 LostFocus="TxtFontSize_LostFocus" KeyDown="TxtFontSize_KeyDown" />
+                                    </Grid>
+
+                                    <TextBlock Style="{StaticResource FieldLabel}" Text="字体" Margin="0,0,0,8" />
+                                    <ComboBox x:Name="CmbFontFamily" Style="{StaticResource SettingsComboBox}" IsEditable="True" Margin="0,0,0,14" />
+
+                                    <TextBlock Style="{StaticResource FieldLabel}" Text="字体颜色" Margin="0,0,0,8" />
+                                    <Grid Margin="0,0,0,14">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="Auto" />
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="Auto" />
+                                            <ColumnDefinition Width="Auto" />
+                                        </Grid.ColumnDefinitions>
+                                        <UniformGrid x:Name="FontColorPalette" Columns="6" />
+                                        <TextBox x:Name="TxtCustomFontColor" Grid.Column="1" Style="{StaticResource SettingsTextBox}"
+                                                 ToolTip="支持 #RRGGBB" Margin="10,0,0,0" />
+                                        <Button Grid.Column="2" Style="{StaticResource SecondaryButton}" Padding="10,6" MinWidth="40" Margin="8,0,0,0"
+                                                ToolTip="编辑">
+                                            <TextBlock Text="&#xE70F;" FontFamily="Segoe MDL2 Assets" />
+                                        </Button>
+                                        <Button x:Name="BtnClearFontColor" Grid.Column="3" Content="恢复默认"
+                                                Margin="8,0,0,0" Style="{StaticResource SecondaryButton}"
+                                                Padding="12,6" Click="BtnClearFontColor_Click" />
+                                    </Grid>
+
+                                    <TextBlock Style="{StaticResource CardTitle}" Text="皮肤系统" Margin="0,4,0,12" />
+                                    <UniformGrid Columns="4" Margin="0,0,0,12">
+                                        <ToggleButton x:Name="TbSkinDefault" Margin="0,0,8,0" Padding="8" Style="{StaticResource SecondaryToggleButton}"
+                                                      Click="SkinToggle_Click" Tag="default">
+                                            <StackPanel HorizontalAlignment="Center">
+                                                <TextBlock Text="&#xE771;" FontFamily="Segoe MDL2 Assets" FontSize="16" HorizontalAlignment="Center" />
+                                                <TextBlock Text="默认" FontSize="10" Margin="0,4,0,0" HorizontalAlignment="Center" />
+                                                <TextBlock Text="毛玻璃" FontSize="9" Foreground="{StaticResource SettingsMuted}" HorizontalAlignment="Center" />
+                                            </StackPanel>
+                                        </ToggleButton>
+                                        <ToggleButton x:Name="TbSkinSolid" Margin="0,0,8,0" Padding="8" Style="{StaticResource SecondaryToggleButton}"
+                                                      Click="SkinToggle_Click" Tag="solid">
+                                            <StackPanel HorizontalAlignment="Center">
+                                                <TextBlock Text="&#xE790;" FontFamily="Segoe MDL2 Assets" FontSize="16" HorizontalAlignment="Center" />
+                                                <TextBlock Text="纯色" FontSize="10" Margin="0,4,0,0" HorizontalAlignment="Center" />
+                                            </StackPanel>
+                                        </ToggleButton>
+                                        <ToggleButton x:Name="TbSkinImage" Margin="0,0,8,0" Padding="8" Style="{StaticResource SecondaryToggleButton}"
+                                                      Click="SkinToggle_Click" Tag="image">
+                                            <StackPanel HorizontalAlignment="Center">
+                                                <TextBlock Text="&#xEB9F;" FontFamily="Segoe MDL2 Assets" FontSize="16" HorizontalAlignment="Center" />
+                                                <TextBlock Text="图片" FontSize="10" Margin="0,4,0,0" HorizontalAlignment="Center" />
+                                                <TextBlock Text="背景" FontSize="9" Foreground="{StaticResource SettingsMuted}" HorizontalAlignment="Center" />
+                                            </StackPanel>
+                                        </ToggleButton>
+                                        <ToggleButton x:Name="TbSkinVideo" Padding="8" Style="{StaticResource SecondaryToggleButton}"
+                                                      Click="SkinToggle_Click" Tag="video">
+                                            <StackPanel HorizontalAlignment="Center">
+                                                <TextBlock Text="&#xE714;" FontFamily="Segoe MDL2 Assets" FontSize="16" HorizontalAlignment="Center" />
+                                                <TextBlock Text="视频" FontSize="10" Margin="0,4,0,0" HorizontalAlignment="Center" />
+                                                <TextBlock Text="背景" FontSize="9" Foreground="{StaticResource SettingsMuted}" HorizontalAlignment="Center" />
+                                            </StackPanel>
+                                        </ToggleButton>
+                                    </UniformGrid>
+                                    <RadioButton x:Name="RbSkinDefault" GroupName="Skin" Visibility="Collapsed" />
+                                    <RadioButton x:Name="RbSkinSolid" GroupName="Skin" Visibility="Collapsed" />
+                                    <RadioButton x:Name="RbSkinImage" GroupName="Skin" Visibility="Collapsed" />
+                                    <RadioButton x:Name="RbSkinVideo" GroupName="Skin" Visibility="Collapsed" />
+                                    <Grid Margin="0,0,0,8">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="Auto" />
+                                        </Grid.ColumnDefinitions>
+                                        <TextBox x:Name="TxtSkinImagePath" Style="{StaticResource SettingsTextBox}" IsReadOnly="True" />
+                                        <Button x:Name="BtnBrowseSkin" Grid.Column="1" Content="浏览图片..."
+                                                Margin="8,0,0,0" Style="{StaticResource SecondaryButton}"
+                                                Click="BtnBrowseSkin_Click" />
+                                    </Grid>
+                                    <Grid Margin="0,0,0,12">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="Auto" />
+                                        </Grid.ColumnDefinitions>
+                                        <TextBox x:Name="TxtSkinVideoPath" Style="{StaticResource SettingsTextBox}" IsReadOnly="True" />
+                                        <Button x:Name="BtnBrowseSkinVideo" Grid.Column="1" Content="浏览视频..."
+                                                Margin="8,0,0,0" Style="{StaticResource SecondaryButton}"
+                                                Click="BtnBrowseSkinVideo_Click" />
+                                    </Grid>
+                                    <TextBlock Style="{StaticResource FieldLabel}" Text="背景遮罩透明度" Margin="0,0,0,8" />
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="Auto" />
+                                        </Grid.ColumnDefinitions>
+                                        <Slider x:Name="SliderSkinOverlay" Style="{StaticResource SettingsSlider}"
+                                                Minimum="0" Maximum="85" IsSnapToTickEnabled="True" TickFrequency="1"
+                                                ValueChanged="SliderSkinOverlay_ValueChanged" />
+                                        <TextBox x:Name="TxtSkinOverlay" Grid.Column="1" Style="{StaticResource SettingsNumericBox}" Width="70"
+                                                 LostFocus="TxtSkinOverlay_LostFocus" KeyDown="TxtSkinOverlay_KeyDown" />
+                                    </Grid>
+                                    <TextBlock Style="{StaticResource HintText}" Text="0% - 85%" Margin="0,6,0,0" />
+                                </StackPanel>
+                            </Border>
+
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="270" />
+                                </Grid.ColumnDefinitions>
+                                <Border x:Name="SectionModules" Height="0" Visibility="Collapsed" />
+                                <Border Style="{StaticResource SettingsCard}">
+                                    <StackPanel>
+                                        <TextBlock Style="{StaticResource CardTitle}" Text="模块" />
+                                        <TextBlock Style="{StaticResource HintText}" Text="显示顺序（拖拽排序后续补齐，当前使用按钮调整）" Margin="0,0,0,10" />
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*" />
+                                                <ColumnDefinition Width="58" />
+                                            </Grid.ColumnDefinitions>
+                                            <ListBox x:Name="ModuleOrderList" Height="170" Style="{StaticResource ModuleOrderListBox}"
+                                                     SelectionChanged="ModuleOrderList_SelectionChanged" />
+                                            <StackPanel Grid.Column="1" Margin="8,0,0,0">
+                                                <Button x:Name="BtnModuleUp" Content="上移" Style="{StaticResource ModuleOrderButton}"
+                                                        Click="BtnModuleUp_Click" Margin="0,0,0,8" />
+                                                <Button x:Name="BtnModuleDown" Content="下移"
+                                                        Style="{StaticResource ModuleOrderButton}" Click="BtnModuleDown_Click" Margin="0,0,0,8" />
+                                                <Button x:Name="BtnResetModuleOrder" Content="重置"
+                                                        Style="{StaticResource ModuleOrderButton}" Click="BtnResetModuleOrder_Click" />
+                                            </StackPanel>
+                                        </Grid>
+                                    </StackPanel>
                                 </Border>
-                            </StackPanel>
-                        </Border>
-                    </StackPanel>
-                </Grid>
+                                <Border Grid.Column="1" Style="{StaticResource SettingsCard}" Margin="0,0,0,12">
+                                    <StackPanel>
+                                        <TextBlock Style="{StaticResource CardTitle}" Text="番茄钟配置" />
+                                        <Grid Margin="0,0,0,10">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*" />
+                                                <ColumnDefinition Width="Auto" />
+                                            </Grid.ColumnDefinitions>
+                                            <TextBlock Style="{StaticResource FieldLabel}" Text="专注时长" />
+                                            <TextBox x:Name="TxtPomodoroWork" Grid.Column="1" Style="{StaticResource SettingsNumericBox}" />
+                                        </Grid>
+                                        <Grid Margin="0,0,0,10">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*" />
+                                                <ColumnDefinition Width="Auto" />
+                                            </Grid.ColumnDefinitions>
+                                            <TextBlock Style="{StaticResource FieldLabel}" Text="短休息时长" />
+                                            <TextBox x:Name="TxtPomodoroBreak" Grid.Column="1" Style="{StaticResource SettingsNumericBox}" />
+                                        </Grid>
+                                        <Grid Margin="0,0,0,10">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*" />
+                                                <ColumnDefinition Width="Auto" />
+                                            </Grid.ColumnDefinitions>
+                                            <TextBlock Style="{StaticResource FieldLabel}" Text="长休息时长" />
+                                            <TextBox x:Name="TxtPomodoroLongBreak" Grid.Column="1" Style="{StaticResource SettingsNumericBox}" />
+                                        </Grid>
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*" />
+                                                <ColumnDefinition Width="Auto" />
+                                            </Grid.ColumnDefinitions>
+                                            <TextBlock Style="{StaticResource FieldLabel}" Text="长休息前番茄数" />
+                                            <TextBox x:Name="TxtPomodoroSessions" Grid.Column="1" Style="{StaticResource SettingsNumericBox}" />
+                                        </Grid>
+                                    </StackPanel>
+                                </Border>
+                            </Grid>
 
-            <!-- 天气 -->
-            <Border x:Name="SectionWeather" Height="0" Visibility="Collapsed" />
-            <Border Style="{StaticResource SettingsCard}" HorizontalAlignment="Stretch" Margin="0,0,12,12">
-                    <StackPanel>
-                        <TextBlock Style="{StaticResource CardTitle}" Text="天气" />
-                        <CheckBox x:Name="ChkShowWeather" Style="{StaticResource FloatlyToggle}" Content="显示天气" Margin="0,0,0,12" />
-                        <CheckBox x:Name="ChkShowCityName" Style="{StaticResource FloatlyToggle}" Content="显示城市名称" Margin="0,0,0,12" />
-                        <CheckBox x:Name="ChkShowSunrise" Style="{StaticResource FloatlyToggle}" Content="显示日出日落" Margin="0,0,0,12" />
-                        <CheckBox x:Name="ChkShowTomorrow" Style="{StaticResource FloatlyToggle}" Content="显示明日天气" Margin="0,0,0,20" />
-                        <TextBlock Style="{StaticResource CardTitle}" Text="城市定位" />
-                        <TextBlock Style="{StaticResource HintText}" Text="自动定位优先使用 Windows 位置服务（Wi‑Fi/GPS，不受 VPN 影响）；不可用时回退 IP 定位。也可手动输入城市。" Margin="0,0,0,12" />
-                        <StackPanel Orientation="Horizontal" Margin="0,0,0,12">
-                            <RadioButton x:Name="RbAutoLocate" Content="自动定位城市" GroupName="CityLocate" />
-                            <RadioButton x:Name="RbManualCity" Content="手动输入" GroupName="CityLocate" Margin="16,0,0,0" />
+                            <Border Style="{StaticResource SettingsCard}" Margin="0,0,12,18">
+                                <StackPanel>
+                                    <TextBlock Style="{StaticResource CardTitle}" Text="窗口大小" />
+                                    <TextBlock Style="{StaticResource HintText}"
+                                               Text="拖拽主窗口四边或四角可自由调整大小。设置窗口内容在超宽屏下保持最大宽度，不会无限拉伸。" Margin="0,0,0,12" />
+                                    <Border Height="72" CornerRadius="8" BorderBrush="{StaticResource SettingsBorder}" BorderThickness="1"
+                                            Background="#121820" HorizontalAlignment="Left" Width="140">
+                                        <Grid>
+                                            <Border Margin="16,12" BorderBrush="#44FFFFFF" BorderThickness="1" CornerRadius="4" />
+                                            <TextBlock Text="&#xE71B;" FontFamily="Segoe MDL2 Assets" FontSize="10"
+                                                       Foreground="{StaticResource SettingsMuted}" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="6" />
+                                        </Grid>
+                                    </Border>
+                                </StackPanel>
+                            </Border>
                         </StackPanel>
-                        <Grid Margin="0,0,0,10">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="Auto" />
-                            </Grid.ColumnDefinitions>
-                            <TextBox x:Name="TxtCity" Style="{StaticResource SettingsTextBox}" />
-                            <Button x:Name="BtnDetectLocation" Grid.Column="1" Content="立即定位"
-                                    Margin="8,0,0,0" Style="{StaticResource SecondaryButton}"
-                                    Click="BtnDetectLocation_Click" />
-                        </Grid>
-                        <StackPanel Orientation="Horizontal" Margin="0,0,0,6">
-                            <Ellipse Width="8" Height="8" Fill="{StaticResource SettingsGreen}" Margin="0,0,8,0" VerticalAlignment="Center" />
-                            <TextBlock x:Name="LocationStatusText" Style="{StaticResource HintText}" Text="定位状态：等待定位" VerticalAlignment="Center" />
-                        </StackPanel>
-                        <TextBlock x:Name="LocationIpWarningText" Style="{StaticResource HintText}"
-                                   Text="代理可能影响 IP 定位结果，建议开启 Windows 位置服务。"
-                                   Foreground="#FFB86C" Visibility="Collapsed" />
-                    </StackPanel>
-                </Border>
+                    </Grid>
+                </ScrollViewer>
+            </Grid>
 
-            <!-- 日历 -->
-            <Border x:Name="SectionCalendar" Height="0" Visibility="Collapsed" />
-            <Border Style="{StaticResource SettingsCard}" MaxWidth="480" HorizontalAlignment="Left" Margin="0,0,12,12">
-                    <StackPanel>
-                        <TextBlock Style="{StaticResource CardTitle}" Text="日历" />
-                        <CheckBox x:Name="ChkShowWeekStrip" Style="{StaticResource FloatlyToggle}" Content="显示万年历" Margin="0,0,0,12" />
-                        <CheckBox x:Name="ChkShowHuangLi" Style="{StaticResource FloatlyToggle}" Content="显示黄历详情" Margin="0,0,0,20" />
-                        <TextBlock Style="{StaticResource FieldLabel}" Text="默认视图" Margin="0,0,0,10" />
-                        <StackPanel Orientation="Horizontal">
-                            <RadioButton x:Name="RbCalWeek" Content="周历" GroupName="Calendar" />
-                            <RadioButton x:Name="RbCalMonth" Content="月历" GroupName="Calendar" />
-                        </StackPanel>
-                    </StackPanel>
-                </Border>
-
-            <!-- 模块 -->
-            <Border x:Name="SectionModules" Height="0" Visibility="Collapsed" />
-            <Grid Margin="0,0,0,12">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*" />
-                        <ColumnDefinition Width="280" />
-                    </Grid.ColumnDefinitions>
-                    <Border Style="{StaticResource SettingsCard}">
-                        <StackPanel>
-                            <TextBlock Style="{StaticResource CardTitle}" Text="显示顺序" />
-                            <TextBlock Style="{StaticResource HintText}" Text="勾选模块以显示，使用按钮调整排列顺序" Margin="0,0,0,10" />
-                            <ListBox x:Name="ModuleOrderList" Height="280" Style="{StaticResource ModuleOrderListBox}"
-                                     SelectionChanged="ModuleOrderList_SelectionChanged" />
-                            <StackPanel Orientation="Horizontal" Margin="0,12,0,0">
-                                <Button x:Name="BtnModuleUp" Content="上移" Style="{StaticResource ModuleOrderButton}"
-                                        Click="BtnModuleUp_Click" />
-                                <Button x:Name="BtnModuleDown" Content="下移" Margin="8,0,0,0"
-                                        Style="{StaticResource ModuleOrderButton}" Click="BtnModuleDown_Click" />
-                                <Button x:Name="BtnResetModuleOrder" Content="重置顺序" Margin="8,0,0,0"
-                                        Style="{StaticResource ModuleOrderButton}" Click="BtnResetModuleOrder_Click" />
-                            </StackPanel>
-                        </StackPanel>
-                    </Border>
-                    <StackPanel Grid.Column="1">
-                        <Border Style="{StaticResource SettingsCard}">
-                            <StackPanel>
-                                <TextBlock Style="{StaticResource CardTitle}" Text="番茄钟配置" />
-                                <Grid Margin="0,0,0,10">
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="*" />
-                                        <ColumnDefinition Width="Auto" />
-                                    </Grid.ColumnDefinitions>
-                                    <TextBlock Style="{StaticResource FieldLabel}" Text="专注时长 (分钟)" />
-                                    <TextBox x:Name="TxtPomodoroWork" Grid.Column="1" Style="{StaticResource SettingsNumericBox}" />
-                                </Grid>
-                                <Grid Margin="0,0,0,10">
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="*" />
-                                        <ColumnDefinition Width="Auto" />
-                                    </Grid.ColumnDefinitions>
-                                    <TextBlock Style="{StaticResource FieldLabel}" Text="短休息时长 (分钟)" />
-                                    <TextBox x:Name="TxtPomodoroBreak" Grid.Column="1" Style="{StaticResource SettingsNumericBox}" />
-                                </Grid>
-                                <Grid Margin="0,0,0,10">
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="*" />
-                                        <ColumnDefinition Width="Auto" />
-                                    </Grid.ColumnDefinitions>
-                                    <TextBlock Style="{StaticResource FieldLabel}" Text="长休息时长 (分钟)" />
-                                    <TextBox x:Name="TxtPomodoroLongBreak" Grid.Column="1" Style="{StaticResource SettingsNumericBox}" />
-                                </Grid>
-                                <Grid>
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="*" />
-                                        <ColumnDefinition Width="Auto" />
-                                    </Grid.ColumnDefinitions>
-                                    <TextBlock Style="{StaticResource FieldLabel}" Text="长休息前番茄数" />
-                                    <TextBox x:Name="TxtPomodoroSessions" Grid.Column="1" Style="{StaticResource SettingsNumericBox}" />
-                                </Grid>
-                            </StackPanel>
-                        </Border>
-                    </StackPanel>
-                </Grid>
-            </StackPanel>
-        </ScrollViewer>
-
-        <!-- Footer -->
-        <Border Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Background="#0A0E14"
-                BorderBrush="#14FFFFFF" BorderThickness="0,1,0,0" Padding="20,14">
-            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
-                <Button Content="取消" Style="{StaticResource SecondaryButton}" Margin="0,0,8,0"
-                        IsCancel="True" Click="Cancel_Click" />
-                <Button Content="应用" Style="{StaticResource SecondaryButton}" Margin="0,0,8,0"
-                        Click="Apply_Click" />
-                <Button Content="保存设置" Style="{StaticResource PrimaryButton}" IsDefault="True"
-                        Click="Save_Click" />
-            </StackPanel>
-        </Border>
-    </Grid>
+            <Border Grid.Row="2" Background="#B80D1521" BorderBrush="#18FFFFFF" BorderThickness="0,1,0,0" Padding="20,14">
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                    <Button Content="取消" Style="{StaticResource SecondaryButton}" Margin="0,0,14,0"
+                            IsCancel="True" Click="Cancel_Click" />
+                    <Button Content="应用" Style="{StaticResource SecondaryButton}" Margin="0,0,14,0"
+                            Click="Apply_Click" />
+                    <Button Content="保存设置" Style="{StaticResource PrimaryButton}" IsDefault="True"
+                            Click="Save_Click" />
+                </StackPanel>
+            </Border>
+        </Grid>
+    </Border>
 </Window>
-
-

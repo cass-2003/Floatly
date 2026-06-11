@@ -69,6 +69,7 @@ public partial class SettingsWindow : Window
         _original.SkinMode = SkinService.NormalizeMode(_original.SkinMode);
         _original.SkinOverlayOpacity = SkinService.ClampOverlayOpacity(_original.SkinOverlayOpacity);
         InitializeComponent();
+        VersionText.Text = $"版本 {AppConstants.Version}";
         FontFamilyHelper.Apply(this, _original.FontFamily);
         SetupModuleListTemplate();
         RbSkinDefault.Checked += (_, _) => UpdateSkinControls();
@@ -80,6 +81,41 @@ public partial class SettingsWindow : Window
         LoadFromSettings(_original);
         NavList.SelectedIndex = 0;
         _isInitializing = false;
+    }
+
+    private void TitleBar_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+    {
+        if (e.ClickCount == 2)
+        {
+            ToggleWindowState();
+            return;
+        }
+
+        if (e.ButtonState == MouseButtonState.Pressed)
+        {
+            DragMove();
+        }
+    }
+
+    private void TitleMinimize_Click(object sender, RoutedEventArgs e)
+    {
+        WindowState = WindowState.Minimized;
+    }
+
+    private void TitleMaximize_Click(object sender, RoutedEventArgs e)
+    {
+        ToggleWindowState();
+    }
+
+    private void TitleClose_Click(object sender, RoutedEventArgs e)
+    {
+        Close();
+    }
+
+    private void ToggleWindowState()
+    {
+        WindowState = WindowState == WindowState.Maximized ? WindowState.Normal : WindowState.Maximized;
+        MaximizeIcon.Text = WindowState == WindowState.Maximized ? "\uE923" : "\uE922";
     }
 
     private void SetupModuleListTemplate()
