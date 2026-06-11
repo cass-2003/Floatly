@@ -17,7 +17,4 @@
       <supportedOS Id="{e2011457-1546-43c5-a5fe-008deee3d3f0}" />
     </application>
   </compatibility>
-  <file name="Microsoft.Windows.Shell.winmd">
-    <activatableClass name="Windows.Devices.Geolocation.Geolocator" threadingModel="both" />
-  </file>
 </assembly>
