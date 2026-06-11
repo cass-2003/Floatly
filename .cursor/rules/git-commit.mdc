@@ -1,0 +1,11 @@
+---
+description: 每次代码修改后自动 git commit
+alwaysApply: true
+---
+
+# Git 提交约定（本项目）
+
+- 完成每次有意义的代码修改后，**必须**创建 git commit，不要留未提交改动。
+- 一次逻辑变更对应一次 commit；message 使用 Conventional Commits（如 `feat(desk-lite): ...`）。
+- commit 前检查 `git status` / `git diff`，只暂存相关文件，不提交 `bin/`、`obj/`、密钥等。
+- 本机若无 git 用户配置，用 `git -c user.name=... -c user.email=... commit`，不要改全局 `git config`。
