@@ -3,7 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Title="DeskLite 设置"
         Width="440"
-        Height="540"
+        Height="620"
         WindowStartupLocation="CenterScreen"
         ResizeMode="NoResize"
         Background="#FAFAFA"
@@ -177,8 +177,43 @@
                             <TextBox x:Name="TxtFontSize" Grid.Column="1" Style="{StaticResource SettingsNumericBox}"
                                      LostFocus="TxtFontSize_LostFocus" KeyDown="TxtFontSize_KeyDown" />
                         </Grid>
-                        <TextBlock Style="{StaticResource HintText}" Text="10–16 pt" />
-                        <TextBlock Style="{StaticResource HintText}" Text="拖拽窗口四边或四角可调整大小" Margin="0,14,0,0" />
+                        <TextBlock Style="{StaticResource HintText}" Text="10–16 pt" Margin="0,0,0,14" />
+
+                        <TextBlock Style="{StaticResource SectionTitle}" Text="字体" />
+                        <ComboBox x:Name="CmbFontFamily" Style="{StaticResource SettingsComboBox}"
+                                  IsEditable="True" Margin="0,0,0,4" />
+                        <TextBlock Style="{StaticResource HintText}" Text="从列表选择或输入已安装字体名称" Margin="0,0,0,14" />
+
+                        <TextBlock Style="{StaticResource SectionTitle}" Text="皮肤" />
+                        <StackPanel Orientation="Horizontal" Margin="0,0,0,8">
+                            <RadioButton x:Name="RbSkinDefault" Content="默认" GroupName="Skin" />
+                            <RadioButton x:Name="RbSkinSolid" Content="纯色" GroupName="Skin" />
+                            <RadioButton x:Name="RbSkinImage" Content="自定义图片" GroupName="Skin" />
+                        </StackPanel>
+                        <Grid Margin="0,0,0,4">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <TextBox x:Name="TxtSkinImagePath" Grid.Column="0" Height="32"
+                                     Style="{StaticResource SettingsTextBox}" IsReadOnly="True" />
+                            <Button x:Name="BtnBrowseSkin" Grid.Column="1" Content="浏览…"
+                                    Margin="8,0,0,0" Style="{StaticResource SecondaryButton}"
+                                    Click="BtnBrowseSkin_Click" />
+                        </Grid>
+                        <Grid Margin="0,0,0,4">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <Slider x:Name="SliderSkinOverlay" Grid.Column="0" Style="{StaticResource SettingsSlider}"
+                                    Minimum="0" Maximum="85" IsSnapToTickEnabled="True" TickFrequency="1"
+                                    ValueChanged="SliderSkinOverlay_ValueChanged" />
+                            <TextBox x:Name="TxtSkinOverlay" Grid.Column="1" Style="{StaticResource SettingsNumericBox}"
+                                     Width="56" LostFocus="TxtSkinOverlay_LostFocus" KeyDown="TxtSkinOverlay_KeyDown" />
+                        </Grid>
+                        <TextBlock Style="{StaticResource HintText}" Text="图片遮罩 0–85%（提高可读性）" Margin="0,0,0,14" />
+                        <TextBlock Style="{StaticResource HintText}" Text="拖拽窗口四边或四角可调整大小" />
                     </StackPanel>
                 </ScrollViewer>
             </TabItem>

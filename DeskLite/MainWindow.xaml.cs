@@ -15,6 +15,7 @@ public partial class MainWindow : Window
     private static readonly string[] WeekLabels = ["一", "二", "三", "四", "五", "六", "日"];
 
     private readonly TodoStore _todoStore = new();
+    private readonly DateNoteStore _dateNoteStore = new();
     private readonly WeatherService _weatherService = new();
     private readonly LocationService _locationService = new();
     private readonly TodoReminderService _reminderService = new();
@@ -150,6 +151,7 @@ public partial class MainWindow : Window
             UpdateWindowHeight();
         }
 
+        FontFamilyHelper.Apply(this, _settings.FontFamily);
         FontScaleHelper.Apply(this, _settings.FontScale);
         if (_settings.ShowHuangLi)
         {
@@ -205,8 +207,9 @@ public partial class MainWindow : Window
     {
         _palette = AppThemePalette.For(AppThemePalette.Parse(_settings.Theme));
 
-        MainBorder.Background = new SolidColorBrush(_palette.PanelBackground);
+        MainBorder.Background = SkinService.CreatePanelBackground(_settings, _palette);
         MainBorder.BorderBrush = new SolidColorBrush(_palette.PanelBorder);
+        ApplySkinOverlay();
         DividerBorder.Background = new SolidColorBrush(_palette.Divider);
 
         ClockText.Foreground = Brush(_palette.TextPrimary);
@@ -251,6 +254,21 @@ public partial class MainWindow : Window
         {
             RefreshHuangLi(_calendarPreviewDate ?? DateTime.Today);
         }
+    }
+
+    private void ApplySkinOverlay()
+    {
+        if (!SkinService.ShouldShowOverlay(_settings))
+        {
+            SkinOverlay.Visibility = Visibility.Collapsed;
+            return;
+        }
+
+        var opacity = SkinService.ClampOverlayOpacity(_settings.SkinOverlayOpacity);
+        SkinOverlay.Background = new SolidColorBrush(System.Windows.Media.Color.FromArgb(
+            (byte)Math.Round(opacity * 255),
+            0, 0, 0));
+        SkinOverlay.Visibility = Visibility.Visible;
     }
 
     private void UpdateCalendarModeButtons()
@@ -595,7 +613,7 @@ public partial class MainWindow : Window
 
         if (_settings.ShowWeekStrip)
         {
-            height += _calendarMode == CalendarViewMode.Month ? 200 : 95;
+            height += _calendarMode == CalendarViewMode.Month ? 220 : 102;
         }
 
         _suppressSizePersist = true;
@@ -830,6 +848,8 @@ public partial class MainWindow : Window
             ? Visibility.Visible
             : Visibility.Collapsed;
 
+        var calScale = FontScaleHelper.CalendarScale(_settings.FontScale);
+
         if (_calendarMode == CalendarViewMode.Month)
         {
             WeekdayHeader.Children.Clear();
@@ -838,7 +858,7 @@ public partial class MainWindow : Window
                 WeekdayHeader.Children.Add(new TextBlock
                 {
                     Text = WeekLabels[i],
-                    FontSize = 9,
+                    FontSize = FontScaleHelper.CalSize(12, _settings.FontScale),
                     Foreground = Brush(_palette.WeekLabel),
                     HorizontalAlignment = System.Windows.HorizontalAlignment.Center
                 });
@@ -853,13 +873,13 @@ public partial class MainWindow : Window
 
         foreach (var day in days)
         {
-            grid.Children.Add(BuildCalendarCell(day, today, preview));
+            grid.Children.Add(BuildCalendarCell(day, today, preview, calScale));
         }
 
         CalendarPanel.Children.Add(grid);
     }
 
-    private UIElement BuildCalendarCell(DateTime day, DateTime today, DateTime? preview)
+    private UIElement BuildCalendarCell(DateTime day, DateTime today, DateTime? preview, double calScale)
     {
         var isToday = day == today;
         var isPreview = preview == day;
@@ -867,13 +887,14 @@ public partial class MainWindow : Window
         var dayInfo = LunarCalendar.Get(day);
         var hasMark = dayInfo.Mark is not null;
         var holiday = HolidayService.GetMark(day);
+        var hasNote = _dateNoteStore.HasNote(day);
 
         var cell = new StackPanel
         {
             HorizontalAlignment = System.Windows.HorizontalAlignment.Center,
             Cursor = System.Windows.Input.Cursors.Hand,
             Tag = day,
-            Margin = new Thickness(0, 1, 0, 1)
+            Margin = new Thickness(0, 0, 0, 0)
         };
         cell.MouseLeftButtonDown += CalendarDay_Click;
 
@@ -882,7 +903,7 @@ public partial class MainWindow : Window
             cell.Children.Add(new TextBlock
             {
                 Text = WeekLabels[((int)day.DayOfWeek + 6) % 7],
-                FontSize = 10,
+                FontSize = 12 * calScale,
                 Foreground = isPreview ? Brush(_palette.Accent) : Brush(_palette.WeekLabel),
                 HorizontalAlignment = System.Windows.HorizontalAlignment.Center
             });
@@ -891,13 +912,13 @@ public partial class MainWindow : Window
         cell.Children.Add(new TextBlock
         {
             Text = isToday && preview is null ? "●" : day.Day.ToString(),
-            FontSize = _calendarMode == CalendarViewMode.Month ? 10 : isToday ? 10 : 11,
+            FontSize = 13 * calScale,
             FontWeight = isPreview ? FontWeights.SemiBold : FontWeights.Normal,
             Foreground = !inMonth
                 ? Brush(0x4B, 0x55, 0x63)
                 : isToday || isPreview ? Brush(_palette.Accent) : Brush(_palette.WeekSolar),
             HorizontalAlignment = System.Windows.HorizontalAlignment.Center,
-            Margin = new Thickness(0, 1, 0, 0)
+            Margin = new Thickness(0, 0, 0, 0)
         });
 
         var lunarText = hasMark ? dayInfo.Mark! : dayInfo.ShortLunar;
@@ -909,7 +930,7 @@ public partial class MainWindow : Window
         cell.Children.Add(new TextBlock
         {
             Text = lunarText,
-            FontSize = 8,
+            FontSize = 11 * calScale,
             Foreground = hasMark ? Brush(_palette.Mark) : Brush(_palette.WeekLunar),
             HorizontalAlignment = System.Windows.HorizontalAlignment.Center,
             TextTrimming = TextTrimming.CharacterEllipsis
@@ -920,13 +941,31 @@ public partial class MainWindow : Window
             cell.Children.Add(new TextBlock
             {
                 Text = holiday,
-                FontSize = 7,
+                FontSize = 9 * calScale,
                 Foreground = holiday == "休" ? Brush(0x22, 0xC5, 0x5E) : Brush(0xEF, 0x44, 0x44),
                 HorizontalAlignment = System.Windows.HorizontalAlignment.Center
             });
         }
 
-        return cell;
+        if (!hasNote)
+        {
+            return cell;
+        }
+
+        var wrapper = new Grid { Margin = new Thickness(0, 1, 0, 1) };
+        wrapper.Children.Add(cell);
+        wrapper.Children.Add(new System.Windows.Shapes.Ellipse
+        {
+            Width = 5 * calScale,
+            Height = 5 * calScale,
+            Fill = Brush(0xA7, 0x8B, 0xFA),
+            HorizontalAlignment = System.Windows.HorizontalAlignment.Right,
+            VerticalAlignment = VerticalAlignment.Top,
+            Margin = new Thickness(0, 1, 1, 0),
+            IsHitTestVisible = false,
+            ToolTip = _dateNoteStore.GetNote(day)
+        });
+        return wrapper;
     }
 
     private void RefreshCityDisplay(WeatherCache? cache = null)
@@ -955,7 +994,7 @@ public partial class MainWindow : Window
 
     private void CalendarDay_Click(object sender, System.Windows.Input.MouseButtonEventArgs e)
     {
-        if (sender is not StackPanel { Tag: DateTime day })
+        if (!TryGetCalendarDay(sender, out var day))
         {
             return;
         }
@@ -966,8 +1005,33 @@ public partial class MainWindow : Window
             return;
         }
 
+        var existing = _dateNoteStore.GetNote(day);
+        var edited = DateNoteDialog.Show(day, existing, _palette, _settings.FontFamily);
+        if (edited is not null)
+        {
+            _dateNoteStore.SetNote(day, string.IsNullOrWhiteSpace(edited) ? null : edited);
+            RefreshCalendar();
+        }
+
         _calendarPreviewDate = day == _calendarPreviewDate ? null : day;
         RefreshClock();
+    }
+
+    private static bool TryGetCalendarDay(object sender, out DateTime day)
+    {
+        switch (sender)
+        {
+            case StackPanel { Tag: DateTime panelDay }:
+                day = panelDay;
+                return true;
+            case Grid { Children: { Count: > 0 } children }
+                when children[0] is StackPanel { Tag: DateTime gridDay }:
+                day = gridDay;
+                return true;
+            default:
+                day = default;
+                return false;
+        }
     }
 
     private async Task RefreshWeatherAsync()
@@ -1405,6 +1469,10 @@ public partial class MainWindow : Window
         _settings.Opacity = next.Opacity;
         _settings.FontSizePt = next.FontSizePt;
         _settings.FontScale = next.FontScale;
+        _settings.FontFamily = next.FontFamily;
+        _settings.SkinMode = next.SkinMode;
+        _settings.SkinImagePath = next.SkinImagePath;
+        _settings.SkinOverlayOpacity = next.SkinOverlayOpacity;
         _settings.City = next.City;
         _settings.CalendarMode = next.CalendarMode;
         _settings.Left = left;

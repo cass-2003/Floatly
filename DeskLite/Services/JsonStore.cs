@@ -58,6 +58,9 @@ public static class JsonStore
             var settings = JsonSerializer.Deserialize<AppSettings>(json, JsonOptions) ?? new AppSettings();
             FontScaleHelper.NormalizeFontSettings(settings);
             settings.Opacity = Math.Clamp(settings.Opacity, 0.30, 1.0);
+            settings.FontFamily = FontFamilyHelper.ResolveName(settings.FontFamily);
+            settings.SkinMode = SkinService.NormalizeMode(settings.SkinMode);
+            settings.SkinOverlayOpacity = SkinService.ClampOverlayOpacity(settings.SkinOverlayOpacity);
             return settings;
         }
         catch

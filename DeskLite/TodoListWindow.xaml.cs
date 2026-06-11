@@ -28,6 +28,7 @@ public partial class TodoListWindow : Window
         _settings = settings;
         _onChanged = onChanged;
         _palette = AppThemePalette.For(AppThemePalette.Parse(settings.Theme));
+        FontFamilyHelper.Apply(this, settings.FontFamily);
         ApplyTheme();
         RefreshList();
     }

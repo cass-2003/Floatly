@@ -2,6 +2,7 @@ using System.Text.Json;
 using System.Windows;
 using DeskLite.Models;
 using DeskLite.Services;
+using Microsoft.Win32;
 
 namespace DeskLite;
 
@@ -16,6 +17,7 @@ public partial class SettingsWindow : Window
     private readonly LocationService _locationService = new();
     private bool _syncOpacity;
     private bool _syncFontSize;
+    private bool _syncSkinOverlay;
     private bool _isInitializing = true;
 
     public AppSettings? Result { get; private set; }
@@ -24,7 +26,14 @@ public partial class SettingsWindow : Window
     {
         _original = Clone(settings);
         FontScaleHelper.NormalizeFontSettings(_original);
+        _original.FontFamily = FontFamilyHelper.ResolveName(_original.FontFamily);
+        _original.SkinMode = SkinService.NormalizeMode(_original.SkinMode);
+        _original.SkinOverlayOpacity = SkinService.ClampOverlayOpacity(_original.SkinOverlayOpacity);
         InitializeComponent();
+        FontFamilyHelper.Apply(this, _original.FontFamily);
+        RbSkinDefault.Checked += (_, _) => UpdateSkinControls();
+        RbSkinSolid.Checked += (_, _) => UpdateSkinControls();
+        RbSkinImage.Checked += (_, _) => UpdateSkinControls();
         LoadFromSettings(_original);
         _isInitializing = false;
     }
@@ -59,6 +68,8 @@ public partial class SettingsWindow : Window
 
         var fontPt = FontScaleHelper.ResolvePt(s);
         SetFontSizeUi(fontPt);
+        LoadFontFamilies(s.FontFamily);
+        LoadSkinSettings(s);
 
         ChkShowWeather.IsChecked = s.ShowWeather;
         ChkShowCityName.IsChecked = s.ShowCityName;
@@ -102,6 +113,62 @@ public partial class SettingsWindow : Window
         SliderOpacity.Value = percent;
         TxtOpacity.Text = percent.ToString();
         _syncOpacity = false;
+    }
+
+    private void LoadFontFamilies(string? selected)
+    {
+        CmbFontFamily.Items.Clear();
+        foreach (var family in FontFamilyHelper.GetSelectableFamilies())
+        {
+            CmbFontFamily.Items.Add(family);
+        }
+
+        CmbFontFamily.Text = FontFamilyHelper.ResolveName(selected);
+    }
+
+    private void LoadSkinSettings(AppSettings s)
+    {
+        var mode = SkinService.NormalizeMode(s.SkinMode);
+        RbSkinDefault.IsChecked = mode == SkinService.ModeDefault;
+        RbSkinSolid.IsChecked = mode == SkinService.ModeSolid;
+        RbSkinImage.IsChecked = mode == SkinService.ModeImage;
+        TxtSkinImagePath.Text = s.SkinImagePath ?? string.Empty;
+        SetSkinOverlayUi((int)Math.Round(SkinService.ClampOverlayOpacity(s.SkinOverlayOpacity) * 100));
+        UpdateSkinControls();
+    }
+
+    private void UpdateSkinControls()
+    {
+        var imageMode = RbSkinImage.IsChecked == true;
+        TxtSkinImagePath.IsEnabled = imageMode;
+        BtnBrowseSkin.IsEnabled = imageMode;
+        SliderSkinOverlay.IsEnabled = imageMode;
+        TxtSkinOverlay.IsEnabled = imageMode;
+    }
+
+    private void SetSkinOverlayUi(int percent)
+    {
+        if (SliderSkinOverlay is null || TxtSkinOverlay is null)
+        {
+            return;
+        }
+
+        percent = Math.Clamp(percent, 0, 85);
+        _syncSkinOverlay = true;
+        SliderSkinOverlay.Value = percent;
+        TxtSkinOverlay.Text = percent.ToString();
+        _syncSkinOverlay = false;
+    }
+
+    private int ReadSkinOverlayPercent()
+    {
+        var text = TxtSkinOverlay.Text.Trim().TrimEnd('%');
+        if (int.TryParse(text, out var value))
+        {
+            return Math.Clamp(value, 0, 85);
+        }
+
+        return (int)SliderSkinOverlay.Value;
     }
 
     private void SetFontSizeUi(int pt)
@@ -199,6 +266,57 @@ public partial class SettingsWindow : Window
         SetFontSizeUi(ReadFontSizePt());
     }
 
+    private void SliderSkinOverlay_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+    {
+        if (_isInitializing || _syncSkinOverlay || TxtSkinOverlay is null)
+        {
+            return;
+        }
+
+        SetSkinOverlayUi((int)SliderSkinOverlay.Value);
+    }
+
+    private void TxtSkinOverlay_LostFocus(object sender, RoutedEventArgs e) => CommitSkinOverlayText();
+
+    private void TxtSkinOverlay_KeyDown(object sender, System.Windows.Input.KeyEventArgs e)
+    {
+        if (e.Key == System.Windows.Input.Key.Enter)
+        {
+            CommitSkinOverlayText();
+        }
+    }
+
+    private void CommitSkinOverlayText()
+    {
+        SetSkinOverlayUi(ReadSkinOverlayPercent());
+    }
+
+    private void BtnBrowseSkin_Click(object sender, RoutedEventArgs e)
+    {
+        var dlg = new Microsoft.Win32.OpenFileDialog
+        {
+            Title = "选择皮肤背景图片",
+            Filter = "图片文件|*.png;*.jpg;*.jpeg;*.webp|所有文件|*.*"
+        };
+
+        if (dlg.ShowDialog(this) != true)
+        {
+            return;
+        }
+
+        var imported = SkinService.ImportSkinImage(dlg.FileName);
+        if (imported is null)
+        {
+            System.Windows.MessageBox.Show(this, "无法导入所选图片，请换一张 png/jpg/webp 图片。", "DeskLite",
+                MessageBoxButton.OK, MessageBoxImage.Warning);
+            return;
+        }
+
+        TxtSkinImagePath.Text = imported;
+        RbSkinImage.IsChecked = true;
+        UpdateSkinControls();
+    }
+
     private AppSettings ReadToSettings()
     {
         var s = Clone(_original);
@@ -215,6 +333,25 @@ public partial class SettingsWindow : Window
         var fontPt = ReadFontSizePt();
         s.FontSizePt = fontPt;
         s.FontScale = FontScaleHelper.PtToScale(fontPt);
+        s.FontFamily = FontFamilyHelper.ResolveName(CmbFontFamily.Text);
+        s.SkinMode = RbSkinImage.IsChecked == true
+            ? SkinService.ModeImage
+            : RbSkinSolid.IsChecked == true
+                ? SkinService.ModeSolid
+                : SkinService.ModeDefault;
+        s.SkinOverlayOpacity = ReadSkinOverlayPercent() / 100.0;
+        if (s.SkinMode != SkinService.ModeImage)
+        {
+            s.SkinImagePath = string.IsNullOrWhiteSpace(TxtSkinImagePath.Text) ? null : TxtSkinImagePath.Text.Trim();
+        }
+        else if (string.IsNullOrWhiteSpace(TxtSkinImagePath.Text))
+        {
+            s.SkinImagePath = null;
+        }
+        else
+        {
+            s.SkinImagePath = TxtSkinImagePath.Text.Trim();
+        }
 
         s.ShowWeather = ChkShowWeather.IsChecked == true;
         s.ShowCityName = ChkShowCityName.IsChecked == true;

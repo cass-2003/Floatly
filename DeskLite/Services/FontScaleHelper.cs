@@ -64,17 +64,21 @@ public static class FontScaleHelper
         Set(window.EmptyTodoText, 12, scale);
         Set(window.TodoOverflowText, 11, scale);
         Set(window.TodoViewAllText, 11, scale);
-        Set(window.CalendarTitleText, 11, scale);
+        Set(window.CalendarTitleText, 14, scale);
         Set(window.NewTodoBox, 12, scale);
         Set(window.AddButton, 12, scale);
 
         window.CalPrevBtn.FontSize = 14 * scale;
         window.CalNextBtn.FontSize = 14 * scale;
-        window.CalWeekModeBtn.FontSize = 10 * scale;
-        window.CalMonthModeBtn.FontSize = 10 * scale;
+        window.CalWeekModeBtn.FontSize = 11 * scale;
+        window.CalMonthModeBtn.FontSize = 11 * scale;
 
         ApplyHuangLi(window, scale);
     }
+
+    public static double CalendarScale(double fontScale) => ClampScale(fontScale);
+
+    public static double CalSize(double baseSize, double fontScale) => baseSize * CalendarScale(fontScale);
 
     public static double ScaledSize(double baseSize, double scale) => baseSize * ClampScale(scale);
 

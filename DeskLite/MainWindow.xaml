@@ -31,7 +31,6 @@
             CornerRadius="12"
             BorderBrush="#40FFFFFF"
             BorderThickness="1"
-            Padding="14"
             ClipToBounds="True">
         <Border.ContextMenu>
             <ContextMenu>
@@ -51,7 +50,9 @@
                 <MenuItem Header="跳转日期..." Click="CalJump_Click" />
             </ContextMenu>
         </Border.ContextMenu>
-        <Grid PreviewMouseLeftButtonDown="Grid_PreviewMouseLeftButtonDown" Cursor="SizeAll">
+        <Grid>
+            <Border x:Name="SkinOverlay" Background="#73000000" CornerRadius="12" Visibility="Collapsed" IsHitTestVisible="False" />
+            <Grid x:Name="ContentRoot" Margin="14" PreviewMouseLeftButtonDown="Grid_PreviewMouseLeftButtonDown" Cursor="SizeAll">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="*" MinHeight="120" />
@@ -548,6 +549,7 @@
                         Click="AddTodo_Click" Background="#3B82F6" Foreground="White"
                         BorderThickness="0" Cursor="Hand" />
             </StackPanel>
+            </Grid>
         </Grid>
     </Border>
 </Window>
