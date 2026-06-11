@@ -1175,7 +1175,11 @@ public partial class MainWindow : Window
         }
 
         var monthDays = CalendarViewHelper.GetMonthGridDays(_calendarAnchor).ToList();
-        var monthGrid = new System.Windows.Controls.Primitives.UniformGrid { Rows = 6, Columns = 7 };
+        var monthGrid = new System.Windows.Controls.Primitives.UniformGrid
+        {
+            Rows = Math.Max(1, monthDays.Count / 7),
+            Columns = 7
+        };
         foreach (var day in monthDays)
         {
             monthGrid.Children.Add(BuildCalendarCell(day, today, preview, calScale * 1.0, compact: true));

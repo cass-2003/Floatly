@@ -9,10 +9,10 @@ public static class FloatlyDesignTokens
     public const double CardCornerRadius = 18;
     public const double CardPadding = 14;
     public const double ModuleGap = 12;
-    public const double ClockFontSize = 58;
-    public const double ClockLineHeight = 62;
-    public const double ClockSecondsFontSize = 18;
-    public const double DateFontSize = 11;
+    public const double ClockFontSize = 64;
+    public const double ClockLineHeight = 68;
+    public const double ClockSecondsFontSize = 20;
+    public const double DateFontSize = 12;
     public const double CardTitleFontSize = 13;
     public const double BodyFontSize = 12;
     public const double ProgressBarHeight = 8;
