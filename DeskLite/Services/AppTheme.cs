@@ -62,6 +62,8 @@ public sealed class AppThemePalette
     public WpfColor ProgressFillEnd { get; init; } = WpfColor.FromRgb(0x60, 0xA5, 0xFA);
     public WpfColor PomodoroWork { get; init; } = WpfColor.FromRgb(0xF9, 0x73, 0x16);
     public WpfColor PomodoroBreak { get; init; } = WpfColor.FromRgb(0x22, 0xC5, 0x5E);
+    public WpfColor SalaryGold { get; init; } = WpfColor.FromRgb(0xF5, 0x9E, 0x0B);
+    public WpfColor SalaryGoldMuted { get; init; } = WpfColor.FromRgb(0xC9, 0xA2, 0x27);
 
     public static AppThemePalette For(ThemeMode mode) => mode switch
     {
@@ -123,7 +125,9 @@ public sealed class AppThemePalette
         ProgressFillStart = WpfColor.FromRgb(0x3B, 0x82, 0xF6),
         ProgressFillEnd = WpfColor.FromRgb(0x60, 0xA5, 0xFA),
         PomodoroWork = WpfColor.FromRgb(0xF9, 0x73, 0x16),
-        PomodoroBreak = WpfColor.FromRgb(0x22, 0xC5, 0x5E)
+        PomodoroBreak = WpfColor.FromRgb(0x22, 0xC5, 0x5E),
+        SalaryGold = WpfColor.FromRgb(0xF5, 0x9E, 0x0B),
+        SalaryGoldMuted = WpfColor.FromRgb(0xC9, 0xA2, 0x27)
     };
 
     private static readonly AppThemePalette Light = new()
@@ -177,6 +181,8 @@ public sealed class AppThemePalette
         ProgressFillStart = WpfColor.FromRgb(0x25, 0x63, 0xEB),
         ProgressFillEnd = WpfColor.FromRgb(0x3B, 0x82, 0xF6),
         PomodoroWork = WpfColor.FromRgb(0xEA, 0x58, 0x0C),
-        PomodoroBreak = WpfColor.FromRgb(0x16, 0xA3, 0x4A)
+        PomodoroBreak = WpfColor.FromRgb(0x16, 0xA3, 0x4A),
+        SalaryGold = WpfColor.FromRgb(0xD9, 0x77, 0x06),
+        SalaryGoldMuted = WpfColor.FromRgb(0xA6, 0x8B, 0x2B)
     };
 }
