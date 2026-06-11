@@ -728,6 +728,7 @@
                                 <StackPanel>
                                     <TextBlock x:Name="WeekCalendarTitleText" Text="周历" Style="{StaticResource CardTitle}" Margin="0,0,0,12" />
                                     <Grid x:Name="WeekCalendarPanel" />
+                                    <StackPanel x:Name="WeekAgendaPanel" Margin="0,12,0,0" />
                                 </StackPanel>
                             </Border>
                             <Border Grid.Column="2" Style="{StaticResource FloatlyCard}" Padding="18,16">

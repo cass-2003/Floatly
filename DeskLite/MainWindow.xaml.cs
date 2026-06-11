@@ -1146,6 +1146,7 @@ public partial class MainWindow : Window
             weekGrid.Children.Add(BuildCalendarCell(day, today, preview, calScale * 1.05, compact: true));
         }
         WeekCalendarPanel.Children.Add(weekGrid);
+        RefreshWeekAgenda(weekDays);
 
         CalendarPanel.Children.Clear();
         WeekdayHeader.Children.Clear();
@@ -1172,6 +1173,111 @@ public partial class MainWindow : Window
             monthGrid.Children.Add(BuildCalendarCell(day, today, preview, calScale * 1.0, compact: true));
         }
         CalendarPanel.Children.Add(monthGrid);
+    }
+
+    private void RefreshWeekAgenda(IReadOnlyList<DateTime> weekDays)
+    {
+        WeekAgendaPanel.Children.Clear();
+
+        var notes = weekDays
+            .Select(day => new { Day = day, Note = _dateNoteStore.GetNote(day) })
+            .Where(item => !string.IsNullOrWhiteSpace(item.Note))
+            .Take(2)
+            .ToList();
+
+        if (notes.Count == 0)
+        {
+            WeekAgendaPanel.Children.Add(BuildWeekAgendaPlaceholder("点击日期添加日程", Brush(_palette.Accent)));
+            WeekAgendaPanel.Children.Add(BuildWeekAgendaPlaceholder("本周暂无安排", Brush(_palette.Mark)));
+            return;
+        }
+
+        foreach (var item in notes)
+        {
+            var row = new Grid
+            {
+                Margin = new Thickness(0, 0, 0, 8)
+            };
+            row.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
+            row.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
+            row.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
+
+            row.Children.Add(new System.Windows.Shapes.Ellipse
+            {
+                Width = 7,
+                Height = 7,
+                Fill = Brush(item.Day.Hour == 0 ? _palette.Accent : _palette.Mark),
+                VerticalAlignment = VerticalAlignment.Center,
+                Margin = new Thickness(0, 0, 8, 0)
+            });
+
+            var time = new TextBlock
+            {
+                Text = item.Day.ToString("MM/dd"),
+                FontSize = FontScaleHelper.CalSize(11, _settings.FontScale),
+                Foreground = Brush(_palette.Accent),
+                VerticalAlignment = VerticalAlignment.Center,
+                Margin = new Thickness(0, 0, 10, 0)
+            };
+            Grid.SetColumn(time, 1);
+            row.Children.Add(time);
+
+            var note = new TextBlock
+            {
+                Text = item.Note!,
+                FontSize = FontScaleHelper.CalSize(11, _settings.FontScale),
+                Foreground = Brush(_palette.TextSecondary),
+                TextTrimming = TextTrimming.CharacterEllipsis,
+                VerticalAlignment = VerticalAlignment.Center
+            };
+            Grid.SetColumn(note, 2);
+            row.Children.Add(note);
+
+            WeekAgendaPanel.Children.Add(new Border
+            {
+                Background = Brush(_palette.HuangLiMutedButton),
+                CornerRadius = new CornerRadius(10),
+                Padding = new Thickness(12, 8, 12, 8),
+                Margin = new Thickness(0, 0, 0, 2),
+                Child = row
+            });
+        }
+    }
+
+    private Border BuildWeekAgendaPlaceholder(string text, System.Windows.Media.Brush dotBrush)
+    {
+        var row = new Grid();
+        row.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
+        row.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
+
+        row.Children.Add(new System.Windows.Shapes.Ellipse
+        {
+            Width = 7,
+            Height = 7,
+            Fill = dotBrush,
+            VerticalAlignment = VerticalAlignment.Center,
+            Margin = new Thickness(0, 0, 8, 0)
+        });
+
+        var label = new TextBlock
+        {
+            Text = text,
+            FontSize = FontScaleHelper.CalSize(11, _settings.FontScale),
+            Foreground = Brush(_palette.TextSubtle),
+            TextTrimming = TextTrimming.CharacterEllipsis,
+            VerticalAlignment = VerticalAlignment.Center
+        };
+        Grid.SetColumn(label, 1);
+        row.Children.Add(label);
+
+        return new Border
+        {
+            Background = Brush(_palette.HuangLiMutedButton),
+            CornerRadius = new CornerRadius(10),
+            Padding = new Thickness(12, 8, 12, 8),
+            Margin = new Thickness(0, 0, 0, 8),
+            Child = row
+        };
     }
 
     private UIElement BuildCalendarCell(DateTime day, DateTime today, DateTime? preview, double calScale, bool compact = false)
