@@ -21,4 +21,8 @@
     </Content>
   </ItemGroup>
 
+  <ItemGroup>
+    <PackageReference Include="lunar-csharp" Version="1.6.8" />
+  </ItemGroup>
+
 </Project>

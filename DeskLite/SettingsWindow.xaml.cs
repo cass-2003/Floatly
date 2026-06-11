@@ -79,6 +79,7 @@ public partial class SettingsWindow : Window
         TxtCity.Text = s.ResolvedCityName ?? s.City;
 
         ChkShowWeekStrip.IsChecked = s.ShowWeekStrip;
+        ChkShowHuangLi.IsChecked = s.ShowHuangLi;
         if (CalendarViewHelper.ParseMode(s.CalendarMode) == CalendarViewMode.Month)
         {
             RbCalMonth.IsChecked = true;
@@ -122,6 +123,7 @@ public partial class SettingsWindow : Window
         }
 
         s.ShowWeekStrip = ChkShowWeekStrip.IsChecked == true;
+        s.ShowHuangLi = ChkShowHuangLi.IsChecked == true;
         s.CalendarMode = RbCalMonth.IsChecked == true ? "month" : "week";
 
         s.ShowYearProgress = ChkYearProgress.IsChecked == true;

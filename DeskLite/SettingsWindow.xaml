@@ -138,6 +138,7 @@
                 <ScrollViewer VerticalScrollBarVisibility="Auto" Padding="4,12,4,0">
                     <StackPanel>
                         <CheckBox x:Name="ChkShowWeekStrip" Content="显示万年历" />
+                        <CheckBox x:Name="ChkShowHuangLi" Content="显示黄历详情（宜忌、神煞、时辰）" Margin="0,0,0,14" />
                         <TextBlock Style="{StaticResource SectionTitle}" Text="默认视图" Margin="0,8,0,10" />
                         <StackPanel Orientation="Horizontal">
                             <RadioButton x:Name="RbCalWeek" Content="周历" GroupName="Calendar" />

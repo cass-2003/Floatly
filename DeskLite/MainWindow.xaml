@@ -66,6 +66,17 @@
                     </Grid>
                     <TextBlock x:Name="LunarText" Text="农历五月初六 · 芒种" FontSize="12" Foreground="#C5D0E0" Margin="0,6,0,0" />
                     <TextBlock x:Name="LunarSubText" Text="乙巳年 · 属蛇 · 庚寅日" FontSize="11" Foreground="#7E8A9C" Margin="0,3,0,0" />
+                    <Border x:Name="HuangLiPanel" Background="#18FFFFFF" CornerRadius="8" Padding="8,6" Margin="0,8,0,0"
+                            Visibility="Collapsed">
+                        <StackPanel>
+                            <TextBlock x:Name="HuangLiYiText" FontSize="11" Foreground="#4ADE80" TextWrapping="Wrap" Margin="0,0,0,3" />
+                            <TextBlock x:Name="HuangLiJiText" FontSize="11" Foreground="#F87171" TextWrapping="Wrap" Margin="0,0,0,4" />
+                            <TextBlock x:Name="HuangLiMetaText" FontSize="10" Foreground="#8B95A5" TextWrapping="Wrap" Margin="0,0,0,3" />
+                            <TextBlock x:Name="HuangLiGodsText" FontSize="10" Foreground="#7E8A9C" TextWrapping="Wrap" Margin="0,0,0,3" />
+                            <TextBlock x:Name="HuangLiExtraText" FontSize="10" Foreground="#7E8A9C" TextWrapping="Wrap" Margin="0,0,0,3" />
+                            <TextBlock x:Name="HuangLiTimeText" FontSize="9" Foreground="#6B7280" TextWrapping="Wrap" />
+                        </StackPanel>
+                    </Border>
                 </StackPanel>
             </Border>
 

@@ -29,6 +29,7 @@ public sealed class AppThemePalette
     public required WpfColor WeekLunar { get; init; }
     public WpfColor Accent { get; init; } = WpfColor.FromRgb(0x3B, 0x82, 0xF6);
     public WpfColor Mark { get; init; } = WpfColor.FromRgb(0xF5, 0x9E, 0x0B);
+    public WpfColor HuangLiBackground { get; init; } = WpfColor.FromArgb(0x18, 0xFF, 0xFF, 0xFF);
 
     public static AppThemePalette For(ThemeMode mode) => mode switch
     {
@@ -57,7 +58,8 @@ public sealed class AppThemePalette
         InputText = WpfColor.FromRgb(0xF3, 0xF4, 0xF6),
         WeekLabel = WpfColor.FromRgb(0x8B, 0x95, 0xA5),
         WeekSolar = WpfColor.FromRgb(0xB8, 0xC0, 0xCC),
-        WeekLunar = WpfColor.FromRgb(0x6B, 0x72, 0x80)
+        WeekLunar = WpfColor.FromRgb(0x6B, 0x72, 0x80),
+        HuangLiBackground = WpfColor.FromArgb(0x18, 0xFF, 0xFF, 0xFF)
     };
 
     private static readonly AppThemePalette Light = new()
@@ -78,6 +80,7 @@ public sealed class AppThemePalette
         InputText = WpfColor.FromRgb(0x0F, 0x17, 0x2A),
         WeekLabel = WpfColor.FromRgb(0x64, 0x74, 0x8B),
         WeekSolar = WpfColor.FromRgb(0x47, 0x55, 0x69),
-        WeekLunar = WpfColor.FromRgb(0x94, 0xA3, 0xB8)
+        WeekLunar = WpfColor.FromRgb(0x94, 0xA3, 0xB8),
+        HuangLiBackground = WpfColor.FromArgb(0x12, 0x15, 0x23, 0x42)
     };
 }
