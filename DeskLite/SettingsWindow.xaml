@@ -917,7 +917,7 @@
 
                         <StackPanel Grid.Column="4">
                             <Border x:Name="SectionAppearance" Height="0" Visibility="Collapsed" />
-                            <Border Style="{StaticResource SettingsCard}" Padding="18,14">
+                            <Border Style="{StaticResource SettingsCard}" Height="554" Padding="18,14">
                                 <StackPanel>
                                     <TextBlock Style="{StaticResource CardTitle}" Text="主题" Margin="0,0,0,10" />
                                     <Grid Margin="0,0,0,14">
@@ -969,18 +969,19 @@
                                             <RowDefinition Height="Auto" />
                                         </Grid.RowDefinitions>
                                         <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="Auto" />
+                                            <ColumnDefinition Width="54" />
                                             <ColumnDefinition Width="*" />
-                                            <ColumnDefinition Width="Auto" />
+                                            <ColumnDefinition Width="54" />
+                                            <ColumnDefinition Width="62" />
                                         </Grid.ColumnDefinitions>
-                                        <TextBlock Style="{StaticResource FieldLabel}" Text="窗口透明度" FontWeight="SemiBold" Foreground="{StaticResource SettingsText}" />
-                                        <TextBox x:Name="TxtOpacity" Grid.Column="2" Style="{StaticResource CompactValueBox}"
+                                        <TextBlock Grid.ColumnSpan="3" Style="{StaticResource FieldLabel}" Text="窗口透明度" FontWeight="SemiBold" Foreground="{StaticResource SettingsText}" />
+                                        <TextBox x:Name="TxtOpacity" Grid.Column="3" Style="{StaticResource CompactValueBox}"
                                                  LostFocus="TxtOpacity_LostFocus" KeyDown="TxtOpacity_KeyDown" />
-                                        <TextBlock Grid.Row="1" Text="30%" Style="{StaticResource HintText}" VerticalAlignment="Center" />
+                                        <TextBlock Grid.Row="1" Grid.Column="0" Text="30%" Style="{StaticResource HintText}" VerticalAlignment="Center" HorizontalAlignment="Left" />
                                         <Slider x:Name="SliderOpacity" Grid.Row="1" Grid.Column="1" Style="{StaticResource SettingsSlider}"
                                                 Minimum="30" Maximum="100" IsSnapToTickEnabled="True" TickFrequency="1"
-                                                ValueChanged="SliderOpacity_ValueChanged" Margin="14,0" />
-                                        <TextBlock Grid.Row="1" Grid.Column="2" Text="100%" Style="{StaticResource HintText}" VerticalAlignment="Center" />
+                                                ValueChanged="SliderOpacity_ValueChanged" Margin="10,0" />
+                                        <TextBlock Grid.Row="1" Grid.Column="2" Text="100%" Style="{StaticResource HintText}" VerticalAlignment="Center" HorizontalAlignment="Right" />
                                     </Grid>
 
                                     <Border Height="1" Background="#14FFFFFF" Margin="0,0,0,8" />
@@ -990,18 +991,19 @@
                                             <RowDefinition Height="Auto" />
                                         </Grid.RowDefinitions>
                                         <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="Auto" />
+                                            <ColumnDefinition Width="54" />
                                             <ColumnDefinition Width="*" />
-                                            <ColumnDefinition Width="Auto" />
+                                            <ColumnDefinition Width="54" />
+                                            <ColumnDefinition Width="62" />
                                         </Grid.ColumnDefinitions>
-                                        <TextBlock Style="{StaticResource FieldLabel}" Text="字号大小" FontWeight="SemiBold" Foreground="{StaticResource SettingsText}" />
-                                        <TextBox x:Name="TxtFontSize" Grid.Column="2" Style="{StaticResource CompactValueBox}"
+                                        <TextBlock Grid.ColumnSpan="3" Style="{StaticResource FieldLabel}" Text="字号大小" FontWeight="SemiBold" Foreground="{StaticResource SettingsText}" />
+                                        <TextBox x:Name="TxtFontSize" Grid.Column="3" Style="{StaticResource CompactValueBox}"
                                                  LostFocus="TxtFontSize_LostFocus" KeyDown="TxtFontSize_KeyDown" />
-                                        <TextBlock Grid.Row="1" Text="10 pt" Style="{StaticResource HintText}" VerticalAlignment="Center" />
+                                        <TextBlock Grid.Row="1" Grid.Column="0" Text="10 pt" Style="{StaticResource HintText}" VerticalAlignment="Center" HorizontalAlignment="Left" />
                                         <Slider x:Name="SliderFontSize" Grid.Row="1" Grid.Column="1" Style="{StaticResource SettingsSlider}"
                                                 Minimum="10" Maximum="16" IsSnapToTickEnabled="True" TickFrequency="1"
-                                                ValueChanged="SliderFontSize_ValueChanged" Margin="14,0" />
-                                        <TextBlock Grid.Row="1" Grid.Column="2" Text="16 pt" Style="{StaticResource HintText}" VerticalAlignment="Center" />
+                                                ValueChanged="SliderFontSize_ValueChanged" Margin="10,0" />
+                                        <TextBlock Grid.Row="1" Grid.Column="2" Text="16 pt" Style="{StaticResource HintText}" VerticalAlignment="Center" HorizontalAlignment="Right" />
                                     </Grid>
 
                                     <Grid Margin="0,0,0,12">
@@ -1109,18 +1111,19 @@
                                             <RowDefinition Height="Auto" />
                                         </Grid.RowDefinitions>
                                         <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="Auto" />
+                                            <ColumnDefinition Width="54" />
                                             <ColumnDefinition Width="*" />
-                                            <ColumnDefinition Width="Auto" />
+                                            <ColumnDefinition Width="54" />
+                                            <ColumnDefinition Width="62" />
                                         </Grid.ColumnDefinitions>
-                                        <TextBlock Style="{StaticResource FieldLabel}" Text="背景遮罩透明度" FontWeight="SemiBold" Foreground="{StaticResource SettingsText}" />
-                                        <TextBox x:Name="TxtSkinOverlay" Grid.Column="2" Style="{StaticResource CompactValueBox}"
+                                        <TextBlock Grid.ColumnSpan="3" Style="{StaticResource FieldLabel}" Text="背景遮罩透明度" FontWeight="SemiBold" Foreground="{StaticResource SettingsText}" />
+                                        <TextBox x:Name="TxtSkinOverlay" Grid.Column="3" Style="{StaticResource CompactValueBox}"
                                                  LostFocus="TxtSkinOverlay_LostFocus" KeyDown="TxtSkinOverlay_KeyDown" />
-                                        <TextBlock Grid.Row="1" Text="0%" Style="{StaticResource HintText}" VerticalAlignment="Center" />
+                                        <TextBlock Grid.Row="1" Grid.Column="0" Text="0%" Style="{StaticResource HintText}" VerticalAlignment="Center" HorizontalAlignment="Left" />
                                         <Slider x:Name="SliderSkinOverlay" Grid.Row="1" Grid.Column="1" Style="{StaticResource SettingsSlider}"
                                                 Minimum="0" Maximum="85" IsSnapToTickEnabled="True" TickFrequency="1"
-                                                ValueChanged="SliderSkinOverlay_ValueChanged" Margin="14,0" />
-                                        <TextBlock Grid.Row="1" Grid.Column="2" Text="85%" Style="{StaticResource HintText}" VerticalAlignment="Center" />
+                                                ValueChanged="SliderSkinOverlay_ValueChanged" Margin="10,0" />
+                                        <TextBlock Grid.Row="1" Grid.Column="2" Text="85%" Style="{StaticResource HintText}" VerticalAlignment="Center" HorizontalAlignment="Right" />
                                     </Grid>
 
                                     <Border Height="1" Background="#14FFFFFF" Margin="0,0,0,8" />
