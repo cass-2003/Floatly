@@ -59,7 +59,7 @@ public sealed class WeatherService
 
             var url =
                 $"https://api.open-meteo.com/v1/forecast?latitude={lat.Value:F4}&longitude={lon.Value:F4}" +
-                "&current=temperature_2m,weather_code" +
+                "&current=temperature_2m,apparent_temperature,weather_code,is_day" +
                 "&daily=temperature_2m_max,temperature_2m_min,weather_code,sunrise,sunset" +
                 "&timezone=auto&forecast_days=2";
 
@@ -70,6 +70,10 @@ public sealed class WeatherService
             var current = root.GetProperty("current");
             var code = current.GetProperty("weather_code").GetInt32();
             var temp = (int)Math.Round(current.GetProperty("temperature_2m").GetDouble());
+            var feels = current.TryGetProperty("apparent_temperature", out var feelsEl)
+                ? (int)Math.Round(feelsEl.GetDouble())
+                : temp;
+            var isDay = !current.TryGetProperty("is_day", out var isDayEl) || isDayEl.GetInt32() == 1;
 
             var daily = root.GetProperty("daily");
             var max = (int)Math.Round(daily.GetProperty("temperature_2m_max")[0].GetDouble());
@@ -79,16 +83,18 @@ public sealed class WeatherService
 
             int? tomorrowMin = null;
             int? tomorrowMax = null;
+            int? tomorrowCode = null;
             string? tomorrowDesc = null;
-            string? tomorrowIcon = null;
+            string? tomorrowIconSlug = null;
 
             if (daily.GetProperty("temperature_2m_max").GetArrayLength() > 1)
             {
                 var tCode = daily.GetProperty("weather_code")[1].GetInt32();
+                tomorrowCode = tCode;
                 tomorrowMin = (int)Math.Round(daily.GetProperty("temperature_2m_min")[1].GetDouble());
                 tomorrowMax = (int)Math.Round(daily.GetProperty("temperature_2m_max")[1].GetDouble());
                 tomorrowDesc = DescribeWeather(tCode);
-                tomorrowIcon = IconForCode(tCode);
+                tomorrowIconSlug = WeatherIconMapper.SlugForCode(tCode, isDay: true);
             }
 
             var cache = new WeatherCache
@@ -99,14 +105,18 @@ public sealed class WeatherService
                 Temperature = temp,
                 TempMin = min,
                 TempMax = max,
+                FeelsLike = feels,
+                WeatherCode = code,
+                IsDay = isDay,
                 Description = DescribeWeather(code),
-                Icon = IconForCode(code),
+                IconSlug = WeatherIconMapper.SlugForCode(code, isDay),
                 Sunrise = sunrise,
                 Sunset = sunset,
                 TomorrowMin = tomorrowMin,
                 TomorrowMax = tomorrowMax,
+                TomorrowWeatherCode = tomorrowCode,
                 TomorrowDescription = tomorrowDesc,
-                TomorrowIcon = tomorrowIcon,
+                TomorrowIconSlug = tomorrowIconSlug,
                 UpdatedAt = DateTime.Now
             };
 
@@ -171,18 +181,6 @@ public sealed class WeatherService
         80 or 81 or 82 => "阵雨",
         95 or 96 or 99 => "雷雨",
         _ => "阴"
-    };
-
-    private static string IconForCode(int code) => code switch
-    {
-        0 => "☀",
-        1 or 2 or 3 => "⛅",
-        45 or 48 => "🌫",
-        >= 51 and <= 67 => "🌧",
-        >= 71 and <= 77 => "❄",
-        >= 80 and <= 82 => "🌦",
-        >= 95 => "⛈",
-        _ => "☁"
     };
 
     private sealed record GeoResult(double Latitude, double Longitude, string Name, string? Region);

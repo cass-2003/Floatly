@@ -141,7 +141,7 @@ public partial class MainWindow : Window
         var showSun = _settings.ShowWeather && _settings.ShowSunriseSunset;
         SunriseLineText.Visibility = showSun ? Visibility.Visible : Visibility.Collapsed;
         SunsetLineText.Visibility = showSun ? Visibility.Visible : Visibility.Collapsed;
-        TomorrowLineText.Visibility = _settings.ShowWeather && _settings.ShowTomorrowWeather
+        TomorrowRow.Visibility = _settings.ShowWeather && _settings.ShowTomorrowWeather
             ? Visibility.Visible
             : Visibility.Collapsed;
 
@@ -270,7 +270,6 @@ public partial class MainWindow : Window
         ApplyHuangLiTheme();
         WeatherTempText.Foreground = Brush(textPrimary);
         WeatherDescText.Foreground = Brush(textPrimary);
-        WeatherIconText.Foreground = Brush(textPrimary);
         WeatherRangeText.Foreground = Brush(_palette.TextSubtle);
         WeatherFeelsText.Foreground = Brush(_palette.TextSubtle);
         CityText.Foreground = Brush(_palette.TextMuted);
@@ -1258,10 +1257,35 @@ public partial class MainWindow : Window
         var city = cache?.City ?? _settings.ResolvedCityName ?? _settings.City;
         var region = cache?.Region ?? _settings.ResolvedRegion;
 
-        CityText.Text = string.IsNullOrWhiteSpace(region)
-            ? $"📍 {city}"
-            : $"📍 {city} {region}";
+        CityText.Text = FormatCityLabel(city, region);
         CityText.Visibility = Visibility.Visible;
+    }
+
+    private static string FormatCityLabel(string city, string? region)
+    {
+        if (string.IsNullOrWhiteSpace(city))
+        {
+            city = "未知";
+        }
+
+        var trimmedCity = city.Trim();
+        if (string.IsNullOrWhiteSpace(region) || CityLabelsDuplicate(trimmedCity, region.Trim()))
+        {
+            return $"📍 {trimmedCity}";
+        }
+
+        return $"📍 {trimmedCity} {region.Trim()}";
+    }
+
+    private static bool CityLabelsDuplicate(string city, string region)
+    {
+        if (string.Equals(city, region, StringComparison.OrdinalIgnoreCase))
+        {
+            return true;
+        }
+
+        return city.Contains(region, StringComparison.OrdinalIgnoreCase)
+               || region.Contains(city, StringComparison.OrdinalIgnoreCase);
     }
 
     private SolidColorBrush Brush(System.Windows.Media.Color color) => new(color);
@@ -1336,14 +1360,14 @@ public partial class MainWindow : Window
         if (result is null)
         {
             WeatherDescText.Text = "加载失败";
-            WeatherIconText.Text = "—";
+            WeatherIconImage.Source = null;
             WeatherTempText.Text = string.Empty;
             WeatherRangeText.Text = string.Empty;
             WeatherFeelsText.Text = string.Empty;
             RefreshCityDisplay();
             SunriseLineText.Visibility = Visibility.Collapsed;
             SunsetLineText.Visibility = Visibility.Collapsed;
-            TomorrowLineText.Visibility = Visibility.Collapsed;
+            TomorrowRow.Visibility = Visibility.Collapsed;
             return;
         }
 
@@ -1436,11 +1460,18 @@ public partial class MainWindow : Window
 
     private void ApplyWeather(WeatherCache cache)
     {
-        WeatherIconText.Text = cache.Icon;
+        var isDay = cache.WeatherCode == 0 && cache.Sunrise is not null
+            ? WeatherIconMapper.InferIsDay(DateTime.Now, cache.Sunrise, cache.Sunset)
+            : cache.IsDay;
+
+        var iconSlug = ResolveIconSlug(cache);
+        WeatherIconImage.Source = WeatherIconLoader.Load(iconSlug);
+
         WeatherTempText.Text = $"{cache.Temperature}°";
         WeatherDescText.Text = cache.Description;
-        WeatherRangeText.Text = $"{cache.TempMin}°~{cache.TempMax}°";
-        WeatherFeelsText.Text = $"体感 {cache.Temperature}°";
+        WeatherRangeText.Text = $"{cache.TempMin}° ~ {cache.TempMax}°";
+        var feels = cache.FeelsLike ?? cache.Temperature;
+        WeatherFeelsText.Text = $"体感 {feels}°";
 
         var showSun = _settings.ShowWeather && _settings.ShowSunriseSunset;
         if (showSun && cache.Sunrise is not null)
@@ -1466,17 +1497,37 @@ public partial class MainWindow : Window
         if (_settings.ShowWeather && _settings.ShowTomorrowWeather
             && cache.TomorrowMin is not null && cache.TomorrowMax is not null)
         {
-            var tomorrowIcon = cache.TomorrowIcon ?? "☁";
+            var tomorrowSlug = cache.TomorrowIconSlug
+                ?? (cache.TomorrowWeatherCode is int code
+                    ? WeatherIconMapper.SlugForCode(code, isDay: true)
+                    : "partly-cloudy-day");
+            TomorrowIconImage.Source = WeatherIconLoader.Load(tomorrowSlug);
+
             var tomorrowDesc = cache.TomorrowDescription ?? string.Empty;
             TomorrowLineText.Text = string.IsNullOrWhiteSpace(tomorrowDesc)
-                ? $"明天 {tomorrowIcon} {cache.TomorrowMin}°~{cache.TomorrowMax}°"
-                : $"明天 {tomorrowIcon} {tomorrowDesc} {cache.TomorrowMin}°~{cache.TomorrowMax}°";
-            TomorrowLineText.Visibility = Visibility.Visible;
+                ? $"明天 {cache.TomorrowMin}°~{cache.TomorrowMax}°"
+                : $"明天 {tomorrowDesc} {cache.TomorrowMin}°~{cache.TomorrowMax}°";
+            TomorrowRow.Visibility = Visibility.Visible;
         }
         else
         {
-            TomorrowLineText.Visibility = Visibility.Collapsed;
+            TomorrowRow.Visibility = Visibility.Collapsed;
         }
+    }
+
+    private static string ResolveIconSlug(WeatherCache cache)
+    {
+        if (!string.IsNullOrWhiteSpace(cache.IconSlug) && cache.IconSlug.Contains('-'))
+        {
+            return cache.IconSlug;
+        }
+
+        if (cache.WeatherCode != 0)
+        {
+            return WeatherIconMapper.SlugForCode(cache.WeatherCode, cache.IsDay);
+        }
+
+        return WeatherIconMapper.SlugForCode(0, cache.IsDay);
     }
 
     private void CheckTodoReminders()

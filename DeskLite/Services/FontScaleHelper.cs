@@ -36,8 +36,8 @@ public static class FontScaleHelper
     {
         scale = ClampScale(scale);
 
-        Set(window.ClockText, 40, scale);
-        Set(window.ClockSecondsText, 14, scale);
+        Set(window.ClockText, 42, scale);
+        Set(window.ClockSecondsText, 13, scale);
         Set(window.DateText, 12, scale);
         Set(window.LunarText, 12, scale);
         Set(window.LunarSubText, 11, scale);
@@ -46,14 +46,17 @@ public static class FontScaleHelper
         Set(window.YearProgressDetail, 10, scale);
         window.YearProgressTrack.Height = 7 * scale;
         Set(window.CityText, 11, scale);
-        Set(window.WeatherIconText, 18, scale);
-        Set(window.WeatherTempText, 26, scale);
+        window.WeatherIconImage.Width = 30 * scale;
+        window.WeatherIconImage.Height = 30 * scale;
+        window.TomorrowIconImage.Width = 14 * scale;
+        window.TomorrowIconImage.Height = 14 * scale;
+        Set(window.WeatherTempText, 28, scale);
         Set(window.WeatherDescText, 13, scale);
-        Set(window.WeatherRangeText, 10, scale);
-        Set(window.WeatherFeelsText, 10, scale);
-        Set(window.SunriseLineText, 10, scale);
-        Set(window.SunsetLineText, 10, scale);
-        Set(window.TomorrowLineText, 10, scale);
+        Set(window.WeatherRangeText, 11, scale);
+        Set(window.WeatherFeelsText, 11, scale);
+        Set(window.SunriseLineText, 11, scale);
+        Set(window.SunsetLineText, 11, scale);
+        Set(window.TomorrowLineText, 11, scale);
         Set(window.CountdownLabel, 11, scale);
         Set(window.CountdownDays, 13, scale);
         Set(window.CountdownHint, 10, scale);
