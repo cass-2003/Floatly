@@ -260,8 +260,8 @@
 
                 <!-- Main modules -->
                 <ScrollViewer x:Name="MainScrollViewer" Grid.Row="1"
-                              VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled"
-                              ClipToBounds="True" Padding="0,0,2,4">
+                              VerticalScrollBarVisibility="Hidden" HorizontalScrollBarVisibility="Disabled"
+                              ClipToBounds="True" Padding="0,0,0,4">
                     <StackPanel x:Name="ModuleContentPanel">
                         <!-- HuangLi expanded details (compact strip lives in hero) -->
                         <Border x:Name="HuangLiPanel" Style="{StaticResource FloatlyCard}" Margin="0,0,0,10" Visibility="Collapsed">
