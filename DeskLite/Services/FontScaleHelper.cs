@@ -36,8 +36,8 @@ public static class FontScaleHelper
     {
         scale = ClampScale(scale);
 
-        Set(window.ClockText, 26, scale);
-        Set(window.DateText, 13, scale);
+        Set(window.ClockText, 36, scale);
+        Set(window.DateText, 12, scale);
         Set(window.LunarText, 12, scale);
         Set(window.LunarSubText, 11, scale);
         Set(window.YearProgressLabel, 11, scale);
@@ -53,8 +53,7 @@ public static class FontScaleHelper
         window.CountdownTrack.Height = 7 * scale;
         Set(window.PomodoroPhaseText, 11, scale);
         Set(window.PomodoroSessionText, 10, scale);
-        Set(window.PomodoroCountdownText, 28, scale);
-        window.PomodoroTrack.Height = 7 * scale;
+        Set(window.PomodoroCountdownText, 16, scale);
         Set(window.PomodoroStartBtn, 11, scale);
         Set(window.PomodoroResetBtn, 11, scale);
         Set(window.DailyQuoteText, 11, scale);

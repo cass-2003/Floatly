@@ -3,8 +3,9 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:local="clr-namespace:DeskLite"
         Title="Floatly"
-        MinWidth="260"
-        MinHeight="380"
+        MinWidth="280"
+        MinHeight="420"
+        Width="360"
         WindowStyle="None"
         AllowsTransparency="True"
         Background="Transparent"
@@ -13,23 +14,48 @@
         Topmost="True"
         SourceInitialized="Window_SourceInitialized">
     <Window.Resources>
-        <SolidColorBrush x:Key="TodoTextBrush" Color="#E8ECF1" />
+        <SolidColorBrush x:Key="TodoTextBrush" Color="#FFFFFF" />
         <SolidColorBrush x:Key="TodoDeleteBrush" Color="#7E8796" />
         <SolidColorBrush x:Key="TodoCardBgBrush" Color="#18FFFFFF" />
-        <SolidColorBrush x:Key="TodoCardBorderBrush" Color="#28FFFFFF" />
-        <SolidColorBrush x:Key="TodoTimeBadgeBrush" Color="#223B82F6" />
+        <SolidColorBrush x:Key="TodoCardBorderBrush" Color="#0DFFFFFF" />
+        <SolidColorBrush x:Key="TodoTimeBadgeBrush" Color="#225C8DFF" />
         <SolidColorBrush x:Key="TodoPinActiveBrush" Color="#F59E0B" />
         <SolidColorBrush x:Key="TodoPinInactiveBrush" Color="#6B7280" />
-        <SolidColorBrush x:Key="TodoCountBadgeBrush" Color="#223B82F6" />
+        <SolidColorBrush x:Key="TodoCountBadgeBrush" Color="#225C8DFF" />
         <SolidColorBrush x:Key="TodoLinkBrush" Color="#94A3B8" />
         <SolidColorBrush x:Key="TodoMutedBrush" Color="#8B95A5" />
         <SolidColorBrush x:Key="TodoEmptyBrush" Color="#6B7280" />
-        <SolidColorBrush x:Key="TodoAccentBrush" Color="#3B82F6" />
+        <SolidColorBrush x:Key="TodoAccentBrush" Color="#5C8DFF" />
+
+        <Style x:Key="FloatlyCard" TargetType="Border">
+            <Setter Property="Background" Value="#B8161922" />
+            <Setter Property="BorderBrush" Value="#0DFFFFFF" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="CornerRadius" Value="14" />
+            <Setter Property="Padding" Value="12" />
+            <Setter Property="ClipToBounds" Value="True" />
+        </Style>
+        <Style x:Key="HeaderIconBtn" TargetType="Button">
+            <Setter Property="Width" Value="28" />
+            <Setter Property="Height" Value="28" />
+            <Setter Property="Padding" Value="0" />
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="BorderThickness" Value="0" />
+            <Setter Property="Foreground" Value="#A6FFFFFF" />
+            <Setter Property="Cursor" Value="Hand" />
+            <Setter Property="FontSize" Value="14" />
+        </Style>
+        <Style x:Key="CardTitle" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="13" />
+            <Setter Property="FontWeight" Value="SemiBold" />
+            <Setter Property="Foreground" Value="#A6FFFFFF" />
+        </Style>
     </Window.Resources>
+
     <Border x:Name="MainBorder"
-            Background="#E8181C24"
-            CornerRadius="12"
-            BorderBrush="#40FFFFFF"
+            Background="#D9131722"
+            CornerRadius="16"
+            BorderBrush="#0DFFFFFF"
             BorderThickness="1"
             ClipToBounds="True">
         <Border.ContextMenu>
@@ -52,571 +78,496 @@
         </Border.ContextMenu>
         <Grid>
             <MediaElement x:Name="SkinVideo"
-                          LoadedBehavior="Manual"
-                          UnloadedBehavior="Stop"
-                          IsMuted="True"
-                          Volume="0"
-                          Stretch="UniformToFill"
-                          Visibility="Collapsed"
-                          IsHitTestVisible="False"
-                          MediaEnded="SkinVideo_MediaEnded"
-                          Loaded="SkinVideo_Loaded" />
-            <Border x:Name="SkinOverlay" Background="#73000000" CornerRadius="12" Visibility="Collapsed" IsHitTestVisible="False" />
-            <Grid x:Name="ContentRoot" Margin="14" PreviewMouseLeftButtonDown="Grid_PreviewMouseLeftButtonDown" Cursor="SizeAll">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="*" MinHeight="120" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-            </Grid.RowDefinitions>
+                          LoadedBehavior="Manual" UnloadedBehavior="Stop" IsMuted="True" Volume="0"
+                          Stretch="UniformToFill" Visibility="Collapsed" IsHitTestVisible="False"
+                          MediaEnded="SkinVideo_MediaEnded" Loaded="SkinVideo_Loaded" />
+            <Border x:Name="SkinOverlay" Background="#73000000" CornerRadius="16" Visibility="Collapsed" IsHitTestVisible="False" />
 
-            <Border Grid.Row="0" x:Name="HeaderBlock" Background="Transparent" Margin="0,0,0,6">
-                <StackPanel>
-                    <Grid>
-                        <TextBlock x:Name="ClockText" Text="14:32:08" FontSize="26" FontWeight="SemiBold" Foreground="#F5F7FA" />
-                        <TextBlock x:Name="DateText" Text="周四 6月11日" FontSize="13" Foreground="#B8C0CC"
-                                   HorizontalAlignment="Right" VerticalAlignment="Center" />
-                    </Grid>
-                    <TextBlock x:Name="LunarText" Text="农历五月初六 · 芒种" FontSize="12" Foreground="#C5D0E0" Margin="0,6,0,0" />
-                    <TextBlock x:Name="LunarSubText" Text="乙巳年 · 属蛇 · 庚寅日" FontSize="11" Foreground="#7E8A9C" Margin="0,3,0,0" />
-                </StackPanel>
-            </Border>
-
-            <ScrollViewer x:Name="MainScrollViewer" Grid.Row="1" VerticalScrollBarVisibility="Hidden"
-                          HorizontalScrollBarVisibility="Disabled" Margin="0,0,0,6">
-                <StackPanel x:Name="ModuleContentPanel">
-                    <Border x:Name="HuangLiPanel" Background="#FF222830" CornerRadius="8" Padding="8,7" Margin="0,0,0,8"
-                            ClipToBounds="True" Visibility="Collapsed">
-                        <StackPanel>
-                            <Grid Margin="0,0,0,2">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="*" />
-                                    <ColumnDefinition Width="Auto" />
-                                </Grid.ColumnDefinitions>
-                                <TextBlock x:Name="HuangLiSolarDate" Grid.Column="0" Text="2026年6月11日" FontSize="12"
-                                           Foreground="#94A3B8" HorizontalAlignment="Center" VerticalAlignment="Center" />
-                                <Button x:Name="HuangLiCollapseBtn" Grid.Column="1" Content="▼" Width="22" Height="22" Padding="0"
-                                        Click="HuangLiCollapse_Click" Background="Transparent" BorderThickness="0"
-                                        Foreground="#94A3B8" Cursor="Hand" FontSize="10" VerticalAlignment="Center"
-                                        ToolTip="收起/展开" />
-                            </Grid>
-
-                            <Grid Margin="0,0,0,2">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="28" />
-                                    <ColumnDefinition Width="*" />
-                                    <ColumnDefinition Width="28" />
-                                </Grid.ColumnDefinitions>
-                                <Button x:Name="HuangLiPrevBtn" Grid.Column="0" Content="‹" Width="24" Height="24" Padding="0"
-                                        Click="HuangLiPrev_Click" Background="Transparent" BorderThickness="0"
-                                        Foreground="#C94133" Cursor="Hand" FontSize="20" FontWeight="Bold" VerticalAlignment="Center" />
-                                <TextBlock x:Name="HuangLiLunarLarge" Grid.Column="1" Text="四月廿六" FontSize="24" FontWeight="Bold"
-                                           Foreground="#C94133" HorizontalAlignment="Center" VerticalAlignment="Center" />
-                                <Button x:Name="HuangLiNextBtn" Grid.Column="2" Content="›" Width="24" Height="24" Padding="0"
-                                        Click="HuangLiNext_Click" Background="Transparent" BorderThickness="0"
-                                        Foreground="#C94133" Cursor="Hand" FontSize="20" FontWeight="Bold" VerticalAlignment="Center" />
-                            </Grid>
-
-                            <StackPanel x:Name="HuangLiDetailsPanel">
-                            <TextBlock x:Name="HuangLiMetaLine" Text="丙午年 甲午月 丙辰日 [属马] 周四 第24周"
-                                       FontSize="12" Foreground="#94A3B8" TextWrapping="Wrap" HorizontalAlignment="Center"
-                                       TextAlignment="Center" Margin="0,0,0,8" />
-
-                            <Grid Margin="0,0,0,6">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="*" />
-                                    <ColumnDefinition Width="Auto" />
-                                </Grid.ColumnDefinitions>
-                                <StackPanel Grid.Column="0">
-                                    <StackPanel Orientation="Horizontal" Margin="0,0,0,4">
-                                        <Border x:Name="HuangLiYiCircle" Width="18" Height="18" CornerRadius="9"
-                                                Background="#C94133" VerticalAlignment="Top" Margin="0,1,6,0">
-                                            <TextBlock x:Name="HuangLiYiCircleText" Text="宜" FontSize="10" FontWeight="SemiBold" Foreground="White"
-                                                       HorizontalAlignment="Center" VerticalAlignment="Center" />
-                                        </Border>
-                                        <TextBlock x:Name="HuangLiYiText" FontSize="12" Foreground="#F5F7FA" TextWrapping="Wrap" />
-                                    </StackPanel>
-                                    <StackPanel Orientation="Horizontal">
-                                        <Border x:Name="HuangLiJiCircle" Width="18" Height="18" CornerRadius="9"
-                                                Background="#2D2D2D" VerticalAlignment="Top" Margin="0,1,6,0">
-                                            <TextBlock x:Name="HuangLiJiCircleText" Text="忌" FontSize="10" FontWeight="SemiBold" Foreground="White"
-                                                       HorizontalAlignment="Center" VerticalAlignment="Center" />
-                                        </Border>
-                                        <TextBlock x:Name="HuangLiJiText" FontSize="12" Foreground="#F5F7FA" TextWrapping="Wrap" />
-                                    </StackPanel>
-                                </StackPanel>
-                            </Grid>
-
-                            <Border x:Name="HuangLiMetaGridBorder" BorderBrush="#30FFFFFF" BorderThickness="1" Margin="0,0,0,6">
-                                <Grid>
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="*" />
-                                        <ColumnDefinition Width="*" />
-                                        <ColumnDefinition Width="*" />
-                                    </Grid.ColumnDefinitions>
-                                    <Border x:Name="HuangLiMetaWuXing" Grid.Column="0" BorderBrush="#30FFFFFF" BorderThickness="0,0,1,0" Padding="5,4">
-                                        <StackPanel HorizontalAlignment="Center">
-                                            <TextBlock x:Name="HuangLiWuXingLabel" Text="五行" FontSize="10" Foreground="#B88A5A" HorizontalAlignment="Center" />
-                                            <TextBlock x:Name="HuangLiWuXingVal" FontSize="11" Foreground="#B8C0CC" Margin="0,2,0,0"
-                                                       HorizontalAlignment="Center" TextTrimming="CharacterEllipsis" />
-                                        </StackPanel>
-                                    </Border>
-                                    <Border x:Name="HuangLiMetaChong" Grid.Column="1" BorderBrush="#30FFFFFF" BorderThickness="0,0,1,0" Padding="5,4">
-                                        <StackPanel HorizontalAlignment="Center">
-                                            <TextBlock x:Name="HuangLiChongLabel" Text="冲煞" FontSize="10" Foreground="#B88A5A" HorizontalAlignment="Center" />
-                                            <TextBlock x:Name="HuangLiChongVal" FontSize="11" Foreground="#B8C0CC" Margin="0,2,0,0"
-                                                       HorizontalAlignment="Center" TextTrimming="CharacterEllipsis" />
-                                        </StackPanel>
-                                    </Border>
-                                    <Border x:Name="HuangLiMetaZhi" Grid.Column="2" Padding="5,4">
-                                        <StackPanel HorizontalAlignment="Center">
-                                            <TextBlock x:Name="HuangLiZhiLabel" Text="值神" FontSize="10" Foreground="#B88A5A" HorizontalAlignment="Center" />
-                                            <TextBlock x:Name="HuangLiZhiVal" FontSize="11" Foreground="#B8C0CC" Margin="0,2,0,0"
-                                                       HorizontalAlignment="Center" TextTrimming="CharacterEllipsis" />
-                                        </StackPanel>
-                                    </Border>
-                                </Grid>
-                            </Border>
-
-                            <Border x:Name="HuangLiTimeStripBorder" BorderBrush="#30FFFFFF" BorderThickness="1" Margin="0,0,0,6" Padding="2,4">
-                                <Grid>
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="22" />
-                                        <ColumnDefinition Width="*" />
-                                    </Grid.ColumnDefinitions>
-                                    <TextBlock x:Name="HuangLiTimeTitle" Grid.Column="0" Text="时辰吉凶" FontSize="10" Foreground="#B88A5A"
-                                               TextWrapping="Wrap" VerticalAlignment="Center" HorizontalAlignment="Center" LineHeight="12" />
-                                    <UniformGrid x:Name="HuangLiTimeStrip" Grid.Column="1" Columns="12" />
-                                </Grid>
-                            </Border>
-
-                            <Border x:Name="HuangLiDetailBorder" BorderBrush="#30FFFFFF" BorderThickness="1" Margin="0,0,0,6">
-                                <Grid>
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="46" />
-                                        <ColumnDefinition Width="*" />
-                                        <ColumnDefinition Width="46" />
-                                    </Grid.ColumnDefinitions>
-                                    <Grid.RowDefinitions>
-                                        <RowDefinition Height="Auto" />
-                                        <RowDefinition Height="Auto" />
-                                    </Grid.RowDefinitions>
-
-                                    <Border x:Name="HuangLiJianCell" Grid.Row="0" Grid.Column="0" Grid.RowSpan="2"
-                                            BorderBrush="#30FFFFFF" BorderThickness="0,0,1,0" Padding="4,4">
-                                        <StackPanel VerticalAlignment="Center">
-                                            <TextBlock x:Name="HuangLiJianLabel" Text="建除十二神" FontSize="10" Foreground="#B88A5A"
-                                                       TextWrapping="Wrap" HorizontalAlignment="Center" TextAlignment="Center" />
-                                            <TextBlock x:Name="HuangLiJianVal" FontSize="11" Foreground="#B8C0CC" Margin="0,3,0,0"
-                                                       TextWrapping="Wrap" HorizontalAlignment="Center" TextAlignment="Center" />
-                                        </StackPanel>
-                                    </Border>
-
-                                    <Grid Grid.Row="0" Grid.Column="1">
-                                        <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="*" />
-                                            <ColumnDefinition Width="*" />
-                                            <ColumnDefinition Width="*" />
-                                        </Grid.ColumnDefinitions>
-                                        <Border x:Name="HuangLiJiShenInner" Grid.Column="0" BorderBrush="#30FFFFFF" BorderThickness="0,0,1,1" Padding="4,4">
-                                            <StackPanel>
-                                                <TextBlock x:Name="HuangLiJiShenLabel" Text="吉神宜趋" FontSize="10" Foreground="#B88A5A" />
-                                                <TextBlock x:Name="HuangLiJiShenVal" FontSize="10" Foreground="#B8C0CC" Margin="0,2,0,0"
-                                                           TextWrapping="NoWrap" TextTrimming="CharacterEllipsis" />
-                                            </StackPanel>
-                                        </Border>
-                                        <Border x:Name="HuangLiTaiShenInner" Grid.Column="1" BorderBrush="#30FFFFFF" BorderThickness="0,0,1,1" Padding="4,4">
-                                            <StackPanel>
-                                                <TextBlock x:Name="HuangLiTaiShenLabel" Text="今日胎神" FontSize="10" Foreground="#B88A5A" />
-                                                <TextBlock x:Name="HuangLiTaiShenVal" FontSize="10" Foreground="#B8C0CC" Margin="0,2,0,0"
-                                                           TextWrapping="NoWrap" TextTrimming="CharacterEllipsis" />
-                                            </StackPanel>
-                                        </Border>
-                                        <Border x:Name="HuangLiXiongInner" Grid.Column="2" BorderBrush="#30FFFFFF" BorderThickness="0,0,0,1" Padding="4,4">
-                                            <StackPanel>
-                                                <TextBlock x:Name="HuangLiXiongLabel" Text="凶神宜忌" FontSize="10" Foreground="#B88A5A" />
-                                                <TextBlock x:Name="HuangLiXiongVal" FontSize="10" Foreground="#B8C0CC" Margin="0,2,0,0"
-                                                           TextWrapping="NoWrap" TextTrimming="CharacterEllipsis" />
-                                            </StackPanel>
-                                        </Border>
-                                    </Grid>
-
-                                    <Border x:Name="HuangLiPengZuCell" Grid.Row="1" Grid.Column="1" Padding="4,4">
-                                        <StackPanel>
-                                            <TextBlock x:Name="HuangLiPengZuLabel" Text="彭祖百忌" FontSize="10" Foreground="#B88A5A" />
-                                            <TextBlock x:Name="HuangLiPengZuVal" FontSize="10" Foreground="#B8C0CC" Margin="0,2,0,0" TextWrapping="Wrap" />
-                                        </StackPanel>
-                                    </Border>
-
-                                    <Border x:Name="HuangLiXiuCell" Grid.Row="0" Grid.Column="2" Grid.RowSpan="2"
-                                            BorderBrush="#30FFFFFF" BorderThickness="1,0,0,0" Padding="4,4">
-                                        <StackPanel VerticalAlignment="Center">
-                                            <TextBlock x:Name="HuangLiXiuLabel" Text="二十八星宿" FontSize="10" Foreground="#B88A5A"
-                                                       TextWrapping="Wrap" HorizontalAlignment="Center" TextAlignment="Center" />
-                                            <TextBlock x:Name="HuangLiXiuVal" FontSize="10" Foreground="#B8C0CC" Margin="0,3,0,0"
-                                                       TextWrapping="Wrap" HorizontalAlignment="Center" TextAlignment="Center" />
-                                        </StackPanel>
-                                    </Border>
-                                </Grid>
-                            </Border>
-
-                            <Border x:Name="HuangLiCurrentDivider" Height="1" Background="#30FFFFFF" Margin="0,0,0,6" />
-
-                            <StackPanel x:Name="HuangLiCurrentCard" Visibility="Collapsed">
-                                <TextBlock x:Name="HuangLiCurrentTitle" Text="当前时辰" FontSize="12" FontWeight="SemiBold"
-                                           Foreground="#F5F7FA" Margin="0,0,0,6" />
-
-                                <Grid Margin="0,0,0,4">
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="Auto" />
-                                        <ColumnDefinition Width="*" />
-                                        <ColumnDefinition Width="Auto" />
-                                    </Grid.ColumnDefinitions>
-                                    <Border x:Name="HuangLiCurrentZhiCircle" Width="40" Height="40" CornerRadius="20"
-                                            Background="#C94133" VerticalAlignment="Top">
-                                        <TextBlock x:Name="HuangLiCurrentZhi" Text="午" FontSize="20" FontWeight="Bold"
-                                                   Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center" />
-                                    </Border>
-                                    <StackPanel Grid.Column="1" Margin="8,0,4,0" VerticalAlignment="Center">
-                                        <TextBlock x:Name="HuangLiCurrentSummary" FontSize="12" Foreground="#F5F7FA" TextWrapping="Wrap" />
-                                        <TextBlock x:Name="HuangLiCurrentDirections" FontSize="10" Foreground="#94A3B8" Margin="0,2,0,0" TextWrapping="Wrap" />
-                                    </StackPanel>
-                                    <Border x:Name="HuangLiCurrentLuckBadge" Grid.Column="2" Width="20" Height="20" CornerRadius="10"
-                                            Background="#2D2D2D" VerticalAlignment="Top">
-                                        <TextBlock x:Name="HuangLiCurrentLuckText" Text="凶" FontSize="10" FontWeight="SemiBold"
-                                                   Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center" />
-                                    </Border>
-                                </Grid>
-
-                                <StackPanel Orientation="Horizontal" Margin="0,0,0,3">
-                                    <Border x:Name="HuangLiCurrentYiCircle" Width="16" Height="16" CornerRadius="8"
-                                            Background="#C94133" VerticalAlignment="Top" Margin="0,1,5,0">
-                                        <TextBlock x:Name="HuangLiCurrentYiCircleText" Text="宜" FontSize="9" FontWeight="SemiBold" Foreground="White"
-                                                   HorizontalAlignment="Center" VerticalAlignment="Center" />
-                                    </Border>
-                                    <TextBlock x:Name="HuangLiCurrentYiText" FontSize="11" Foreground="#B8C0CC" TextWrapping="Wrap" />
-                                </StackPanel>
-                                <StackPanel Orientation="Horizontal" Margin="0,0,0,6">
-                                    <Border x:Name="HuangLiCurrentJiCircle" Width="16" Height="16" CornerRadius="8"
-                                            Background="#2D2D2D" VerticalAlignment="Top" Margin="0,1,5,0">
-                                        <TextBlock x:Name="HuangLiCurrentJiCircleText" Text="忌" FontSize="9" FontWeight="SemiBold" Foreground="White"
-                                                   HorizontalAlignment="Center" VerticalAlignment="Center" />
-                                    </Border>
-                                    <TextBlock x:Name="HuangLiCurrentJiText" FontSize="11" Foreground="#B8C0CC" TextWrapping="Wrap" />
-                                </StackPanel>
-
-                                <Border x:Name="HuangLiMoreBtn" Background="#18FFFFFF" CornerRadius="4" Padding="6,4"
-                                        HorizontalAlignment="Stretch" Cursor="Hand" MouseLeftButtonUp="HuangLiMore_Click">
-                                    <TextBlock x:Name="HuangLiMoreText" Text="查看更多 ›" FontSize="11" Foreground="#94A3B8"
-                                               HorizontalAlignment="Center" />
-                                </Border>
-                            </StackPanel>
-                            </StackPanel>
-                        </StackPanel>
-                    </Border>
-
-                    <StackPanel x:Name="YearProgressPanel" Margin="0,0,0,8" Visibility="Collapsed">
-                        <Grid Margin="0,0,0,4">
-                            <TextBlock x:Name="YearProgressLabel" Text="2026 年进度" FontSize="11"
-                                       Foreground="#8B95A5" VerticalAlignment="Center" />
-                            <TextBlock x:Name="YearProgressPercent" Text="45.2%" FontSize="13" FontWeight="SemiBold"
-                                       Foreground="#F5F7FA" HorizontalAlignment="Right" VerticalAlignment="Center" />
-                        </Grid>
-                        <Border x:Name="YearProgressTrack" Height="7" CornerRadius="3.5"
-                                Background="#28FFFFFF" ClipToBounds="True" Margin="0,0,0,4">
-                            <Border x:Name="YearProgressFill" HorizontalAlignment="Left" CornerRadius="3.5"
-                                    Background="#3B82F6" Width="0" />
-                        </Border>
-                        <TextBlock x:Name="YearProgressDetail" Text="已过 162 天 / 全年 366 天"
-                                   FontSize="10" Foreground="#7E8A9C" />
-                    </StackPanel>
-
-                    <StackPanel x:Name="WeatherPanel">
-                        <TextBlock x:Name="CityText" Text="📍 北京"
-                                   FontSize="11" Foreground="#8B95A5" Margin="0,0,0,4" Visibility="Collapsed" />
-
-                        <TextBlock x:Name="WeatherText" Text="☀ 28° 晴  18°~31°"
-                                   FontSize="12" Foreground="#B8C0CC" Margin="0,0,0,4" Visibility="Collapsed" />
-
-                        <TextBlock x:Name="WeatherExtraText" FontSize="11" Foreground="#7E8A9C"
-                                   Margin="0,0,0,6" Visibility="Collapsed" />
-                    </StackPanel>
-
-                    <StackPanel x:Name="OffWorkPanel" Margin="0,0,0,8" Visibility="Collapsed">
-                        <Grid Margin="0,0,0,4">
-                            <TextBlock x:Name="OffWorkLabel" Text="下班倒计时" FontSize="11"
-                                       Foreground="#8B95A5" VerticalAlignment="Center" />
-                            <TextBlock x:Name="OffWorkMainText" Text="02:15:30" FontSize="13" FontWeight="SemiBold"
-                                       Foreground="#F5F7FA" HorizontalAlignment="Right" VerticalAlignment="Center" />
-                        </Grid>
-                        <Border x:Name="OffWorkTrack" Height="7" CornerRadius="3.5"
-                                Background="#28FFFFFF" ClipToBounds="True" Margin="0,0,0,4">
-                            <Border x:Name="OffWorkFill" HorizontalAlignment="Left" CornerRadius="3.5"
-                                    Background="#22C55E" Width="0" />
-                        </Border>
-                        <TextBlock x:Name="OffWorkDetail" Text="距离下班还有 2小时15分"
-                                   FontSize="10" Foreground="#7E8A9C" />
-                    </StackPanel>
-
-                    <Border x:Name="SalaryPanel" Background="#18FFFFFF" CornerRadius="8" Padding="10,8"
-                            Margin="0,0,0,8" ClipToBounds="True" Visibility="Collapsed">
-                        <StackPanel>
-                            <Grid Margin="0,0,0,4">
-                                <TextBlock x:Name="SalaryLabel" Text="今日已赚" FontSize="11"
-                                           Foreground="#8B95A5" VerticalAlignment="Center" />
-                                <TextBlock x:Name="SalaryAmount" Text="¥0.00" FontSize="18" FontWeight="SemiBold"
-                                           Foreground="#FFD700" HorizontalAlignment="Right" VerticalAlignment="Center" />
-                            </Grid>
-                            <TextBlock x:Name="SalarySubtitle" Text="摸鱼中… 每秒都在赚钱"
-                                       FontSize="10" Foreground="#7E8A9C" />
-                        </StackPanel>
-                    </Border>
-
-                    <StackPanel x:Name="CountdownPanel" Margin="0,0,0,8" Visibility="Collapsed">
-                        <Grid Margin="0,0,0,4">
-                            <TextBlock x:Name="CountdownLabel" Text="距离国庆还有" FontSize="11"
-                                       Foreground="#8B95A5" VerticalAlignment="Center" />
-                            <TextBlock x:Name="CountdownDays" Text="112 天" FontSize="13" FontWeight="SemiBold"
-                                       Foreground="#B8C0CC" HorizontalAlignment="Right" VerticalAlignment="Center" />
-                        </Grid>
-                        <Border x:Name="CountdownTrack" Height="7" CornerRadius="3.5"
-                                Background="#28FFFFFF" ClipToBounds="True" Margin="0,0,0,4">
-                            <Border x:Name="CountdownFill" HorizontalAlignment="Left" CornerRadius="3.5"
-                                    Background="#3B82F6" Width="0" />
-                        </Border>
-                        <TextBlock x:Name="CountdownHint" Text="越接近目标，进度条越满"
-                                   FontSize="10" Foreground="#7E8A9C" />
-                    </StackPanel>
-
-                    <Border x:Name="PomodoroPanel" Background="#18FFFFFF" CornerRadius="8" Padding="10,8"
-                            Margin="0,0,0,8" ClipToBounds="True" Visibility="Collapsed">
-                        <StackPanel>
-                            <Grid Margin="0,0,0,4">
-                                <TextBlock x:Name="PomodoroPhaseText" Text="番茄钟" FontSize="11"
-                                           Foreground="#8B95A5" VerticalAlignment="Center" />
-                                <TextBlock x:Name="PomodoroSessionText" Text="第 0 个番茄" FontSize="10"
-                                           Foreground="#7E8A9C" HorizontalAlignment="Right" VerticalAlignment="Center" />
-                            </Grid>
-                            <TextBlock x:Name="PomodoroCountdownText" Text="25:00" FontSize="28" FontWeight="SemiBold"
-                                       Foreground="#F5F7FA" HorizontalAlignment="Center" Margin="0,0,0,6" />
-                            <Border x:Name="PomodoroTrack" Height="7" CornerRadius="3.5"
-                                    Background="#28FFFFFF" ClipToBounds="True" Margin="0,0,0,8">
-                                <Border x:Name="PomodoroFill" HorizontalAlignment="Left" CornerRadius="3.5"
-                                        Background="#F97316" Width="0" />
-                            </Border>
-                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                                <Button x:Name="PomodoroStartBtn" Content="开始" Width="64" Height="26" Padding="0"
-                                        Click="PomodoroStart_Click" Background="#3B82F6" Foreground="White"
-                                        BorderThickness="0" Cursor="Hand" FontSize="11" />
-                                <Button x:Name="PomodoroResetBtn" Content="重置" Width="52" Height="26" Padding="0"
-                                        Margin="8,0,0,0" Click="PomodoroReset_Click"
-                                        Background="Transparent" Foreground="#94A3B8"
-                                        BorderBrush="#3A4150" BorderThickness="1" Cursor="Hand" FontSize="11" />
-                            </StackPanel>
-                        </StackPanel>
-                    </Border>
-
-                    <TextBlock x:Name="DailyQuoteText" FontSize="11" Foreground="#8B95A5"
-                               FontStyle="Italic" TextWrapping="Wrap" Margin="0,0,0,8" Visibility="Collapsed" />
-
-                    <Border x:Name="ScratchPanel" Margin="0,0,0,8" Padding="0" Visibility="Collapsed"
-                            Background="Transparent" Cursor="Hand" MouseLeftButtonUp="ScratchPanel_Click">
-                        <StackPanel>
-                            <Grid Margin="0,0,0,6">
-                                <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                                    <TextBlock x:Name="ScratchTitleText" Text="速记便签" FontSize="12"
-                                               Foreground="#8B95A5" VerticalAlignment="Center" />
-                                    <Border x:Name="ScratchCountBadge" CornerRadius="8" Padding="6,1" Margin="6,0,0,0"
-                                            Background="#203B82F6" VerticalAlignment="Center">
-                                        <TextBlock x:Name="ScratchCountText" Text="0" FontSize="10"
-                                                   Foreground="#3B82F6" FontWeight="SemiBold" />
-                                    </Border>
-                                </StackPanel>
-                                <TextBlock x:Name="ScratchExpandText" Text="展开" FontSize="11" Foreground="#94A3B8"
-                                           HorizontalAlignment="Right" VerticalAlignment="Center" Cursor="Hand"
-                                           MouseLeftButtonUp="ScratchExpand_Click" />
-                            </Grid>
-                            <Border x:Name="ScratchPreviewCard" CornerRadius="8" Padding="8,6"
-                                    Background="#282F30" BorderBrush="#3A4150" BorderThickness="1"
-                                    MouseLeftButtonUp="ScratchExpand_Click">
-                                <StackPanel>
-                                    <TextBlock x:Name="ScratchPreviewTitle" FontSize="11" FontWeight="SemiBold"
-                                               Foreground="#C5D0E0" TextTrimming="CharacterEllipsis" Margin="0,0,0,2" />
-                                    <TextBlock x:Name="ScratchPreviewContent" FontSize="10" Foreground="#8B95A5"
-                                               TextWrapping="Wrap" MaxHeight="32" TextTrimming="CharacterEllipsis" />
-                                </StackPanel>
-                            </Border>
-                            <TextBlock x:Name="ScratchEmptyText" Text="点击展开 · 新建便签" FontSize="11"
-                                       Foreground="#6B7280" Margin="0,4,0,0" Visibility="Collapsed"
-                                       MouseLeftButtonUp="ScratchExpand_Click" Cursor="Hand" />
-                        </StackPanel>
-                    </Border>
-
-                    <StackPanel x:Name="TodoPanel">
-                        <Border x:Name="DividerBorder" Height="1" Background="#28FFFFFF" Margin="0,0,0,8" />
-
-                        <Grid Margin="0,0,0,6">
-                            <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                                <TextBlock x:Name="TodoTitleText" Text="今日待办" FontSize="12"
-                                           Foreground="#8B95A5" VerticalAlignment="Center" />
-                                <Border x:Name="TodoCountBadge" CornerRadius="8" Padding="6,1" Margin="6,0,0,0"
-                                        Background="{DynamicResource TodoCountBadgeBrush}" VerticalAlignment="Center">
-                                    <TextBlock x:Name="TodoCountText" Text="0/0" FontSize="10"
-                                               Foreground="{DynamicResource TodoAccentBrush}" FontWeight="SemiBold" />
-                                </Border>
-                            </StackPanel>
-                        </Grid>
-
-                        <ItemsControl x:Name="TodoList" Margin="0,0,0,4">
-                            <ItemsControl.ItemTemplate>
-                                <DataTemplate>
-                                    <Border Background="{DynamicResource TodoCardBgBrush}"
-                                            BorderBrush="{DynamicResource TodoCardBorderBrush}"
-                                            BorderThickness="1" CornerRadius="8"
-                                            Padding="8,6" Margin="0,0,0,5">
-                                        <Grid>
-                                            <Grid.ColumnDefinitions>
-                                                <ColumnDefinition Width="Auto" />
-                                                <ColumnDefinition Width="*" />
-                                                <ColumnDefinition Width="Auto" />
-                                            </Grid.ColumnDefinitions>
-                                            <local:CircleCheckBox Grid.Column="0" Margin="0,0,8,0" VerticalAlignment="Center"
-                                                                  TagId="{Binding Id}" Click="TodoCheck_Click" />
-                                            <StackPanel Grid.Column="1" VerticalAlignment="Center">
-                                                <StackPanel Orientation="Horizontal">
-                                                    <Border Background="{DynamicResource TodoTimeBadgeBrush}"
-                                                            CornerRadius="4" Padding="4,1" Margin="0,0,6,0" VerticalAlignment="Center">
-                                                        <Border.Style>
-                                                            <Style TargetType="Border">
-                                                                <Setter Property="Visibility" Value="Collapsed" />
-                                                                <Style.Triggers>
-                                                                    <DataTrigger Binding="{Binding HasTime}" Value="True">
-                                                                        <Setter Property="Visibility" Value="Visible" />
-                                                                    </DataTrigger>
-                                                                </Style.Triggers>
-                                                            </Style>
-                                                        </Border.Style>
-                                                        <TextBlock Text="{Binding Time}" FontSize="10"
-                                                                   Foreground="{DynamicResource TodoAccentBrush}"
-                                                                   FontWeight="SemiBold" ToolTip="提醒时间" />
-                                                    </Border>
-                                                    <Border Background="#22F59E0B" CornerRadius="4" Padding="4,1" Margin="0,0,6,0"
-                                                            VerticalAlignment="Center">
-                                                        <Border.Style>
-                                                            <Style TargetType="Border">
-                                                                <Setter Property="Visibility" Value="Collapsed" />
-                                                                <Style.Triggers>
-                                                                    <DataTrigger Binding="{Binding HasDueDate}" Value="True">
-                                                                        <Setter Property="Visibility" Value="Visible" />
-                                                                    </DataTrigger>
-                                                                </Style.Triggers>
-                                                            </Style>
-                                                        </Border.Style>
-                                                        <TextBlock Text="{Binding DueDateLabel}" FontSize="10"
-                                                                   Foreground="#F59E0B" FontWeight="SemiBold" />
-                                                    </Border>
-                                                    <TextBlock Text="{Binding Title}" Foreground="{DynamicResource TodoTextBrush}"
-                                                               FontSize="13" TextTrimming="CharacterEllipsis" VerticalAlignment="Center"
-                                                               Tag="{Binding Id}" MouseLeftButtonDown="TodoTitle_DoubleClick"
-                                                               Cursor="Hand" ToolTip="双击编辑" />
-                                                </StackPanel>
-                                            </StackPanel>
-                                            <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center">
-                                                <Button Content="{Binding PinIcon}" Width="22" Height="22" Padding="0"
-                                                        Tag="{Binding Id}" Click="TodoPin_Click"
-                                                        Background="Transparent" BorderThickness="0" Cursor="Hand"
-                                                        ToolTip="置顶" FontSize="12">
-                                                    <Button.Style>
-                                                        <Style TargetType="Button">
-                                                            <Setter Property="Foreground" Value="{DynamicResource TodoPinInactiveBrush}" />
-                                                            <Style.Triggers>
-                                                                <DataTrigger Binding="{Binding Pinned}" Value="True">
-                                                                    <Setter Property="Foreground" Value="{DynamicResource TodoPinActiveBrush}" />
-                                                                </DataTrigger>
-                                                            </Style.Triggers>
-                                                        </Style>
-                                                    </Button.Style>
-                                                </Button>
-                                                <Button Content="✎" Width="22" Height="22" Padding="0" Margin="0,0,0,0"
-                                                        Tag="{Binding Id}" Click="TodoEdit_Click"
-                                                        Background="Transparent" BorderThickness="0" Cursor="Hand"
-                                                        Foreground="{DynamicResource TodoMutedBrush}" ToolTip="编辑" FontSize="11" />
-                                                <Button Content="×" Width="22" Height="22" Padding="0"
-                                                        Tag="{Binding Id}" Click="TodoDelete_Click"
-                                                        Background="Transparent" BorderThickness="0" Cursor="Hand"
-                                                        Foreground="{DynamicResource TodoDeleteBrush}" ToolTip="删除" FontSize="14" />
-                                            </StackPanel>
-                                        </Grid>
-                                    </Border>
-                                </DataTemplate>
-                            </ItemsControl.ItemTemplate>
-                        </ItemsControl>
-
-                        <Border x:Name="EmptyTodoPanel" Background="{DynamicResource TodoCardBgBrush}"
-                                BorderBrush="{DynamicResource TodoCardBorderBrush}" BorderThickness="1"
-                                CornerRadius="8" Padding="12,10" Margin="0,0,0,6" Visibility="Collapsed">
-                            <TextBlock x:Name="EmptyTodoText" Text="暂无待办，在下方添加一条吧 ✨"
-                                       Foreground="{DynamicResource TodoEmptyBrush}" FontSize="12"
-                                       TextAlignment="Center" TextWrapping="Wrap" />
-                        </Border>
-
-                        <Border x:Name="TodoOverflowBtn" Background="#18FFFFFF" CornerRadius="6" Padding="6,4"
-                                Margin="0,0,0,4" Cursor="Hand" MouseLeftButtonUp="TodoViewAll_Click"
-                                Visibility="Collapsed">
-                            <TextBlock x:Name="TodoOverflowText" Text="还有 0 条未显示 ›" FontSize="11"
-                                       Foreground="{DynamicResource TodoLinkBrush}" HorizontalAlignment="Center" />
-                        </Border>
-
-                        <Border x:Name="TodoViewAllBtn" Background="Transparent" CornerRadius="4" Padding="2,2"
-                                Cursor="Hand" MouseLeftButtonUp="TodoViewAll_Click">
-                            <TextBlock x:Name="TodoViewAllText" Text="查看全部 ›" FontSize="11"
-                                       Foreground="{DynamicResource TodoLinkBrush}" HorizontalAlignment="Center" />
-                        </Border>
-                    </StackPanel>
-                </StackPanel>
-            </ScrollViewer>
-
-            <Grid x:Name="CalendarSection" Grid.Row="2" Margin="0,0,0,6" Visibility="Collapsed">
+            <Grid x:Name="ContentRoot" Margin="12" PreviewMouseLeftButtonDown="Grid_PreviewMouseLeftButtonDown" Cursor="SizeAll">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" MinHeight="200" />
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
-                <Grid Grid.Row="0" Margin="0,0,0,4">
+
+                <!-- Hero Header -->
+                <Border Grid.Row="0" x:Name="HeaderBlock" Background="Transparent" Margin="0,0,0,10">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+
+                        <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                            <TextBlock x:Name="ClockText" Text="15:03" FontSize="36" FontWeight="Bold" Foreground="#FFFFFF" />
+                            <TextBlock x:Name="DateText" Text="2026年6月11日 周四" FontSize="12" Foreground="#A6FFFFFF" Margin="0,2,0,0" />
+                            <TextBlock x:Name="CityText" Text="📍 东京 Tokyo" FontSize="11" Foreground="#8B95A5" Margin="0,2,0,0" Visibility="Collapsed" />
+                            <TextBlock x:Name="LunarText" Text="农历五月初六 · 芒种" FontSize="11" Foreground="#8B95A5" Margin="0,2,0,0" Visibility="Collapsed" />
+                            <TextBlock x:Name="LunarSubText" Text="乙巳年 · 属蛇" FontSize="10" Foreground="#6B7280" Margin="0,1,0,0" Visibility="Collapsed" />
+                        </StackPanel>
+
+                        <StackPanel Grid.Column="1" VerticalAlignment="Center" Margin="8,0,8,0" HorizontalAlignment="Right">
+                            <StackPanel x:Name="WeatherPanel" Orientation="Horizontal" HorizontalAlignment="Right">
+                                <TextBlock x:Name="WeatherText" Text="⛅ 25° 多云" FontSize="14" FontWeight="SemiBold"
+                                           Foreground="#FFFFFF" VerticalAlignment="Center" Visibility="Collapsed" />
+                            </StackPanel>
+                            <TextBlock x:Name="WeatherExtraText" FontSize="10" Foreground="#8B95A5"
+                                       HorizontalAlignment="Right" Margin="0,2,0,0" Visibility="Collapsed" TextWrapping="Wrap" />
+                        </StackPanel>
+
+                        <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Top">
+                            <Button x:Name="PinBtn" Content="📌" Style="{StaticResource HeaderIconBtn}"
+                                    Click="PinBtn_Click" ToolTip="置顶" />
+                            <Button x:Name="SettingsBtn" Content="⚙" Style="{StaticResource HeaderIconBtn}"
+                                    Margin="4,0,0,0" Click="OpenSettings_Click" ToolTip="设置" />
+                        </StackPanel>
+                    </Grid>
+                </Border>
+
+                <!-- Main modules -->
+                <ScrollViewer x:Name="MainScrollViewer" Grid.Row="1"
+                              VerticalScrollBarVisibility="Hidden" HorizontalScrollBarVisibility="Disabled">
+                    <StackPanel x:Name="ModuleContentPanel">
+                        <!-- HuangLi compact card -->
+                        <Border x:Name="HuangLiPanel" Style="{StaticResource FloatlyCard}" Margin="0,0,0,10" Visibility="Collapsed">
+                            <StackPanel>
+                                <Grid Margin="0,0,0,6">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Grid.Column="0" Text="📅" FontSize="14" VerticalAlignment="Center" Margin="0,0,6,0" />
+                                    <TextBlock x:Name="HuangLiLunarLarge" Grid.Column="1" Text="四月廿六" FontSize="14" FontWeight="SemiBold"
+                                               Foreground="#FF8A72" VerticalAlignment="Center" />
+                                    <Button x:Name="HuangLiCollapseBtn" Grid.Column="2" Content="⌄" Width="22" Height="22" Padding="0"
+                                            Click="HuangLiCollapse_Click" Background="Transparent" BorderThickness="0"
+                                            Foreground="#94A3B8" Cursor="Hand" FontSize="12" ToolTip="展开/收起" />
+                                </Grid>
+                                <StackPanel Orientation="Horizontal" Margin="0,0,0,4">
+                                    <Border x:Name="HuangLiYiCircle" CornerRadius="4" Padding="4,2" Margin="0,0,6,0" Background="#2255D38A">
+                                        <TextBlock x:Name="HuangLiYiCircleText" Text="宜" FontSize="10" FontWeight="SemiBold" Foreground="#55D38A" />
+                                    </Border>
+                                    <TextBlock x:Name="HuangLiYiText" FontSize="11" Foreground="#A6FFFFFF" TextWrapping="Wrap" VerticalAlignment="Center" />
+                                </StackPanel>
+                                <StackPanel Orientation="Horizontal">
+                                    <Border x:Name="HuangLiJiCircle" CornerRadius="4" Padding="4,2" Margin="0,0,6,0" Background="#22FF8A72">
+                                        <TextBlock x:Name="HuangLiJiCircleText" Text="忌" FontSize="10" FontWeight="SemiBold" Foreground="#FF8A72" />
+                                    </Border>
+                                    <TextBlock x:Name="HuangLiJiText" FontSize="11" Foreground="#A6FFFFFF" TextWrapping="Wrap" VerticalAlignment="Center" />
+                                </StackPanel>
+
+                                <StackPanel x:Name="HuangLiDetailsPanel" Margin="0,8,0,0">
+                                    <TextBlock x:Name="HuangLiSolarDate" Text="2026年6月11日" FontSize="11" Foreground="#8B95A5" HorizontalAlignment="Center" Margin="0,0,0,4" />
+                                    <Grid Margin="0,0,0,4">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="28" /><ColumnDefinition Width="*" /><ColumnDefinition Width="28" />
+                                        </Grid.ColumnDefinitions>
+                                        <Button x:Name="HuangLiPrevBtn" Grid.Column="0" Content="‹" Width="24" Height="24" Padding="0"
+                                                Click="HuangLiPrev_Click" Background="Transparent" BorderThickness="0"
+                                                Foreground="#FF8A72" Cursor="Hand" FontSize="18" FontWeight="Bold" />
+                                        <TextBlock x:Name="HuangLiMetaLine" Grid.Column="1" Text="丙午年 甲午月" FontSize="10"
+                                                   Foreground="#8B95A5" TextWrapping="Wrap" HorizontalAlignment="Center" TextAlignment="Center" />
+                                        <Button x:Name="HuangLiNextBtn" Grid.Column="2" Content="›" Width="24" Height="24" Padding="0"
+                                                Click="HuangLiNext_Click" Background="Transparent" BorderThickness="0"
+                                                Foreground="#FF8A72" Cursor="Hand" FontSize="18" FontWeight="Bold" />
+                                    </Grid>
+                                    <Border x:Name="HuangLiMetaGridBorder" BorderBrush="#0DFFFFFF" BorderThickness="1" Margin="0,0,0,4">
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*" /><ColumnDefinition Width="*" /><ColumnDefinition Width="*" />
+                                            </Grid.ColumnDefinitions>
+                                            <Border x:Name="HuangLiMetaWuXing" Grid.Column="0" BorderBrush="#0DFFFFFF" BorderThickness="0,0,1,0" Padding="4,3">
+                                                <StackPanel HorizontalAlignment="Center">
+                                                    <TextBlock x:Name="HuangLiWuXingLabel" Text="五行" FontSize="9" Foreground="#B88A5A" HorizontalAlignment="Center" />
+                                                    <TextBlock x:Name="HuangLiWuXingVal" FontSize="10" Foreground="#A6FFFFFF" Margin="0,1,0,0" HorizontalAlignment="Center" TextTrimming="CharacterEllipsis" />
+                                                </StackPanel>
+                                            </Border>
+                                            <Border x:Name="HuangLiMetaChong" Grid.Column="1" BorderBrush="#0DFFFFFF" BorderThickness="0,0,1,0" Padding="4,3">
+                                                <StackPanel HorizontalAlignment="Center">
+                                                    <TextBlock x:Name="HuangLiChongLabel" Text="冲煞" FontSize="9" Foreground="#B88A5A" HorizontalAlignment="Center" />
+                                                    <TextBlock x:Name="HuangLiChongVal" FontSize="10" Foreground="#A6FFFFFF" Margin="0,1,0,0" HorizontalAlignment="Center" TextTrimming="CharacterEllipsis" />
+                                                </StackPanel>
+                                            </Border>
+                                            <Border x:Name="HuangLiMetaZhi" Grid.Column="2" Padding="4,3">
+                                                <StackPanel HorizontalAlignment="Center">
+                                                    <TextBlock x:Name="HuangLiZhiLabel" Text="值神" FontSize="9" Foreground="#B88A5A" HorizontalAlignment="Center" />
+                                                    <TextBlock x:Name="HuangLiZhiVal" FontSize="10" Foreground="#A6FFFFFF" Margin="0,1,0,0" HorizontalAlignment="Center" TextTrimming="CharacterEllipsis" />
+                                                </StackPanel>
+                                            </Border>
+                                        </Grid>
+                                    </Border>
+                                    <Border x:Name="HuangLiTimeStripBorder" BorderBrush="#0DFFFFFF" BorderThickness="1" Margin="0,0,0,4" Padding="2,3">
+                                        <Grid>
+                                            <Grid.ColumnDefinitions><ColumnDefinition Width="20" /><ColumnDefinition Width="*" /></Grid.ColumnDefinitions>
+                                            <TextBlock x:Name="HuangLiTimeTitle" Grid.Column="0" Text="时辰" FontSize="9" Foreground="#B88A5A" TextWrapping="Wrap" VerticalAlignment="Center" HorizontalAlignment="Center" />
+                                            <UniformGrid x:Name="HuangLiTimeStrip" Grid.Column="1" Columns="12" />
+                                        </Grid>
+                                    </Border>
+                                    <Border x:Name="HuangLiDetailBorder" BorderBrush="#0DFFFFFF" BorderThickness="1" Margin="0,0,0,4">
+                                        <Grid>
+                                            <Grid.ColumnDefinitions><ColumnDefinition Width="40" /><ColumnDefinition Width="*" /><ColumnDefinition Width="40" /></Grid.ColumnDefinitions>
+                                            <Grid.RowDefinitions><RowDefinition Height="Auto" /><RowDefinition Height="Auto" /></Grid.RowDefinitions>
+                                            <Border x:Name="HuangLiJianCell" Grid.Row="0" Grid.Column="0" Grid.RowSpan="2" BorderBrush="#0DFFFFFF" BorderThickness="0,0,1,0" Padding="3,3">
+                                                <StackPanel VerticalAlignment="Center">
+                                                    <TextBlock x:Name="HuangLiJianLabel" Text="建除" FontSize="9" Foreground="#B88A5A" TextWrapping="Wrap" HorizontalAlignment="Center" TextAlignment="Center" />
+                                                    <TextBlock x:Name="HuangLiJianVal" FontSize="10" Foreground="#A6FFFFFF" Margin="0,2,0,0" TextWrapping="Wrap" HorizontalAlignment="Center" TextAlignment="Center" />
+                                                </StackPanel>
+                                            </Border>
+                                            <Grid Grid.Row="0" Grid.Column="1">
+                                                <Grid.ColumnDefinitions><ColumnDefinition Width="*" /><ColumnDefinition Width="*" /><ColumnDefinition Width="*" /></Grid.ColumnDefinitions>
+                                                <Border x:Name="HuangLiJiShenInner" Grid.Column="0" BorderBrush="#0DFFFFFF" BorderThickness="0,0,1,1" Padding="3,3">
+                                                    <StackPanel>
+                                                        <TextBlock x:Name="HuangLiJiShenLabel" Text="吉神" FontSize="9" Foreground="#B88A5A" />
+                                                        <TextBlock x:Name="HuangLiJiShenVal" FontSize="9" Foreground="#A6FFFFFF" Margin="0,1,0,0" TextTrimming="CharacterEllipsis" />
+                                                    </StackPanel>
+                                                </Border>
+                                                <Border x:Name="HuangLiTaiShenInner" Grid.Column="1" BorderBrush="#0DFFFFFF" BorderThickness="0,0,1,1" Padding="3,3">
+                                                    <StackPanel>
+                                                        <TextBlock x:Name="HuangLiTaiShenLabel" Text="胎神" FontSize="9" Foreground="#B88A5A" />
+                                                        <TextBlock x:Name="HuangLiTaiShenVal" FontSize="9" Foreground="#A6FFFFFF" Margin="0,1,0,0" TextTrimming="CharacterEllipsis" />
+                                                    </StackPanel>
+                                                </Border>
+                                                <Border x:Name="HuangLiXiongInner" Grid.Column="2" BorderBrush="#0DFFFFFF" BorderThickness="0,0,0,1" Padding="3,3">
+                                                    <StackPanel>
+                                                        <TextBlock x:Name="HuangLiXiongLabel" Text="凶神" FontSize="9" Foreground="#B88A5A" />
+                                                        <TextBlock x:Name="HuangLiXiongVal" FontSize="9" Foreground="#A6FFFFFF" Margin="0,1,0,0" TextTrimming="CharacterEllipsis" />
+                                                    </StackPanel>
+                                                </Border>
+                                            </Grid>
+                                            <Border x:Name="HuangLiPengZuCell" Grid.Row="1" Grid.Column="1" Padding="3,3">
+                                                <StackPanel>
+                                                    <TextBlock x:Name="HuangLiPengZuLabel" Text="彭祖百忌" FontSize="9" Foreground="#B88A5A" />
+                                                    <TextBlock x:Name="HuangLiPengZuVal" FontSize="9" Foreground="#A6FFFFFF" Margin="0,1,0,0" TextWrapping="Wrap" />
+                                                </StackPanel>
+                                            </Border>
+                                            <Border x:Name="HuangLiXiuCell" Grid.Row="0" Grid.Column="2" Grid.RowSpan="2" BorderBrush="#0DFFFFFF" BorderThickness="1,0,0,0" Padding="3,3">
+                                                <StackPanel VerticalAlignment="Center">
+                                                    <TextBlock x:Name="HuangLiXiuLabel" Text="星宿" FontSize="9" Foreground="#B88A5A" TextWrapping="Wrap" HorizontalAlignment="Center" TextAlignment="Center" />
+                                                    <TextBlock x:Name="HuangLiXiuVal" FontSize="9" Foreground="#A6FFFFFF" Margin="0,2,0,0" TextWrapping="Wrap" HorizontalAlignment="Center" TextAlignment="Center" />
+                                                </StackPanel>
+                                            </Border>
+                                        </Grid>
+                                    </Border>
+                                    <Border x:Name="HuangLiCurrentDivider" Height="1" Background="#0DFFFFFF" Margin="0,0,0,4" />
+                                    <StackPanel x:Name="HuangLiCurrentCard" Visibility="Collapsed">
+                                        <TextBlock x:Name="HuangLiCurrentTitle" Text="当前时辰" FontSize="11" FontWeight="SemiBold" Foreground="#FFFFFF" Margin="0,0,0,4" />
+                                        <Grid Margin="0,0,0,4">
+                                            <Grid.ColumnDefinitions><ColumnDefinition Width="Auto" /><ColumnDefinition Width="*" /><ColumnDefinition Width="Auto" /></Grid.ColumnDefinitions>
+                                            <Border x:Name="HuangLiCurrentZhiCircle" Width="36" Height="36" CornerRadius="18" Background="#FF8A72" VerticalAlignment="Top">
+                                                <TextBlock x:Name="HuangLiCurrentZhi" Text="午" FontSize="18" FontWeight="Bold" Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                            </Border>
+                                            <StackPanel Grid.Column="1" Margin="6,0,4,0" VerticalAlignment="Center">
+                                                <TextBlock x:Name="HuangLiCurrentSummary" FontSize="11" Foreground="#FFFFFF" TextWrapping="Wrap" />
+                                                <TextBlock x:Name="HuangLiCurrentDirections" FontSize="9" Foreground="#8B95A5" Margin="0,1,0,0" TextWrapping="Wrap" />
+                                            </StackPanel>
+                                            <Border x:Name="HuangLiCurrentLuckBadge" Grid.Column="2" Width="18" Height="18" CornerRadius="9" Background="#3A3A3A" VerticalAlignment="Top">
+                                                <TextBlock x:Name="HuangLiCurrentLuckText" Text="凶" FontSize="9" FontWeight="SemiBold" Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                            </Border>
+                                        </Grid>
+                                        <StackPanel Orientation="Horizontal" Margin="0,0,0,2">
+                                            <Border x:Name="HuangLiCurrentYiCircle" Width="14" Height="14" CornerRadius="7" Background="#55D38A" VerticalAlignment="Top" Margin="0,1,4,0">
+                                                <TextBlock x:Name="HuangLiCurrentYiCircleText" Text="宜" FontSize="8" FontWeight="SemiBold" Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                            </Border>
+                                            <TextBlock x:Name="HuangLiCurrentYiText" FontSize="10" Foreground="#A6FFFFFF" TextWrapping="Wrap" />
+                                        </StackPanel>
+                                        <StackPanel Orientation="Horizontal" Margin="0,0,0,4">
+                                            <Border x:Name="HuangLiCurrentJiCircle" Width="14" Height="14" CornerRadius="7" Background="#FF8A72" VerticalAlignment="Top" Margin="0,1,4,0">
+                                                <TextBlock x:Name="HuangLiCurrentJiCircleText" Text="忌" FontSize="8" FontWeight="SemiBold" Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                            </Border>
+                                            <TextBlock x:Name="HuangLiCurrentJiText" FontSize="10" Foreground="#A6FFFFFF" TextWrapping="Wrap" />
+                                        </StackPanel>
+                                        <Border x:Name="HuangLiMoreBtn" Background="#18FFFFFF" CornerRadius="4" Padding="5,3" Cursor="Hand" MouseLeftButtonUp="HuangLiMore_Click">
+                                            <TextBlock x:Name="HuangLiMoreText" Text="查看更多 ›" FontSize="10" Foreground="#8B95A5" HorizontalAlignment="Center" />
+                                        </Border>
+                                    </StackPanel>
+                                </StackPanel>
+                            </StackPanel>
+                        </Border>
+
+                        <!-- Extra modules (offwork, salary, daily quote) — order via ApplyModuleOrder -->
+                        <StackPanel x:Name="ExtraModuleStack" Margin="0,0,0,0" />
+
+                        <!-- Countdown + Year Progress row -->
+                        <Grid Margin="0,0,0,10">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="6" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <Border Grid.Column="0" x:Name="CountdownCard" Style="{StaticResource FloatlyCard}" Padding="10">
+                                <StackPanel x:Name="CountdownPanel" Visibility="Collapsed">
+                                    <TextBlock x:Name="CountdownLabel" Text="距离 618" Style="{StaticResource CardTitle}" Margin="0,0,0,4" />
+                                    <TextBlock x:Name="CountdownDays" Text="12 天" FontSize="22" FontWeight="Bold" Foreground="#FFFFFF" Margin="0,0,0,6" />
+                                    <Border x:Name="CountdownTrack" Height="5" CornerRadius="2.5" Background="#28FFFFFF" ClipToBounds="True" Margin="0,0,0,4">
+                                        <Border x:Name="CountdownFill" HorizontalAlignment="Left" CornerRadius="2.5" Background="#FF8A72" Width="0" />
+                                    </Border>
+                                    <TextBlock x:Name="CountdownHint" Text="目标日期" FontSize="10" Foreground="#8B95A5" />
+                                </StackPanel>
+                            </Border>
+                            <Border Grid.Column="2" x:Name="YearProgressCard" Style="{StaticResource FloatlyCard}" Padding="10">
+                                <StackPanel x:Name="YearProgressPanel" Visibility="Collapsed">
+                                    <TextBlock x:Name="YearProgressLabel" Text="2026 年进度" Style="{StaticResource CardTitle}" Margin="0,0,0,4" />
+                                    <TextBlock x:Name="YearProgressPercent" Text="44.1%" FontSize="22" FontWeight="Bold" Foreground="#FFFFFF" Margin="0,0,0,6" />
+                                    <Border x:Name="YearProgressTrack" Height="5" CornerRadius="2.5" Background="#28FFFFFF" ClipToBounds="True" Margin="0,0,0,4">
+                                        <Border x:Name="YearProgressFill" HorizontalAlignment="Left" CornerRadius="2.5" Background="#5C8DFF" Width="0" />
+                                    </Border>
+                                    <TextBlock x:Name="YearProgressDetail" Text="已过 162 天 / 365 天" FontSize="10" Foreground="#8B95A5" />
+                                </StackPanel>
+                            </Border>
+                        </Grid>
+
+                        <!-- OffWork + Salary (hidden cards, parent panels referenced by code) -->
+                        <StackPanel x:Name="OffWorkPanel" Visibility="Collapsed" Margin="0,0,0,8">
+                            <Grid Margin="0,0,0,4">
+                                <TextBlock x:Name="OffWorkLabel" Text="下班倒计时" FontSize="11" Foreground="#8B95A5" VerticalAlignment="Center" />
+                                <TextBlock x:Name="OffWorkMainText" Text="02:15:30" FontSize="13" FontWeight="SemiBold" Foreground="#FFFFFF" HorizontalAlignment="Right" />
+                            </Grid>
+                            <Border x:Name="OffWorkTrack" Height="5" CornerRadius="2.5" Background="#28FFFFFF" ClipToBounds="True" Margin="0,0,0,4">
+                                <Border x:Name="OffWorkFill" HorizontalAlignment="Left" CornerRadius="2.5" Background="#55D38A" Width="0" />
+                            </Border>
+                            <TextBlock x:Name="OffWorkDetail" Text="" FontSize="10" Foreground="#8B95A5" />
+                        </StackPanel>
+                        <Border x:Name="SalaryPanel" Style="{StaticResource FloatlyCard}" Margin="0,0,0,8" Visibility="Collapsed">
+                            <StackPanel>
+                                <Grid Margin="0,0,0,4">
+                                    <TextBlock x:Name="SalaryLabel" Text="今日已赚" FontSize="11" Foreground="#8B95A5" />
+                                    <TextBlock x:Name="SalaryAmount" Text="¥0.00" FontSize="16" FontWeight="SemiBold" Foreground="#F59E0B" HorizontalAlignment="Right" />
+                                </Grid>
+                                <TextBlock x:Name="SalarySubtitle" Text="" FontSize="10" Foreground="#8B95A5" />
+                            </StackPanel>
+                        </Border>
+
+                        <!-- Todo + Pomodoro row -->
+                        <Grid Margin="0,0,0,10">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="6" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <Border Grid.Column="0" Style="{StaticResource FloatlyCard}" Padding="10">
+                                <StackPanel x:Name="TodoPanel">
+                                    <Grid Margin="0,0,0,6">
+                                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                            <TextBlock x:Name="TodoTitleText" Text="今日待办" Style="{StaticResource CardTitle}" />
+                                            <Border x:Name="TodoCountBadge" CornerRadius="8" Padding="5,1" Margin="5,0,0,0" Background="#225C8DFF">
+                                                <TextBlock x:Name="TodoCountText" Text="0" FontSize="10" Foreground="#5C8DFF" FontWeight="SemiBold" />
+                                            </Border>
+                                        </StackPanel>
+                                    </Grid>
+                                    <Border x:Name="DividerBorder" Height="0" Visibility="Collapsed" />
+                                    <ItemsControl x:Name="TodoList" Margin="0,0,0,4">
+                                        <ItemsControl.ItemTemplate>
+                                            <DataTemplate>
+                                                <Border Background="{DynamicResource TodoCardBgBrush}" BorderBrush="{DynamicResource TodoCardBorderBrush}"
+                                                        BorderThickness="1" CornerRadius="6" Padding="6,4" Margin="0,0,0,4">
+                                                    <Grid>
+                                                        <Grid.ColumnDefinitions>
+                                                            <ColumnDefinition Width="Auto" /><ColumnDefinition Width="*" /><ColumnDefinition Width="Auto" />
+                                                        </Grid.ColumnDefinitions>
+                                                        <local:CircleCheckBox Grid.Column="0" Margin="0,0,6,0" VerticalAlignment="Center"
+                                                                              TagId="{Binding Id}" Click="TodoCheck_Click" />
+                                                        <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                                                            <StackPanel Orientation="Horizontal">
+                                                                <Border Background="{DynamicResource TodoTimeBadgeBrush}" CornerRadius="3" Padding="3,1" Margin="0,0,4,0" VerticalAlignment="Center">
+                                                                    <Border.Style>
+                                                                        <Style TargetType="Border">
+                                                                            <Setter Property="Visibility" Value="Collapsed" />
+                                                                            <Style.Triggers>
+                                                                                <DataTrigger Binding="{Binding HasTime}" Value="True">
+                                                                                    <Setter Property="Visibility" Value="Visible" />
+                                                                                </DataTrigger>
+                                                                            </Style.Triggers>
+                                                                        </Style>
+                                                                    </Border.Style>
+                                                                    <TextBlock Text="{Binding Time}" FontSize="9" Foreground="{DynamicResource TodoAccentBrush}" FontWeight="SemiBold" />
+                                                                </Border>
+                                                                <TextBlock Text="{Binding Title}" Foreground="{DynamicResource TodoTextBrush}" FontSize="11"
+                                                                           TextTrimming="CharacterEllipsis" VerticalAlignment="Center"
+                                                                           Tag="{Binding Id}" MouseLeftButtonDown="TodoTitle_DoubleClick" Cursor="Hand" />
+                                                            </StackPanel>
+                                                        </StackPanel>
+                                                        <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center">
+                                                            <Button Content="{Binding PinIcon}" Width="20" Height="20" Padding="0" Tag="{Binding Id}" Click="TodoPin_Click"
+                                                                    Background="Transparent" BorderThickness="0" Cursor="Hand" FontSize="11" ToolTip="置顶">
+                                                                <Button.Style>
+                                                                    <Style TargetType="Button">
+                                                                        <Setter Property="Foreground" Value="{DynamicResource TodoPinInactiveBrush}" />
+                                                                        <Style.Triggers>
+                                                                            <DataTrigger Binding="{Binding Pinned}" Value="True">
+                                                                                <Setter Property="Foreground" Value="{DynamicResource TodoPinActiveBrush}" />
+                                                                            </DataTrigger>
+                                                                        </Style.Triggers>
+                                                                    </Style>
+                                                                </Button.Style>
+                                                            </Button>
+                                                            <Button Content="×" Width="20" Height="20" Padding="0" Tag="{Binding Id}" Click="TodoDelete_Click"
+                                                                    Background="Transparent" BorderThickness="0" Cursor="Hand" Foreground="{DynamicResource TodoDeleteBrush}" FontSize="13" />
+                                                        </StackPanel>
+                                                    </Grid>
+                                                </Border>
+                                            </DataTemplate>
+                                        </ItemsControl.ItemTemplate>
+                                    </ItemsControl>
+                                    <Border x:Name="EmptyTodoPanel" Background="{DynamicResource TodoCardBgBrush}" BorderBrush="{DynamicResource TodoCardBorderBrush}"
+                                            BorderThickness="1" CornerRadius="6" Padding="8,6" Margin="0,0,0,4" Visibility="Collapsed">
+                                        <TextBlock x:Name="EmptyTodoText" Text="暂无待办 ✨" Foreground="{DynamicResource TodoEmptyBrush}" FontSize="11" TextAlignment="Center" />
+                                    </Border>
+                                    <Border x:Name="TodoOverflowBtn" Background="#18FFFFFF" CornerRadius="4" Padding="4,2" Margin="0,0,0,2" Cursor="Hand"
+                                            MouseLeftButtonUp="TodoViewAll_Click" Visibility="Collapsed">
+                                        <TextBlock x:Name="TodoOverflowText" Text="还有 0 条 ›" FontSize="10" Foreground="{DynamicResource TodoLinkBrush}" HorizontalAlignment="Center" />
+                                    </Border>
+                                    <Border x:Name="TodoViewAllBtn" Background="Transparent" Padding="2" Cursor="Hand" MouseLeftButtonUp="TodoViewAll_Click">
+                                        <TextBlock x:Name="TodoViewAllText" Text="查看全部 ›" FontSize="10" Foreground="{DynamicResource TodoLinkBrush}" HorizontalAlignment="Center" />
+                                    </Border>
+                                </StackPanel>
+                            </Border>
+                            <Border Grid.Column="2" Style="{StaticResource FloatlyCard}" Padding="10">
+                                <StackPanel x:Name="PomodoroPanel" Visibility="Collapsed">
+                                    <Grid Margin="0,0,0,6">
+                                        <TextBlock x:Name="PomodoroPhaseText" Text="番茄钟" Style="{StaticResource CardTitle}" />
+                                        <TextBlock x:Name="PomodoroSessionText" Text="准备开始" FontSize="10" Foreground="#8B95A5" HorizontalAlignment="Right" VerticalAlignment="Center" />
+                                    </Grid>
+                                    <Grid HorizontalAlignment="Center" Margin="0,0,0,8">
+                                        <Ellipse x:Name="PomodoroRingTrack" Width="72" Height="72" Stroke="#28FFFFFF" StrokeThickness="4" Fill="Transparent" />
+                                        <Ellipse x:Name="PomodoroRingProgress" Width="72" Height="72" Stroke="#5C8DFF" StrokeThickness="4" Fill="Transparent"
+                                                 StrokeDashCap="Round" RenderTransformOrigin="0.5,0.5">
+                                            <Ellipse.RenderTransform>
+                                                <RotateTransform Angle="-90" />
+                                            </Ellipse.RenderTransform>
+                                        </Ellipse>
+                                        <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
+                                            <TextBlock x:Name="PomodoroCountdownText" Text="25:00" FontSize="16" FontWeight="Bold" Foreground="#FFFFFF" HorizontalAlignment="Center" />
+                                        </StackPanel>
+                                    </Grid>
+                                    <Border x:Name="PomodoroTrack" Height="0" Visibility="Collapsed">
+                                        <Border x:Name="PomodoroFill" Width="0" />
+                                    </Border>
+                                    <Button x:Name="PomodoroStartBtn" Content="开始专注" Height="28" Padding="0"
+                                            Click="PomodoroStart_Click" Background="#5C8DFF" Foreground="White"
+                                            BorderThickness="0" Cursor="Hand" FontSize="11" FontWeight="SemiBold" />
+                                    <Button x:Name="PomodoroResetBtn" Content="重置" Height="22" Padding="0" Margin="0,4,0,0"
+                                            Click="PomodoroReset_Click" Background="Transparent" Foreground="#8B95A5"
+                                            BorderThickness="0" Cursor="Hand" FontSize="10" />
+                                </StackPanel>
+                            </Border>
+                        </Grid>
+
+                        <TextBlock x:Name="DailyQuoteText" FontSize="11" Foreground="#8B95A5" FontStyle="Italic"
+                                   TextWrapping="Wrap" Margin="0,0,0,8" Visibility="Collapsed" />
+
+                        <!-- Scratch notes -->
+                        <Border x:Name="ScratchPanel" Style="{StaticResource FloatlyCard}" Margin="0,0,0,10" Padding="10"
+                                Cursor="Hand" MouseLeftButtonUp="ScratchPanel_Click" Visibility="Collapsed">
+                            <StackPanel>
+                                <Grid Margin="0,0,0,6">
+                                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                        <TextBlock x:Name="ScratchTitleText" Text="速记便签" Style="{StaticResource CardTitle}" />
+                                        <Border x:Name="ScratchCountBadge" CornerRadius="8" Padding="5,1" Margin="5,0,0,0" Background="#225C8DFF">
+                                            <TextBlock x:Name="ScratchCountText" Text="0" FontSize="10" Foreground="#5C8DFF" FontWeight="SemiBold" />
+                                        </Border>
+                                    </StackPanel>
+                                    <TextBlock x:Name="ScratchExpandText" Text="+" FontSize="14" Foreground="#8B95A5"
+                                               HorizontalAlignment="Right" VerticalAlignment="Center" Cursor="Hand" MouseLeftButtonUp="ScratchExpand_Click" />
+                                </Grid>
+                                <Border x:Name="ScratchPreviewCard" CornerRadius="6" Padding="8,6" Background="#3D3520" BorderBrush="#0DFFFFFF" BorderThickness="1"
+                                        MouseLeftButtonUp="ScratchExpand_Click">
+                                    <StackPanel>
+                                        <TextBlock x:Name="ScratchPreviewTitle" FontSize="11" FontWeight="SemiBold" Foreground="#E8D5A0" TextTrimming="CharacterEllipsis" Margin="0,0,0,2" />
+                                        <TextBlock x:Name="ScratchPreviewContent" FontSize="10" Foreground="#A6FFFFFF" TextWrapping="Wrap" MaxHeight="28" TextTrimming="CharacterEllipsis" />
+                                    </StackPanel>
+                                </Border>
+                                <TextBlock x:Name="ScratchEmptyText" Text="点击新建便签" FontSize="10" Foreground="#6B7280" Margin="0,4,0,0" Visibility="Collapsed"
+                                           MouseLeftButtonUp="ScratchExpand_Click" Cursor="Hand" />
+                            </StackPanel>
+                        </Border>
+
+                        <!-- Calendar: week + month side by side -->
+                        <Grid x:Name="CalendarSection" Margin="0,0,0,0" Visibility="Collapsed">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="6" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <Border Grid.Column="0" Style="{StaticResource FloatlyCard}" Padding="8">
+                                <StackPanel>
+                                    <TextBlock Text="本周日程" Style="{StaticResource CardTitle}" Margin="0,0,0,6" />
+                                    <Grid x:Name="WeekCalendarPanel" />
+                                </StackPanel>
+                            </Border>
+                            <Border Grid.Column="2" Style="{StaticResource FloatlyCard}" Padding="8">
+                                <StackPanel>
+                                    <Grid Margin="0,0,0,4">
+                                        <Button x:Name="CalPrevBtn" Content="‹" Width="20" Height="20" Padding="0"
+                                                Click="CalPrev_Click" Background="Transparent" BorderThickness="0"
+                                                Foreground="#8B95A5" Cursor="Hand" FontSize="12" HorizontalAlignment="Left" />
+                                        <TextBlock x:Name="CalendarTitleText" Text="6月 2026" FontSize="11" FontWeight="SemiBold"
+                                                   Foreground="#A6FFFFFF" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                        <Button x:Name="CalNextBtn" Content="›" Width="20" Height="20" Padding="0"
+                                                Click="CalNext_Click" Background="Transparent" BorderThickness="0"
+                                                Foreground="#8B95A5" Cursor="Hand" FontSize="12" HorizontalAlignment="Right" />
+                                    </Grid>
+                                    <UniformGrid x:Name="WeekdayHeader" Rows="1" Columns="7" Margin="0,0,0,2" />
+                                    <Grid x:Name="CalendarPanel" />
+                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,4,0,0" Visibility="Collapsed">
+                                        <Button x:Name="CalWeekModeBtn" Content="周" Width="22" Height="18" Padding="0" Click="CalWeekMode_Click"
+                                                Background="Transparent" BorderThickness="0" Foreground="#5C8DFF" FontSize="9" />
+                                        <Button x:Name="CalMonthModeBtn" Content="月" Width="22" Height="18" Padding="0" Click="CalMonthMode_Click"
+                                                Background="Transparent" BorderThickness="0" Foreground="#6B7280" FontSize="9" Margin="4,0,0,0" />
+                                    </StackPanel>
+                                </StackPanel>
+                            </Border>
+                        </Grid>
+                    </StackPanel>
+                </ScrollViewer>
+
+                <!-- Bottom toolbar -->
+                <Border Grid.Row="2" x:Name="BottomToolbar" Background="#18FFFFFF" CornerRadius="10" Padding="10,8" Margin="0,8,0,8">
+                    <StackPanel>
+                        <Grid Margin="0,0,0,6">
+                            <TextBlock Text="透明度" FontSize="10" Foreground="#8B95A5" VerticalAlignment="Center" />
+                            <TextBlock x:Name="OpacityValueText" Text="80%" FontSize="10" Foreground="#A6FFFFFF" HorizontalAlignment="Right" />
+                        </Grid>
+                        <Slider x:Name="OpacitySlider" Minimum="30" Maximum="100" Value="80"
+                                ValueChanged="OpacitySlider_ValueChanged" Margin="0,0,0,8" />
+                        <Grid Margin="0,0,0,6">
+                            <TextBlock Text="字体大小" FontSize="10" Foreground="#8B95A5" VerticalAlignment="Center" />
+                            <TextBlock x:Name="FontSizeValueText" Text="12px" FontSize="10" Foreground="#A6FFFFFF" HorizontalAlignment="Right" />
+                        </Grid>
+                        <Slider x:Name="FontSizeSlider" Minimum="10" Maximum="16" Value="12" TickFrequency="1" IsSnapToTickEnabled="True"
+                                ValueChanged="FontSizeSlider_ValueChanged" Margin="0,0,0,8" />
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" /><ColumnDefinition Width="*" /><ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <Button x:Name="ThemeToggleBtn" Content="🌙" Width="28" Height="28" Padding="0"
+                                    Click="ThemeToggleBtn_Click" Background="Transparent" BorderThickness="0"
+                                    Foreground="#A6FFFFFF" Cursor="Hand" FontSize="14" ToolTip="切换主题" />
+                            <Button x:Name="ToolbarPinBtn" Grid.Column="1" Content="📌 置顶" Height="28" Padding="8,0"
+                                    Click="PinBtn_Click" Background="Transparent" BorderThickness="0"
+                                    Foreground="#A6FFFFFF" Cursor="Hand" FontSize="10" HorizontalAlignment="Center" />
+                            <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center">
+                                <TextBlock Text="穿透" FontSize="10" Foreground="#8B95A5" VerticalAlignment="Center" Margin="0,0,6,0" />
+                                <CheckBox x:Name="ClickThroughToggle" VerticalAlignment="Center" Click="ClickThroughToggle_Click" />
+                            </StackPanel>
+                        </Grid>
+                    </StackPanel>
+                </Border>
+
+                <!-- Todo input -->
+                <Grid Grid.Row="3">
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="Auto" />
                         <ColumnDefinition Width="*" />
                         <ColumnDefinition Width="Auto" />
-                        <ColumnDefinition Width="Auto" />
-                        <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
-                    <Button x:Name="CalPrevBtn" Grid.Column="0" Content="‹" Width="22" Height="22" Padding="0"
-                            Click="CalPrev_Click" Background="Transparent" BorderThickness="0"
-                            Foreground="#8B95A5" Cursor="Hand" FontSize="14" />
-                    <TextBlock x:Name="CalendarTitleText" Grid.Column="1" Text="本周 · 万年历"
-                               FontSize="11" Foreground="#6B7280" HorizontalAlignment="Center" VerticalAlignment="Center" />
-                    <Button x:Name="CalWeekModeBtn" Grid.Column="2" Content="周" Width="24" Height="22" Padding="0"
-                            Click="CalWeekMode_Click" Background="Transparent" BorderThickness="0"
-                            Foreground="#3B82F6" Cursor="Hand" FontSize="10" Margin="4,0,0,0" />
-                    <Button x:Name="CalMonthModeBtn" Grid.Column="3" Content="月" Width="24" Height="22" Padding="0"
-                            Click="CalMonthMode_Click" Background="Transparent" BorderThickness="0"
-                            Foreground="#6B7280" Cursor="Hand" FontSize="10" />
-                    <Button x:Name="CalNextBtn" Grid.Column="4" Content="›" Width="22" Height="22" Padding="0"
-                            Click="CalNext_Click" Background="Transparent" BorderThickness="0"
-                            Foreground="#8B95A5" Cursor="Hand" FontSize="14" Margin="4,0,0,0" />
+                    <TextBox x:Name="NewTodoBox" Height="30" Background="#252A33" Foreground="#FFFFFF"
+                             BorderBrush="#0DFFFFFF" Padding="8,4" FontSize="12" Cursor="IBeam"
+                             KeyDown="NewTodoBox_KeyDown" GotFocus="NewTodoBox_GotFocus" LostFocus="NewTodoBox_LostFocus" />
+                    <Button x:Name="AddButton" Grid.Column="1" Content="添加" Width="52" Height="30" Margin="6,0,0,0"
+                            Click="AddTodo_Click" Background="#5C8DFF" Foreground="White" BorderThickness="0" Cursor="Hand" FontSize="11" />
                 </Grid>
-                <UniformGrid x:Name="WeekdayHeader" Grid.Row="1" Rows="1" Columns="7" Margin="0,0,0,2" Visibility="Collapsed" />
-                <Grid x:Name="CalendarPanel" Grid.Row="2" />
-            </Grid>
-
-            <StackPanel Grid.Row="3" Orientation="Horizontal">
-                <TextBox x:Name="NewTodoBox" Width="200" Height="30" Background="#252A33"
-                         Foreground="#F3F4F6" BorderBrush="#3A4150" Padding="8,4" FontSize="12"
-                         Cursor="IBeam" KeyDown="NewTodoBox_KeyDown" GotFocus="NewTodoBox_GotFocus" LostFocus="NewTodoBox_LostFocus" />
-                <Button x:Name="AddButton" Content="添加" Width="58" Height="30" Margin="8,0,0,0"
-                        Click="AddTodo_Click" Background="#3B82F6" Foreground="White"
-                        BorderThickness="0" Cursor="Hand" />
-            </StackPanel>
             </Grid>
         </Grid>
     </Border>

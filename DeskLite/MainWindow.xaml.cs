@@ -128,9 +128,11 @@ public partial class MainWindow : Window
         WeatherText.Visibility = _settings.ShowWeather ? Visibility.Visible : Visibility.Collapsed;
         CityText.Visibility = _settings.ShowWeather && _settings.ShowCityName ? Visibility.Visible : Visibility.Collapsed;
         YearProgressPanel.Visibility = _settings.ShowYearProgress ? Visibility.Visible : Visibility.Collapsed;
+        YearProgressCard.Visibility = _settings.ShowYearProgress ? Visibility.Visible : Visibility.Collapsed;
         OffWorkPanel.Visibility = _settings.ShowOffWorkCountdown ? Visibility.Visible : Visibility.Collapsed;
         SalaryPanel.Visibility = _settings.ShowSalaryHelper ? Visibility.Visible : Visibility.Collapsed;
         CountdownPanel.Visibility = _settings.ShowCountdown ? Visibility.Visible : Visibility.Collapsed;
+        CountdownCard.Visibility = _settings.ShowCountdown ? Visibility.Visible : Visibility.Collapsed;
         PomodoroPanel.Visibility = _settings.ShowPomodoro ? Visibility.Visible : Visibility.Collapsed;
         DailyQuoteText.Visibility = _settings.ShowDailyQuote ? Visibility.Visible : Visibility.Collapsed;
         ScratchPanel.Visibility = _settings.ShowScratch ? Visibility.Visible : Visibility.Collapsed;
@@ -167,31 +169,48 @@ public partial class MainWindow : Window
 
         ApplyModuleOrder();
         RefreshScratch();
+        SyncBottomToolbar();
+    }
+
+    private void SyncBottomToolbar()
+    {
+        OpacitySlider.ValueChanged -= OpacitySlider_ValueChanged;
+        FontSizeSlider.ValueChanged -= FontSizeSlider_ValueChanged;
+        OpacitySlider.Value = Math.Round(_settings.Opacity * 100);
+        FontSizeSlider.Value = FontScaleHelper.ResolvePt(_settings);
+        OpacitySlider.ValueChanged += OpacitySlider_ValueChanged;
+        FontSizeSlider.ValueChanged += FontSizeSlider_ValueChanged;
+        OpacityValueText.Text = $"{(int)OpacitySlider.Value}%";
+        FontSizeValueText.Text = $"{(int)FontSizeSlider.Value}px";
+        ClickThroughToggle.IsChecked = _settings.ClickThrough;
+        ThemeToggleBtn.Content = AppThemePalette.Parse(_settings.Theme) == ThemeMode.Light ? "☀" : "🌙";
+        ToolbarPinBtn.Foreground = Topmost ? Brush(FloatlyDesignTokens.AccentBlue) : Brush(_palette.TextSecondary);
     }
 
     private void ApplyModuleOrder()
     {
         var order = DeskModuleIds.Normalize(_settings.ModuleOrder);
-        var modules = new Dictionary<string, UIElement>
+        var extraModules = new Dictionary<string, UIElement>
         {
-            [DeskModuleIds.HuangLi] = HuangLiPanel,
-            [DeskModuleIds.YearProgress] = YearProgressPanel,
             [DeskModuleIds.OffWork] = OffWorkPanel,
             [DeskModuleIds.Salary] = SalaryPanel,
-            [DeskModuleIds.Weather] = WeatherPanel,
-            [DeskModuleIds.Countdown] = CountdownPanel,
-            [DeskModuleIds.Pomodoro] = PomodoroPanel,
-            [DeskModuleIds.DailyQuote] = DailyQuoteText,
-            [DeskModuleIds.Scratch] = ScratchPanel,
-            [DeskModuleIds.Todos] = TodoPanel
+            [DeskModuleIds.DailyQuote] = DailyQuoteText
         };
 
-        ModuleContentPanel.Children.Clear();
+        ExtraModuleStack.Children.Clear();
         foreach (var id in order)
         {
-            if (modules.TryGetValue(id, out var element))
+            if (extraModules.TryGetValue(id, out var element))
             {
-                ModuleContentPanel.Children.Add(element);
+                ExtraModuleStack.Children.Add(element);
+            }
+        }
+
+        foreach (var (id, element) in extraModules)
+        {
+            if (!order.Contains(id) && !ExtraModuleStack.Children.Contains(element))
+            {
+                ExtraModuleStack.Children.Add(element);
             }
         }
     }
@@ -257,6 +276,10 @@ public partial class MainWindow : Window
         ScratchExpandText.Foreground = Brush(_palette.TodoLink);
         ScratchEmptyText.Foreground = Brush(_palette.TextEmpty);
         RefreshScratchPreviewTheme();
+        SyncBottomToolbar();
+
+        PomodoroRingTrack.Stroke = Brush(_palette.ProgressTrack);
+        CountdownFill.Background = new SolidColorBrush(FloatlyDesignTokens.AccentOrange);
 
         Resources["TodoTextBrush"] = Brush(_palette.TodoText);
         Resources["TodoDeleteBrush"] = Brush(_palette.DeleteButton);
@@ -381,6 +404,13 @@ public partial class MainWindow : Window
         Opacity = _settings.Opacity;
         JsonStore.SaveSettings(_settings);
         _tray?.RefreshMenu();
+        if (IsLoaded)
+        {
+            OpacitySlider.ValueChanged -= OpacitySlider_ValueChanged;
+            OpacitySlider.Value = Math.Round(_settings.Opacity * 100);
+            OpacityValueText.Text = $"{(int)OpacitySlider.Value}%";
+            OpacitySlider.ValueChanged += OpacitySlider_ValueChanged;
+        }
     }
 
     public void ToggleModule(string key)
@@ -478,9 +508,8 @@ public partial class MainWindow : Window
         var displayDate = _calendarPreviewDate ?? now;
         var info = LunarCalendar.Get(displayDate);
 
-        DateText.Text = _calendarPreviewDate is null
-            ? $"周{info.WeekName} {now.Month}月{now.Day}日"
-            : $"周{info.WeekName} {displayDate.Month}月{displayDate.Day}日";
+        var dateRef = _calendarPreviewDate ?? now;
+        DateText.Text = $"{dateRef.Year}年{dateRef.Month}月{dateRef.Day}日 周{info.WeekName}";
 
         LunarText.Text = info.Line;
         RefreshHuangLi(displayDate);
@@ -531,7 +560,7 @@ public partial class MainWindow : Window
     private void ApplyHuangLiCollapsedState()
     {
         HuangLiDetailsPanel.Visibility = _settings.HuangLiCollapsed ? Visibility.Collapsed : Visibility.Visible;
-        HuangLiCollapseBtn.Content = _settings.HuangLiCollapsed ? "▶" : "▼";
+        HuangLiCollapseBtn.Content = _settings.HuangLiCollapsed ? "⌄" : "⌃";
     }
 
     private void HuangLiCollapse_Click(object sender, RoutedEventArgs e)
@@ -594,8 +623,10 @@ public partial class MainWindow : Window
         HuangLiMetaLine.Foreground = Brush(_palette.TextEmpty);
         HuangLiPrevBtn.Foreground = Brush(_palette.HuangLiAccent);
         HuangLiNextBtn.Foreground = Brush(_palette.HuangLiAccent);
-        HuangLiYiCircle.Background = Brush(_palette.HuangLiYiCircle);
-        HuangLiJiCircle.Background = Brush(_palette.HuangLiJiCircle);
+        HuangLiYiCircle.Background = Brush(_palette.HuangLiYiChipBg);
+        HuangLiJiCircle.Background = Brush(_palette.HuangLiJiChipBg);
+        HuangLiYiCircleText.Foreground = Brush(_palette.HuangLiYi);
+        HuangLiJiCircleText.Foreground = Brush(_palette.HuangLiJi);
         HuangLiCurrentYiCircle.Background = Brush(_palette.HuangLiYiCircle);
         HuangLiCurrentJiCircle.Background = Brush(_palette.HuangLiJiCircle);
         HuangLiCurrentZhiCircle.Background = Brush(_palette.HuangLiAccent);
@@ -693,16 +724,17 @@ public partial class MainWindow : Window
             return;
         }
 
-        const double headerHeight = 72;
-        var scrollBody = _settings.ShowHuangLi ? 460 : 240;
+        const double headerHeight = 88;
+        var scrollBody = 520;
+        const double toolbarHeight = 110;
         const double todoInput = 40;
-        const double chrome = 28;
+        const double chrome = 36;
 
-        var height = headerHeight + scrollBody + todoInput + chrome;
+        var height = headerHeight + scrollBody + toolbarHeight + todoInput + chrome;
 
         if (_settings.ShowWeekStrip)
         {
-            height += _calendarMode == CalendarViewMode.Month ? 220 : 102;
+            height += 140;
         }
 
         _suppressSizePersist = true;
@@ -908,7 +940,7 @@ public partial class MainWindow : Window
 
         PomodoroStartBtn.Content = _pomodoro.Phase switch
         {
-            PomodoroPhase.Idle => "开始",
+            PomodoroPhase.Idle => "开始专注",
             _ when _pomodoro.IsRunning => "暂停",
             _ => "继续"
         };
@@ -917,7 +949,8 @@ public partial class MainWindow : Window
             ? _palette.PomodoroBreak
             : _palette.PomodoroWork;
         PomodoroFill.Background = Brush(fillColor);
-        QueueProgressBarUpdate(PomodoroTrack, PomodoroFill, _pomodoro.ProgressPercent);
+        PomodoroRingProgress.Stroke = Brush(fillColor);
+        PomodoroRingHelper.Update(PomodoroRingProgress, _pomodoro.ProgressPercent, 72, 4);
     }
 
     private void OnPomodoroCompleted(PomodoroPhase phase)
@@ -990,53 +1023,47 @@ public partial class MainWindow : Window
             return;
         }
 
-        CalendarTitleText.Text = CalendarViewHelper.GetTitle(_calendarMode, _calendarAnchor, _calendarPreviewDate);
+        CalendarTitleText.Text = $"{_calendarAnchor.Month}月 {_calendarAnchor.Year}";
         UpdateCalendarModeButtons();
         UpdateWindowHeight();
 
-        CalendarPanel.Children.Clear();
         var today = DateTime.Today;
         var preview = _calendarPreviewDate?.Date;
-        var days = (_calendarMode == CalendarViewMode.Month
-            ? CalendarViewHelper.GetMonthGridDays(_calendarAnchor)
-            : CalendarViewHelper.GetWeekDays(_calendarAnchor)).ToList();
-
-        WeekdayHeader.Visibility = _calendarMode == CalendarViewMode.Month
-            ? Visibility.Visible
-            : Visibility.Collapsed;
-
         var calScale = FontScaleHelper.CalendarScale(_settings.FontScale);
 
-        if (_calendarMode == CalendarViewMode.Month)
+        WeekCalendarPanel.Children.Clear();
+        var weekDays = CalendarViewHelper.GetWeekDays(_calendarAnchor).ToList();
+        var weekGrid = new System.Windows.Controls.Primitives.UniformGrid { Rows = 1, Columns = 7 };
+        foreach (var day in weekDays)
         {
-            WeekdayHeader.Children.Clear();
-            for (var i = 0; i < 7; i++)
+            weekGrid.Children.Add(BuildCalendarCell(day, today, preview, calScale * 0.9, compact: true));
+        }
+        WeekCalendarPanel.Children.Add(weekGrid);
+
+        CalendarPanel.Children.Clear();
+        WeekdayHeader.Children.Clear();
+        WeekdayHeader.Visibility = Visibility.Visible;
+        for (var i = 0; i < 7; i++)
+        {
+            WeekdayHeader.Children.Add(new TextBlock
             {
-                WeekdayHeader.Children.Add(new TextBlock
-                {
-                    Text = WeekLabels[i],
-                    FontSize = FontScaleHelper.CalSize(12, _settings.FontScale),
-                    Foreground = Brush(_palette.WeekLabel),
-                    HorizontalAlignment = System.Windows.HorizontalAlignment.Center
-                });
-            }
+                Text = WeekLabels[i],
+                FontSize = FontScaleHelper.CalSize(9, _settings.FontScale),
+                Foreground = Brush(_palette.WeekLabel),
+                HorizontalAlignment = System.Windows.HorizontalAlignment.Center
+            });
         }
 
-        var grid = new System.Windows.Controls.Primitives.UniformGrid
+        var monthDays = CalendarViewHelper.GetMonthGridDays(_calendarAnchor).ToList();
+        var monthGrid = new System.Windows.Controls.Primitives.UniformGrid { Rows = 6, Columns = 7 };
+        foreach (var day in monthDays)
         {
-            Rows = _calendarMode == CalendarViewMode.Month ? 6 : 1,
-            Columns = 7
-        };
-
-        foreach (var day in days)
-        {
-            grid.Children.Add(BuildCalendarCell(day, today, preview, calScale));
+            monthGrid.Children.Add(BuildCalendarCell(day, today, preview, calScale * 0.85, compact: true));
         }
-
-        CalendarPanel.Children.Add(grid);
+        CalendarPanel.Children.Add(monthGrid);
     }
 
-    private UIElement BuildCalendarCell(DateTime day, DateTime today, DateTime? preview, double calScale)
+    private UIElement BuildCalendarCell(DateTime day, DateTime today, DateTime? preview, double calScale, bool compact = false)
     {
         var isToday = day == today;
         var isPreview = preview == day;
@@ -1055,7 +1082,7 @@ public partial class MainWindow : Window
         };
         cell.MouseLeftButtonDown += CalendarDay_Click;
 
-        if (_calendarMode == CalendarViewMode.Week)
+        if (!compact && _calendarMode == CalendarViewMode.Week)
         {
             cell.Children.Add(new TextBlock
             {
@@ -1066,32 +1093,77 @@ public partial class MainWindow : Window
             });
         }
 
+        var dayDisplay = isToday && preview is null && compact
+            ? day.Day.ToString()
+            : isToday && preview is null ? "●" : day.Day.ToString();
+
+        var dayFontSize = compact ? 11 * calScale : 13 * calScale;
+        var dayForeground = isToday || isPreview ? Brush(_palette.Accent) : Brush(_palette.WeekSolar);
+
+        if (compact && (isToday || isPreview))
+        {
+            var dayBorder = new Border
+            {
+                Width = 20 * calScale,
+                Height = 20 * calScale,
+                CornerRadius = new CornerRadius(10 * calScale),
+                Background = Brush(_palette.Accent),
+                HorizontalAlignment = System.Windows.HorizontalAlignment.Center,
+                Child = new TextBlock
+                {
+                    Text = day.Day.ToString(),
+                    FontSize = dayFontSize,
+                    FontWeight = FontWeights.SemiBold,
+                    Foreground = System.Windows.Media.Brushes.White,
+                    HorizontalAlignment = System.Windows.HorizontalAlignment.Center,
+                    VerticalAlignment = VerticalAlignment.Center
+                }
+            };
+            cell.Children.Add(dayBorder);
+        }
+        else
+        {
         cell.Children.Add(new TextBlock
         {
-            Text = isToday && preview is null ? "●" : day.Day.ToString(),
-            FontSize = 13 * calScale,
+            Text = dayDisplay,
+            FontSize = dayFontSize,
             FontWeight = isPreview ? FontWeights.SemiBold : FontWeights.Normal,
             Foreground = !inMonth
                 ? Brush(0x4B, 0x55, 0x63)
-                : isToday || isPreview ? Brush(_palette.Accent) : Brush(_palette.WeekSolar),
+                : dayForeground,
             HorizontalAlignment = System.Windows.HorizontalAlignment.Center,
             Margin = new Thickness(0, 0, 0, 0)
         });
-
-        var lunarText = hasMark ? dayInfo.Mark! : dayInfo.ShortLunar;
-        if (_calendarMode == CalendarViewMode.Month && lunarText.Length > 3)
-        {
-            lunarText = dayInfo.ShortLunar;
         }
 
-        cell.Children.Add(new TextBlock
+        if (!compact)
         {
-            Text = lunarText,
-            FontSize = 11 * calScale,
-            Foreground = hasMark ? Brush(_palette.Mark) : Brush(_palette.WeekLunar),
-            HorizontalAlignment = System.Windows.HorizontalAlignment.Center,
-            TextTrimming = TextTrimming.CharacterEllipsis
-        });
+            var lunarText = hasMark ? dayInfo.Mark! : dayInfo.ShortLunar;
+            if (_calendarMode == CalendarViewMode.Month && lunarText.Length > 3)
+            {
+                lunarText = dayInfo.ShortLunar;
+            }
+
+            cell.Children.Add(new TextBlock
+            {
+                Text = lunarText,
+                FontSize = 11 * calScale,
+                Foreground = hasMark ? Brush(_palette.Mark) : Brush(_palette.WeekLunar),
+                HorizontalAlignment = System.Windows.HorizontalAlignment.Center,
+                TextTrimming = TextTrimming.CharacterEllipsis
+            });
+        }
+        else if (hasMark)
+        {
+            cell.Children.Add(new TextBlock
+            {
+                Text = dayInfo.Mark!,
+                FontSize = 8 * calScale,
+                Foreground = Brush(_palette.Mark),
+                HorizontalAlignment = System.Windows.HorizontalAlignment.Center,
+                TextTrimming = TextTrimming.CharacterEllipsis
+            });
+        }
 
         if (holiday is not null)
         {
@@ -1609,6 +1681,7 @@ public partial class MainWindow : Window
         Topmost = _settings.AlwaysOnTop;
         JsonStore.SaveSettings(_settings);
         _tray?.RefreshMenu();
+        SyncBottomToolbar();
     }
 
     private void ToggleAutoStart()
@@ -2153,4 +2226,50 @@ public partial class MainWindow : Window
     private void Opacity70_Click(object sender, RoutedEventArgs e) => SetOpacity(0.70);
 
     private void Opacity55_Click(object sender, RoutedEventArgs e) => SetOpacity(0.55);
+
+    private void PinBtn_Click(object sender, RoutedEventArgs e) => ToggleTopmost();
+
+    private void OpacitySlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+    {
+        if (!IsLoaded)
+        {
+            return;
+        }
+
+        var value = Math.Round(e.NewValue) / 100.0;
+        OpacityValueText.Text = $"{(int)e.NewValue}%";
+        SetOpacity(value);
+    }
+
+    private void FontSizeSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+    {
+        if (!IsLoaded)
+        {
+            return;
+        }
+
+        var pt = (int)e.NewValue;
+        FontSizeValueText.Text = $"{pt}px";
+        _settings.FontSizePt = pt;
+        _settings.FontScale = FontScaleHelper.PtToScale(pt);
+        FontFamilyHelper.Apply(this, _settings.FontFamily);
+        FontScaleHelper.Apply(this, _settings.FontScale);
+        JsonStore.SaveSettings(_settings);
+    }
+
+    private void ThemeToggleBtn_Click(object sender, RoutedEventArgs e)
+    {
+        var next = AppThemePalette.Parse(_settings.Theme) == ThemeMode.Dark ? ThemeMode.Light : ThemeMode.Dark;
+        SetTheme(next);
+        SyncBottomToolbar();
+    }
+
+    private void ClickThroughToggle_Click(object sender, RoutedEventArgs e)
+    {
+        if (ClickThroughToggle.IsChecked != _settings.ClickThrough)
+        {
+            ToggleClickThrough();
+            ClickThroughToggle.IsChecked = _settings.ClickThrough;
+        }
+    }
 }

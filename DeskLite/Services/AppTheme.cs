@@ -37,7 +37,7 @@ public sealed class AppThemePalette
     public required WpfColor WeekLabel { get; init; }
     public required WpfColor WeekSolar { get; init; }
     public required WpfColor WeekLunar { get; init; }
-    public WpfColor Accent { get; init; } = WpfColor.FromRgb(0x3B, 0x82, 0xF6);
+    public WpfColor Accent { get; init; } = WpfColor.FromRgb(0x5C, 0x8D, 0xFF);
     public WpfColor Mark { get; init; } = WpfColor.FromRgb(0xF5, 0x9E, 0x0B);
     public WpfColor HuangLiBackground { get; init; } = WpfColor.FromRgb(0x22, 0x28, 0x30);
     public WpfColor HuangLiMetaCell { get; init; } = WpfColor.FromArgb(0x14, 0xFF, 0xFF, 0xFF);
@@ -76,8 +76,8 @@ public sealed class AppThemePalette
 
     private static readonly AppThemePalette Dark = new()
     {
-        PanelBackground = WpfColor.FromArgb(0xE8, 0x18, 0x1C, 0x24),
-        PanelBorder = WpfColor.FromArgb(0x40, 0xFF, 0xFF, 0xFF),
+        PanelBackground = WpfColor.FromArgb(0xD9, 0x13, 0x17, 0x22),
+        PanelBorder = WpfColor.FromArgb(0x0D, 0xFF, 0xFF, 0xFF),
         Divider = WpfColor.FromArgb(0x28, 0xFF, 0xFF, 0xFF),
         TextPrimary = WpfColor.FromRgb(0xF5, 0xF7, 0xFA),
         TextSecondary = WpfColor.FromRgb(0xB8, 0xC0, 0xCC),
@@ -96,7 +96,7 @@ public sealed class AppThemePalette
         TodoActionHover = WpfColor.FromArgb(0x30, 0xFF, 0xFF, 0xFF),
         TodoCountBadge = WpfColor.FromArgb(0x22, 0x3B, 0x82, 0xF6),
         TodoLink = WpfColor.FromRgb(0x94, 0xA3, 0xB8),
-        TodoAccentButton = WpfColor.FromRgb(0x3B, 0x82, 0xF6),
+        TodoAccentButton = WpfColor.FromRgb(0x5C, 0x8D, 0xFF),
         InputBackground = WpfColor.FromRgb(0x25, 0x2A, 0x33),
         InputBorder = WpfColor.FromRgb(0x3A, 0x41, 0x50),
         InputText = WpfColor.FromRgb(0xF3, 0xF4, 0xF6),
@@ -122,7 +122,7 @@ public sealed class AppThemePalette
         HuangLiCircleText = WpfColor.FromRgb(0xFF, 0xFF, 0xFF),
         HuangLiMutedButton = WpfColor.FromArgb(0x20, 0xFF, 0xFF, 0xFF),
         ProgressTrack = WpfColor.FromArgb(0x28, 0xFF, 0xFF, 0xFF),
-        ProgressFillStart = WpfColor.FromRgb(0x3B, 0x82, 0xF6),
+        ProgressFillStart = WpfColor.FromRgb(0x5C, 0x8D, 0xFF),
         ProgressFillEnd = WpfColor.FromRgb(0x60, 0xA5, 0xFA),
         PomodoroWork = WpfColor.FromRgb(0xF9, 0x73, 0x16),
         PomodoroBreak = WpfColor.FromRgb(0x22, 0xC5, 0x5E),
