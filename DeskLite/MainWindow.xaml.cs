@@ -993,7 +993,7 @@ public partial class MainWindow : Window
 
     private void ApplyPomodoroTheme(System.Windows.Media.Color textPrimary)
     {
-        PomodoroPanel.Background = Brush(_palette.HuangLiMutedButton);
+        PomodoroCard.Background = Brush(_palette.HuangLiMutedButton);
         PomodoroPhaseText.Foreground = Brush(_palette.TextMuted);
         PomodoroSessionText.Foreground = Brush(_palette.TextSubtle);
         PomodoroCountdownText.Foreground = Brush(textPrimary);
@@ -1070,7 +1070,7 @@ public partial class MainWindow : Window
             : _palette.PomodoroWork;
         PomodoroFill.Background = Brush(fillColor);
         PomodoroRingProgress.Stroke = Brush(fillColor);
-        PomodoroRingHelper.Update(PomodoroRingProgress, _pomodoro.ProgressPercent, 168, 8);
+        PomodoroRingHelper.Update(PomodoroRingProgress, _pomodoro.ProgressPercent, 118, 7);
     }
 
     private void OnPomodoroCompleted(PomodoroPhase phase)
