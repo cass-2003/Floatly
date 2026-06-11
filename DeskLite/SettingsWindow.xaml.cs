@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Text.Json;
@@ -5,6 +6,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
+using System.Windows.Forms;
 using DeskLite.Models;
 using DeskLite.Services;
 using WpfColor = System.Windows.Media.Color;
@@ -71,6 +73,7 @@ public partial class SettingsWindow : Window
         InitializeComponent();
         VersionText.Text = $"版本 {AppConstants.Version}";
         FontFamilyHelper.Apply(this, _original.FontFamily);
+        ConfigureTimePickers();
         SetupModuleListTemplate();
         RbSkinDefault.Checked += (_, _) => UpdateSkinControls();
         RbSkinSolid.Checked += (_, _) => UpdateSkinControls();
@@ -140,6 +143,32 @@ public partial class SettingsWindow : Window
         return JsonSerializer.Deserialize<AppSettings>(json) ?? new AppSettings();
     }
 
+    private static void SetTimePickerValue(DateTimePicker picker, string value, string fallback)
+    {
+        var normalized = OffWorkService.TryParseTime(value, out var time)
+            ? time
+            : OffWorkService.TryParseTime(fallback, out var fallbackTime)
+                ? fallbackTime
+                : new TimeOnly(9, 0);
+        picker.Value = DateTime.Today.Add(normalized.ToTimeSpan());
+    }
+
+    private static string ReadTimePickerValue(DateTimePicker picker)
+    {
+        return picker.Value.ToString("HH:mm", CultureInfo.InvariantCulture);
+    }
+
+    private void ConfigureTimePickers()
+    {
+        WorkStartTimePicker.Format = DateTimePickerFormat.Custom;
+        WorkStartTimePicker.CustomFormat = "HH:mm";
+        WorkStartTimePicker.ShowUpDown = true;
+
+        WorkEndTimePicker.Format = DateTimePickerFormat.Custom;
+        WorkEndTimePicker.CustomFormat = "HH:mm";
+        WorkEndTimePicker.ShowUpDown = true;
+    }
+
     private void LoadFromSettings(AppSettings s)
     {
         ChkAlwaysOnTop.IsChecked = s.AlwaysOnTop;
@@ -148,8 +177,8 @@ public partial class SettingsWindow : Window
         ChkGlobalHotkey.IsChecked = s.EnableGlobalHotkey;
         TxtHotkeyShowHide.Text = HotkeyComboHelper.Sanitize(s.HotkeyShowHide, HotkeyComboHelper.DefaultShowHide);
         TxtHotkeyQuickTodo.Text = HotkeyComboHelper.Sanitize(s.HotkeyQuickTodo, HotkeyComboHelper.DefaultQuickTodo);
-        TxtWorkStartTime.Text = s.WorkStartTime;
-        TxtWorkEndTime.Text = s.WorkEndTime;
+        SetTimePickerValue(WorkStartTimePicker, s.WorkStartTime, "09:00");
+        SetTimePickerValue(WorkEndTimePicker, s.WorkEndTime, "18:00");
         ChkOffWorkWeekdaysOnly.IsChecked = s.OffWorkWeekdaysOnly;
         TxtMonthlySalary.Text = s.MonthlySalary > 0 ? s.MonthlySalary.ToString("0.##", CultureInfo.InvariantCulture) : string.Empty;
         TxtWorkDaysPerMonth.Text = s.WorkDaysPerMonth.ToString();
@@ -200,7 +229,7 @@ public partial class SettingsWindow : Window
             RbManualCity.IsChecked = true;
         }
 
-        TxtCity.Text = s.ResolvedCityName ?? s.City;
+        TxtCity.Text = ResolveCityText(s);
         UpdateCityControls();
         UpdateLocationStatus(s);
 
@@ -324,6 +353,21 @@ public partial class SettingsWindow : Window
         TxtCity.IsEnabled = !auto;
     }
 
+    private static string ResolveCityText(AppSettings s)
+    {
+        if (LocationService.HasUsableCityName(s.ResolvedCityName))
+        {
+            return s.ResolvedCityName!;
+        }
+
+        if (LocationService.HasUsableCityName(s.City))
+        {
+            return s.City;
+        }
+
+        return string.Empty;
+    }
+
     private void UpdateLocationStatus(AppSettings s)
     {
         var cache = new WeatherService().LoadCache();
@@ -331,20 +375,26 @@ public partial class SettingsWindow : Window
         var method = s.AutoLocateCity
             ? LocationService.DescribeSource(string.IsNullOrWhiteSpace(source) ? "auto" : source)
             : LocationService.DescribeSource("manual");
-        var showIpWarning = s.AutoLocateCity && string.Equals(source, "ip", StringComparison.OrdinalIgnoreCase);
+        var showIpWarning = s.AutoLocateCity &&
+                            (string.Equals(source, "ip", StringComparison.OrdinalIgnoreCase) ||
+                             string.Equals(source, "hybrid", StringComparison.OrdinalIgnoreCase));
         LocationIpWarningText.Visibility = showIpWarning ? Visibility.Visible : Visibility.Collapsed;
 
-        if (!string.IsNullOrWhiteSpace(s.ResolvedCityName))
+        if (LocationService.HasUsableCityName(s.ResolvedCityName))
         {
             LocationStatusText.Text = string.IsNullOrWhiteSpace(s.ResolvedRegion)
                 ? $"定位方式：{method} · {s.ResolvedCityName}"
                 : $"定位方式：{method} · {s.ResolvedCityName}, {s.ResolvedRegion}";
         }
-        else if (!string.IsNullOrWhiteSpace(s.City))
+        else if (LocationService.HasUsableCityName(s.City))
         {
             LocationStatusText.Text = s.AutoLocateCity
                 ? $"定位方式：{method} · {s.City}"
                 : $"定位方式：手动 · {s.City}";
+        }
+        else if (s.AutoLocateCity && s.WeatherLatitude is not null && s.WeatherLongitude is not null)
+        {
+            LocationStatusText.Text = $"定位方式：{method} · 已获取坐标，正在刷新城市名";
         }
         else
         {
@@ -630,11 +680,6 @@ public partial class SettingsWindow : Window
         }
     }
 
-    private static string ReadWorkTime(string text, string fallback)
-    {
-        return OffWorkService.TryParseTime(text, out _) ? text.Trim() : fallback;
-    }
-
     private static decimal ReadMonthlySalary(string text)
     {
         return decimal.TryParse(text.Trim(), NumberStyles.Number, CultureInfo.InvariantCulture, out var value)
@@ -831,8 +876,8 @@ public partial class SettingsWindow : Window
             s.HotkeyQuickTodo = HotkeyComboHelper.DefaultQuickTodo;
         }
 
-        s.WorkStartTime = ReadWorkTime(TxtWorkStartTime.Text, "09:00");
-        s.WorkEndTime = ReadWorkTime(TxtWorkEndTime.Text, "18:00");
+        s.WorkStartTime = ReadTimePickerValue(WorkStartTimePicker);
+        s.WorkEndTime = ReadTimePickerValue(WorkEndTimePicker);
         s.OffWorkWeekdaysOnly = ChkOffWorkWeekdaysOnly.IsChecked == true;
         s.MonthlySalary = ReadMonthlySalary(TxtMonthlySalary.Text);
         s.WorkDaysPerMonth = ReadPositiveInt(TxtWorkDaysPerMonth.Text, 22, 1, 31);
@@ -889,10 +934,22 @@ public partial class SettingsWindow : Window
         s.ShowSunriseSunset = ChkShowSunrise.IsChecked == true;
         s.ShowTomorrowWeather = ChkShowTomorrow.IsChecked == true;
         s.AutoLocateCity = RbAutoLocate.IsChecked == true;
-        s.City = TxtCity.Text.Trim();
-        if (!string.IsNullOrWhiteSpace(s.City))
+        var cityText = TxtCity.Text.Trim();
+        if (LocationService.HasUsableCityName(cityText))
         {
-            s.ResolvedCityName = s.City;
+            s.City = cityText;
+            s.ResolvedCityName = cityText;
+        }
+        else if (s.AutoLocateCity)
+        {
+            s.City = LocationService.HasUsableCityName(_original.City) ? _original.City : string.Empty;
+            s.ResolvedCityName = LocationService.HasUsableCityName(_original.ResolvedCityName)
+                ? _original.ResolvedCityName
+                : s.ResolvedCityName;
+        }
+        else
+        {
+            s.City = cityText;
         }
 
         s.ShowWeekStrip = ChkShowWeekStrip.IsChecked == true;
@@ -1089,13 +1146,6 @@ public partial class SettingsWindow : Window
         if (!string.IsNullOrWhiteSpace(TxtCustomFontColor.Text) && FontColorHelper.NormalizeHex(TxtCustomFontColor.Text) is null)
         {
             System.Windows.MessageBox.Show(this, "字体颜色格式无效，请使用 #RRGGBB。", AppConstants.DisplayName,
-                MessageBoxButton.OK, MessageBoxImage.Information);
-            return false;
-        }
-
-        if (!OffWorkService.TryParseTime(TxtWorkStartTime.Text, out _) || !OffWorkService.TryParseTime(TxtWorkEndTime.Text, out _))
-        {
-            System.Windows.MessageBox.Show(this, "上下班时间格式无效，请使用 HH:mm（如 09:00）。", AppConstants.DisplayName,
                 MessageBoxButton.OK, MessageBoxImage.Information);
             return false;
         }
