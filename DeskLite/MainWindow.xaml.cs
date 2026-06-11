@@ -69,25 +69,12 @@ public partial class MainWindow : Window
 
         _tray = new TrayService(
             this,
-            _settings,
             OpenSettings,
             PromptAddTodo,
-            ToggleTopmost,
-            ToggleAutoStart,
-            SetCity,
-            DetectLocationByIp,
-            ToggleWeather,
-            ToggleWeekStrip,
-            SetCalendarWeek,
-            SetCalendarMonth,
+            AddCountdown,
             JumpToCalendarDate,
             ResetCalendarToday,
-            ToggleModule,
-            AddCountdown,
             ExportBackup,
-            SetTheme,
-            SetOpacity,
-            ToggleClickThrough,
             ExitApp);
 
         Closing += (_, e) =>
@@ -170,11 +157,7 @@ public partial class MainWindow : Window
         DateText.Foreground = Brush(_palette.TextSecondary);
         LunarText.Foreground = Brush(_palette.TextTertiary);
         LunarSubText.Foreground = Brush(_palette.TextSubtle);
-        HuangLiPanel.Background = Brush(_palette.HuangLiBackground);
-        HuangLiMetaText.Foreground = Brush(_palette.TextMuted);
-        HuangLiGodsText.Foreground = Brush(_palette.TextSubtle);
-        HuangLiExtraText.Foreground = Brush(_palette.TextSubtle);
-        HuangLiTimeText.Foreground = Brush(_palette.TextEmpty);
+        ApplyHuangLiTheme();
         WeatherText.Foreground = Brush(_palette.TextSecondary);
         CityText.Foreground = Brush(_palette.TextMuted);
         WeatherExtraText.Foreground = Brush(_palette.TextSubtle);
@@ -200,6 +183,10 @@ public partial class MainWindow : Window
 
         RefreshCalendar();
         RefreshTodoTheme();
+        if (_settings.ShowHuangLi)
+        {
+            RefreshHuangLi(_calendarPreviewDate ?? DateTime.Today);
+        }
     }
 
     private void UpdateCalendarModeButtons()
@@ -331,15 +318,154 @@ public partial class MainWindow : Window
         HuangLiPanel.Visibility = Visibility.Visible;
         var huangLi = HuangLiService.Get(displayDate, includeCurrentTime: _calendarPreviewDate is null);
         LunarSubText.Text = huangLi.Headline;
-        HuangLiYiText.Text = $"宜  {huangLi.Yi}";
-        HuangLiJiText.Text = $"忌  {huangLi.Ji}";
-        HuangLiMetaText.Text = huangLi.Meta;
-        HuangLiGodsText.Text = $"{huangLi.Gods} · {huangLi.TaiShen}";
-        HuangLiExtraText.Text = string.IsNullOrEmpty(huangLi.CurrentTime)
-            ? $"{huangLi.PengZu} · {huangLi.Deity}"
-            : $"{huangLi.PengZu}\n{huangLi.Deity}\n{huangLi.CurrentTime}";
-        HuangLiTimeText.Text = huangLi.TimeLuck;
+
+        PopulateHuangLiChips(HuangLiYiChips, huangLi.YiItems, isYi: true);
+        PopulateHuangLiChips(HuangLiJiChips, huangLi.JiItems, isYi: false);
+
+        HuangLiWuXingVal.Text = huangLi.WuXing;
+        HuangLiChongVal.Text = huangLi.ChongSha;
+        HuangLiZhiVal.Text = huangLi.ZhiShen;
+        HuangLiJianVal.Text = huangLi.JianChu;
+
+        HuangLiXiText.Text = $"喜神 {huangLi.XiShen}";
+        HuangLiCaiText.Text = $"财神 {huangLi.CaiShen}";
+        HuangLiFuText.Text = $"福神 {huangLi.FuShen}";
+
+        PopulateHuangLiTimeGrid(huangLi.TimeSlots);
+
+        HuangLiJiShenText.Text = $"吉神宜趋 {string.Join(" ", huangLi.JiShen)}";
+        HuangLiXiongShaText.Text = $"凶神宜忌 {string.Join(" ", huangLi.XiongShen)}";
+        HuangLiSecondaryText.Text = $"胎神 {huangLi.TaiShen} · 彭祖 {huangLi.PengZu} · 星宿 {huangLi.Xiu}";
+
+        if (!string.IsNullOrEmpty(huangLi.CurrentTimeSummary))
+        {
+            HuangLiCurrentTimeText.Text = huangLi.CurrentTimeSummary;
+            HuangLiCurrentTimeText.Visibility = Visibility.Visible;
+        }
+        else
+        {
+            HuangLiCurrentTimeText.Visibility = Visibility.Collapsed;
+        }
+
         UpdateWindowHeight();
+    }
+
+    private void ApplyHuangLiTheme()
+    {
+        HuangLiPanel.Background = Brush(_palette.HuangLiBackground);
+        HuangLiYiLabel.Foreground = Brush(_palette.HuangLiYi);
+        HuangLiJiLabel.Foreground = Brush(_palette.HuangLiJi);
+        HuangLiWuXingLabel.Foreground = Brush(_palette.TextEmpty);
+        HuangLiChongLabel.Foreground = Brush(_palette.TextEmpty);
+        HuangLiZhiLabel.Foreground = Brush(_palette.TextEmpty);
+        HuangLiJianLabel.Foreground = Brush(_palette.TextEmpty);
+        HuangLiWuXingVal.Foreground = Brush(_palette.TextSecondary);
+        HuangLiChongVal.Foreground = Brush(_palette.TextSecondary);
+        HuangLiZhiVal.Foreground = Brush(_palette.TextSecondary);
+        HuangLiJianVal.Foreground = Brush(_palette.TextSecondary);
+        HuangLiMetaWuXing.Background = Brush(_palette.HuangLiMetaCell);
+        HuangLiMetaChong.Background = Brush(_palette.HuangLiMetaCell);
+        HuangLiMetaZhi.Background = Brush(_palette.HuangLiMetaCell);
+        HuangLiMetaJian.Background = Brush(_palette.HuangLiMetaCell);
+        HuangLiXiBadge.Background = Brush(_palette.HuangLiBadgeBg);
+        HuangLiCaiBadge.Background = Brush(_palette.HuangLiBadgeBg);
+        HuangLiFuBadge.Background = Brush(_palette.HuangLiBadgeBg);
+        HuangLiXiText.Foreground = Brush(_palette.TextSecondary);
+        HuangLiCaiText.Foreground = Brush(_palette.TextSecondary);
+        HuangLiFuText.Foreground = Brush(_palette.TextSecondary);
+        HuangLiTimeTitle.Foreground = Brush(_palette.TextEmpty);
+        HuangLiJiShenLabel.Foreground = Brush(_palette.TextEmpty);
+        HuangLiXiongLabel.Foreground = Brush(_palette.TextEmpty);
+        HuangLiSecondaryText.Foreground = Brush(_palette.TextEmpty);
+        HuangLiCurrentTimeText.Foreground = Brush(_palette.Accent);
+    }
+
+    private void PopulateHuangLiNeutralChips(WrapPanel panel, IReadOnlyList<string> items)
+    {
+        panel.Children.Clear();
+        foreach (var item in items)
+        {
+            panel.Children.Add(new Border
+            {
+                Background = Brush(_palette.HuangLiMetaCell),
+                CornerRadius = new CornerRadius(4),
+                Padding = new Thickness(5, 2, 5, 2),
+                Margin = new Thickness(0, 0, 4, 4),
+                Child = new TextBlock
+                {
+                    Text = item,
+                    FontSize = 9,
+                    Foreground = Brush(_palette.TextSubtle)
+                }
+            });
+        }
+    }
+
+    private void PopulateHuangLiChips(WrapPanel panel, IReadOnlyList<string> items, bool isYi)
+    {
+        panel.Children.Clear();
+        foreach (var item in items)
+        {
+            panel.Children.Add(new Border
+            {
+                Background = Brush(isYi ? _palette.HuangLiYiChipBg : _palette.HuangLiJiChipBg),
+                CornerRadius = new CornerRadius(4),
+                Padding = new Thickness(6, 2, 6, 2),
+                Margin = new Thickness(0, 0, 4, 4),
+                Child = new TextBlock
+                {
+                    Text = item,
+                    FontSize = 10,
+                    Foreground = Brush(isYi ? _palette.HuangLiYi : _palette.HuangLiJi)
+                }
+            });
+        }
+    }
+
+    private void PopulateHuangLiTimeGrid(IReadOnlyList<HuangLiTimeSlot> slots)
+    {
+        HuangLiTimeGrid.Children.Clear();
+        foreach (var slot in slots)
+        {
+            var luckBrush = slot.Luck == "吉"
+                ? Brush(_palette.HuangLiLuckGood)
+                : slot.Luck == "凶"
+                    ? Brush(_palette.HuangLiLuckBad)
+                    : Brush(_palette.TextMuted);
+
+            var cell = new Border
+            {
+                Background = slot.IsCurrent ? Brush(_palette.Accent) : Brush(_palette.HuangLiTimeCell),
+                CornerRadius = new CornerRadius(3),
+                Padding = new Thickness(1, 2, 1, 2),
+                Margin = new Thickness(1),
+                Child = new StackPanel
+                {
+                    HorizontalAlignment = System.Windows.HorizontalAlignment.Center,
+                    Children =
+                    {
+                        new TextBlock
+                        {
+                            Text = slot.Zhi,
+                            FontSize = 9,
+                            FontWeight = slot.IsCurrent ? FontWeights.SemiBold : FontWeights.Normal,
+                            Foreground = slot.IsCurrent
+                                ? Brush(_palette.TextPrimary)
+                                : Brush(_palette.TextSecondary),
+                            HorizontalAlignment = System.Windows.HorizontalAlignment.Center
+                        },
+                        new TextBlock
+                        {
+                            Text = slot.Luck,
+                            FontSize = 8,
+                            Foreground = slot.IsCurrent ? Brush(_palette.TextPrimary) : luckBrush,
+                            HorizontalAlignment = System.Windows.HorizontalAlignment.Center
+                        }
+                    }
+                }
+            };
+            HuangLiTimeGrid.Children.Add(cell);
+        }
     }
 
     private void UpdateWindowHeight()
@@ -347,7 +473,7 @@ public partial class MainWindow : Window
         var height = 460;
         if (_settings.ShowHuangLi)
         {
-            height += 128;
+            height += 152;
         }
 
         if (_settings.ShowWeekStrip)

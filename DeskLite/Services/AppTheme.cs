@@ -30,6 +30,15 @@ public sealed class AppThemePalette
     public WpfColor Accent { get; init; } = WpfColor.FromRgb(0x3B, 0x82, 0xF6);
     public WpfColor Mark { get; init; } = WpfColor.FromRgb(0xF5, 0x9E, 0x0B);
     public WpfColor HuangLiBackground { get; init; } = WpfColor.FromArgb(0x18, 0xFF, 0xFF, 0xFF);
+    public WpfColor HuangLiMetaCell { get; init; } = WpfColor.FromArgb(0x14, 0xFF, 0xFF, 0xFF);
+    public WpfColor HuangLiYi { get; init; } = WpfColor.FromRgb(0x4A, 0xDE, 0x80);
+    public WpfColor HuangLiJi { get; init; } = WpfColor.FromRgb(0xF8, 0x71, 0x71);
+    public WpfColor HuangLiYiChipBg { get; init; } = WpfColor.FromArgb(0x22, 0x4A, 0xDE, 0x80);
+    public WpfColor HuangLiJiChipBg { get; init; } = WpfColor.FromArgb(0x22, 0xF8, 0x71, 0x71);
+    public WpfColor HuangLiLuckGood { get; init; } = WpfColor.FromRgb(0x4A, 0xDE, 0x80);
+    public WpfColor HuangLiLuckBad { get; init; } = WpfColor.FromRgb(0xF8, 0x71, 0x71);
+    public WpfColor HuangLiTimeCell { get; init; } = WpfColor.FromArgb(0x18, 0xFF, 0xFF, 0xFF);
+    public WpfColor HuangLiBadgeBg { get; init; } = WpfColor.FromArgb(0x20, 0x3B, 0x82, 0xF6);
 
     public static AppThemePalette For(ThemeMode mode) => mode switch
     {
@@ -59,7 +68,16 @@ public sealed class AppThemePalette
         WeekLabel = WpfColor.FromRgb(0x8B, 0x95, 0xA5),
         WeekSolar = WpfColor.FromRgb(0xB8, 0xC0, 0xCC),
         WeekLunar = WpfColor.FromRgb(0x6B, 0x72, 0x80),
-        HuangLiBackground = WpfColor.FromArgb(0x18, 0xFF, 0xFF, 0xFF)
+        HuangLiBackground = WpfColor.FromArgb(0x18, 0xFF, 0xFF, 0xFF),
+        HuangLiMetaCell = WpfColor.FromArgb(0x14, 0xFF, 0xFF, 0xFF),
+        HuangLiYi = WpfColor.FromRgb(0x4A, 0xDE, 0x80),
+        HuangLiJi = WpfColor.FromRgb(0xF8, 0x71, 0x71),
+        HuangLiYiChipBg = WpfColor.FromArgb(0x22, 0x4A, 0xDE, 0x80),
+        HuangLiJiChipBg = WpfColor.FromArgb(0x22, 0xF8, 0x71, 0x71),
+        HuangLiLuckGood = WpfColor.FromRgb(0x4A, 0xDE, 0x80),
+        HuangLiLuckBad = WpfColor.FromRgb(0xF8, 0x71, 0x71),
+        HuangLiTimeCell = WpfColor.FromArgb(0x18, 0xFF, 0xFF, 0xFF),
+        HuangLiBadgeBg = WpfColor.FromArgb(0x20, 0x3B, 0x82, 0xF6)
     };
 
     private static readonly AppThemePalette Light = new()
@@ -81,6 +99,15 @@ public sealed class AppThemePalette
         WeekLabel = WpfColor.FromRgb(0x64, 0x74, 0x8B),
         WeekSolar = WpfColor.FromRgb(0x47, 0x55, 0x69),
         WeekLunar = WpfColor.FromRgb(0x94, 0xA3, 0xB8),
-        HuangLiBackground = WpfColor.FromArgb(0x12, 0x15, 0x23, 0x42)
+        HuangLiBackground = WpfColor.FromArgb(0x12, 0x15, 0x23, 0x42),
+        HuangLiMetaCell = WpfColor.FromArgb(0x0C, 0x15, 0x23, 0x42),
+        HuangLiYi = WpfColor.FromRgb(0x16, 0xA3, 0x4A),
+        HuangLiJi = WpfColor.FromRgb(0xDC, 0x26, 0x26),
+        HuangLiYiChipBg = WpfColor.FromArgb(0x18, 0x16, 0xA3, 0x4A),
+        HuangLiJiChipBg = WpfColor.FromArgb(0x18, 0xDC, 0x26, 0x26),
+        HuangLiLuckGood = WpfColor.FromRgb(0x16, 0xA3, 0x4A),
+        HuangLiLuckBad = WpfColor.FromRgb(0xDC, 0x26, 0x26),
+        HuangLiTimeCell = WpfColor.FromArgb(0x0C, 0x15, 0x23, 0x42),
+        HuangLiBadgeBg = WpfColor.FromArgb(0x14, 0x3B, 0x82, 0xF6)
     };
 }

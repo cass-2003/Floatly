@@ -69,12 +69,91 @@
                     <Border x:Name="HuangLiPanel" Background="#18FFFFFF" CornerRadius="8" Padding="8,6" Margin="0,8,0,0"
                             Visibility="Collapsed">
                         <StackPanel>
-                            <TextBlock x:Name="HuangLiYiText" FontSize="11" Foreground="#4ADE80" TextWrapping="Wrap" Margin="0,0,0,3" />
-                            <TextBlock x:Name="HuangLiJiText" FontSize="11" Foreground="#F87171" TextWrapping="Wrap" Margin="0,0,0,4" />
-                            <TextBlock x:Name="HuangLiMetaText" FontSize="10" Foreground="#8B95A5" TextWrapping="Wrap" Margin="0,0,0,3" />
-                            <TextBlock x:Name="HuangLiGodsText" FontSize="10" Foreground="#7E8A9C" TextWrapping="Wrap" Margin="0,0,0,3" />
-                            <TextBlock x:Name="HuangLiExtraText" FontSize="10" Foreground="#7E8A9C" TextWrapping="Wrap" Margin="0,0,0,3" />
-                            <TextBlock x:Name="HuangLiTimeText" FontSize="9" Foreground="#6B7280" TextWrapping="Wrap" />
+                            <Grid Margin="0,0,0,4">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="18" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+                                <TextBlock x:Name="HuangLiYiLabel" Grid.Column="0" Text="宜" FontSize="11" FontWeight="SemiBold" Foreground="#4ADE80" VerticalAlignment="Top" Margin="0,2,0,0" />
+                                <WrapPanel x:Name="HuangLiYiChips" Grid.Column="1" />
+                            </Grid>
+                            <Grid Margin="0,0,0,6">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="18" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+                                <TextBlock x:Name="HuangLiJiLabel" Grid.Column="0" Text="忌" FontSize="11" FontWeight="SemiBold" Foreground="#F87171" VerticalAlignment="Top" Margin="0,2,0,0" />
+                                <WrapPanel x:Name="HuangLiJiChips" Grid.Column="1" />
+                            </Grid>
+
+                            <Grid Margin="0,0,0,6">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                </Grid.RowDefinitions>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+                                <Border x:Name="HuangLiMetaWuXing" Grid.Row="0" Grid.Column="0" Background="#14FFFFFF" CornerRadius="4" Padding="5,3" Margin="0,0,3,3">
+                                    <StackPanel>
+                                        <TextBlock x:Name="HuangLiWuXingLabel" Text="五行" FontSize="9" Foreground="#6B7280" />
+                                        <TextBlock x:Name="HuangLiWuXingVal" FontSize="10" Foreground="#B8C0CC" Margin="0,1,0,0" TextTrimming="CharacterEllipsis" />
+                                    </StackPanel>
+                                </Border>
+                                <Border x:Name="HuangLiMetaChong" Grid.Row="0" Grid.Column="1" Background="#14FFFFFF" CornerRadius="4" Padding="5,3" Margin="3,0,0,3">
+                                    <StackPanel>
+                                        <TextBlock x:Name="HuangLiChongLabel" Text="冲煞" FontSize="9" Foreground="#6B7280" />
+                                        <TextBlock x:Name="HuangLiChongVal" FontSize="10" Foreground="#B8C0CC" Margin="0,1,0,0" TextTrimming="CharacterEllipsis" />
+                                    </StackPanel>
+                                </Border>
+                                <Border x:Name="HuangLiMetaZhi" Grid.Row="1" Grid.Column="0" Background="#14FFFFFF" CornerRadius="4" Padding="5,3" Margin="0,3,3,0">
+                                    <StackPanel>
+                                        <TextBlock x:Name="HuangLiZhiLabel" Text="值神" FontSize="9" Foreground="#6B7280" />
+                                        <TextBlock x:Name="HuangLiZhiVal" FontSize="10" Foreground="#B8C0CC" Margin="0,1,0,0" TextTrimming="CharacterEllipsis" />
+                                    </StackPanel>
+                                </Border>
+                                <Border x:Name="HuangLiMetaJian" Grid.Row="1" Grid.Column="1" Background="#14FFFFFF" CornerRadius="4" Padding="5,3" Margin="3,3,0,0">
+                                    <StackPanel>
+                                        <TextBlock x:Name="HuangLiJianLabel" Text="建除" FontSize="9" Foreground="#6B7280" />
+                                        <TextBlock x:Name="HuangLiJianVal" FontSize="10" Foreground="#B8C0CC" Margin="0,1,0,0" TextTrimming="CharacterEllipsis" />
+                                    </StackPanel>
+                                </Border>
+                            </Grid>
+
+                            <StackPanel x:Name="HuangLiDeityRow" Orientation="Horizontal" Margin="0,0,0,6">
+                                <Border x:Name="HuangLiXiBadge" Background="#203B82F6" CornerRadius="4" Padding="6,2" Margin="0,0,4,0">
+                                    <TextBlock x:Name="HuangLiXiText" FontSize="9" Foreground="#B8C0CC" />
+                                </Border>
+                                <Border x:Name="HuangLiCaiBadge" Background="#203B82F6" CornerRadius="4" Padding="6,2" Margin="0,0,4,0">
+                                    <TextBlock x:Name="HuangLiCaiText" FontSize="9" Foreground="#B8C0CC" />
+                                </Border>
+                                <Border x:Name="HuangLiFuBadge" Background="#203B82F6" CornerRadius="4" Padding="6,2">
+                                    <TextBlock x:Name="HuangLiFuText" FontSize="9" Foreground="#B8C0CC" />
+                                </Border>
+                            </StackPanel>
+
+                            <TextBlock x:Name="HuangLiTimeTitle" Text="时辰吉凶" FontSize="9" Foreground="#6B7280" Margin="0,0,0,3" />
+                            <UniformGrid x:Name="HuangLiTimeGrid" Rows="2" Columns="6" Margin="0,0,0,5" />
+
+                            <Grid Margin="0,0,0,3">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+                                <TextBlock x:Name="HuangLiJiShenLabel" Text="吉神" FontSize="9" Foreground="#6B7280" Margin="0,2,6,0" />
+                                <WrapPanel x:Name="HuangLiJiShenWrap" Grid.Column="1" />
+                            </Grid>
+                            <Grid Margin="0,0,0,4">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+                                <TextBlock x:Name="HuangLiXiongLabel" Text="凶神" FontSize="9" Foreground="#6B7280" Margin="0,2,6,0" />
+                                <WrapPanel x:Name="HuangLiXiongWrap" Grid.Column="1" />
+                            </Grid>
+                            <TextBlock x:Name="HuangLiSecondaryText" FontSize="9" Foreground="#6B7280" TextWrapping="Wrap" Margin="0,0,0,2" />
+                            <TextBlock x:Name="HuangLiCurrentTimeText" FontSize="9" Foreground="#3B82F6" TextWrapping="Wrap" Visibility="Collapsed" />
                         </StackPanel>
                     </Border>
                 </StackPanel>
