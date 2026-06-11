@@ -427,15 +427,23 @@
                         </Grid>
 
                         <!-- Todo + Pomodoro row -->
-                        <Grid Margin="0,0,0,10" MinHeight="190">
+                        <Grid Margin="0,0,0,10" MinHeight="218">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*" />
                                 <ColumnDefinition Width="14" />
                                 <ColumnDefinition Width="*" />
                             </Grid.ColumnDefinitions>
-                            <Border Grid.Column="0" Style="{StaticResource FloatlyCard}" Padding="16">
-                                <StackPanel x:Name="TodoPanel">
-                                    <Grid Margin="0,0,0,6">
+                            <Border Grid.Column="0" Style="{StaticResource FloatlyCard}" Padding="0">
+                                <Grid x:Name="TodoPanel" ClipToBounds="False">
+                                    <Border Width="4" HorizontalAlignment="Left" Margin="0,14,0,0" CornerRadius="0,4,4,0"
+                                            Background="#5C8DFF" VerticalAlignment="Top" Height="30" />
+                                    <Grid Margin="16,14,16,14">
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="Auto" />
+                                            <RowDefinition Height="*" />
+                                            <RowDefinition Height="Auto" />
+                                        </Grid.RowDefinitions>
+                                    <Grid Grid.Row="0" Margin="0,0,0,10">
                                         <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                                             <TextBlock x:Name="TodoTitleText" Text="今日待办" Style="{StaticResource CardTitle}" />
                                             <Border x:Name="TodoCountBadge" CornerRadius="8" Padding="5,1" Margin="5,0,0,0" Background="#225C8DFF">
@@ -447,20 +455,20 @@
                                                 Foreground="#DDE8FF" Cursor="Hand" FontSize="20" />
                                     </Grid>
                                     <Border x:Name="DividerBorder" Height="0" Visibility="Collapsed" />
-                                    <ItemsControl x:Name="TodoList" Margin="0,0,0,4">
+                                    <ItemsControl x:Name="TodoList" Grid.Row="1" Margin="0,0,0,6">
                                         <ItemsControl.ItemTemplate>
                                             <DataTemplate>
                                                 <Border Background="{DynamicResource TodoCardBgBrush}" BorderBrush="{DynamicResource TodoCardBorderBrush}"
-                                                        BorderThickness="1" CornerRadius="6" Padding="6,4" Margin="0,0,0,4">
+                                                        BorderThickness="1" CornerRadius="10" Padding="10,7" Margin="0,0,0,7" MinHeight="38">
                                                     <Grid>
                                                         <Grid.ColumnDefinitions>
                                                             <ColumnDefinition Width="Auto" /><ColumnDefinition Width="*" /><ColumnDefinition Width="Auto" />
                                                         </Grid.ColumnDefinitions>
-                                                        <local:CircleCheckBox Grid.Column="0" Margin="0,0,6,0" VerticalAlignment="Center"
+                                                        <local:CircleCheckBox Grid.Column="0" Margin="0,0,10,0" VerticalAlignment="Center"
                                                                               TagId="{Binding Id}" Click="TodoCheck_Click" />
                                                         <StackPanel Grid.Column="1" VerticalAlignment="Center">
                                                             <StackPanel Orientation="Horizontal">
-                                                                <Border Background="{DynamicResource TodoTimeBadgeBrush}" CornerRadius="3" Padding="3,1" Margin="0,0,4,0" VerticalAlignment="Center">
+                                                                <Border Background="{DynamicResource TodoTimeBadgeBrush}" CornerRadius="6" Padding="5,2" Margin="0,0,8,0" VerticalAlignment="Center">
                                                                     <Border.Style>
                                                                         <Style TargetType="Border">
                                                                             <Setter Property="Visibility" Value="Collapsed" />
@@ -471,16 +479,16 @@
                                                                             </Style.Triggers>
                                                                         </Style>
                                                                     </Border.Style>
-                                                                    <TextBlock Text="{Binding Time}" FontSize="9" Foreground="{DynamicResource TodoAccentBrush}" FontWeight="SemiBold" />
+                                                                    <TextBlock Text="{Binding Time}" FontSize="11" Foreground="{DynamicResource TodoAccentBrush}" FontWeight="SemiBold" />
                                                                 </Border>
-                                                                <TextBlock Text="{Binding Title}" Foreground="{DynamicResource TodoTextBrush}" FontSize="11"
+                                                                <TextBlock Text="{Binding Title}" Foreground="{DynamicResource TodoTextBrush}" FontSize="12"
                                                                            TextTrimming="CharacterEllipsis" VerticalAlignment="Center"
                                                                            Tag="{Binding Id}" MouseLeftButtonDown="TodoTitle_DoubleClick" Cursor="Hand" />
                                                             </StackPanel>
                                                         </StackPanel>
                                                         <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center">
-                                                            <Button Content="{Binding PinIcon}" Width="20" Height="20" Padding="0" Tag="{Binding Id}" Click="TodoPin_Click"
-                                                                    Background="Transparent" BorderThickness="0" Cursor="Hand" FontSize="11" ToolTip="置顶">
+                                                            <Button Content="{Binding PinIcon}" Width="24" Height="24" Padding="0" Tag="{Binding Id}" Click="TodoPin_Click"
+                                                                    Background="Transparent" BorderThickness="0" Cursor="Hand" FontSize="13" ToolTip="置顶">
                                                                 <Button.Style>
                                                                     <Style TargetType="Button">
                                                                         <Setter Property="Foreground" Value="{DynamicResource TodoPinInactiveBrush}" />
@@ -500,28 +508,55 @@
                                             </DataTemplate>
                                         </ItemsControl.ItemTemplate>
                                     </ItemsControl>
-                                    <Border x:Name="EmptyTodoPanel" Background="{DynamicResource TodoCardBgBrush}" BorderBrush="{DynamicResource TodoCardBorderBrush}"
-                                            BorderThickness="1" CornerRadius="6" Padding="8,6" Margin="0,0,0,4" Visibility="Collapsed">
+                                    <Border x:Name="EmptyTodoPanel" Grid.Row="1" Background="{DynamicResource TodoCardBgBrush}" BorderBrush="{DynamicResource TodoCardBorderBrush}"
+                                            BorderThickness="1" CornerRadius="10" Padding="12,18" Margin="0,0,0,6" Visibility="Collapsed">
                                         <TextBlock x:Name="EmptyTodoText" Text="暂无待办" Foreground="{DynamicResource TodoEmptyBrush}" FontSize="11" TextAlignment="Center" />
                                     </Border>
-                                    <Border x:Name="TodoOverflowBtn" Background="#18FFFFFF" CornerRadius="4" Padding="4,2" Margin="0,0,0,2" Cursor="Hand"
-                                            MouseLeftButtonUp="TodoViewAll_Click" Visibility="Collapsed">
-                                        <TextBlock x:Name="TodoOverflowText" Text="还有 0 条未显示 ›" FontSize="10" Foreground="{DynamicResource TodoLinkBrush}" HorizontalAlignment="Center" />
-                                    </Border>
-                                    <Border x:Name="TodoViewAllBtn" Background="Transparent" Padding="2" Cursor="Hand" MouseLeftButtonUp="TodoViewAll_Click">
-                                        <TextBlock x:Name="TodoViewAllText" Text="查看全部 ›" FontSize="10" Foreground="{DynamicResource TodoLinkBrush}" HorizontalAlignment="Center" />
-                                    </Border>
-                                </StackPanel>
-                            </Border>
-                            <Border Grid.Column="2" Style="{StaticResource FloatlyCard}" Padding="16">
-                                <StackPanel x:Name="PomodoroPanel" Visibility="Collapsed">
-                                    <Grid Margin="0,0,0,6">
-                                        <TextBlock x:Name="PomodoroPhaseText" Text="番茄钟" Style="{StaticResource CardTitle}" />
-                                        <TextBlock x:Name="PomodoroSessionText" Text="准备开始" FontSize="10" Foreground="#8B95A5" HorizontalAlignment="Right" VerticalAlignment="Center" />
+                                    <Grid Grid.Row="2">
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="Auto" />
+                                            <RowDefinition Height="Auto" />
+                                        </Grid.RowDefinitions>
+                                        <Border x:Name="TodoOverflowBtn" Grid.Row="0" Background="#18FFFFFF" CornerRadius="10" Padding="10,6" Margin="0,0,0,8" Cursor="Hand"
+                                                MouseLeftButtonUp="TodoViewAll_Click" Visibility="Collapsed">
+                                            <Grid>
+                                                <TextBlock x:Name="TodoOverflowText" Text="+ 2 条待办" FontSize="11" Foreground="{DynamicResource TodoLinkBrush}" />
+                                                <TextBlock Text="⌄" FontSize="12" Foreground="{DynamicResource TodoLinkBrush}" HorizontalAlignment="Right" />
+                                            </Grid>
+                                        </Border>
+                                        <Grid Grid.Row="1">
+                                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
+                                                <TextBlock Text="☑" FontSize="15" Foreground="{DynamicResource TodoLinkBrush}" Margin="4,0,16,0" VerticalAlignment="Center" />
+                                                <TextBlock Text="▦" FontSize="15" Foreground="{DynamicResource TodoLinkBrush}" VerticalAlignment="Center" />
+                                            </StackPanel>
+                                            <Border x:Name="TodoViewAllBtn" Background="Transparent" Padding="2" Cursor="Hand" MouseLeftButtonUp="TodoViewAll_Click"
+                                                    HorizontalAlignment="Right">
+                                                <StackPanel Orientation="Horizontal">
+                                                    <TextBlock x:Name="TodoViewAllText" Text="查看全部" FontSize="11" Foreground="{DynamicResource TodoLinkBrush}" />
+                                                    <TextBlock Text="›" FontSize="16" Foreground="{DynamicResource TodoLinkBrush}" Margin="10,-2,0,0" />
+                                                </StackPanel>
+                                            </Border>
+                                        </Grid>
                                     </Grid>
-                                    <Grid HorizontalAlignment="Center" Margin="0,8,0,16">
-                                        <Ellipse x:Name="PomodoroRingTrack" Width="156" Height="156" Stroke="#28FFFFFF" StrokeThickness="8" Fill="Transparent" />
-                                        <Ellipse x:Name="PomodoroRingProgress" Width="156" Height="156" Stroke="#5C8DFF" StrokeThickness="8" Fill="Transparent"
+                                    </Grid>
+                                </Grid>
+                            </Border>
+                            <Border Grid.Column="2" Style="{StaticResource FloatlyCard}" Padding="20,18">
+                                <Grid x:Name="PomodoroPanel" Visibility="Collapsed">
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="*" />
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="Auto" />
+                                    </Grid.RowDefinitions>
+                                    <Grid Grid.Row="0" Margin="0,0,0,4">
+                                        <TextBlock x:Name="PomodoroPhaseText" Text="番茄钟" Style="{StaticResource CardTitle}" />
+                                        <TextBlock x:Name="PomodoroSessionText" Text="准备开始" FontSize="10" Foreground="#8B95A5"
+                                                   HorizontalAlignment="Right" VerticalAlignment="Center" />
+                                    </Grid>
+                                    <Grid Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,4,0,12">
+                                        <Ellipse x:Name="PomodoroRingTrack" Width="168" Height="168" Stroke="#28FFFFFF" StrokeThickness="8" Fill="Transparent" />
+                                        <Ellipse x:Name="PomodoroRingProgress" Width="168" Height="168" Stroke="#5C8DFF" StrokeThickness="8" Fill="Transparent"
                                                  StrokeDashCap="Round" RenderTransformOrigin="0.5,0.5">
                                             <Ellipse.RenderTransform>
                                                 <RotateTransform Angle="-90" />
@@ -529,19 +564,22 @@
                                         </Ellipse>
                                         <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
                                             <TextBlock x:Name="PomodoroCountdownText" Text="25:00" FontSize="34" FontWeight="SemiBold" Foreground="#FFFFFF" HorizontalAlignment="Center" />
-                                            <TextBlock Text="准备开始" FontSize="14" Foreground="#A6FFFFFF" HorizontalAlignment="Center" Margin="0,4,0,0" />
+                                            <TextBlock x:Name="PomodoroCenterStatusText" Text="准备开始" FontSize="14" Foreground="#A6FFFFFF" HorizontalAlignment="Center" Margin="0,4,0,0" />
                                         </StackPanel>
                                     </Grid>
                                     <Border x:Name="PomodoroTrack" Height="0" Width="0" Visibility="Collapsed">
                                         <Border x:Name="PomodoroFill" Width="0" />
                                     </Border>
-                                    <Button x:Name="PomodoroStartBtn" Content="开始专注" Height="44" Padding="0" Width="230"
+                                    <Button x:Name="PomodoroStartBtn" Grid.Row="2" Content="开始专注" Height="36" Padding="0" Width="220"
                                             Click="PomodoroStart_Click" Background="#5C8DFF" Foreground="White"
                                             BorderThickness="0" Cursor="Hand" FontSize="15" FontWeight="SemiBold" HorizontalAlignment="Center" />
-                                    <Button x:Name="PomodoroResetBtn" Content="重置" Height="22" Padding="0" Margin="0,4,0,0"
+                                    <TextBlock x:Name="PomodoroHintText" Grid.Row="3" Text="专注更高效，休息更放松" FontSize="11" Foreground="#8B95A5"
+                                               HorizontalAlignment="Center" Margin="0,12,0,0" />
+                                    <Button x:Name="PomodoroResetBtn" Grid.Row="3" Content="重置" Height="22" Padding="0" Margin="0,6,0,0"
                                             Click="PomodoroReset_Click" Background="Transparent" Foreground="#8B95A5"
-                                            BorderThickness="0" Cursor="Hand" FontSize="10" />
-                                </StackPanel>
+                                            BorderThickness="0" Cursor="Hand" FontSize="10" HorizontalAlignment="Right" VerticalAlignment="Top"
+                                            Visibility="Collapsed" />
+                                </Grid>
                             </Border>
                         </Grid>
 

@@ -996,6 +996,8 @@ public partial class MainWindow : Window
         PomodoroPhaseText.Foreground = Brush(_palette.TextMuted);
         PomodoroSessionText.Foreground = Brush(_palette.TextSubtle);
         PomodoroCountdownText.Foreground = Brush(textPrimary);
+        PomodoroCenterStatusText.Foreground = Brush(_palette.TextSecondary);
+        PomodoroHintText.Foreground = Brush(_palette.TextSubtle);
         PomodoroTrack.Background = Brush(_palette.ProgressTrack);
         PomodoroStartBtn.Background = Brush(_palette.TodoAccentButton);
         PomodoroStartBtn.Foreground = System.Windows.Media.Brushes.White;
@@ -1039,6 +1041,18 @@ public partial class MainWindow : Window
             PomodoroPhase.LongBreak => "长休息",
             _ => "番茄钟"
         };
+        PomodoroCenterStatusText.Text = _pomodoro.Phase switch
+        {
+            PomodoroPhase.Working => "保持专注",
+            PomodoroPhase.ShortBreak => "短暂休息",
+            PomodoroPhase.LongBreak => "长休息",
+            _ => "准备开始"
+        };
+        PomodoroHintText.Text = _pomodoro.Phase switch
+        {
+            PomodoroPhase.ShortBreak or PomodoroPhase.LongBreak => "放松一下，准备下一轮",
+            _ => "专注更高效，休息更放松"
+        };
 
         var sessions = _pomodoro.CompletedWorkSessions;
         PomodoroSessionText.Text = sessions > 0 ? $"第 {sessions} 个番茄" : "准备开始";
@@ -1055,7 +1069,7 @@ public partial class MainWindow : Window
             : _palette.PomodoroWork;
         PomodoroFill.Background = Brush(fillColor);
         PomodoroRingProgress.Stroke = Brush(fillColor);
-        PomodoroRingHelper.Update(PomodoroRingProgress, _pomodoro.ProgressPercent, 72, 4);
+        PomodoroRingHelper.Update(PomodoroRingProgress, _pomodoro.ProgressPercent, 168, 8);
     }
 
     private void OnPomodoroCompleted(PomodoroPhase phase)
@@ -1642,7 +1656,7 @@ public partial class MainWindow : Window
         if (hidden > 0)
         {
             TodoOverflowBtn.Visibility = Visibility.Visible;
-            TodoOverflowText.Text = $"还有 {hidden} 条未显示 ›";
+            TodoOverflowText.Text = $"+ {hidden} 条待办";
             TodoViewAllBtn.Visibility = Visibility.Collapsed;
         }
         else
