@@ -3,9 +3,9 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:local="clr-namespace:DeskLite"
         Title="Floatly"
-        MinWidth="280"
+        MinWidth="320"
         MinHeight="420"
-        Width="360"
+        Width="380"
         WindowStyle="None"
         AllowsTransparency="True"
         Background="Transparent"
@@ -108,23 +108,23 @@
                         <!-- Row 1: clock | weather | controls -->
                         <Grid VerticalAlignment="Center">
                             <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*" MinWidth="100" />
-                                <ColumnDefinition Width="Auto" MinWidth="112" />
-                                <ColumnDefinition Width="Auto" MinWidth="92" />
+                                <ColumnDefinition Width="Auto" MinWidth="155" />
+                                <ColumnDefinition Width="*" MinWidth="72" />
+                                <ColumnDefinition Width="Auto" MinWidth="100" />
                             </Grid.ColumnDefinitions>
 
                             <!-- Left: time + date + city -->
                             <StackPanel Grid.Column="0" VerticalAlignment="Center">
-                                <StackPanel Orientation="Horizontal" VerticalAlignment="Top">
+                                <StackPanel Orientation="Horizontal" VerticalAlignment="Top" ClipToBounds="False">
                                     <TextBlock x:Name="ClockText" Text="15:03" FontSize="42" FontWeight="Bold"
                                                Foreground="#FFFFFF" LineHeight="42" LineStackingStrategy="BlockLineHeight"
                                                TextTrimming="None" />
-                                    <TextBlock x:Name="ClockSecondsText" Text="54" FontSize="13" FontWeight="SemiBold"
-                                               Foreground="#A6FFFFFF" VerticalAlignment="Top" Margin="2,5,0,0"
-                                               Visibility="Collapsed" />
+                                    <TextBlock x:Name="ClockSecondsText" Text="54" FontSize="17" FontWeight="SemiBold"
+                                               Foreground="#A6FFFFFF" VerticalAlignment="Top" Margin="3,4,0,0"
+                                               TextTrimming="None" Visibility="Collapsed" />
                                 </StackPanel>
                                 <TextBlock x:Name="DateText" Text="2026年6月11日 周四" FontSize="12"
-                                           Foreground="#A6FFFFFF" Margin="0,4,0,0" TextTrimming="CharacterEllipsis" />
+                                           Foreground="#A6FFFFFF" Margin="0,4,0,0" TextTrimming="None" />
                                 <TextBlock x:Name="CityText" Text="📍 东京 Tokyo" FontSize="11" Foreground="#8B95A5"
                                            Margin="0,3,0,0" Visibility="Collapsed" TextTrimming="CharacterEllipsis" />
                                 <TextBlock x:Name="LunarText" Text="农历五月初六 · 芒种" FontSize="11" Foreground="#8B95A5"
@@ -135,7 +135,7 @@
 
                             <!-- Center: weather -->
                             <StackPanel x:Name="WeatherPanel" Grid.Column="1" VerticalAlignment="Center"
-                                        HorizontalAlignment="Center" Margin="12,0" Visibility="Collapsed">
+                                        HorizontalAlignment="Center" Margin="8,0" Visibility="Collapsed">
                                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
                                     <Image x:Name="WeatherIconImage" Width="30" Height="30" VerticalAlignment="Center"
                                            Margin="0,0,6,0" RenderOptions.BitmapScalingMode="HighQuality" />

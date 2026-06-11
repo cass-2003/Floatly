@@ -37,7 +37,7 @@ public static class FontScaleHelper
         scale = ClampScale(scale);
 
         Set(window.ClockText, 42, scale);
-        Set(window.ClockSecondsText, 13, scale);
+        Set(window.ClockSecondsText, 17, scale);
         Set(window.DateText, 12, scale);
         Set(window.LunarText, 12, scale);
         Set(window.LunarSubText, 11, scale);

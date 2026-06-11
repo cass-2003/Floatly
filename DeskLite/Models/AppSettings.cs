@@ -43,7 +43,7 @@ public sealed class AppSettings
     public string City { get; set; } = "北京";
     public double Left { get; set; } = 100;
     public double Top { get; set; } = 100;
-    public double WindowWidth { get; set; } = 300;
+    public double WindowWidth { get; set; } = 380;
     public double WindowHeight { get; set; } = 540;
     public bool UserCustomSize { get; set; }
     public double FontScale { get; set; } = 1.0;

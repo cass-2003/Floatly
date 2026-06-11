@@ -151,7 +151,7 @@ public partial class MainWindow : Window
         LunarText.Visibility = _settings.ShowHuangLi ? Visibility.Collapsed : Visibility.Visible;
         LunarSubText.Visibility = _settings.ShowHuangLi ? Visibility.Collapsed : Visibility.Visible;
 
-        Width = Math.Clamp(_settings.WindowWidth, 260, 480);
+        Width = Math.Clamp(_settings.WindowWidth, 320, 480);
         if (_settings.UserCustomSize)
         {
             _suppressSizePersist = true;
