@@ -44,7 +44,7 @@ public sealed class AppSettings
     public double Left { get; set; } = 100;
     public double Top { get; set; } = 100;
     public double WindowWidth { get; set; } = 720;
-    public double WindowHeight { get; set; } = 980;
+    public double WindowHeight { get; set; } = 1280;
     public bool UserCustomSize { get; set; }
     public double FontScale { get; set; } = 1.0;
     /// <summary>UI font size in pt (10-16). Null in older settings files migrates from <see cref="FontScale"/>.</summary>

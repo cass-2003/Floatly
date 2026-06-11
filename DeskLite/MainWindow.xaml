@@ -6,7 +6,7 @@
         MinWidth="360"
         MinHeight="420"
         Width="720"
-        Height="980"
+        Height="1280"
         WindowStyle="None"
         AllowsTransparency="True"
         Background="Transparent"
@@ -717,43 +717,8 @@
                             </Grid>
                         </Border>
 
-                        <!-- Scratch notes -->
-                        <Border x:Name="ScratchPanel" Style="{StaticResource FloatlyCard}" Margin="0,0,0,10" Padding="0" MinHeight="124"
-                                Cursor="Hand" MouseLeftButtonUp="ScratchPanel_Click" Visibility="Collapsed">
-                            <Grid ClipToBounds="False">
-                                <Border Width="4" HorizontalAlignment="Left" Margin="0,14,0,0" CornerRadius="0,4,4,0"
-                                        Background="#9BA8FF" VerticalAlignment="Top" Height="30" />
-                                <Grid Margin="16,14,16,14">
-                                    <Grid.RowDefinitions>
-                                        <RowDefinition Height="Auto" />
-                                        <RowDefinition Height="*" />
-                                    </Grid.RowDefinitions>
-                                <Grid Margin="0,0,0,12">
-                                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                                        <TextBlock x:Name="ScratchTitleText" Text="速记便签" Style="{StaticResource CardTitle}" />
-                                        <Border x:Name="ScratchCountBadge" CornerRadius="8" Padding="5,1" Margin="5,0,0,0" Background="#225C8DFF">
-                                            <TextBlock x:Name="ScratchCountText" Text="0" FontSize="10" Foreground="#5C8DFF" FontWeight="SemiBold" />
-                                        </Border>
-                                    </StackPanel>
-                                    <Border Width="28" Height="28" CornerRadius="14" HorizontalAlignment="Right" VerticalAlignment="Center"
-                                            Background="#18FFFFFF" Cursor="Hand" MouseLeftButtonUp="ScratchExpand_Click">
-                                        <TextBlock x:Name="ScratchExpandText" Text="+" FontSize="18" Foreground="#DDE8FF"
-                                                   HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,-2,0,0" />
-                                    </Border>
-                                </Grid>
-                                <UniformGrid x:Name="ScratchPreviewGrid" Grid.Row="1" Columns="2" Rows="1" />
-                                <Border x:Name="ScratchPreviewCard" Visibility="Collapsed" />
-                                <TextBlock x:Name="ScratchPreviewTitle" Visibility="Collapsed" />
-                                <TextBlock x:Name="ScratchPreviewContent" Visibility="Collapsed" />
-                                <TextBlock x:Name="ScratchEmptyText" Grid.Row="1" Text="点击新建便签" FontSize="11" Foreground="#6B7280"
-                                           HorizontalAlignment="Center" VerticalAlignment="Center" Visibility="Collapsed"
-                                           MouseLeftButtonUp="ScratchExpand_Click" Cursor="Hand" />
-                                </Grid>
-                            </Grid>
-                        </Border>
-
                         <!-- Calendar: week + month side by side -->
-                        <Grid x:Name="CalendarSection" Margin="0,0,0,0" MinHeight="226" Visibility="Collapsed">
+                        <Grid x:Name="CalendarSection" Margin="0,0,0,10" MinHeight="226" Visibility="Collapsed">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*" />
                                 <ColumnDefinition Width="14" />
@@ -788,6 +753,41 @@
                                 </StackPanel>
                             </Border>
                         </Grid>
+
+                        <!-- Scratch notes remain available, but sit after the salary-dashboard flow. -->
+                        <Border x:Name="ScratchPanel" Style="{StaticResource FloatlyCard}" Margin="0,0,0,0" Padding="0" MinHeight="124"
+                                Cursor="Hand" MouseLeftButtonUp="ScratchPanel_Click" Visibility="Collapsed">
+                            <Grid ClipToBounds="False">
+                                <Border Width="4" HorizontalAlignment="Left" Margin="0,14,0,0" CornerRadius="0,4,4,0"
+                                        Background="#9BA8FF" VerticalAlignment="Top" Height="30" />
+                                <Grid Margin="16,14,16,14">
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="*" />
+                                    </Grid.RowDefinitions>
+                                    <Grid Margin="0,0,0,12">
+                                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                            <TextBlock x:Name="ScratchTitleText" Text="速记便签" Style="{StaticResource CardTitle}" />
+                                            <Border x:Name="ScratchCountBadge" CornerRadius="8" Padding="5,1" Margin="5,0,0,0" Background="#225C8DFF">
+                                                <TextBlock x:Name="ScratchCountText" Text="0" FontSize="10" Foreground="#5C8DFF" FontWeight="SemiBold" />
+                                            </Border>
+                                        </StackPanel>
+                                        <Border Width="28" Height="28" CornerRadius="14" HorizontalAlignment="Right" VerticalAlignment="Center"
+                                                Background="#18FFFFFF" Cursor="Hand" MouseLeftButtonUp="ScratchExpand_Click">
+                                            <TextBlock x:Name="ScratchExpandText" Text="+" FontSize="18" Foreground="#DDE8FF"
+                                                       HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,-2,0,0" />
+                                        </Border>
+                                    </Grid>
+                                    <UniformGrid x:Name="ScratchPreviewGrid" Grid.Row="1" Columns="2" Rows="1" />
+                                    <Border x:Name="ScratchPreviewCard" Visibility="Collapsed" />
+                                    <TextBlock x:Name="ScratchPreviewTitle" Visibility="Collapsed" />
+                                    <TextBlock x:Name="ScratchPreviewContent" Visibility="Collapsed" />
+                                    <TextBlock x:Name="ScratchEmptyText" Grid.Row="1" Text="点击新建便签" FontSize="11" Foreground="#6B7280"
+                                               HorizontalAlignment="Center" VerticalAlignment="Center" Visibility="Collapsed"
+                                               MouseLeftButtonUp="ScratchExpand_Click" Cursor="Hand" />
+                                </Grid>
+                            </Grid>
+                        </Border>
                     </StackPanel>
                 </ScrollViewer>
 
