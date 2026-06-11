@@ -299,7 +299,7 @@ public partial class MainWindow : Window
         RefreshScratch();
         SyncBottomToolbar();
 
-        PomodoroRingTrack.Stroke = Brush(_palette.ProgressTrack);
+        PomodoroRingTrack.Stroke = Brush(0x34, 0xE8, 0xF4, 0xFF);
         CountdownFill.Background = new SolidColorBrush(FloatlyDesignTokens.AccentOrange);
 
         Resources["TodoTextBrush"] = Brush(_palette.TodoText);
@@ -1070,7 +1070,6 @@ public partial class MainWindow : Window
 
     private void ApplyPomodoroTheme(System.Windows.Media.Color textPrimary)
     {
-        PomodoroCard.Background = Brush(_palette.HuangLiMutedButton);
         PomodoroPhaseText.Foreground = Brush(_palette.TextMuted);
         PomodoroSessionText.Foreground = Brush(_palette.TextSubtle);
         PomodoroCountdownText.Foreground = Brush(textPrimary);
@@ -1142,12 +1141,20 @@ public partial class MainWindow : Window
             _ => "继续"
         };
 
-        var fillColor = _pomodoro.Phase is PomodoroPhase.ShortBreak or PomodoroPhase.LongBreak
-            ? _palette.PomodoroBreak
-            : _palette.PomodoroWork;
+        var fillColor = _pomodoro.Phase switch
+        {
+            PomodoroPhase.Idle => FloatlyDesignTokens.AccentBlue,
+            PomodoroPhase.ShortBreak or PomodoroPhase.LongBreak => _palette.PomodoroBreak,
+            _ => FloatlyDesignTokens.AccentBlue
+        };
+        var ringProgress = _pomodoro.Phase == PomodoroPhase.Idle
+            ? 92
+            : Math.Max(2, _pomodoro.ProgressPercent);
+
         PomodoroFill.Background = Brush(fillColor);
         PomodoroRingProgress.Stroke = Brush(fillColor);
-        PomodoroRingHelper.Update(PomodoroRingProgress, _pomodoro.ProgressPercent, 108, 7);
+        PomodoroRingHelper.UpdateOpenArc(PomodoroRingTrack, 100, 124, 7);
+        PomodoroRingHelper.UpdateOpenArc(PomodoroRingProgress, ringProgress, 124, 7);
     }
 
     private void OnPomodoroCompleted(PomodoroPhase phase)

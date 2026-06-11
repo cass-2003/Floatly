@@ -545,7 +545,7 @@
                                 <Grid x:Name="PomodoroPanel" Visibility="Collapsed">
                                     <Grid.RowDefinitions>
                                         <RowDefinition Height="Auto" />
-                                        <RowDefinition Height="*" />
+                                        <RowDefinition Height="136" />
                                         <RowDefinition Height="Auto" />
                                         <RowDefinition Height="Auto" />
                                     </Grid.RowDefinitions>
@@ -554,12 +554,17 @@
                                         <TextBlock x:Name="PomodoroSessionText" Text="准备开始" FontSize="10" Foreground="#8B95A5"
                                                    HorizontalAlignment="Right" VerticalAlignment="Center" />
                                     </Grid>
-                                    <Grid Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,2,0,10">
-                                        <Ellipse x:Name="PomodoroRingTrack" Width="108" Height="108" Stroke="#28FFFFFF" StrokeThickness="7" Fill="Transparent" />
-                                        <Ellipse x:Name="PomodoroRingProgress" Width="108" Height="108" Stroke="#5C8DFF" StrokeThickness="7" Fill="Transparent"
+                                    <Grid Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,-2,0,0">
+                                        <Ellipse x:Name="PomodoroRingTrack" Width="124" Height="124" Stroke="#28FFFFFF" StrokeThickness="7" Fill="Transparent"
                                                  StrokeDashCap="Round" RenderTransformOrigin="0.5,0.5">
                                             <Ellipse.RenderTransform>
-                                                <RotateTransform Angle="-90" />
+                                                <RotateTransform Angle="-126" />
+                                            </Ellipse.RenderTransform>
+                                        </Ellipse>
+                                        <Ellipse x:Name="PomodoroRingProgress" Width="124" Height="124" Stroke="#5C8DFF" StrokeThickness="7" Fill="Transparent"
+                                                 StrokeDashCap="Round" RenderTransformOrigin="0.5,0.5">
+                                            <Ellipse.RenderTransform>
+                                                <RotateTransform Angle="-126" />
                                             </Ellipse.RenderTransform>
                                         </Ellipse>
                                         <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
@@ -570,7 +575,7 @@
                                     <Border x:Name="PomodoroTrack" Height="0" Width="0" Visibility="Collapsed">
                                         <Border x:Name="PomodoroFill" Width="0" />
                                     </Border>
-                                    <Button x:Name="PomodoroStartBtn" Grid.Row="2" Content="开始专注" Height="30" Padding="0" Width="190"
+                                    <Button x:Name="PomodoroStartBtn" Grid.Row="2" Content="开始专注" Height="30" Padding="0" Width="188"
                                             Click="PomodoroStart_Click" Background="#5C8DFF" Foreground="White"
                                             BorderThickness="0" Cursor="Hand" FontSize="15" FontWeight="SemiBold" HorizontalAlignment="Center" />
                                     <TextBlock x:Name="PomodoroHintText" Grid.Row="3" Text="专注更高效，休息更放松" FontSize="11" Foreground="#8B95A5"
