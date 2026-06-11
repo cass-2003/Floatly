@@ -83,9 +83,9 @@ public static class FontScaleHelper
         Set(window.SalaryWorkDurationText, 11, scale);
         Set(window.DailyQuoteText, 20, scale);
         Set(window.DailyQuoteSourceText, 12, scale);
-        Set(window.ScratchTitleText, 12, scale);
+        Set(window.ScratchTitleText, 13, scale);
         Set(window.ScratchCountText, 10, scale);
-        Set(window.ScratchExpandText, 11, scale);
+        Set(window.ScratchExpandText, 18, scale);
         Set(window.ScratchPreviewTitle, 11, scale);
         Set(window.ScratchPreviewContent, 10, scale);
         Set(window.ScratchEmptyText, 11, scale);
@@ -94,7 +94,8 @@ public static class FontScaleHelper
         Set(window.EmptyTodoText, 12, scale);
         Set(window.TodoOverflowText, 11, scale);
         Set(window.TodoViewAllText, 11, scale);
-        Set(window.CalendarTitleText, 14, scale);
+        Set(window.WeekCalendarTitleText, 13, scale);
+        Set(window.CalendarTitleText, 13, scale);
         Set(window.NewTodoBox, 12, scale);
         Set(window.AddButton, 12, scale);
 

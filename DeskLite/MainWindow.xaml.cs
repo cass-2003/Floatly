@@ -296,6 +296,7 @@ public partial class MainWindow : Window
         ScratchExpandText.Foreground = Brush(_palette.TodoLink);
         ScratchEmptyText.Foreground = Brush(_palette.TextEmpty);
         RefreshScratchPreviewTheme();
+        RefreshScratch();
         SyncBottomToolbar();
 
         PomodoroRingTrack.Stroke = Brush(_palette.ProgressTrack);
@@ -1155,7 +1156,7 @@ public partial class MainWindow : Window
         var weekGrid = new System.Windows.Controls.Primitives.UniformGrid { Rows = 1, Columns = 7 };
         foreach (var day in weekDays)
         {
-            weekGrid.Children.Add(BuildCalendarCell(day, today, preview, calScale * 0.9, compact: true));
+            weekGrid.Children.Add(BuildCalendarCell(day, today, preview, calScale * 1.05, compact: true));
         }
         WeekCalendarPanel.Children.Add(weekGrid);
 
@@ -1167,7 +1168,7 @@ public partial class MainWindow : Window
             WeekdayHeader.Children.Add(new TextBlock
             {
                 Text = WeekLabels[i],
-                FontSize = FontScaleHelper.CalSize(9, _settings.FontScale),
+                FontSize = FontScaleHelper.CalSize(11, _settings.FontScale),
                 Foreground = Brush(_palette.WeekLabel),
                 HorizontalAlignment = System.Windows.HorizontalAlignment.Center
             });
@@ -1177,7 +1178,7 @@ public partial class MainWindow : Window
         var monthGrid = new System.Windows.Controls.Primitives.UniformGrid { Rows = 6, Columns = 7 };
         foreach (var day in monthDays)
         {
-            monthGrid.Children.Add(BuildCalendarCell(day, today, preview, calScale * 0.85, compact: true));
+            monthGrid.Children.Add(BuildCalendarCell(day, today, preview, calScale * 1.0, compact: true));
         }
         CalendarPanel.Children.Add(monthGrid);
     }
@@ -1216,16 +1217,16 @@ public partial class MainWindow : Window
             ? day.Day.ToString()
             : isToday && preview is null ? "今" : day.Day.ToString();
 
-        var dayFontSize = compact ? 11 * calScale : 13 * calScale;
+        var dayFontSize = compact ? 13 * calScale : 13 * calScale;
         var dayForeground = isToday || isPreview ? Brush(_palette.Accent) : Brush(_palette.WeekSolar);
 
         if (compact && (isToday || isPreview))
         {
             var dayBorder = new Border
             {
-                Width = 20 * calScale,
-                Height = 20 * calScale,
-                CornerRadius = new CornerRadius(10 * calScale),
+                Width = 26 * calScale,
+                Height = 26 * calScale,
+                CornerRadius = new CornerRadius(13 * calScale),
                 Background = Brush(_palette.Accent),
                 HorizontalAlignment = System.Windows.HorizontalAlignment.Center,
                 Child = new TextBlock
@@ -1277,7 +1278,7 @@ public partial class MainWindow : Window
             cell.Children.Add(new TextBlock
             {
                 Text = dayInfo.Mark!,
-                FontSize = 8 * calScale,
+                FontSize = 9 * calScale,
                 Foreground = Brush(_palette.Mark),
                 HorizontalAlignment = System.Windows.HorizontalAlignment.Center,
                 TextTrimming = TextTrimming.CharacterEllipsis
@@ -1726,16 +1727,17 @@ public partial class MainWindow : Window
         var notes = _todoStore.GetScratchNotes();
         ScratchCountText.Text = notes.Count.ToString();
         ScratchCountBadge.Visibility = notes.Count > 0 ? Visibility.Visible : Visibility.Collapsed;
+        ScratchPreviewGrid.Children.Clear();
 
         var preview = _todoStore.GetScratchPreviewNote();
         if (preview is null)
         {
-            ScratchPreviewCard.Visibility = Visibility.Collapsed;
+            ScratchPreviewGrid.Visibility = Visibility.Collapsed;
             ScratchEmptyText.Visibility = Visibility.Visible;
             return;
         }
 
-        ScratchPreviewCard.Visibility = Visibility.Visible;
+        ScratchPreviewGrid.Visibility = Visibility.Visible;
         ScratchEmptyText.Visibility = Visibility.Collapsed;
         ScratchPreviewTitle.Text = string.IsNullOrWhiteSpace(preview.Title) ? "无标题" : preview.Title;
         if (preview.Pinned)
@@ -1746,6 +1748,127 @@ public partial class MainWindow : Window
         var content = preview.Content.Replace('\r', ' ').Replace('\n', ' ').Trim();
         ScratchPreviewContent.Text = string.IsNullOrEmpty(content) ? "（空便签）" : content;
         RefreshScratchPreviewTheme(preview);
+
+        var shown = notes.Take(2).ToList();
+        for (var i = 0; i < shown.Count; i++)
+        {
+            ScratchPreviewGrid.Children.Add(BuildScratchPreviewCard(shown[i], i));
+        }
+
+        if (shown.Count == 1)
+        {
+            ScratchPreviewGrid.Children.Add(BuildScratchAddCard());
+        }
+    }
+
+    private Border BuildScratchPreviewCard(ScratchNote note, int index)
+    {
+        var theme = AppThemePalette.Parse(_settings.Theme);
+        var title = string.IsNullOrWhiteSpace(note.Title) ? "无标题" : note.Title.Trim();
+        var content = note.Content.Replace('\r', ' ').Replace('\n', ' ').Trim();
+        if (string.IsNullOrEmpty(content))
+        {
+            content = "（空便签）";
+        }
+
+        var titleGrid = new Grid();
+        titleGrid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
+        titleGrid.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
+        titleGrid.Children.Add(new TextBlock
+        {
+            Text = title,
+            FontSize = 12 * FontScaleHelper.ClampScale(_settings.FontScale),
+            FontWeight = FontWeights.SemiBold,
+            Foreground = Brush(_palette.TextPrimary),
+            TextTrimming = TextTrimming.CharacterEllipsis,
+            VerticalAlignment = VerticalAlignment.Center
+        });
+        if (note.Pinned)
+        {
+            var pin = new TextBlock
+            {
+                Text = "📌",
+                FontSize = 12 * FontScaleHelper.ClampScale(_settings.FontScale),
+                Foreground = Brush(_palette.SalaryGold),
+                VerticalAlignment = VerticalAlignment.Center,
+                Margin = new Thickness(8, 0, 0, 0)
+            };
+            Grid.SetColumn(pin, 1);
+            titleGrid.Children.Add(pin);
+        }
+
+        var stack = new StackPanel { VerticalAlignment = VerticalAlignment.Center };
+        stack.Children.Add(titleGrid);
+        stack.Children.Add(new TextBlock
+        {
+            Text = content,
+            FontSize = 11 * FontScaleHelper.ClampScale(_settings.FontScale),
+            Foreground = Brush(_palette.TextSecondary),
+            TextWrapping = TextWrapping.Wrap,
+            MaxHeight = 34,
+            Margin = new Thickness(0, 5, 0, 0),
+            TextTrimming = TextTrimming.CharacterEllipsis
+        });
+        stack.Children.Add(new TextBlock
+        {
+            Text = ScratchColorHelper.FormatRelativeTime(note.UpdatedAt),
+            FontSize = 10 * FontScaleHelper.ClampScale(_settings.FontScale),
+            Foreground = Brush(_palette.TextSubtle),
+            Margin = new Thickness(0, 6, 0, 0)
+        });
+
+        var card = new Border
+        {
+            CornerRadius = new CornerRadius(10),
+            Padding = new Thickness(12, 10, 12, 9),
+            Margin = index == 0 ? new Thickness(0, 0, 7, 0) : new Thickness(7, 0, 0, 0),
+            MinHeight = 78,
+            Background = new SolidColorBrush(ScratchColorHelper.GetCardBackground(note.Color, theme)),
+            BorderBrush = Brush(_palette.TodoCardBorder),
+            BorderThickness = new Thickness(1),
+            Cursor = System.Windows.Input.Cursors.Hand,
+            Child = stack
+        };
+        card.MouseLeftButtonUp += ScratchExpand_Click;
+        return card;
+    }
+
+    private Border BuildScratchAddCard()
+    {
+        var stack = new StackPanel
+        {
+            VerticalAlignment = VerticalAlignment.Center,
+            HorizontalAlignment = System.Windows.HorizontalAlignment.Center
+        };
+        stack.Children.Add(new TextBlock
+        {
+            Text = "+",
+            FontSize = 24,
+            Foreground = Brush(_palette.TextSecondary),
+            HorizontalAlignment = System.Windows.HorizontalAlignment.Center
+        });
+        stack.Children.Add(new TextBlock
+        {
+            Text = "新建便签",
+            FontSize = 11 * FontScaleHelper.ClampScale(_settings.FontScale),
+            Foreground = Brush(_palette.TextSubtle),
+            HorizontalAlignment = System.Windows.HorizontalAlignment.Center
+        });
+
+        var card = new Border
+        {
+            CornerRadius = new CornerRadius(10),
+            Padding = new Thickness(12, 10, 12, 9),
+            Margin = new Thickness(7, 0, 0, 0),
+            MinHeight = 78,
+            Background = Brush(_palette.HuangLiMutedButton),
+            BorderBrush = Brush(_palette.TodoCardBorder),
+            BorderThickness = new Thickness(1),
+            Cursor = System.Windows.Input.Cursors.Hand,
+            Child = stack
+        };
+        card.MouseLeftButtonUp += ScratchExpand_Click;
+        return card;
     }
 
     private void RefreshScratchPreviewTheme(ScratchNote? note = null)
