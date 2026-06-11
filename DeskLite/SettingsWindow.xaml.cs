@@ -1161,19 +1161,10 @@ public partial class SettingsWindow : Window
     {
         BtnDetectLocation.IsEnabled = false;
         LocationIpWarningText.Visibility = Visibility.Collapsed;
-        SetLocationStatus("定位中", "正在使用 Windows 定位");
+        SetLocationStatus("定位中", "正在尝试 Windows / 服务端 / IP 多源定位");
         try
         {
-            var loc = await _locationService.TryDetectByWindowsAsync();
-            if (loc is null)
-            {
-                SetLocationStatus("定位中", "Windows 定位不可用，正在尝试 IP 定位");
-                loc = await _locationService.DetectByIpAsync();
-                if (loc is not null)
-                {
-                    loc = loc with { IpFallbackWarning = true };
-                }
-            }
+            var loc = await _locationService.DetectAsync();
 
             if (loc is null)
             {
