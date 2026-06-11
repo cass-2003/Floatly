@@ -40,9 +40,14 @@ public sealed class TodoStore
     {
         var today = DateTime.Today.ToString("yyyy-MM-dd");
         return _data.Todos
-            .Where(t => !t.Done && t.Date == today && !string.IsNullOrWhiteSpace(t.Time))
+            .Where(t => !t.Done
+                        && !string.IsNullOrWhiteSpace(t.Time)
+                        && GetReminderDate(t) == today)
             .ToList();
     }
+
+    public static string GetReminderDate(TodoItem item) =>
+        string.IsNullOrWhiteSpace(item.DueDate) ? item.Date : item.DueDate!;
 
     public IReadOnlyList<TodoItem> GetActiveTodos() =>
         _data.Todos
@@ -73,7 +78,7 @@ public sealed class TodoStore
     public TodoItem? GetById(string id) =>
         _data.Todos.FirstOrDefault(t => t.Id == id);
 
-    public void Add(string title, string? time = null)
+    public void Add(string title, string? time = null, string? dueDate = null)
     {
         title = title.Trim();
         if (string.IsNullOrWhiteSpace(title))
@@ -81,15 +86,14 @@ public sealed class TodoStore
             return;
         }
 
-        if (!string.IsNullOrWhiteSpace(time) && !TimeSpan.TryParse(time, out _))
-        {
-            time = null;
-        }
+        time = NormalizeTime(time);
+        dueDate = NormalizeDate(dueDate);
 
         _data.Todos.Add(new TodoItem
         {
             Title = title,
-            Time = string.IsNullOrWhiteSpace(time) ? null : time,
+            Time = time,
+            DueDate = dueDate,
             Date = DateTime.Today.ToString("yyyy-MM-dd")
         });
         Save();
@@ -119,7 +123,7 @@ public sealed class TodoStore
         Save();
     }
 
-    public void Update(string id, string title, string? time = null)
+    public void Update(string id, string title, string? time = null, string? dueDate = null)
     {
         var item = _data.Todos.FirstOrDefault(t => t.Id == id);
         if (item is null)
@@ -133,14 +137,35 @@ public sealed class TodoStore
             return;
         }
 
-        if (!string.IsNullOrWhiteSpace(time) && !TimeSpan.TryParse(time, out _))
+        item.Title = title;
+        item.Time = NormalizeTime(time);
+        item.DueDate = NormalizeDate(dueDate);
+        Save();
+    }
+
+    private static string? NormalizeTime(string? time)
+    {
+        if (string.IsNullOrWhiteSpace(time) || !TimeSpan.TryParse(time, out _))
         {
-            time = null;
+            return null;
         }
 
-        item.Title = title;
-        item.Time = string.IsNullOrWhiteSpace(time) ? null : time;
-        Save();
+        return time.Length >= 5 ? time[..5] : time;
+    }
+
+    private static string? NormalizeDate(string? date)
+    {
+        if (string.IsNullOrWhiteSpace(date))
+        {
+            return null;
+        }
+
+        if (DateTime.TryParse(date, out var dt))
+        {
+            return dt.ToString("yyyy-MM-dd");
+        }
+
+        return null;
     }
 
     public void Remove(string id)

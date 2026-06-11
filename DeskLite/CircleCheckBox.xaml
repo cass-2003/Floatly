@@ -1,0 +1,17 @@
+<UserControl x:Class="DeskLite.CircleCheckBox"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             Width="18" Height="18" Cursor="Hand">
+    <ToggleButton x:Name="Toggle" Background="Transparent" BorderThickness="0" Padding="0"
+                  Click="Toggle_Click">
+        <Grid Width="18" Height="18">
+            <Ellipse x:Name="Circle" Width="16" Height="16" StrokeThickness="1.5"
+                     Stroke="{DynamicResource CircleCheckBorderBrush}" Fill="Transparent"
+                     HorizontalAlignment="Center" VerticalAlignment="Center" />
+            <Path x:Name="CheckMark" Data="M 4,9 L 7.5,12.5 L 13,6" StrokeThickness="1.8"
+                  Stroke="{DynamicResource CircleCheckMarkBrush}" StrokeStartLineCap="Round"
+                  StrokeEndLineCap="Round" Visibility="Collapsed"
+                  HorizontalAlignment="Center" VerticalAlignment="Center" />
+        </Grid>
+    </ToggleButton>
+</UserControl>

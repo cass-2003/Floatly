@@ -5,7 +5,6 @@ using System.Windows.Media;
 using DeskLite.Models;
 using DeskLite.Services;
 using WpfButton = System.Windows.Controls.Button;
-using WpfCheckBox = System.Windows.Controls.CheckBox;
 using WpfTextBox = System.Windows.Controls.TextBox;
 using WpfColor = System.Windows.Media.Color;
 
@@ -77,7 +76,8 @@ public partial class TodoListWindow : Window
         {
             items = items
                 .Where(t => t.Title.Contains(_search, StringComparison.OrdinalIgnoreCase)
-                            || (t.Time?.Contains(_search, StringComparison.OrdinalIgnoreCase) ?? false))
+                            || (t.Time?.Contains(_search, StringComparison.OrdinalIgnoreCase) ?? false)
+                            || (t.DueDate?.Contains(_search, StringComparison.OrdinalIgnoreCase) ?? false))
                 .ToList();
         }
 
@@ -115,13 +115,14 @@ public partial class TodoListWindow : Window
         grid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
         grid.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
 
-        var check = new WpfCheckBox
+        var check = new CircleCheckBox
         {
             IsChecked = item.Done,
+            TagId = item.Id,
             VerticalAlignment = VerticalAlignment.Center,
-            Margin = new Thickness(0, 0, 8, 0),
-            Tag = item.Id
+            Margin = new Thickness(0, 0, 8, 0)
         };
+        check.ApplyTheme(_palette);
         check.Click += TodoCheck_Click;
         Grid.SetColumn(check, 0);
         grid.Children.Add(check);
@@ -153,6 +154,26 @@ public partial class TodoListWindow : Window
                     Text = item.Time,
                     FontSize = Scaled(10),
                     Foreground = Brush(_palette.Accent),
+                    FontWeight = FontWeights.SemiBold,
+                    ToolTip = "提醒时间"
+                }
+            });
+        }
+
+        if (display.HasDueDate)
+        {
+            titleRow.Children.Add(new Border
+            {
+                Background = new SolidColorBrush(WpfColor.FromArgb(0x22, 0xF5, 0x9E, 0x0B)),
+                CornerRadius = new CornerRadius(4),
+                Padding = new Thickness(5, 1, 5, 1),
+                Margin = new Thickness(0, 0, 6, 0),
+                VerticalAlignment = VerticalAlignment.Center,
+                Child = new TextBlock
+                {
+                    Text = display.DueDateLabel,
+                    FontSize = Scaled(10),
+                    Foreground = Brush(_palette.TodoPinActive),
                     FontWeight = FontWeights.SemiBold
                 }
             });
@@ -222,7 +243,7 @@ public partial class TodoListWindow : Window
 
     private void TodoCheck_Click(object sender, RoutedEventArgs e)
     {
-        if (sender is WpfCheckBox { Tag: string id })
+        if (sender is CircleCheckBox { TagId: string id })
         {
             _store.ToggleDone(id);
             NotifyChanged();
@@ -276,20 +297,13 @@ public partial class TodoListWindow : Window
             return;
         }
 
-        var defaultText = string.IsNullOrWhiteSpace(item.Time) ? item.Title : $"{item.Time} {item.Title}";
-        var text = InputPrompt.Show("编辑待办", "修改内容（可加时间如 14:00 周会）：", defaultText);
-        if (string.IsNullOrWhiteSpace(text))
+        var result = TodoEditPrompt.Show("编辑待办", "修改待办内容与截止时间：", item, _palette);
+        if (result is null || string.IsNullOrWhiteSpace(result.Title))
         {
             return;
         }
 
-        ParseTodoInput(text, out var title, out var time);
-        if (string.IsNullOrWhiteSpace(title))
-        {
-            return;
-        }
-
-        _store.Update(id, title, time);
+        _store.Update(id, result.Title, result.ReminderTime, result.DueDate);
         NotifyChanged();
     }
 
@@ -297,19 +311,6 @@ public partial class TodoListWindow : Window
     {
         RefreshList();
         _onChanged();
-    }
-
-    private static void ParseTodoInput(string text, out string title, out string? time)
-    {
-        text = text.Trim();
-        time = null;
-        title = text;
-
-        if (text.Length >= 5 && text[2] == ':' && int.TryParse(text[..2], out _))
-        {
-            time = text[..5];
-            title = text[5..].TrimStart();
-        }
     }
 
     private void FilterActive_Click(object sender, RoutedEventArgs e)

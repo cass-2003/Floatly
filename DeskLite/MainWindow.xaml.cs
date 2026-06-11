@@ -18,6 +18,7 @@ public partial class MainWindow : Window
     private readonly WeatherService _weatherService = new();
     private readonly LocationService _locationService = new();
     private readonly TodoReminderService _reminderService = new();
+    private readonly PomodoroService _pomodoro = new();
     private readonly AppSettings _settings;
     private readonly DispatcherTimer _clockTimer;
     private DateTime _lastWeatherFetch = DateTime.MinValue;
@@ -42,6 +43,7 @@ public partial class MainWindow : Window
         _settings = JsonStore.LoadSettings();
         LoadCalendarState();
         SyncAutoStartSetting();
+        InitializePomodoro();
         ApplySettings();
 
         RefreshClock();
@@ -123,6 +125,7 @@ public partial class MainWindow : Window
         CityText.Visibility = _settings.ShowWeather && _settings.ShowCityName ? Visibility.Visible : Visibility.Collapsed;
         YearProgressPanel.Visibility = _settings.ShowYearProgress ? Visibility.Visible : Visibility.Collapsed;
         CountdownPanel.Visibility = _settings.ShowCountdown ? Visibility.Visible : Visibility.Collapsed;
+        PomodoroPanel.Visibility = _settings.ShowPomodoro ? Visibility.Visible : Visibility.Collapsed;
         DailyQuoteText.Visibility = _settings.ShowDailyQuote ? Visibility.Visible : Visibility.Collapsed;
         ScratchBox.Visibility = _settings.ShowScratch ? Visibility.Visible : Visibility.Collapsed;
 
@@ -167,6 +170,7 @@ public partial class MainWindow : Window
             [DeskModuleIds.YearProgress] = YearProgressPanel,
             [DeskModuleIds.Weather] = WeatherPanel,
             [DeskModuleIds.Countdown] = CountdownPanel,
+            [DeskModuleIds.Pomodoro] = PomodoroPanel,
             [DeskModuleIds.DailyQuote] = DailyQuoteText,
             [DeskModuleIds.Scratch] = ScratchBox,
             [DeskModuleIds.Todos] = TodoPanel
@@ -214,6 +218,7 @@ public partial class MainWindow : Window
         CityText.Foreground = Brush(_palette.TextMuted);
         WeatherExtraText.Foreground = Brush(_palette.TextSubtle);
         ApplyProgressTheme();
+        ApplyPomodoroTheme();
         DailyQuoteText.Foreground = Brush(_palette.TextMuted);
         TodoTitleText.Foreground = Brush(_palette.TextMuted);
         EmptyTodoText.Foreground = Brush(_palette.TextEmpty);
@@ -262,6 +267,15 @@ public partial class MainWindow : Window
         var items = TodoList.ItemsSource;
         TodoList.ItemsSource = null;
         TodoList.ItemsSource = items;
+        Dispatcher.BeginInvoke(ApplyCircleCheckTheme, DispatcherPriority.Loaded);
+    }
+
+    private void ApplyCircleCheckTheme()
+    {
+        foreach (var check in FindVisualChildren<CircleCheckBox>(TodoList))
+        {
+            check.ApplyTheme(_palette);
+        }
     }
 
     public void SetTheme(ThemeMode mode)
@@ -290,6 +304,7 @@ public partial class MainWindow : Window
             case "sunrise": _settings.ShowSunriseSunset = !_settings.ShowSunriseSunset; break;
             case "tomorrow": _settings.ShowTomorrowWeather = !_settings.ShowTomorrowWeather; break;
             case "scratch": _settings.ShowScratch = !_settings.ShowScratch; break;
+            case "pomodoro": _settings.ShowPomodoro = !_settings.ShowPomodoro; break;
             case "cityName": _settings.ShowCityName = !_settings.ShowCityName; break;
             case "huangLi": _settings.ShowHuangLi = !_settings.ShowHuangLi; break;
             case "autoLocate":
@@ -402,7 +417,22 @@ public partial class MainWindow : Window
         PopulateHuangLiTimeStrip(huangLi.TimeSlots);
         PopulateHuangLiCurrentCard(huangLi.CurrentTime);
 
+        ApplyHuangLiCollapsedState();
         UpdateWindowHeight();
+    }
+
+    private void ApplyHuangLiCollapsedState()
+    {
+        HuangLiDetailsPanel.Visibility = _settings.HuangLiCollapsed ? Visibility.Collapsed : Visibility.Visible;
+        HuangLiCollapseBtn.Content = _settings.HuangLiCollapsed ? "▶" : "▼";
+    }
+
+    private void HuangLiCollapse_Click(object sender, RoutedEventArgs e)
+    {
+        _settings.HuangLiCollapsed = !_settings.HuangLiCollapsed;
+        ApplyHuangLiCollapsedState();
+        UpdateWindowHeight();
+        JsonStore.SaveSettings(_settings);
     }
 
     private static string JoinHuangLiItems(IReadOnlyList<string> items) =>
@@ -452,6 +482,7 @@ public partial class MainWindow : Window
         var border = Brush(_palette.HuangLiBorder);
         HuangLiPanel.Background = Brush(_palette.HuangLiBackground);
         HuangLiSolarDate.Foreground = Brush(_palette.TextEmpty);
+        HuangLiCollapseBtn.Foreground = Brush(_palette.TextEmpty);
         HuangLiLunarLarge.Foreground = Brush(_palette.HuangLiAccent);
         HuangLiMetaLine.Foreground = Brush(_palette.TextEmpty);
         HuangLiPrevBtn.Foreground = Brush(_palette.HuangLiAccent);
@@ -645,6 +676,108 @@ public partial class MainWindow : Window
         CountdownHint.Foreground = Brush(_palette.TextSubtle);
         CountdownTrack.Background = Brush(_palette.ProgressTrack);
         CountdownFill.Background = fillBrush;
+    }
+
+    private void ApplyPomodoroTheme()
+    {
+        PomodoroPanel.Background = Brush(_palette.HuangLiMutedButton);
+        PomodoroPhaseText.Foreground = Brush(_palette.TextMuted);
+        PomodoroSessionText.Foreground = Brush(_palette.TextSubtle);
+        PomodoroCountdownText.Foreground = Brush(_palette.TextPrimary);
+        PomodoroTrack.Background = Brush(_palette.ProgressTrack);
+        PomodoroStartBtn.Background = Brush(_palette.TodoAccentButton);
+        PomodoroStartBtn.Foreground = System.Windows.Media.Brushes.White;
+        PomodoroResetBtn.Foreground = Brush(_palette.TodoLink);
+        PomodoroResetBtn.BorderBrush = Brush(_palette.InputBorder);
+        RefreshPomodoroUi();
+    }
+
+    private void InitializePomodoro()
+    {
+        ConfigurePomodoroService();
+        _pomodoro.Tick += RefreshPomodoroUi;
+        _pomodoro.PhaseChanged += _ => RefreshPomodoroUi();
+        _pomodoro.Completed += OnPomodoroCompleted;
+        RefreshPomodoroUi();
+    }
+
+    private void ConfigurePomodoroService()
+    {
+        _pomodoro.Configure(
+            _settings.PomodoroWorkMinutes,
+            _settings.PomodoroBreakMinutes,
+            _settings.PomodoroLongBreakMinutes,
+            _settings.PomodoroSessionsBeforeLongBreak);
+    }
+
+    private void RefreshPomodoroUi()
+    {
+        if (!_settings.ShowPomodoro)
+        {
+            return;
+        }
+
+        var remaining = _pomodoro.Remaining;
+        PomodoroCountdownText.Text = $"{(int)remaining.TotalMinutes:D2}:{remaining.Seconds:D2}";
+
+        PomodoroPhaseText.Text = _pomodoro.Phase switch
+        {
+            PomodoroPhase.Working => "专注中",
+            PomodoroPhase.ShortBreak => "休息中",
+            PomodoroPhase.LongBreak => "长休息",
+            _ => "番茄钟"
+        };
+
+        var sessions = _pomodoro.CompletedWorkSessions;
+        PomodoroSessionText.Text = sessions > 0 ? $"第 {sessions} 个番茄" : "准备开始";
+
+        PomodoroStartBtn.Content = _pomodoro.Phase switch
+        {
+            PomodoroPhase.Idle => "开始",
+            _ when _pomodoro.IsRunning => "暂停",
+            _ => "继续"
+        };
+
+        var fillColor = _pomodoro.Phase is PomodoroPhase.ShortBreak or PomodoroPhase.LongBreak
+            ? _palette.PomodoroBreak
+            : _palette.PomodoroWork;
+        PomodoroFill.Background = Brush(fillColor);
+        QueueProgressBarUpdate(PomodoroTrack, PomodoroFill, _pomodoro.ProgressPercent);
+    }
+
+    private void OnPomodoroCompleted(PomodoroPhase phase)
+    {
+        if (!_settings.ShowPomodoro)
+        {
+            return;
+        }
+
+        switch (phase)
+        {
+            case PomodoroPhase.Working:
+                var nextSession = _pomodoro.CompletedWorkSessions + 1;
+                var breakMin = nextSession % _settings.PomodoroSessionsBeforeLongBreak == 0
+                    ? _settings.PomodoroLongBreakMinutes
+                    : _settings.PomodoroBreakMinutes;
+                _tray?.ShowBalloon($"专注完成，休息 {breakMin} 分钟", "番茄钟");
+                break;
+            case PomodoroPhase.ShortBreak:
+            case PomodoroPhase.LongBreak:
+                _tray?.ShowBalloon("休息结束，开始下一个番茄", "番茄钟");
+                break;
+        }
+    }
+
+    private void PomodoroStart_Click(object sender, RoutedEventArgs e)
+    {
+        _pomodoro.StartOrToggle();
+        RefreshPomodoroUi();
+    }
+
+    private void PomodoroReset_Click(object sender, RoutedEventArgs e)
+    {
+        _pomodoro.Reset();
+        RefreshPomodoroUi();
     }
 
     private void QueueProgressBarUpdate(Border track, Border fill, double percent)
@@ -1055,20 +1188,13 @@ public partial class MainWindow : Window
             return;
         }
 
-        var defaultText = string.IsNullOrWhiteSpace(item.Time) ? item.Title : $"{item.Time} {item.Title}";
-        var text = InputPrompt.Show("编辑待办", "修改内容（可加时间如 14:00 周会）：", defaultText);
-        if (string.IsNullOrWhiteSpace(text))
+        var result = TodoEditPrompt.Show("编辑待办", "修改待办内容与截止时间：", item, _palette);
+        if (result is null || string.IsNullOrWhiteSpace(result.Title))
         {
             return;
         }
 
-        ParseTodoInput(text, out var title, out var time);
-        if (string.IsNullOrWhiteSpace(title))
-        {
-            return;
-        }
-
-        _todoStore.Update(id, title, time);
+        _todoStore.Update(id, result.Title, result.ReminderTime, result.DueDate);
         RefreshTodos();
         _todoListWindow?.RefreshFromOutside();
     }
@@ -1263,6 +1389,11 @@ public partial class MainWindow : Window
         _settings.ShowHuangLi = next.ShowHuangLi;
         _settings.ShowYearProgress = next.ShowYearProgress;
         _settings.ShowCountdown = next.ShowCountdown;
+        _settings.ShowPomodoro = next.ShowPomodoro;
+        _settings.PomodoroWorkMinutes = next.PomodoroWorkMinutes;
+        _settings.PomodoroBreakMinutes = next.PomodoroBreakMinutes;
+        _settings.PomodoroLongBreakMinutes = next.PomodoroLongBreakMinutes;
+        _settings.PomodoroSessionsBeforeLongBreak = next.PomodoroSessionsBeforeLongBreak;
         _settings.ShowDailyQuote = next.ShowDailyQuote;
         _settings.ShowSunriseSunset = next.ShowSunriseSunset;
         _settings.ShowTomorrowWeather = next.ShowTomorrowWeather;
@@ -1333,6 +1464,7 @@ public partial class MainWindow : Window
 
         _calendarMode = CalendarViewHelper.ParseMode(_settings.CalendarMode);
 
+        ConfigurePomodoroService();
         ApplySettings();
         RefreshExtras();
         RefreshClock();
@@ -1578,10 +1710,70 @@ public partial class MainWindow : Window
 
     private void TodoCheck_Click(object sender, RoutedEventArgs e)
     {
-        if (sender is System.Windows.Controls.CheckBox { Tag: string id })
+        if (sender is not CircleCheckBox { TagId: string id })
         {
+            return;
+        }
+
+        var titleBlock = FindTitleBlock(sender as DependencyObject, id);
+        if (titleBlock is not null)
+        {
+            titleBlock.Foreground = Brush(_palette.TextEmpty);
+            titleBlock.TextDecorations = TextDecorations.Strikethrough;
+        }
+
+        var timer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(350) };
+        timer.Tick += (_, _) =>
+        {
+            timer.Stop();
             _todoStore.ToggleDone(id);
             RefreshTodos();
+            _todoListWindow?.RefreshFromOutside();
+        };
+        timer.Start();
+    }
+
+    private static TextBlock? FindTitleBlock(DependencyObject? start, string id)
+    {
+        var border = FindAncestor<Border>(start);
+        if (border is null)
+        {
+            return null;
+        }
+
+        return FindVisualChildren<TextBlock>(border).FirstOrDefault(tb => tb.Tag as string == id);
+    }
+
+    private static T? FindAncestor<T>(DependencyObject? start) where T : DependencyObject
+    {
+        var current = start;
+        while (current is not null)
+        {
+            if (current is T match)
+            {
+                return match;
+            }
+
+            current = VisualTreeHelper.GetParent(current);
+        }
+
+        return null;
+    }
+
+    private static IEnumerable<T> FindVisualChildren<T>(DependencyObject parent) where T : DependencyObject
+    {
+        for (var i = 0; i < VisualTreeHelper.GetChildrenCount(parent); i++)
+        {
+            var child = VisualTreeHelper.GetChild(parent, i);
+            if (child is T match)
+            {
+                yield return match;
+            }
+
+            foreach (var nested in FindVisualChildren<T>(child))
+            {
+                yield return nested;
+            }
         }
     }
 

@@ -16,15 +16,17 @@ public partial class SettingsWindow : Window
     private readonly LocationService _locationService = new();
     private bool _syncOpacity;
     private bool _syncFontSize;
+    private bool _isInitializing = true;
 
     public AppSettings? Result { get; private set; }
 
     public SettingsWindow(AppSettings settings)
     {
-        InitializeComponent();
         _original = Clone(settings);
         FontScaleHelper.NormalizeFontSettings(_original);
+        InitializeComponent();
         LoadFromSettings(_original);
+        _isInitializing = false;
     }
 
     private static AppSettings Clone(AppSettings settings)
@@ -78,6 +80,11 @@ public partial class SettingsWindow : Window
 
         ChkYearProgress.IsChecked = s.ShowYearProgress;
         ChkCountdown.IsChecked = s.ShowCountdown;
+        ChkPomodoro.IsChecked = s.ShowPomodoro;
+        TxtPomodoroWork.Text = s.PomodoroWorkMinutes.ToString();
+        TxtPomodoroBreak.Text = s.PomodoroBreakMinutes.ToString();
+        TxtPomodoroLongBreak.Text = s.PomodoroLongBreakMinutes.ToString();
+        TxtPomodoroSessions.Text = s.PomodoroSessionsBeforeLongBreak.ToString();
         ChkDailyQuote.IsChecked = s.ShowDailyQuote;
         ChkScratch.IsChecked = s.ShowScratch;
         ChkTodoReminder.IsChecked = s.ShowTodoReminder;
@@ -86,6 +93,11 @@ public partial class SettingsWindow : Window
 
     private void SetOpacityUi(int percent)
     {
+        if (SliderOpacity is null || TxtOpacity is null)
+        {
+            return;
+        }
+
         _syncOpacity = true;
         SliderOpacity.Value = percent;
         TxtOpacity.Text = percent.ToString();
@@ -94,6 +106,11 @@ public partial class SettingsWindow : Window
 
     private void SetFontSizeUi(int pt)
     {
+        if (SliderFontSize is null || TxtFontSize is null)
+        {
+            return;
+        }
+
         _syncFontSize = true;
         SliderFontSize.Value = pt;
         TxtFontSize.Text = $"{pt}pt";
@@ -122,9 +139,19 @@ public partial class SettingsWindow : Window
         return (int)SliderFontSize.Value;
     }
 
+    private static int ReadPomodoroMinutes(string text, int fallback, int min, int max)
+    {
+        if (int.TryParse(text.Trim(), out var value))
+        {
+            return Math.Clamp(value, min, max);
+        }
+
+        return fallback;
+    }
+
     private void SliderOpacity_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
     {
-        if (_syncOpacity)
+        if (_isInitializing || _syncOpacity || TxtOpacity is null)
         {
             return;
         }
@@ -134,7 +161,7 @@ public partial class SettingsWindow : Window
 
     private void SliderFontSize_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
     {
-        if (_syncFontSize)
+        if (_isInitializing || _syncFontSize || TxtFontSize is null)
         {
             return;
         }
@@ -206,6 +233,11 @@ public partial class SettingsWindow : Window
 
         s.ShowYearProgress = ChkYearProgress.IsChecked == true;
         s.ShowCountdown = ChkCountdown.IsChecked == true;
+        s.ShowPomodoro = ChkPomodoro.IsChecked == true;
+        s.PomodoroWorkMinutes = ReadPomodoroMinutes(TxtPomodoroWork.Text, 25, 1, 120);
+        s.PomodoroBreakMinutes = ReadPomodoroMinutes(TxtPomodoroBreak.Text, 5, 1, 60);
+        s.PomodoroLongBreakMinutes = ReadPomodoroMinutes(TxtPomodoroLongBreak.Text, 15, 1, 60);
+        s.PomodoroSessionsBeforeLongBreak = ReadPomodoroMinutes(TxtPomodoroSessions.Text, 4, 2, 12);
         s.ShowDailyQuote = ChkDailyQuote.IsChecked == true;
         s.ShowScratch = ChkScratch.IsChecked == true;
         s.ShowTodoReminder = ChkTodoReminder.IsChecked == true;

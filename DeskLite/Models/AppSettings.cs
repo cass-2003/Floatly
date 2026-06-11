@@ -13,12 +13,18 @@ public sealed class AppSettings
     public bool AutoLocateCity { get; set; } = true;
     public bool ShowWeekStrip { get; set; } = true;
     public bool ShowHuangLi { get; set; } = true;
+    public bool HuangLiCollapsed { get; set; }
     public bool ShowYearProgress { get; set; }
     public bool ShowCountdown { get; set; } = true;
     public bool ShowDailyQuote { get; set; } = true;
     public bool ShowSunriseSunset { get; set; } = true;
     public bool ShowTomorrowWeather { get; set; } = true;
     public bool ShowScratch { get; set; }
+    public bool ShowPomodoro { get; set; }
+    public int PomodoroWorkMinutes { get; set; } = 25;
+    public int PomodoroBreakMinutes { get; set; } = 5;
+    public int PomodoroLongBreakMinutes { get; set; } = 15;
+    public int PomodoroSessionsBeforeLongBreak { get; set; } = 4;
     public bool ShowTodoReminder { get; set; } = true;
     public bool EnableGlobalHotkey { get; set; } = true;
     public string Theme { get; set; } = "dark";

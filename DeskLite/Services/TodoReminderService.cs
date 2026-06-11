@@ -19,7 +19,7 @@ public sealed class TodoReminderService
         var current = now.ToString("HH:mm");
         foreach (var todo in todos)
         {
-            if (todo.Done || string.IsNullOrWhiteSpace(todo.Time) || todo.Date != today)
+            if (todo.Done || string.IsNullOrWhiteSpace(todo.Time) || TodoStore.GetReminderDate(todo) != today)
             {
                 continue;
             }

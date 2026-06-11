@@ -1,6 +1,7 @@
 <Window x:Class="DeskLite.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:local="clr-namespace:DeskLite"
         Title="DeskLite"
         MinWidth="260"
         MinHeight="380"
@@ -76,8 +77,18 @@
                     <Border x:Name="HuangLiPanel" Background="#FF222830" CornerRadius="8" Padding="8,7" Margin="0,0,0,8"
                             ClipToBounds="True" Visibility="Collapsed">
                         <StackPanel>
-                            <TextBlock x:Name="HuangLiSolarDate" Text="2026年6月11日" FontSize="12"
-                                       Foreground="#94A3B8" HorizontalAlignment="Center" Margin="0,0,0,2" />
+                            <Grid Margin="0,0,0,2">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+                                <TextBlock x:Name="HuangLiSolarDate" Grid.Column="0" Text="2026年6月11日" FontSize="12"
+                                           Foreground="#94A3B8" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                <Button x:Name="HuangLiCollapseBtn" Grid.Column="1" Content="▼" Width="22" Height="22" Padding="0"
+                                        Click="HuangLiCollapse_Click" Background="Transparent" BorderThickness="0"
+                                        Foreground="#94A3B8" Cursor="Hand" FontSize="10" VerticalAlignment="Center"
+                                        ToolTip="收起/展开" />
+                            </Grid>
 
                             <Grid Margin="0,0,0,2">
                                 <Grid.ColumnDefinitions>
@@ -95,6 +106,7 @@
                                         Foreground="#C94133" Cursor="Hand" FontSize="20" FontWeight="Bold" VerticalAlignment="Center" />
                             </Grid>
 
+                            <StackPanel x:Name="HuangLiDetailsPanel">
                             <TextBlock x:Name="HuangLiMetaLine" Text="丙午年 甲午月 丙辰日 [属马] 周四 第24周"
                                        FontSize="12" Foreground="#94A3B8" TextWrapping="Wrap" HorizontalAlignment="Center"
                                        TextAlignment="Center" Margin="0,0,0,8" />
@@ -288,6 +300,7 @@
                                                HorizontalAlignment="Center" />
                                 </Border>
                             </StackPanel>
+                            </StackPanel>
                         </StackPanel>
                     </Border>
 
@@ -334,6 +347,34 @@
                                    FontSize="10" Foreground="#7E8A9C" />
                     </StackPanel>
 
+                    <Border x:Name="PomodoroPanel" Background="#18FFFFFF" CornerRadius="8" Padding="10,8"
+                            Margin="0,0,0,8" ClipToBounds="True" Visibility="Collapsed">
+                        <StackPanel>
+                            <Grid Margin="0,0,0,4">
+                                <TextBlock x:Name="PomodoroPhaseText" Text="番茄钟" FontSize="11"
+                                           Foreground="#8B95A5" VerticalAlignment="Center" />
+                                <TextBlock x:Name="PomodoroSessionText" Text="第 0 个番茄" FontSize="10"
+                                           Foreground="#7E8A9C" HorizontalAlignment="Right" VerticalAlignment="Center" />
+                            </Grid>
+                            <TextBlock x:Name="PomodoroCountdownText" Text="25:00" FontSize="28" FontWeight="SemiBold"
+                                       Foreground="#F5F7FA" HorizontalAlignment="Center" Margin="0,0,0,6" />
+                            <Border x:Name="PomodoroTrack" Height="7" CornerRadius="3.5"
+                                    Background="#28FFFFFF" ClipToBounds="True" Margin="0,0,0,8">
+                                <Border x:Name="PomodoroFill" HorizontalAlignment="Left" CornerRadius="3.5"
+                                        Background="#F97316" Width="0" />
+                            </Border>
+                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                <Button x:Name="PomodoroStartBtn" Content="开始" Width="64" Height="26" Padding="0"
+                                        Click="PomodoroStart_Click" Background="#3B82F6" Foreground="White"
+                                        BorderThickness="0" Cursor="Hand" FontSize="11" />
+                                <Button x:Name="PomodoroResetBtn" Content="重置" Width="52" Height="26" Padding="0"
+                                        Margin="8,0,0,0" Click="PomodoroReset_Click"
+                                        Background="Transparent" Foreground="#94A3B8"
+                                        BorderBrush="#3A4150" BorderThickness="1" Cursor="Hand" FontSize="11" />
+                            </StackPanel>
+                        </StackPanel>
+                    </Border>
+
                     <TextBlock x:Name="DailyQuoteText" FontSize="11" Foreground="#8B95A5"
                                FontStyle="Italic" TextWrapping="Wrap" Margin="0,0,0,8" Visibility="Collapsed" />
 
@@ -370,29 +411,46 @@
                                                 <ColumnDefinition Width="*" />
                                                 <ColumnDefinition Width="Auto" />
                                             </Grid.ColumnDefinitions>
-                                            <CheckBox Grid.Column="0" Margin="0,0,8,0" VerticalAlignment="Center"
-                                                      Tag="{Binding Id}" Click="TodoCheck_Click" />
-                                            <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
-                                                <Border Background="{DynamicResource TodoTimeBadgeBrush}"
-                                                        CornerRadius="4" Padding="4,1" Margin="0,0,6,0" VerticalAlignment="Center">
-                                                    <Border.Style>
-                                                        <Style TargetType="Border">
-                                                            <Setter Property="Visibility" Value="Collapsed" />
-                                                            <Style.Triggers>
-                                                                <DataTrigger Binding="{Binding HasTime}" Value="True">
-                                                                    <Setter Property="Visibility" Value="Visible" />
-                                                                </DataTrigger>
-                                                            </Style.Triggers>
-                                                        </Style>
-                                                    </Border.Style>
-                                                    <TextBlock Text="{Binding Time}" FontSize="10"
-                                                               Foreground="{DynamicResource TodoAccentBrush}"
-                                                               FontWeight="SemiBold" />
-                                                </Border>
-                                                <TextBlock Text="{Binding Title}" Foreground="{DynamicResource TodoTextBrush}"
-                                                           FontSize="13" TextTrimming="CharacterEllipsis" VerticalAlignment="Center"
-                                                           Tag="{Binding Id}" MouseLeftButtonDown="TodoTitle_DoubleClick"
-                                                           Cursor="Hand" ToolTip="双击编辑" />
+                                            <local:CircleCheckBox Grid.Column="0" Margin="0,0,8,0" VerticalAlignment="Center"
+                                                                  TagId="{Binding Id}" Click="TodoCheck_Click" />
+                                            <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                                                <StackPanel Orientation="Horizontal">
+                                                    <Border Background="{DynamicResource TodoTimeBadgeBrush}"
+                                                            CornerRadius="4" Padding="4,1" Margin="0,0,6,0" VerticalAlignment="Center">
+                                                        <Border.Style>
+                                                            <Style TargetType="Border">
+                                                                <Setter Property="Visibility" Value="Collapsed" />
+                                                                <Style.Triggers>
+                                                                    <DataTrigger Binding="{Binding HasTime}" Value="True">
+                                                                        <Setter Property="Visibility" Value="Visible" />
+                                                                    </DataTrigger>
+                                                                </Style.Triggers>
+                                                            </Style>
+                                                        </Border.Style>
+                                                        <TextBlock Text="{Binding Time}" FontSize="10"
+                                                                   Foreground="{DynamicResource TodoAccentBrush}"
+                                                                   FontWeight="SemiBold" ToolTip="提醒时间" />
+                                                    </Border>
+                                                    <Border Background="#22F59E0B" CornerRadius="4" Padding="4,1" Margin="0,0,6,0"
+                                                            VerticalAlignment="Center">
+                                                        <Border.Style>
+                                                            <Style TargetType="Border">
+                                                                <Setter Property="Visibility" Value="Collapsed" />
+                                                                <Style.Triggers>
+                                                                    <DataTrigger Binding="{Binding HasDueDate}" Value="True">
+                                                                        <Setter Property="Visibility" Value="Visible" />
+                                                                    </DataTrigger>
+                                                                </Style.Triggers>
+                                                            </Style>
+                                                        </Border.Style>
+                                                        <TextBlock Text="{Binding DueDateLabel}" FontSize="10"
+                                                                   Foreground="#F59E0B" FontWeight="SemiBold" />
+                                                    </Border>
+                                                    <TextBlock Text="{Binding Title}" Foreground="{DynamicResource TodoTextBrush}"
+                                                               FontSize="13" TextTrimming="CharacterEllipsis" VerticalAlignment="Center"
+                                                               Tag="{Binding Id}" MouseLeftButtonDown="TodoTitle_DoubleClick"
+                                                               Cursor="Hand" ToolTip="双击编辑" />
+                                                </StackPanel>
                                             </StackPanel>
                                             <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center">
                                                 <Button Content="{Binding PinIcon}" Width="22" Height="22" Padding="0"
