@@ -1290,7 +1290,13 @@ public partial class MainWindow : Window
             return;
         }
 
-        var city = cache?.City ?? _settings.ResolvedCityName ?? _settings.City;
+        var city = LocationService.HasUsableCityName(cache?.City)
+            ? cache!.City
+            : LocationService.HasUsableCityName(_settings.ResolvedCityName)
+                ? _settings.ResolvedCityName!
+                : LocationService.HasUsableCityName(_settings.City)
+                    ? _settings.City
+                    : string.Empty;
         var region = cache?.Region ?? _settings.ResolvedRegion;
 
         CityText.Text = FormatCityLabel(city, region);
