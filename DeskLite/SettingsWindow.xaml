@@ -616,9 +616,9 @@
                               Margin="18,16,18,0" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
                     <Grid Width="{Binding ActualWidth, ElementName=ContentScrollViewer}" MaxWidth="1464" HorizontalAlignment="Left">
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="1.02*" MinWidth="324" />
+                            <ColumnDefinition Width="1.16*" MinWidth="360" />
                             <ColumnDefinition Width="16" />
-                            <ColumnDefinition Width="1.02*" MinWidth="324" />
+                            <ColumnDefinition Width="0.88*" MinWidth="286" />
                             <ColumnDefinition Width="16" />
                             <ColumnDefinition Width="1.34*" MinWidth="428" />
                         </Grid.ColumnDefinitions>
@@ -765,12 +765,9 @@
                                                 <ColumnDefinition Width="10" />
                                                 <ColumnDefinition Width="96" />
                                             </Grid.ColumnDefinitions>
-                                            <ComboBox x:Name="TxtCity"
-                                                      Style="{StaticResource SettingsComboBox}"
-                                                      IsEditable="True"
-                                                      IsTextSearchEnabled="False"
-                                                      StaysOpenOnEdit="True"
-                                                      VerticalAlignment="Center" />
+                                            <TextBox x:Name="TxtCity"
+                                                     Style="{StaticResource SettingsTextBox}"
+                                                     VerticalAlignment="Center" />
                                             <Button x:Name="BtnDetectLocation" Grid.Column="2" Content="立即定位"
                                                     Style="{StaticResource SecondaryButton}"
                                                     Padding="0"
@@ -781,7 +778,8 @@
                                         <StackPanel Orientation="Horizontal" Margin="0,0,0,4">
                                             <TextBlock Text="定位状态：" Foreground="{StaticResource SettingsText}" VerticalAlignment="Center" />
                                             <Ellipse Width="8" Height="8" Fill="{StaticResource SettingsGreen}" Margin="0,0,8,0" VerticalAlignment="Center" />
-                                            <TextBlock x:Name="LocationStatusText" Style="{StaticResource HintText}" Text="已定位：Tokyo, Japan" VerticalAlignment="Center" />
+                                            <TextBlock x:Name="LocationStateText" Text="已定位" Foreground="{StaticResource SettingsText}" FontSize="12" VerticalAlignment="Center" Margin="0,0,12,0" />
+                                            <TextBlock x:Name="LocationStatusText" Style="{StaticResource HintText}" Text="Tokyo, Japan" VerticalAlignment="Center" />
                                         </StackPanel>
                                         <TextBlock x:Name="LocationIpWarningText" Style="{StaticResource HintText}"
                                                    Text="当前结果可能来自 IP 定位，建议开启 Windows 位置服务"

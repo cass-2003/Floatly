@@ -404,35 +404,37 @@ public partial class SettingsWindow : Window
 
         if (LocationService.HasUsableCityName(s.ResolvedCityName))
         {
-            LocationStatusText.Text = string.IsNullOrWhiteSpace(s.ResolvedRegion)
-                ? $"定位方式：{method} · {s.ResolvedCityName}"
-                : $"定位方式：{method} · {s.ResolvedCityName}, {s.ResolvedRegion}";
+            SetLocationStatus("已定位", FormatLocatedCity(s.ResolvedCityName!, s.ResolvedRegion));
         }
         else if (LocationService.HasUsableCityName(s.City))
         {
-            LocationStatusText.Text = s.AutoLocateCity
-                ? $"定位方式：{method} · {s.City}"
-                : $"定位方式：手动 · {s.City}";
+            SetLocationStatus(s.AutoLocateCity ? "已定位" : "手动", s.City);
         }
         else if (s.AutoLocateCity && s.WeatherLatitude is not null && s.WeatherLongitude is not null)
         {
-            LocationStatusText.Text = $"定位方式：{method} · 已获取坐标，正在刷新城市名";
+            SetLocationStatus("定位中", $"{method} · 已获取坐标，正在刷新城市名");
         }
         else
         {
-            LocationStatusText.Text = s.AutoLocateCity
-                ? "定位方式：等待自动定位"
-                : "定位方式：手动 · 请输入城市";
+            SetLocationStatus(s.AutoLocateCity ? "等待定位" : "手动", s.AutoLocateCity ? method : "请输入城市");
         }
     }
 
     private void UpdateLocationStatus(LocationService.DetectedLocation loc)
     {
-        var method = LocationService.DescribeSource(loc.Source);
         LocationIpWarningText.Visibility = loc.IpFallbackWarning ? Visibility.Visible : Visibility.Collapsed;
-        LocationStatusText.Text = string.IsNullOrWhiteSpace(loc.Region)
-            ? $"定位方式：{method} · {loc.City}"
-            : $"定位方式：{method} · {loc.City}, {loc.Region}";
+        SetLocationStatus("已定位", FormatLocatedCity(loc.City, loc.Region));
+    }
+
+    private void SetLocationStatus(string state, string detail)
+    {
+        LocationStateText.Text = state;
+        LocationStatusText.Text = detail;
+    }
+
+    private static string FormatLocatedCity(string city, string? region)
+    {
+        return string.IsNullOrWhiteSpace(region) ? city : $"{city}, {region}";
     }
 
     private void SetOpacityUi(int percent)
@@ -1159,13 +1161,13 @@ public partial class SettingsWindow : Window
     {
         BtnDetectLocation.IsEnabled = false;
         LocationIpWarningText.Visibility = Visibility.Collapsed;
-        LocationStatusText.Text = "定位方式：正在使用 Windows 定位";
+        SetLocationStatus("定位中", "正在使用 Windows 定位");
         try
         {
             var loc = await _locationService.TryDetectByWindowsAsync();
             if (loc is null)
             {
-                LocationStatusText.Text = "定位方式：Windows 定位不可用，正在尝试 IP 定位（备用）";
+                SetLocationStatus("定位中", "Windows 定位不可用，正在尝试 IP 定位");
                 loc = await _locationService.DetectByIpAsync();
                 if (loc is not null)
                 {
@@ -1175,7 +1177,7 @@ public partial class SettingsWindow : Window
 
             if (loc is null)
             {
-                LocationStatusText.Text = "定位失败：请检查 Windows 位置权限、网络连接，或改用手动输入城市";
+                SetLocationStatus("定位失败", "请检查权限、网络，或改用手动输入城市");
                 return;
             }
 
