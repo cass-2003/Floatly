@@ -51,6 +51,12 @@ public static class FontScaleHelper
         Set(window.CountdownDays, 13, scale);
         Set(window.CountdownHint, 10, scale);
         window.CountdownTrack.Height = 7 * scale;
+        Set(window.PomodoroPhaseText, 11, scale);
+        Set(window.PomodoroSessionText, 10, scale);
+        Set(window.PomodoroCountdownText, 28, scale);
+        window.PomodoroTrack.Height = 7 * scale;
+        Set(window.PomodoroStartBtn, 11, scale);
+        Set(window.PomodoroResetBtn, 11, scale);
         Set(window.DailyQuoteText, 11, scale);
         Set(window.ScratchBox, 11, scale);
         Set(window.TodoTitleText, 12, scale);

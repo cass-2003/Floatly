@@ -8,6 +8,7 @@ public static class DeskModuleIds
     public const string Countdown = "countdown";
     public const string DailyQuote = "dailyquote";
     public const string Scratch = "scratch";
+    public const string Pomodoro = "pomodoro";
     public const string Todos = "todos";
 
     public static readonly string[] DefaultOrder =
@@ -16,6 +17,7 @@ public static class DeskModuleIds
         YearProgress,
         Weather,
         Countdown,
+        Pomodoro,
         DailyQuote,
         Scratch,
         Todos
@@ -30,6 +32,7 @@ public static class DeskModuleIds
             [Countdown] = "倒数日",
             [DailyQuote] = "每日一句",
             [Scratch] = "速记便签",
+            [Pomodoro] = "番茄钟",
             [Todos] = "今日待办"
         };
 

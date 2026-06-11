@@ -247,9 +247,48 @@
                         <TextBlock Style="{StaticResource SectionTitle}" Text="桌面模块" />
                         <CheckBox x:Name="ChkYearProgress" Content="年进度" />
                         <CheckBox x:Name="ChkCountdown" Content="倒数日" />
+                        <CheckBox x:Name="ChkPomodoro" Content="番茄钟" />
                         <CheckBox x:Name="ChkDailyQuote" Content="每日一句" />
                         <CheckBox x:Name="ChkScratch" Content="速记便签" />
                         <CheckBox x:Name="ChkTodoReminder" Content="待办到时提醒" />
+
+                        <TextBlock Style="{StaticResource SectionTitle}" Text="番茄钟时长（分钟）" Margin="0,8,0,10" />
+                        <Grid Margin="0,0,0,6">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Text="专注" VerticalAlignment="Center" />
+                            <TextBox x:Name="TxtPomodoroWork" Grid.Column="1" Style="{StaticResource SettingsNumericBox}"
+                                     Width="56" />
+                        </Grid>
+                        <Grid Margin="0,0,0,6">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Text="短休息" VerticalAlignment="Center" />
+                            <TextBox x:Name="TxtPomodoroBreak" Grid.Column="1" Style="{StaticResource SettingsNumericBox}"
+                                     Width="56" />
+                        </Grid>
+                        <Grid Margin="0,0,0,6">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Text="长休息" VerticalAlignment="Center" />
+                            <TextBox x:Name="TxtPomodoroLongBreak" Grid.Column="1" Style="{StaticResource SettingsNumericBox}"
+                                     Width="56" />
+                        </Grid>
+                        <Grid Margin="0,0,0,0">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Text="长休息前番茄数" VerticalAlignment="Center" />
+                            <TextBox x:Name="TxtPomodoroSessions" Grid.Column="1" Style="{StaticResource SettingsNumericBox}"
+                                     Width="56" />
+                        </Grid>
                     </StackPanel>
                 </ScrollViewer>
             </TabItem>

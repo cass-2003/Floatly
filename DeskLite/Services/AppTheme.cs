@@ -60,6 +60,8 @@ public sealed class AppThemePalette
     public WpfColor ProgressTrack { get; init; } = WpfColor.FromArgb(0x28, 0xFF, 0xFF, 0xFF);
     public WpfColor ProgressFillStart { get; init; } = WpfColor.FromRgb(0x3B, 0x82, 0xF6);
     public WpfColor ProgressFillEnd { get; init; } = WpfColor.FromRgb(0x60, 0xA5, 0xFA);
+    public WpfColor PomodoroWork { get; init; } = WpfColor.FromRgb(0xF9, 0x73, 0x16);
+    public WpfColor PomodoroBreak { get; init; } = WpfColor.FromRgb(0x22, 0xC5, 0x5E);
 
     public static AppThemePalette For(ThemeMode mode) => mode switch
     {
@@ -119,7 +121,9 @@ public sealed class AppThemePalette
         HuangLiMutedButton = WpfColor.FromArgb(0x20, 0xFF, 0xFF, 0xFF),
         ProgressTrack = WpfColor.FromArgb(0x28, 0xFF, 0xFF, 0xFF),
         ProgressFillStart = WpfColor.FromRgb(0x3B, 0x82, 0xF6),
-        ProgressFillEnd = WpfColor.FromRgb(0x60, 0xA5, 0xFA)
+        ProgressFillEnd = WpfColor.FromRgb(0x60, 0xA5, 0xFA),
+        PomodoroWork = WpfColor.FromRgb(0xF9, 0x73, 0x16),
+        PomodoroBreak = WpfColor.FromRgb(0x22, 0xC5, 0x5E)
     };
 
     private static readonly AppThemePalette Light = new()
@@ -171,6 +175,8 @@ public sealed class AppThemePalette
         HuangLiMutedButton = WpfColor.FromArgb(0x12, 0x15, 0x23, 0x42),
         ProgressTrack = WpfColor.FromArgb(0x40, 0x94, 0xA3, 0xB8),
         ProgressFillStart = WpfColor.FromRgb(0x25, 0x63, 0xEB),
-        ProgressFillEnd = WpfColor.FromRgb(0x3B, 0x82, 0xF6)
+        ProgressFillEnd = WpfColor.FromRgb(0x3B, 0x82, 0xF6),
+        PomodoroWork = WpfColor.FromRgb(0xEA, 0x58, 0x0C),
+        PomodoroBreak = WpfColor.FromRgb(0x16, 0xA3, 0x4A)
     };
 }
