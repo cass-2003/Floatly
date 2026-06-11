@@ -139,17 +139,17 @@ public partial class MainWindow : Window
         ScratchPanel.Visibility = _settings.ShowScratch ? Visibility.Visible : Visibility.Collapsed;
 
         var showSun = _settings.ShowWeather && _settings.ShowSunriseSunset;
-        SunriseLineText.Visibility = showSun ? Visibility.Visible : Visibility.Collapsed;
-        SunsetLineText.Visibility = showSun ? Visibility.Visible : Visibility.Collapsed;
+        SunriseRow.Visibility = showSun ? Visibility.Visible : Visibility.Collapsed;
+        SunsetRow.Visibility = showSun ? Visibility.Visible : Visibility.Collapsed;
         TomorrowRow.Visibility = _settings.ShowWeather && _settings.ShowTomorrowWeather
             ? Visibility.Visible
             : Visibility.Collapsed;
 
         var showWeek = _settings.ShowWeekStrip;
         CalendarSection.Visibility = showWeek ? Visibility.Visible : Visibility.Collapsed;
-        HuangLiPanel.Visibility = _settings.ShowHuangLi ? Visibility.Visible : Visibility.Collapsed;
         LunarText.Visibility = _settings.ShowHuangLi ? Visibility.Collapsed : Visibility.Visible;
         LunarSubText.Visibility = _settings.ShowHuangLi ? Visibility.Collapsed : Visibility.Visible;
+        ApplyHuangLiCollapsedState();
 
         Width = Math.Clamp(_settings.WindowWidth, 320, 480);
         if (_settings.UserCustomSize)
@@ -266,7 +266,9 @@ public partial class MainWindow : Window
         LunarText.Foreground = Brush(_palette.TextTertiary);
         LunarSubText.Foreground = Brush(_palette.TextSubtle);
         HeaderBlock.Background = Brush(FloatlyDesignTokens.CardBackground);
-        HeaderBlock.BorderBrush = Brush(_palette.PanelBorder);
+        HeaderBlock.BorderBrush = Brush(FloatlyDesignTokens.CardBorder);
+        ApplyModuleCardTheme();
+        BottomToolbar.Background = Brush(FloatlyDesignTokens.ToolbarBackground);
         ApplyHuangLiTheme();
         WeatherTempText.Foreground = Brush(textPrimary);
         WeatherDescText.Foreground = Brush(textPrimary);
@@ -345,6 +347,35 @@ public partial class MainWindow : Window
         {
             ContentBackdrop.Background = new SolidColorBrush(FloatlyDesignTokens.ContentBackdrop);
         }
+    }
+
+    private void ApplyModuleCardTheme()
+    {
+        var cardBg = Brush(FloatlyDesignTokens.CardBackground);
+        var cardBorder = Brush(FloatlyDesignTokens.CardBorder);
+        var trackBg = Brush(FloatlyDesignTokens.ProgressTrack);
+
+        foreach (var card in new[]
+                 {
+                     CountdownCard, YearProgressCard, SalaryPanel, HuangLiPanel, ScratchPanel
+                 })
+        {
+            card.Background = cardBg;
+            card.BorderBrush = cardBorder;
+        }
+
+        CountdownTrack.Background = trackBg;
+        YearProgressTrack.Background = trackBg;
+        OffWorkTrack.Background = trackBg;
+        CountdownTrack.CornerRadius = new CornerRadius(FloatlyDesignTokens.ProgressBarRadius);
+        YearProgressTrack.CornerRadius = new CornerRadius(FloatlyDesignTokens.ProgressBarRadius);
+        OffWorkTrack.CornerRadius = new CornerRadius(FloatlyDesignTokens.ProgressBarRadius);
+        CountdownFill.CornerRadius = new CornerRadius(FloatlyDesignTokens.ProgressBarRadius);
+        YearProgressFill.CornerRadius = new CornerRadius(FloatlyDesignTokens.ProgressBarRadius);
+        OffWorkFill.CornerRadius = new CornerRadius(FloatlyDesignTokens.ProgressBarRadius);
+        CountdownTrack.Height = FloatlyDesignTokens.ProgressBarHeight;
+        YearProgressTrack.Height = FloatlyDesignTokens.ProgressBarHeight;
+        OffWorkTrack.Height = FloatlyDesignTokens.ProgressBarHeight;
     }
 
     private void ApplySkinVideo()
@@ -541,7 +572,7 @@ public partial class MainWindow : Window
         ClockText.Text = now.ToString(timeFormat, CultureInfo.InvariantCulture);
         if (_settings.ShowSeconds)
         {
-            ClockSecondsText.Text = now.ToString("ss", CultureInfo.InvariantCulture);
+            ClockSecondsText.Text = ":" + now.ToString("ss", CultureInfo.InvariantCulture);
             ClockSecondsText.Visibility = Visibility.Visible;
         }
         else
@@ -1359,14 +1390,13 @@ public partial class MainWindow : Window
 
         if (result is null)
         {
-            WeatherDescText.Text = "加载失败";
             WeatherIconImage.Source = null;
             WeatherTempText.Text = string.Empty;
             WeatherRangeText.Text = string.Empty;
-            WeatherFeelsText.Text = string.Empty;
+            WeatherFeelsText.Text = "加载失败";
             RefreshCityDisplay();
-            SunriseLineText.Visibility = Visibility.Collapsed;
-            SunsetLineText.Visibility = Visibility.Collapsed;
+            SunriseRow.Visibility = Visibility.Collapsed;
+            SunsetRow.Visibility = Visibility.Collapsed;
             TomorrowRow.Visibility = Visibility.Collapsed;
             return;
         }
@@ -1468,7 +1498,7 @@ public partial class MainWindow : Window
         WeatherIconImage.Source = WeatherIconLoader.Load(iconSlug);
 
         WeatherTempText.Text = $"{cache.Temperature}°";
-        WeatherDescText.Text = cache.Description;
+        WeatherDescText.Visibility = Visibility.Collapsed;
         WeatherRangeText.Text = $"{cache.TempMin}° ~ {cache.TempMax}°";
         var feels = cache.FeelsLike ?? cache.Temperature;
         WeatherFeelsText.Text = $"体感 {feels}°";
@@ -1476,22 +1506,24 @@ public partial class MainWindow : Window
         var showSun = _settings.ShowWeather && _settings.ShowSunriseSunset;
         if (showSun && cache.Sunrise is not null)
         {
-            SunriseLineText.Text = $"🌅 日出 {cache.Sunrise}";
-            SunriseLineText.Visibility = Visibility.Visible;
+            SunriseIconImage.Source = WeatherIconLoader.Load("sunrise");
+            SunriseLineText.Text = $"日出 {cache.Sunrise}";
+            SunriseRow.Visibility = Visibility.Visible;
         }
         else
         {
-            SunriseLineText.Visibility = Visibility.Collapsed;
+            SunriseRow.Visibility = Visibility.Collapsed;
         }
 
         if (showSun && cache.Sunset is not null)
         {
-            SunsetLineText.Text = $"🌇 日落 {cache.Sunset}";
-            SunsetLineText.Visibility = Visibility.Visible;
+            SunsetIconImage.Source = WeatherIconLoader.Load("sunset");
+            SunsetLineText.Text = $"日落 {cache.Sunset}";
+            SunsetRow.Visibility = Visibility.Visible;
         }
         else
         {
-            SunsetLineText.Visibility = Visibility.Collapsed;
+            SunsetRow.Visibility = Visibility.Collapsed;
         }
 
         if (_settings.ShowWeather && _settings.ShowTomorrowWeather
@@ -1502,11 +1534,7 @@ public partial class MainWindow : Window
                     ? WeatherIconMapper.SlugForCode(code, isDay: true)
                     : "partly-cloudy-day");
             TomorrowIconImage.Source = WeatherIconLoader.Load(tomorrowSlug);
-
-            var tomorrowDesc = cache.TomorrowDescription ?? string.Empty;
-            TomorrowLineText.Text = string.IsNullOrWhiteSpace(tomorrowDesc)
-                ? $"明天 {cache.TomorrowMin}°~{cache.TomorrowMax}°"
-                : $"明天 {tomorrowDesc} {cache.TomorrowMin}°~{cache.TomorrowMax}°";
+            TomorrowLineText.Text = $"明天 {cache.TomorrowMin}° ~ {cache.TomorrowMax}°";
             TomorrowRow.Visibility = Visibility.Visible;
         }
         else
@@ -1655,9 +1683,9 @@ public partial class MainWindow : Window
         var theme = AppThemePalette.Parse(_settings.Theme);
         if (note is null)
         {
-            ScratchPreviewCard.Background = Brush(_palette.TodoCardBackground);
-            ScratchPreviewCard.BorderBrush = Brush(_palette.TodoCardBorder);
-            ScratchPreviewTitle.Foreground = Brush(_palette.TextSecondary);
+            ScratchPreviewCard.Background = Brush(FloatlyDesignTokens.ScratchYellow);
+            ScratchPreviewCard.BorderBrush = Brush(FloatlyDesignTokens.CardBorder);
+            ScratchPreviewTitle.Foreground = Brush(System.Windows.Media.Color.FromRgb(0xE8, 0xD5, 0xA0));
             ScratchPreviewContent.Foreground = Brush(_palette.TextSubtle);
             return;
         }

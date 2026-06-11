@@ -36,22 +36,25 @@ public static class FontScaleHelper
     {
         scale = ClampScale(scale);
 
-        Set(window.ClockText, 42, scale);
-        Set(window.ClockSecondsText, 17, scale);
+        Set(window.ClockText, FloatlyDesignTokens.ClockFontSize, scale);
+        Set(window.ClockSecondsText, FloatlyDesignTokens.ClockSecondsFontSize, scale);
         Set(window.DateText, 12, scale);
         Set(window.LunarText, 12, scale);
         Set(window.LunarSubText, 11, scale);
         Set(window.YearProgressLabel, 11, scale);
         Set(window.YearProgressPercent, 13, scale);
         Set(window.YearProgressDetail, 10, scale);
-        window.YearProgressTrack.Height = 7 * scale;
+        window.YearProgressTrack.Height = FloatlyDesignTokens.ProgressBarHeight * scale;
         Set(window.CityText, 11, scale);
-        window.WeatherIconImage.Width = 30 * scale;
-        window.WeatherIconImage.Height = 30 * scale;
+        window.WeatherIconImage.Width = 36 * scale;
+        window.WeatherIconImage.Height = 36 * scale;
+        window.SunriseIconImage.Width = 14 * scale;
+        window.SunriseIconImage.Height = 14 * scale;
+        window.SunsetIconImage.Width = 14 * scale;
+        window.SunsetIconImage.Height = 14 * scale;
         window.TomorrowIconImage.Width = 14 * scale;
         window.TomorrowIconImage.Height = 14 * scale;
-        Set(window.WeatherTempText, 28, scale);
-        Set(window.WeatherDescText, 13, scale);
+        Set(window.WeatherTempText, 30, scale);
         Set(window.WeatherRangeText, 11, scale);
         Set(window.WeatherFeelsText, 11, scale);
         Set(window.SunriseLineText, 11, scale);
@@ -60,7 +63,8 @@ public static class FontScaleHelper
         Set(window.CountdownLabel, 11, scale);
         Set(window.CountdownDays, 13, scale);
         Set(window.CountdownHint, 10, scale);
-        window.CountdownTrack.Height = 7 * scale;
+        window.CountdownTrack.Height = FloatlyDesignTokens.ProgressBarHeight * scale;
+        window.OffWorkTrack.Height = FloatlyDesignTokens.ProgressBarHeight * scale;
         Set(window.PomodoroPhaseText, 11, scale);
         Set(window.PomodoroSessionText, 10, scale);
         Set(window.PomodoroCountdownText, 16, scale);

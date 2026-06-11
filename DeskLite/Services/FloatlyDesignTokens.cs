@@ -6,24 +6,29 @@ namespace DeskLite.Services;
 public static class FloatlyDesignTokens
 {
     public const double PanelCornerRadius = 16;
-    public const double CardCornerRadius = 14;
+    public const double CardCornerRadius = 18;
     public const double CardPadding = 14;
     public const double ModuleGap = 12;
-    public const double ClockFontSize = 36;
+    public const double ClockFontSize = 48;
+    public const double ClockSecondsFontSize = 20;
     public const double DateFontSize = 12;
     public const double CardTitleFontSize = 13;
     public const double BodyFontSize = 12;
+    public const double ProgressBarHeight = 8;
+    public const double ProgressBarRadius = 4;
 
-    public static WpfColor Background => WpfColor.FromRgb(0x13, 0x17, 0x22);
+    public static WpfColor Background => WpfColor.FromRgb(0x0D, 0x0F, 0x14);
     public static WpfColor PanelBackground => WpfColor.FromArgb(0xF0, 0x13, 0x17, 0x22);
-    public static WpfColor CardBackground => WpfColor.FromArgb(0xE8, 0x16, 0x19, 0x22);
-    public static WpfColor ContentBackdrop => WpfColor.FromArgb(0xE6, 0x10, 0x14, 0x1C);
-    public static WpfColor ToolbarBackground => WpfColor.FromArgb(0xD0, 0x1A, 0x1F, 0x28);
-    public static WpfColor CardBorder => WpfColor.FromArgb(0x0D, 0xFF, 0xFF, 0xFF);
+    public static WpfColor CardBackground => WpfColor.FromArgb(0xF2, 0x1E, 0x20, 0x28);
+    public static WpfColor ContentBackdrop => WpfColor.FromArgb(0xCC, 0x0D, 0x0F, 0x14);
+    public static WpfColor ToolbarBackground => WpfColor.FromArgb(0xD8, 0x1A, 0x1D, 0x24);
+    public static WpfColor CardBorder => WpfColor.FromArgb(0x14, 0xFF, 0xFF, 0xFF);
     public static WpfColor AccentBlue => WpfColor.FromRgb(0x5C, 0x8D, 0xFF);
     public static WpfColor AccentOrange => WpfColor.FromRgb(0xFF, 0x8A, 0x72);
     public static WpfColor AccentGreen => WpfColor.FromRgb(0x55, 0xD3, 0x8A);
     public static WpfColor TextPrimary => WpfColor.FromRgb(0xFF, 0xFF, 0xFF);
     public static WpfColor TextSecondary => WpfColor.FromArgb(0xA6, 0xFF, 0xFF, 0xFF);
-    public static WpfColor ProgressTrack => WpfColor.FromArgb(0x28, 0xFF, 0xFF, 0xFF);
+    public static WpfColor ProgressTrack => WpfColor.FromArgb(0x38, 0xFF, 0xFF, 0xFF);
+    public static WpfColor ScratchYellow => WpfColor.FromArgb(0x55, 0x3D, 0x35, 0x20);
+    public static WpfColor ScratchBlue => WpfColor.FromArgb(0x44, 0x1A, 0x2A, 0x42);
 }
