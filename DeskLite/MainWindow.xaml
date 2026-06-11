@@ -581,18 +581,15 @@
                             </Border>
                         </Grid>
 
-                        <Border x:Name="DailyQuoteBanner" Style="{StaticResource FloatlyCard}" Margin="0,0,0,10" Padding="18,16" Visibility="Collapsed">
+                        <Border x:Name="DailyQuoteBanner" Style="{StaticResource FloatlyCard}" Margin="0,0,0,10" Padding="0" Visibility="Collapsed">
                             <Grid>
-                                <Border CornerRadius="14" Opacity="0.42">
-                                    <Border.Background>
-                                        <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
-                                            <GradientStop Color="#324673" Offset="0" />
-                                            <GradientStop Color="#614A5D" Offset="0.65" />
-                                            <GradientStop Color="#0F1827" Offset="1" />
-                                        </LinearGradientBrush>
-                                    </Border.Background>
-                                </Border>
-                                <StackPanel Margin="0">
+                                <Image Source="Assets/CardBackgrounds/star-sky-dark.png"
+                                       Stretch="UniformToFill"
+                                       Opacity="0.46"
+                                       IsHitTestVisible="False"
+                                       RenderOptions.BitmapScalingMode="HighQuality" />
+                                <Border Background="#B80E1625" />
+                                <StackPanel Margin="18,16">
                                     <TextBlock Text="“  每日一句" FontSize="15" FontWeight="SemiBold" Foreground="#DDE8FF" Margin="0,0,0,10" />
                                     <TextBlock x:Name="DailyQuoteText" FontSize="20" Foreground="#FFFFFF" FontWeight="SemiBold"
                                                TextWrapping="Wrap" Visibility="Collapsed" />
