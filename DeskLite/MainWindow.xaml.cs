@@ -12,6 +12,12 @@ namespace DeskLite;
 
 public partial class MainWindow : Window
 {
+    private const double DefaultWindowWidth = 420;
+    private const double DefaultWindowHeight = 620;
+    private const double MaxWindowWidth = 980;
+    private const double MaxWindowHeight = 1320;
+    private const double LegacyForcedMinWidth = 880;
+    private const double LegacyForcedMinHeight = 900;
     private static readonly string[] WeekLabels = ["一", "二", "三", "四", "五", "六", "日"];
 
     private readonly TodoStore _todoStore = new();
@@ -153,11 +159,11 @@ public partial class MainWindow : Window
         LunarSubText.Visibility = _settings.ShowHuangLi ? Visibility.Collapsed : Visibility.Visible;
         ApplyHuangLiCollapsedState();
 
-        Width = Math.Clamp(_settings.WindowWidth, 880, 980);
+        Width = NormalizeWindowWidth(_settings.WindowWidth);
         if (_settings.UserCustomSize)
         {
             _suppressSizePersist = true;
-            Height = Math.Clamp(_settings.WindowHeight, MinHeight, 1320);
+            Height = NormalizeWindowHeight(_settings.WindowHeight);
             _suppressSizePersist = false;
         }
         else
@@ -783,23 +789,43 @@ public partial class MainWindow : Window
             return;
         }
 
-        var headerHeight = _settings.ShowHuangLi ? 190.0 : 142.0;
-        var scrollBody = 860;
+        var headerHeight = _settings.ShowHuangLi ? 176.0 : 132.0;
+        var scrollBody = 330;
         const double toolbarHeight = 58;
         const double todoInput = 0;
-        const double chrome = 50;
+        const double chrome = 38;
 
         var height = headerHeight + scrollBody + toolbarHeight + todoInput + chrome;
 
         if (_settings.ShowWeekStrip)
         {
-            height += 140;
+            height += 110;
         }
 
         _suppressSizePersist = true;
-        Height = Math.Clamp(height, MinHeight, 1320);
+        Height = Math.Clamp(height, MinHeight, MaxWindowHeight);
         _settings.WindowHeight = Height;
         _suppressSizePersist = false;
+    }
+
+    private double NormalizeWindowWidth(double width)
+    {
+        if (!_settings.UserCustomSize || width >= LegacyForcedMinWidth)
+        {
+            return DefaultWindowWidth;
+        }
+
+        return Math.Clamp(width, MinWidth, MaxWindowWidth);
+    }
+
+    private double NormalizeWindowHeight(double height)
+    {
+        if (height >= LegacyForcedMinHeight)
+        {
+            return DefaultWindowHeight;
+        }
+
+        return Math.Clamp(height, MinHeight, MaxWindowHeight);
     }
 
     private void OnWindowSizeChanged(object sender, SizeChangedEventArgs e)

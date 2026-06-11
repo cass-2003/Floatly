@@ -3,10 +3,10 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:local="clr-namespace:DeskLite"
         Title="Floatly"
-        MinWidth="880"
-        MinHeight="900"
-        Width="900"
-        Height="1180"
+        MinWidth="360"
+        MinHeight="420"
+        Width="420"
+        Height="620"
         WindowStyle="None"
         AllowsTransparency="True"
         Background="Transparent"
@@ -388,7 +388,7 @@
                         <StackPanel x:Name="ExtraModuleStack" Margin="0,0,0,0" Visibility="Collapsed" />
 
                         <!-- Countdown + Year Progress row -->
-                        <Grid Margin="0,0,0,10" MinHeight="150">
+                        <Grid Margin="0,0,0,10" MinHeight="92">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*" />
                                 <ColumnDefinition Width="14" />
@@ -417,7 +417,7 @@
                         </Grid>
 
                         <!-- Todo + Pomodoro row -->
-                        <Grid Margin="0,0,0,10" MinHeight="250">
+                        <Grid Margin="0,0,0,10" MinHeight="190">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*" />
                                 <ColumnDefinition Width="14" />
@@ -536,7 +536,7 @@
                         </Grid>
 
                         <!-- OffWork + Salary row -->
-                        <Grid Margin="0,0,0,10" MinHeight="170">
+                        <Grid Margin="0,0,0,10" MinHeight="120">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*" />
                                 <ColumnDefinition Width="14" />
@@ -586,7 +586,7 @@
                             </Border>
                         </Grid>
 
-                        <Border x:Name="DailyQuoteBanner" Style="{StaticResource FloatlyCard}" Margin="0,0,0,10" Padding="0" MinHeight="150" Visibility="Collapsed">
+                        <Border x:Name="DailyQuoteBanner" Style="{StaticResource FloatlyCard}" Margin="0,0,0,10" Padding="0" MinHeight="100" Visibility="Collapsed">
                             <Grid>
                                 <Image Source="Assets/CardBackgrounds/star-sky-dark.png"
                                        Stretch="UniformToFill"
@@ -604,7 +604,7 @@
                         </Border>
 
                         <!-- Scratch notes -->
-                        <Border x:Name="ScratchPanel" Style="{StaticResource FloatlyCard}" Margin="0,0,0,10" Padding="16" MinHeight="126"
+                        <Border x:Name="ScratchPanel" Style="{StaticResource FloatlyCard}" Margin="0,0,0,10" Padding="16" MinHeight="96"
                                 Cursor="Hand" MouseLeftButtonUp="ScratchPanel_Click" Visibility="Collapsed">
                             <StackPanel>
                                 <Grid Margin="0,0,0,6">
@@ -630,7 +630,7 @@
                         </Border>
 
                         <!-- Calendar: week + month side by side -->
-                        <Grid x:Name="CalendarSection" Margin="0,0,0,0" MinHeight="260" Visibility="Collapsed">
+                        <Grid x:Name="CalendarSection" Margin="0,0,0,0" MinHeight="220" Visibility="Collapsed">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*" />
                                 <ColumnDefinition Width="14" />
