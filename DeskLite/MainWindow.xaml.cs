@@ -107,6 +107,7 @@ public partial class MainWindow : Window
 
     private void Window_SourceInitialized(object? sender, EventArgs e)
     {
+        WindowHelper.EnableGlassBackdrop(this);
         WindowHelper.EnableBorderlessResize(this);
         WindowHelper.SetClickThrough(this, _settings.ClickThrough);
         if (_settings.EnableGlobalHotkey)
@@ -211,6 +212,8 @@ public partial class MainWindow : Window
         SettingsIcon.Source = DashboardIconLoader.Load("setting");
         MoreIcon.Source = DashboardIconLoader.Load("sandian");
         HuangLiCalendarIcon.Source = DashboardIconLoader.Load("rili");
+        SunriseIconImage.Source = DashboardIconLoader.Load("richu");
+        SunsetIconImage.Source = DashboardIconLoader.Load("richurila");
         CountdownIcon.Source = DashboardIconLoader.Load("huomiao");
         YearProgressIcon.Source = DashboardIconLoader.Load("sangexinhao");
         OffWorkIcon.Source = DashboardIconLoader.Load("shizhong");
@@ -377,9 +380,14 @@ public partial class MainWindow : Window
         var cardBorder = Brush(FloatlyDesignTokens.CardBorder);
         var trackBg = Brush(FloatlyDesignTokens.ProgressTrack);
 
+        Resources["WidgetGlassCardBrush"] = cardBg;
+        Resources["WidgetGlassBorderBrush"] = cardBorder;
+        Resources["WidgetGlassToolbarBrush"] = CreateToolbarBrush();
+
         foreach (var card in new[]
                  {
-                     CountdownCard, YearProgressCard, OffWorkCard, SalaryPanel, HuangLiPanel, ScratchPanel
+                     CountdownCard, YearProgressCard, OffWorkCard, SalaryPanel, HuangLiPanel, PomodoroCard,
+                     DailyQuoteBanner, ScratchPanel
                  })
         {
             card.Background = cardBg;
@@ -402,9 +410,9 @@ public partial class MainWindow : Window
 
     private void ApplyWidgetGlassResources()
     {
-        Resources["TodoCardBgBrush"] = Brush(0x24, 0xE8, 0xF4, 0xFF);
-        Resources["TodoCardBorderBrush"] = Brush(0x32, 0xE4, 0xF0, 0xFF);
-        TodoOverflowBtn.Background = Brush(0x26, 0xE8, 0xF4, 0xFF);
+        Resources["TodoCardBgBrush"] = Brush(0x2C, 0xE8, 0xF4, 0xFF);
+        Resources["TodoCardBorderBrush"] = Brush(0x3C, 0xE4, 0xF0, 0xFF);
+        TodoOverflowBtn.Background = Brush(0x2E, 0xE8, 0xF4, 0xFF);
         TodoCountBadge.Background = Brush(0x24, 0x5C, 0x8D, 0xFF);
         ScratchCountBadge.Background = Brush(0x24, 0x5C, 0x8D, 0xFF);
     }
@@ -436,8 +444,8 @@ public partial class MainWindow : Window
             GradientStops =
             {
                 new GradientStop(FloatlyDesignTokens.PanelGlow, 0.0),
-                new GradientStop(FloatlyDesignTokens.PanelBackground, 0.42),
-                new GradientStop(System.Windows.Media.Color.FromArgb(0xF6, 0x07, 0x14, 0x25), 1.0)
+                new GradientStop(FloatlyDesignTokens.PanelBackground, 0.38),
+                new GradientStop(System.Windows.Media.Color.FromArgb(0xCC, 0x07, 0x14, 0x25), 1.0)
             }
         };
     }
@@ -446,9 +454,9 @@ public partial class MainWindow : Window
         CreateLinearBrush(
             [
                 new GradientStop(FloatlyDesignTokens.ContentBackdrop, 0.0),
-                new GradientStop(System.Windows.Media.Color.FromArgb(0x18, 0xFF, 0xFF, 0xFF), 0.18),
-                new GradientStop(System.Windows.Media.Color.FromArgb(0x1C, 0x12, 0x2A, 0x45), 0.58),
-                new GradientStop(System.Windows.Media.Color.FromArgb(0x32, 0x07, 0x15, 0x27), 1.0)
+                new GradientStop(System.Windows.Media.Color.FromArgb(0x10, 0xFF, 0xFF, 0xFF), 0.18),
+                new GradientStop(System.Windows.Media.Color.FromArgb(0x12, 0x12, 0x2A, 0x45), 0.58),
+                new GradientStop(System.Windows.Media.Color.FromArgb(0x26, 0x07, 0x15, 0x27), 1.0)
             ],
             new System.Windows.Point(0, 0),
             new System.Windows.Point(1, 1));
@@ -457,7 +465,8 @@ public partial class MainWindow : Window
         CreateLinearBrush(
             [
                 new GradientStop(FloatlyDesignTokens.CardHighlight, 0.0),
-                new GradientStop(FloatlyDesignTokens.CardBackground, 0.28),
+                new GradientStop(FloatlyDesignTokens.CardBackground, 0.22),
+                new GradientStop(FloatlyDesignTokens.CardBackgroundMid, 0.58),
                 new GradientStop(FloatlyDesignTokens.CardBackgroundDeep, 1.0)
             ],
             new System.Windows.Point(0, 0),
@@ -811,7 +820,8 @@ public partial class MainWindow : Window
     private void ApplyHuangLiTheme()
     {
         var border = Brush(_palette.HuangLiBorder);
-        HuangLiPanel.Background = Brush(_palette.HuangLiBackground);
+        HuangLiPanel.Background = CreateGlassCardBrush();
+        HuangLiPanel.BorderBrush = Brush(FloatlyDesignTokens.CardBorder);
         HuangLiSolarDate.Foreground = Brush(_palette.TextEmpty);
         HuangLiCollapseBtn.Foreground = Brush(_palette.TextEmpty);
         HuangLiLunarLarge.Foreground = Brush(_palette.HuangLiAccent);
@@ -1885,7 +1895,7 @@ public partial class MainWindow : Window
         var showSun = _settings.ShowWeather && _settings.ShowSunriseSunset;
         if (showSun && cache.Sunrise is not null)
         {
-            SunriseIconImage.Source = WeatherIconLoader.Load("sunrise", WeatherIconStyle.Line);
+            SunriseIconImage.Source ??= DashboardIconLoader.Load("richu");
             SunriseLineText.Text = $"日出 {cache.Sunrise}";
             SunriseRow.Visibility = Visibility.Visible;
         }
@@ -1896,7 +1906,7 @@ public partial class MainWindow : Window
 
         if (showSun && cache.Sunset is not null)
         {
-            SunsetIconImage.Source = WeatherIconLoader.Load("sunset", WeatherIconStyle.Line);
+            SunsetIconImage.Source ??= DashboardIconLoader.Load("richurila");
             SunsetLineText.Text = $"日落 {cache.Sunset}";
             SunsetRow.Visibility = Visibility.Visible;
         }

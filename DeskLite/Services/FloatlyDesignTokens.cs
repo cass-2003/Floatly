@@ -19,14 +19,16 @@ public static class FloatlyDesignTokens
     public const double ProgressBarRadius = 4;
 
     public static WpfColor Background => WpfColor.FromArgb(0xFF, 0x07, 0x14, 0x25);
-    public static WpfColor PanelBackground => WpfColor.FromArgb(0xF2, 0x0D, 0x1E, 0x33);
-    public static WpfColor PanelGlow => WpfColor.FromArgb(0xD8, 0x35, 0x62, 0x91);
-    public static WpfColor CardBackground => WpfColor.FromArgb(0x62, 0x37, 0x52, 0x70);
-    public static WpfColor CardBackgroundDeep => WpfColor.FromArgb(0x7A, 0x0D, 0x20, 0x37);
-    public static WpfColor CardHighlight => WpfColor.FromArgb(0x36, 0xFF, 0xFF, 0xFF);
-    public static WpfColor ContentBackdrop => WpfColor.FromArgb(0x24, 0xD8, 0xEA, 0xFF);
-    public static WpfColor ToolbarBackground => WpfColor.FromArgb(0x62, 0x24, 0x3A, 0x55);
-    public static WpfColor CardBorder => WpfColor.FromArgb(0x48, 0xE4, 0xF0, 0xFF);
+    public static WpfColor PanelBackground => WpfColor.FromArgb(0xD8, 0x0A, 0x1B, 0x31);
+    public static WpfColor PanelGlow => WpfColor.FromArgb(0xA8, 0x4D, 0x77, 0xA5);
+    public static WpfColor CardBackground => WpfColor.FromArgb(0x34, 0xD8, 0xEA, 0xFF);
+    public static WpfColor CardBackgroundMid => WpfColor.FromArgb(0x2A, 0x78, 0x9E, 0xC8);
+    public static WpfColor CardBackgroundDeep => WpfColor.FromArgb(0x42, 0x09, 0x1A, 0x30);
+    public static WpfColor CardHighlight => WpfColor.FromArgb(0x4C, 0xFF, 0xFF, 0xFF);
+    public static WpfColor ContentBackdrop => WpfColor.FromArgb(0x16, 0xD8, 0xEA, 0xFF);
+    public static WpfColor ToolbarBackground => WpfColor.FromArgb(0x42, 0xE8, 0xF4, 0xFF);
+    public static WpfColor CardBorder => WpfColor.FromArgb(0x5C, 0xE4, 0xF0, 0xFF);
+    public static WpfColor CardInnerBorder => WpfColor.FromArgb(0x22, 0xFF, 0xFF, 0xFF);
     public static WpfColor AccentBlue => WpfColor.FromRgb(0x5C, 0x8D, 0xFF);
     public static WpfColor AccentOrange => WpfColor.FromRgb(0xFF, 0x8A, 0x72);
     public static WpfColor AccentGreen => WpfColor.FromRgb(0x55, 0xD3, 0x8A);

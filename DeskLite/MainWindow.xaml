@@ -29,14 +29,30 @@
         <SolidColorBrush x:Key="TodoMutedBrush" Color="#8B95A5" />
         <SolidColorBrush x:Key="TodoEmptyBrush" Color="#6B7280" />
         <SolidColorBrush x:Key="TodoAccentBrush" Color="#5C8DFF" />
+        <LinearGradientBrush x:Key="WidgetGlassCardBrush" StartPoint="0,0" EndPoint="1,1">
+            <GradientStop Color="#44FFFFFF" Offset="0" />
+            <GradientStop Color="#2FD8EAFF" Offset="0.22" />
+            <GradientStop Color="#22789EC8" Offset="0.58" />
+            <GradientStop Color="#42091A30" Offset="1" />
+        </LinearGradientBrush>
+        <LinearGradientBrush x:Key="WidgetGlassToolbarBrush" StartPoint="0,0" EndPoint="1,0">
+            <GradientStop Color="#3EE8F4FF" Offset="0" />
+            <GradientStop Color="#220F2035" Offset="1" />
+        </LinearGradientBrush>
+        <SolidColorBrush x:Key="WidgetGlassBorderBrush" Color="#5CE4F0FF" />
 
         <Style x:Key="FloatlyCard" TargetType="Border">
-            <Setter Property="Background" Value="#A61D3450" />
-            <Setter Property="BorderBrush" Value="#2EE4F0FF" />
+            <Setter Property="Background" Value="{DynamicResource WidgetGlassCardBrush}" />
+            <Setter Property="BorderBrush" Value="{DynamicResource WidgetGlassBorderBrush}" />
             <Setter Property="BorderThickness" Value="1" />
             <Setter Property="CornerRadius" Value="18" />
             <Setter Property="Padding" Value="14" />
             <Setter Property="ClipToBounds" Value="True" />
+            <Setter Property="Effect">
+                <Setter.Value>
+                    <DropShadowEffect BlurRadius="24" ShadowDepth="10" Direction="270" Opacity="0.18" Color="#020914" />
+                </Setter.Value>
+            </Setter>
         </Style>
         <Style x:Key="HeaderIconBtn" TargetType="Button">
             <Setter Property="Width" Value="26" />
@@ -77,7 +93,7 @@
     <Border x:Name="MainBorder"
             Width="720"
             Height="1280"
-            Background="#FF102239"
+            Background="#D80A1B31"
             CornerRadius="16"
             BorderBrush="#2EE4F0FF"
             BorderThickness="1"
@@ -109,6 +125,16 @@
 
             <Border x:Name="ContentBackdrop" Background="#400C1D31" CornerRadius="14" Margin="8"
                     IsHitTestVisible="False" Visibility="Visible" />
+            <Border x:Name="GlassSheen" CornerRadius="14" Margin="8" IsHitTestVisible="False">
+                <Border.Background>
+                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                        <GradientStop Color="#42FFFFFF" Offset="0" />
+                        <GradientStop Color="#08FFFFFF" Offset="0.18" />
+                        <GradientStop Color="#00000000" Offset="0.5" />
+                        <GradientStop Color="#18000000" Offset="1" />
+                    </LinearGradientBrush>
+                </Border.Background>
+            </Border>
 
             <Grid x:Name="ContentRoot" Margin="30,40,30,16" PreviewMouseLeftButtonDown="Grid_PreviewMouseLeftButtonDown" Cursor="SizeAll">
                 <Grid.RowDefinitions>
