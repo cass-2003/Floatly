@@ -449,8 +449,8 @@ public partial class MainWindow : Window
                 GradientStops =
                 {
                     new GradientStop(System.Windows.Media.Color.FromArgb(0xFA, 0xFF, 0xFF, 0xFF), 0.0),
-                    new GradientStop(System.Windows.Media.Color.FromArgb(0xF3, 0xF9, 0xFB, 0xFF), 0.42),
-                    new GradientStop(System.Windows.Media.Color.FromArgb(0xEE, 0xEC, 0xF4, 0xFF), 1.0)
+                    new GradientStop(System.Windows.Media.Color.FromArgb(0xF7, 0xF9, 0xFB, 0xFF), 0.42),
+                    new GradientStop(System.Windows.Media.Color.FromArgb(0xF2, 0xEC, 0xF4, 0xFF), 1.0)
                 }
             };
         }
@@ -464,8 +464,8 @@ public partial class MainWindow : Window
             GradientStops =
             {
                 new GradientStop(FloatlyDesignTokens.PanelGlow, 0.0),
-                new GradientStop(FloatlyDesignTokens.PanelBackground, 0.38),
-                new GradientStop(System.Windows.Media.Color.FromArgb(0xE0, 0x07, 0x14, 0x25), 1.0)
+                new GradientStop(System.Windows.Media.Color.FromArgb(0xEC, 0x09, 0x19, 0x2E), 0.38),
+                new GradientStop(System.Windows.Media.Color.FromArgb(0xEA, 0x07, 0x14, 0x25), 1.0)
             }
         };
     }
