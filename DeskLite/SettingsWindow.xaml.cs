@@ -142,14 +142,14 @@ public partial class SettingsWindow : Window
         var template = new DataTemplate();
 
         var row = new FrameworkElementFactory(typeof(DockPanel));
-        row.SetValue(FrameworkElement.HeightProperty, 22.0);
+        row.SetValue(FrameworkElement.HeightProperty, 24.0);
         row.SetValue(FrameworkElement.MarginProperty, new Thickness(0));
         row.SetValue(DockPanel.LastChildFillProperty, true);
 
         var visibilityMark = new FrameworkElementFactory(typeof(TextBlock));
-        visibilityMark.SetValue(TextBlock.TextProperty, "\uE8FD");
-        visibilityMark.SetValue(TextBlock.FontFamilyProperty, new System.Windows.Media.FontFamily("Segoe MDL2 Assets"));
-        visibilityMark.SetValue(TextBlock.FontSizeProperty, 9.0);
+        visibilityMark.SetValue(TextBlock.TextProperty, "...");
+        visibilityMark.SetValue(TextBlock.FontFamilyProperty, new System.Windows.Media.FontFamily("Microsoft YaHei UI"));
+        visibilityMark.SetValue(TextBlock.FontSizeProperty, 11.0);
         visibilityMark.SetValue(TextBlock.ForegroundProperty, FindResource("SettingsMuted"));
         visibilityMark.SetValue(FrameworkElement.VerticalAlignmentProperty, System.Windows.VerticalAlignment.Center);
         visibilityMark.SetValue(FrameworkElement.HorizontalAlignmentProperty, System.Windows.HorizontalAlignment.Center);
