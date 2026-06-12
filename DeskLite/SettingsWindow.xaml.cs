@@ -321,12 +321,30 @@ public partial class SettingsWindow : Window
     private void UpdateThemeCards()
     {
         var dark = RbThemeDark.IsChecked == true;
+        var currentLight = RbThemeLight.IsChecked == true;
+        var cardBg = (System.Windows.Media.Brush)FindResource("SettingsInputBg");
+        var selectedBg = (System.Windows.Media.Brush)FindResource("SettingsAccentDim");
+        var border = (System.Windows.Media.Brush)FindResource("SettingsBorder");
+        var accent = (System.Windows.Media.Brush)FindResource("SettingsAccent");
+        var text = (System.Windows.Media.Brush)FindResource("SettingsText");
+        var muted = (System.Windows.Media.Brush)FindResource("SettingsMuted");
+
         ThemeDarkCard.BorderBrush = dark
-            ? (System.Windows.Media.Brush)FindResource("SettingsAccent")
-            : (System.Windows.Media.Brush)FindResource("SettingsBorder");
+            ? accent
+            : border;
+        ThemeDarkCard.Background = dark
+            ? selectedBg
+            : cardBg;
         ThemeLightCard.BorderBrush = dark
-            ? (System.Windows.Media.Brush)FindResource("SettingsBorder")
-            : (System.Windows.Media.Brush)FindResource("SettingsAccent");
+            ? border
+            : accent;
+        ThemeLightCard.Background = dark
+            ? cardBg
+            : selectedBg;
+        ThemeDarkText.Foreground = dark ? text : muted;
+        ThemeLightText.Foreground = dark ? muted : text;
+        ThemeDarkSwatch.Background = new SolidColorBrush(Color(0xFF, 0x0F, 0x17, 0x2A));
+        ThemeLightSwatch.Background = new SolidColorBrush(Color((byte)(currentLight ? 0xFF : 0xE8), 0xF5, 0xF7, 0xFA));
         ThemeDarkCheck.Visibility = dark ? Visibility.Visible : Visibility.Collapsed;
         ThemeLightCheck.Visibility = dark ? Visibility.Collapsed : Visibility.Visible;
     }

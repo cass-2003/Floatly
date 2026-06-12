@@ -1053,8 +1053,8 @@
                                                     <ColumnDefinition Width="*" />
                                                     <ColumnDefinition Width="Auto" />
                                                 </Grid.ColumnDefinitions>
-                                                <Border Width="24" Height="24" CornerRadius="6" Background="#0F172A" VerticalAlignment="Center" />
-                                                <TextBlock Grid.Column="1" Text="深色" Foreground="{DynamicResource SettingsText}" VerticalAlignment="Center" Margin="12,0,0,0" />
+                                                <Border x:Name="ThemeDarkSwatch" Width="24" Height="24" CornerRadius="6" Background="#0F172A" VerticalAlignment="Center" />
+                                                <TextBlock x:Name="ThemeDarkText" Grid.Column="1" Text="深色" Foreground="{DynamicResource SettingsText}" VerticalAlignment="Center" Margin="12,0,0,0" />
                                                 <TextBlock x:Name="ThemeDarkCheck" Grid.Column="2" Text="&#xE73E;" FontFamily="Segoe MDL2 Assets"
                                                            Foreground="{DynamicResource SettingsAccent}" VerticalAlignment="Center" />
                                             </Grid>
@@ -1068,8 +1068,8 @@
                                                     <ColumnDefinition Width="*" />
                                                     <ColumnDefinition Width="Auto" />
                                                 </Grid.ColumnDefinitions>
-                                                <Border Width="24" Height="24" CornerRadius="6" Background="#F5F7FA" VerticalAlignment="Center" />
-                                                <TextBlock Grid.Column="1" Text="浅色" Foreground="#1F2937" VerticalAlignment="Center" Margin="12,0,0,0" />
+                                                <Border x:Name="ThemeLightSwatch" Width="24" Height="24" CornerRadius="6" Background="#F5F7FA" VerticalAlignment="Center" />
+                                                <TextBlock x:Name="ThemeLightText" Grid.Column="1" Text="浅色" Foreground="#1F2937" VerticalAlignment="Center" Margin="12,0,0,0" />
                                                 <TextBlock x:Name="ThemeLightCheck" Grid.Column="2" Text="&#xE73E;" FontFamily="Segoe MDL2 Assets"
                                                            Foreground="{DynamicResource SettingsAccent}" VerticalAlignment="Center"
                                                            Visibility="Collapsed" />
