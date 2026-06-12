@@ -34,6 +34,12 @@ public static class WindowHelper
     [DllImport("user32.dll")]
     private static extern int SetWindowCompositionAttribute(IntPtr hwnd, ref WindowCompositionAttributeData data);
 
+    [DllImport("gdi32.dll")]
+    private static extern IntPtr CreateRoundRectRgn(int left, int top, int right, int bottom, int width, int height);
+
+    [DllImport("user32.dll")]
+    private static extern int SetWindowRgn(IntPtr hwnd, IntPtr hRgn, bool redraw);
+
     public static void SetClickThrough(Window window, bool enabled)
     {
         var hwnd = new WindowInteropHelper(window).Handle;
@@ -64,6 +70,25 @@ public static class WindowHelper
         if (!TryApplyAccent(hwnd, AccentEnableAcrylicBlurbehind, 0x660A1B31))
         {
             TryApplyAccent(hwnd, AccentEnableBlurbehind, 0x220A1B31);
+        }
+    }
+
+    public static void ApplyRoundedRegion(Window window, double radius)
+    {
+        var hwnd = new WindowInteropHelper(window).Handle;
+        if (hwnd == IntPtr.Zero || window.ActualWidth <= 0 || window.ActualHeight <= 0)
+        {
+            return;
+        }
+
+        var dpi = VisualTreeHelper.GetDpi(window);
+        var width = (int)Math.Round(window.ActualWidth * dpi.DpiScaleX);
+        var height = (int)Math.Round(window.ActualHeight * dpi.DpiScaleY);
+        var diameter = Math.Max(1, (int)Math.Round(radius * 2 * Math.Max(dpi.DpiScaleX, dpi.DpiScaleY)));
+        var region = CreateRoundRectRgn(0, 0, width + 1, height + 1, diameter, diameter);
+        if (region != IntPtr.Zero)
+        {
+            SetWindowRgn(hwnd, region, true);
         }
     }
 

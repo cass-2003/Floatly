@@ -108,6 +108,7 @@ public partial class MainWindow : Window
     private void Window_SourceInitialized(object? sender, EventArgs e)
     {
         WindowHelper.EnableGlassBackdrop(this);
+        WindowHelper.ApplyRoundedRegion(this, 22);
         WindowHelper.EnableBorderlessResize(this);
         WindowHelper.SetClickThrough(this, _settings.ClickThrough);
         if (_settings.EnableGlobalHotkey)
@@ -474,18 +475,18 @@ public partial class MainWindow : Window
         IsLightTheme()
             ? CreateLinearBrush(
                 [
-                    new GradientStop(System.Windows.Media.Color.FromArgb(0xEA, 0xFF, 0xFF, 0xFF), 0.0),
-                    new GradientStop(System.Windows.Media.Color.FromArgb(0xD8, 0xFF, 0xFF, 0xFF), 0.35),
-                    new GradientStop(System.Windows.Media.Color.FromArgb(0xC8, 0xF8, 0xFB, 0xFF), 1.0)
+                    new GradientStop(System.Windows.Media.Color.FromArgb(0xF2, 0xFF, 0xFF, 0xFF), 0.0),
+                    new GradientStop(System.Windows.Media.Color.FromArgb(0xDC, 0xFF, 0xFF, 0xFF), 0.36),
+                    new GradientStop(System.Windows.Media.Color.FromArgb(0xCC, 0xF6, 0xFA, 0xFF), 1.0)
                 ],
                 new System.Windows.Point(0, 0),
                 new System.Windows.Point(1, 1))
             : CreateLinearBrush(
                 [
-                    new GradientStop(FloatlyDesignTokens.CardHighlight, 0.0),
-                    new GradientStop(FloatlyDesignTokens.CardBackground, 0.22),
-                    new GradientStop(FloatlyDesignTokens.CardBackgroundMid, 0.58),
-                    new GradientStop(FloatlyDesignTokens.CardBackgroundDeep, 1.0)
+                    new GradientStop(System.Windows.Media.Color.FromArgb(0x2A, 0xFF, 0xFF, 0xFF), 0.0),
+                    new GradientStop(System.Windows.Media.Color.FromArgb(0x20, 0x27, 0x42, 0x62), 0.24),
+                    new GradientStop(System.Windows.Media.Color.FromArgb(0x26, 0x12, 0x2A, 0x45), 0.62),
+                    new GradientStop(System.Windows.Media.Color.FromArgb(0x38, 0x07, 0x18, 0x2D), 1.0)
                 ],
                 new System.Windows.Point(0, 0),
                 new System.Windows.Point(1, 1));
@@ -494,23 +495,23 @@ public partial class MainWindow : Window
         IsLightTheme()
             ? CreateLinearBrush(
                 [
-                    new GradientStop(System.Windows.Media.Color.FromArgb(0xD8, 0xFF, 0xFF, 0xFF), 0.0),
-                    new GradientStop(System.Windows.Media.Color.FromArgb(0xC6, 0xF3, 0xF7, 0xFF), 1.0)
+                    new GradientStop(System.Windows.Media.Color.FromArgb(0xEA, 0xFF, 0xFF, 0xFF), 0.0),
+                    new GradientStop(System.Windows.Media.Color.FromArgb(0xD2, 0xF3, 0xF7, 0xFF), 1.0)
                 ],
                 new System.Windows.Point(0, 0),
                 new System.Windows.Point(1, 0))
             : CreateLinearBrush(
                 [
-                    new GradientStop(FloatlyDesignTokens.ToolbarBackground, 0.0),
-                    new GradientStop(System.Windows.Media.Color.FromArgb(0x4C, 0x0F, 0x20, 0x35), 1.0)
+                    new GradientStop(System.Windows.Media.Color.FromArgb(0x36, 0xE8, 0xF4, 0xFF), 0.0),
+                    new GradientStop(System.Windows.Media.Color.FromArgb(0x28, 0x0F, 0x20, 0x35), 1.0)
                 ],
                 new System.Windows.Point(0, 0),
                 new System.Windows.Point(1, 0));
 
     private System.Windows.Media.Brush CreateGlassBorderBrush() =>
         IsLightTheme()
-            ? Brush(0x26, 0x15, 0x23, 0x42)
-            : Brush(FloatlyDesignTokens.CardBorder);
+            ? Brush(0x20, 0x15, 0x23, 0x42)
+            : Brush(0x30, 0xE4, 0xF0, 0xFF);
 
     private bool IsLightTheme() => AppThemePalette.Parse(_settings.Theme) == ThemeMode.Light;
 
@@ -1004,6 +1005,8 @@ public partial class MainWindow : Window
 
     private void OnWindowSizeChanged(object sender, SizeChangedEventArgs e)
     {
+        WindowHelper.ApplyRoundedRegion(this, 22);
+
         if (_suppressSizePersist || !IsLoaded)
         {
             return;
