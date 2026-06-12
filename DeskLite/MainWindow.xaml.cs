@@ -203,6 +203,8 @@ public partial class MainWindow : Window
         ThemeToggleIcon.Source = DashboardIconLoader.Load(
             AppThemePalette.Parse(_settings.Theme) == ThemeMode.Light ? "taiyang" : "yueliang");
         ToolbarPinBtn.Foreground = Topmost ? Brush(FloatlyDesignTokens.AccentBlue) : Brush(_palette.TextSecondary);
+        QuickSettingsText.Foreground = Brush(_palette.TextSecondary);
+        ClickThroughLabel.Foreground = Brush(_palette.TextSecondary);
         SyncClickThroughSwitch();
     }
 
@@ -271,9 +273,10 @@ public partial class MainWindow : Window
     {
         _palette = AppThemePalette.For(AppThemePalette.Parse(_settings.Theme));
         var textPrimary = FontColorHelper.ResolvePrimary(_palette.TextPrimary, _settings.PrimaryTextColor);
+        var cardBorder = CreateGlassBorderBrush();
 
         MainBorder.Background = CreateMainPanelBackground();
-        MainBorder.BorderBrush = Brush(FloatlyDesignTokens.CardBorder);
+        MainBorder.BorderBrush = cardBorder;
         ApplySkinVideo();
         ApplySkinOverlay();
         ApplyContentBackdrop();
@@ -289,9 +292,9 @@ public partial class MainWindow : Window
         ApplyModuleCardTheme();
         BottomToolbar.Background = System.Windows.Media.Brushes.Transparent;
         QuickSettingsPill.Background = CreateToolbarBrush();
-        QuickSettingsPill.BorderBrush = Brush(FloatlyDesignTokens.CardBorder);
+        QuickSettingsPill.BorderBrush = cardBorder;
         QuickActionsPill.Background = CreateToolbarBrush();
-        QuickActionsPill.BorderBrush = Brush(FloatlyDesignTokens.CardBorder);
+        QuickActionsPill.BorderBrush = cardBorder;
         ApplyHuangLiTheme();
         WeatherTempText.Foreground = Brush(textPrimary);
         WeatherDescText.Foreground = Brush(textPrimary);
@@ -377,8 +380,8 @@ public partial class MainWindow : Window
     private void ApplyModuleCardTheme()
     {
         var cardBg = CreateGlassCardBrush();
-        var cardBorder = Brush(FloatlyDesignTokens.CardBorder);
-        var trackBg = Brush(FloatlyDesignTokens.ProgressTrack);
+        var cardBorder = CreateGlassBorderBrush();
+        var trackBg = Brush(_palette.ProgressTrack);
 
         Resources["WidgetGlassCardBrush"] = cardBg;
         Resources["WidgetGlassBorderBrush"] = cardBorder;
@@ -410,11 +413,22 @@ public partial class MainWindow : Window
 
     private void ApplyWidgetGlassResources()
     {
-        Resources["TodoCardBgBrush"] = Brush(0x24, 0xE8, 0xF4, 0xFF);
-        Resources["TodoCardBorderBrush"] = Brush(0x2E, 0xE4, 0xF0, 0xFF);
-        TodoOverflowBtn.Background = Brush(0x24, 0xE8, 0xF4, 0xFF);
-        TodoCountBadge.Background = Brush(0x24, 0x5C, 0x8D, 0xFF);
-        ScratchCountBadge.Background = Brush(0x24, 0x5C, 0x8D, 0xFF);
+        var isLight = IsLightTheme();
+        Resources["TodoCardBgBrush"] = isLight
+            ? Brush(0xB8, 0xFF, 0xFF, 0xFF)
+            : Brush(0x24, 0xE8, 0xF4, 0xFF);
+        Resources["TodoCardBorderBrush"] = isLight
+            ? Brush(0x24, 0x15, 0x23, 0x42)
+            : Brush(0x2E, 0xE4, 0xF0, 0xFF);
+        TodoOverflowBtn.Background = isLight
+            ? Brush(0x70, 0xF8, 0xFA, 0xFC)
+            : Brush(0x24, 0xE8, 0xF4, 0xFF);
+        TodoCountBadge.Background = isLight
+            ? Brush(0x16, 0x25, 0x63, 0xEB)
+            : Brush(0x24, 0x5C, 0x8D, 0xFF);
+        ScratchCountBadge.Background = isLight
+            ? Brush(0x16, 0x25, 0x63, 0xEB)
+            : Brush(0x24, 0x5C, 0x8D, 0xFF);
     }
 
     private System.Windows.Media.Brush CreateMainPanelBackground()
@@ -431,8 +445,26 @@ public partial class MainWindow : Window
 
         if (skinMode is SkinService.ModeSolid or SkinService.ModeVideo)
         {
-            var solid = FloatlyDesignTokens.PanelBackground;
-            return Brush(solid.A, solid.R, solid.G, solid.B);
+            return IsLightTheme()
+                ? Brush(0xF4, 0xFF, 0xFF, 0xFF)
+                : Brush(FloatlyDesignTokens.PanelBackground);
+        }
+
+        if (IsLightTheme())
+        {
+            return new RadialGradientBrush
+            {
+                RadiusX = 1.05,
+                RadiusY = 0.92,
+                Center = new System.Windows.Point(0.30, 0.02),
+                GradientOrigin = new System.Windows.Point(0.24, -0.05),
+                GradientStops =
+                {
+                    new GradientStop(System.Windows.Media.Color.FromArgb(0xFA, 0xFF, 0xFF, 0xFF), 0.0),
+                    new GradientStop(System.Windows.Media.Color.FromArgb(0xF3, 0xF9, 0xFB, 0xFF), 0.42),
+                    new GradientStop(System.Windows.Media.Color.FromArgb(0xEE, 0xEC, 0xF4, 0xFF), 1.0)
+                }
+            };
         }
 
         return new RadialGradientBrush
@@ -450,36 +482,69 @@ public partial class MainWindow : Window
         };
     }
 
-    private static System.Windows.Media.Brush CreateContentBackdropBrush() =>
-        CreateLinearBrush(
-            [
-                new GradientStop(FloatlyDesignTokens.ContentBackdrop, 0.0),
-                new GradientStop(System.Windows.Media.Color.FromArgb(0x08, 0xFF, 0xFF, 0xFF), 0.18),
-                new GradientStop(System.Windows.Media.Color.FromArgb(0x14, 0x12, 0x2A, 0x45), 0.58),
-                new GradientStop(System.Windows.Media.Color.FromArgb(0x32, 0x07, 0x15, 0x27), 1.0)
-            ],
-            new System.Windows.Point(0, 0),
-            new System.Windows.Point(1, 1));
+    private System.Windows.Media.Brush CreateContentBackdropBrush() =>
+        IsLightTheme()
+            ? CreateLinearBrush(
+                [
+                    new GradientStop(System.Windows.Media.Color.FromArgb(0x30, 0xE8, 0xF1, 0xFF), 0.0),
+                    new GradientStop(System.Windows.Media.Color.FromArgb(0x18, 0xFF, 0xFF, 0xFF), 0.46),
+                    new GradientStop(System.Windows.Media.Color.FromArgb(0x22, 0xD9, 0xE7, 0xFF), 1.0)
+                ],
+                new System.Windows.Point(0, 0),
+                new System.Windows.Point(1, 1))
+            : CreateLinearBrush(
+                [
+                    new GradientStop(FloatlyDesignTokens.ContentBackdrop, 0.0),
+                    new GradientStop(System.Windows.Media.Color.FromArgb(0x08, 0xFF, 0xFF, 0xFF), 0.18),
+                    new GradientStop(System.Windows.Media.Color.FromArgb(0x14, 0x12, 0x2A, 0x45), 0.58),
+                    new GradientStop(System.Windows.Media.Color.FromArgb(0x32, 0x07, 0x15, 0x27), 1.0)
+                ],
+                new System.Windows.Point(0, 0),
+                new System.Windows.Point(1, 1));
 
-    private static System.Windows.Media.Brush CreateGlassCardBrush() =>
-        CreateLinearBrush(
-            [
-                new GradientStop(FloatlyDesignTokens.CardHighlight, 0.0),
-                new GradientStop(FloatlyDesignTokens.CardBackground, 0.22),
-                new GradientStop(FloatlyDesignTokens.CardBackgroundMid, 0.58),
-                new GradientStop(FloatlyDesignTokens.CardBackgroundDeep, 1.0)
-            ],
-            new System.Windows.Point(0, 0),
-            new System.Windows.Point(1, 1));
+    private System.Windows.Media.Brush CreateGlassCardBrush() =>
+        IsLightTheme()
+            ? CreateLinearBrush(
+                [
+                    new GradientStop(System.Windows.Media.Color.FromArgb(0xEA, 0xFF, 0xFF, 0xFF), 0.0),
+                    new GradientStop(System.Windows.Media.Color.FromArgb(0xD8, 0xFF, 0xFF, 0xFF), 0.35),
+                    new GradientStop(System.Windows.Media.Color.FromArgb(0xC8, 0xF8, 0xFB, 0xFF), 1.0)
+                ],
+                new System.Windows.Point(0, 0),
+                new System.Windows.Point(1, 1))
+            : CreateLinearBrush(
+                [
+                    new GradientStop(FloatlyDesignTokens.CardHighlight, 0.0),
+                    new GradientStop(FloatlyDesignTokens.CardBackground, 0.22),
+                    new GradientStop(FloatlyDesignTokens.CardBackgroundMid, 0.58),
+                    new GradientStop(FloatlyDesignTokens.CardBackgroundDeep, 1.0)
+                ],
+                new System.Windows.Point(0, 0),
+                new System.Windows.Point(1, 1));
 
-    private static System.Windows.Media.Brush CreateToolbarBrush() =>
-        CreateLinearBrush(
-            [
-                new GradientStop(FloatlyDesignTokens.ToolbarBackground, 0.0),
-                new GradientStop(System.Windows.Media.Color.FromArgb(0x4C, 0x0F, 0x20, 0x35), 1.0)
-            ],
-            new System.Windows.Point(0, 0),
-            new System.Windows.Point(1, 0));
+    private System.Windows.Media.Brush CreateToolbarBrush() =>
+        IsLightTheme()
+            ? CreateLinearBrush(
+                [
+                    new GradientStop(System.Windows.Media.Color.FromArgb(0xD8, 0xFF, 0xFF, 0xFF), 0.0),
+                    new GradientStop(System.Windows.Media.Color.FromArgb(0xC6, 0xF3, 0xF7, 0xFF), 1.0)
+                ],
+                new System.Windows.Point(0, 0),
+                new System.Windows.Point(1, 0))
+            : CreateLinearBrush(
+                [
+                    new GradientStop(FloatlyDesignTokens.ToolbarBackground, 0.0),
+                    new GradientStop(System.Windows.Media.Color.FromArgb(0x4C, 0x0F, 0x20, 0x35), 1.0)
+                ],
+                new System.Windows.Point(0, 0),
+                new System.Windows.Point(1, 0));
+
+    private System.Windows.Media.Brush CreateGlassBorderBrush() =>
+        IsLightTheme()
+            ? Brush(0x26, 0x15, 0x23, 0x42)
+            : Brush(FloatlyDesignTokens.CardBorder);
+
+    private bool IsLightTheme() => AppThemePalette.Parse(_settings.Theme) == ThemeMode.Light;
 
     private static LinearGradientBrush CreateLinearBrush(
         IEnumerable<GradientStop> stops,
@@ -821,7 +886,12 @@ public partial class MainWindow : Window
     {
         var border = Brush(_palette.HuangLiBorder);
         HuangLiPanel.Background = CreateGlassCardBrush();
-        HuangLiPanel.BorderBrush = Brush(FloatlyDesignTokens.CardBorder);
+        HuangLiPanel.BorderBrush = CreateGlassBorderBrush();
+        HeroLunarStrip.Background = IsLightTheme()
+            ? Brush(0xD8, 0xFF, 0xFF, 0xFF)
+            : Brush(0x6A, 0x1F, 0x38, 0x55);
+        HeroLunarStrip.BorderBrush = CreateGlassBorderBrush();
+        HuangLiStripDivider.Background = Brush(_palette.Divider);
         HuangLiSolarDate.Foreground = Brush(_palette.TextEmpty);
         HuangLiCollapseBtn.Foreground = Brush(_palette.TextEmpty);
         HuangLiLunarLarge.Foreground = Brush(_palette.HuangLiAccent);

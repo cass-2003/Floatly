@@ -290,7 +290,7 @@
                                     <TextBlock x:Name="HuangLiMetaLineStrip" Text="丙午年 甲午月 戊申日" FontSize="14"
                                                Foreground="#8B95A5" Margin="0,2,0,0" TextTrimming="CharacterEllipsis" />
                                 </StackPanel>
-                                <Border Grid.Column="2" Width="1" Background="#22FFFFFF" Margin="10,0,22,0" />
+                                <Border x:Name="HuangLiStripDivider" Grid.Column="2" Width="1" Background="#22FFFFFF" Margin="10,0,22,0" />
                                 <Grid Grid.Column="3" VerticalAlignment="Center" Margin="0,0,16,0">
                                     <Grid.RowDefinitions>
                                         <RowDefinition Height="Auto" />
@@ -902,7 +902,7 @@
                                 BorderBrush="#2EE4F0FF" BorderThickness="1">
                             <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                                 <Image x:Name="QuickSettingsIcon" Width="13" Height="13" VerticalAlignment="Center" Margin="0,0,8,0" />
-                                <TextBlock Text="快捷设置" FontSize="12" Foreground="#DDE8FF" VerticalAlignment="Center" />
+                                <TextBlock x:Name="QuickSettingsText" Text="快捷设置" FontSize="12" Foreground="#DDE8FF" VerticalAlignment="Center" />
                             </StackPanel>
                         </Border>
                         <StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Center" Visibility="Collapsed">
@@ -937,7 +937,7 @@
                                     </StackPanel>
                                 </Button>
                                 <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center" Margin="8,0,0,0">
-                                    <TextBlock Text="鼠标穿透" FontSize="11" Foreground="#A6FFFFFF" VerticalAlignment="Center" Margin="0,0,8,0" />
+                                    <TextBlock x:Name="ClickThroughLabel" Text="鼠标穿透" FontSize="11" Foreground="#A6FFFFFF" VerticalAlignment="Center" Margin="0,0,8,0" />
                                     <Border x:Name="ClickThroughSwitch" Width="36" Height="22" CornerRadius="11"
                                             Background="#5C8DFF" Cursor="Hand" MouseLeftButtonUp="ClickThroughSwitch_Click">
                                         <Border x:Name="ClickThroughKnob" Width="18" Height="18" CornerRadius="9"
