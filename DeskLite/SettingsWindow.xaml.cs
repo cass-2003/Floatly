@@ -197,19 +197,29 @@ public partial class SettingsWindow : Window
         return JsonSerializer.Deserialize<AppSettings>(json) ?? new AppSettings();
     }
 
-    private static void SetTimePickerValue(HandyControl.Controls.TimePicker picker, string value, string fallback)
+    private static void SetTimeTextBoxValue(System.Windows.Controls.TextBox textBox, string value, string fallback)
     {
         var normalized = OffWorkService.TryParseTime(value, out var time)
             ? time
             : OffWorkService.TryParseTime(fallback, out var fallbackTime)
                 ? fallbackTime
                 : new TimeOnly(9, 0);
-        picker.SelectedTime = DateTime.Today.Add(normalized.ToTimeSpan());
+        textBox.Text = normalized.ToString("HH:mm", CultureInfo.InvariantCulture);
     }
 
-    private static string ReadTimePickerValue(HandyControl.Controls.TimePicker picker)
+    private static string ReadTimeTextBoxValue(System.Windows.Controls.TextBox textBox, string fallback)
     {
-        return (picker.SelectedTime ?? DateTime.Today).ToString("HH:mm", CultureInfo.InvariantCulture);
+        if (OffWorkService.TryParseTime(textBox.Text, out var time))
+        {
+            return time.ToString("HH:mm", CultureInfo.InvariantCulture);
+        }
+
+        if (OffWorkService.TryParseTime(fallback, out var fallbackTime))
+        {
+            return fallbackTime.ToString("HH:mm", CultureInfo.InvariantCulture);
+        }
+
+        return "09:00";
     }
 
     private void LoadFromSettings(AppSettings s)
@@ -220,8 +230,8 @@ public partial class SettingsWindow : Window
         ChkGlobalHotkey.IsChecked = s.EnableGlobalHotkey;
         TxtHotkeyShowHide.Text = HotkeyComboHelper.Sanitize(s.HotkeyShowHide, HotkeyComboHelper.DefaultShowHide);
         TxtHotkeyQuickTodo.Text = HotkeyComboHelper.Sanitize(s.HotkeyQuickTodo, HotkeyComboHelper.DefaultQuickTodo);
-        SetTimePickerValue(WorkStartTimePicker, s.WorkStartTime, "09:00");
-        SetTimePickerValue(WorkEndTimePicker, s.WorkEndTime, "18:00");
+        SetTimeTextBoxValue(TxtWorkStartTime, s.WorkStartTime, "09:00");
+        SetTimeTextBoxValue(TxtWorkEndTime, s.WorkEndTime, "18:00");
         ChkOffWorkWeekdaysOnly.IsChecked = s.OffWorkWeekdaysOnly;
         TxtMonthlySalary.Text = s.MonthlySalary > 0 ? s.MonthlySalary.ToString("0.##", CultureInfo.InvariantCulture) : string.Empty;
         TxtWorkDaysPerMonth.Text = s.WorkDaysPerMonth.ToString();
@@ -985,8 +995,8 @@ public partial class SettingsWindow : Window
             s.HotkeyQuickTodo = HotkeyComboHelper.DefaultQuickTodo;
         }
 
-        s.WorkStartTime = ReadTimePickerValue(WorkStartTimePicker);
-        s.WorkEndTime = ReadTimePickerValue(WorkEndTimePicker);
+        s.WorkStartTime = ReadTimeTextBoxValue(TxtWorkStartTime, "09:00");
+        s.WorkEndTime = ReadTimeTextBoxValue(TxtWorkEndTime, "18:00");
         s.OffWorkWeekdaysOnly = ChkOffWorkWeekdaysOnly.IsChecked == true;
         s.MonthlySalary = ReadMonthlySalary(TxtMonthlySalary.Text);
         s.WorkDaysPerMonth = ReadPositiveInt(TxtWorkDaysPerMonth.Text, 22, 1, 31);
