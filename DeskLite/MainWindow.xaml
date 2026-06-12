@@ -631,10 +631,10 @@
                                                 HorizontalAlignment="Right" VerticalAlignment="Center"
                                                 ToolTip="番茄钟设置" />
                                     </Grid>
-                                    <Grid Grid.Row="1" Width="132" Height="132" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,-2,0,0">
-                                        <Path x:Name="PomodoroRingTrack" Stroke="#28FFFFFF" StrokeThickness="7" Fill="Transparent"
+                                    <Grid Grid.Row="1" Width="148" Height="148" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,-4,0,-2">
+                                        <Path x:Name="PomodoroRingTrack" Stroke="#28FFFFFF" StrokeThickness="8" Fill="Transparent"
                                               StrokeStartLineCap="Round" StrokeEndLineCap="Round" />
-                                        <Path x:Name="PomodoroRingProgress" Stroke="#5C8DFF" StrokeThickness="7" Fill="Transparent"
+                                        <Path x:Name="PomodoroRingProgress" Stroke="#5C8DFF" StrokeThickness="8" Fill="Transparent"
                                               StrokeStartLineCap="Round" StrokeEndLineCap="Round" />
                                         <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
                                             <TextBlock x:Name="PomodoroCountdownText" Text="25:00" FontSize="32" FontWeight="SemiBold" Foreground="#FFFFFF" HorizontalAlignment="Center" />
@@ -644,7 +644,7 @@
                                     <Border x:Name="PomodoroTrack" Height="0" Width="0" Visibility="Collapsed">
                                         <Border x:Name="PomodoroFill" Width="0" />
                                     </Border>
-                                    <Button x:Name="PomodoroStartBtn" Grid.Row="2" Content="开始专注" Height="32" Padding="0" Width="206"
+                                    <Button x:Name="PomodoroStartBtn" Grid.Row="2" Content="开始专注" Height="34" Padding="0" Width="216"
                                             Click="PomodoroStart_Click" Background="#5C8DFF" Foreground="White"
                                             BorderThickness="0" Cursor="Hand" FontSize="15" FontWeight="SemiBold" HorizontalAlignment="Center" />
                                     <TextBlock x:Name="PomodoroHintText" Grid.Row="3" Text="专注更高效，休息更放松" FontSize="11" Foreground="#8B95A5"
