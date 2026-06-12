@@ -38,6 +38,7 @@ public partial class MainWindow : Window
     private GlobalHotkeyService? _hotkeyService;
     private AppThemePalette _palette = AppThemePalette.For(ThemeMode.Dark);
     private bool _suppressSizePersist;
+    private MediaElement? _skinVideo;
     private TodoListWindow? _todoListWindow;
     private ScratchPadWindow? _scratchPadWindow;
     private SettingsWindow? _settingsWindow;
@@ -434,8 +435,8 @@ public partial class MainWindow : Window
         if (skinMode is SkinService.ModeSolid or SkinService.ModeVideo)
         {
             return IsLightTheme()
-                ? Brush(0xF4, 0xFF, 0xFF, 0xFF)
-                : Brush(FloatlyDesignTokens.PanelBackground);
+                ? Brush(0xD8, 0xFF, 0xFF, 0xFF)
+                : Brush(0xC4, 0x0A, 0x1B, 0x31);
         }
 
         if (IsLightTheme())
@@ -448,9 +449,9 @@ public partial class MainWindow : Window
                 GradientOrigin = new System.Windows.Point(0.24, -0.05),
                 GradientStops =
                 {
-                    new GradientStop(System.Windows.Media.Color.FromArgb(0xFA, 0xFF, 0xFF, 0xFF), 0.0),
-                    new GradientStop(System.Windows.Media.Color.FromArgb(0xF7, 0xF9, 0xFB, 0xFF), 0.42),
-                    new GradientStop(System.Windows.Media.Color.FromArgb(0xF2, 0xEC, 0xF4, 0xFF), 1.0)
+                    new GradientStop(System.Windows.Media.Color.FromArgb(0xDC, 0xFF, 0xFF, 0xFF), 0.0),
+                    new GradientStop(System.Windows.Media.Color.FromArgb(0xD2, 0xF9, 0xFB, 0xFF), 0.42),
+                    new GradientStop(System.Windows.Media.Color.FromArgb(0xC6, 0xEC, 0xF4, 0xFF), 1.0)
                 }
             };
         }
@@ -464,8 +465,8 @@ public partial class MainWindow : Window
             GradientStops =
             {
                 new GradientStop(FloatlyDesignTokens.PanelGlow, 0.0),
-                new GradientStop(System.Windows.Media.Color.FromArgb(0xEC, 0x09, 0x19, 0x2E), 0.38),
-                new GradientStop(System.Windows.Media.Color.FromArgb(0xEA, 0x07, 0x14, 0x25), 1.0)
+                new GradientStop(System.Windows.Media.Color.FromArgb(0xB8, 0x09, 0x19, 0x2E), 0.38),
+                new GradientStop(System.Windows.Media.Color.FromArgb(0xAA, 0x07, 0x14, 0x25), 1.0)
             }
         };
     }
@@ -538,47 +539,47 @@ public partial class MainWindow : Window
         var isVideoMode = SkinService.NormalizeMode(_settings.SkinMode) == SkinService.ModeVideo;
         if (!isVideoMode)
         {
-            SkinVideo.Stop();
-            SkinVideo.Source = null;
-            SkinVideo.Visibility = Visibility.Collapsed;
+            RemoveSkinVideo();
             return;
         }
 
         var path = SkinService.ResolveVideoPath(_settings.SkinVideoPath);
         if (path is null)
         {
-            SkinVideo.Stop();
-            SkinVideo.Source = null;
-            SkinVideo.Visibility = Visibility.Collapsed;
+            RemoveSkinVideo();
             return;
         }
 
+        var skinVideo = EnsureSkinVideo();
         var uri = new Uri(path, UriKind.Absolute);
-        if (!Equals(SkinVideo.Source, uri))
+        if (!Equals(skinVideo.Source, uri))
         {
-            SkinVideo.Source = uri;
+            skinVideo.Source = uri;
         }
 
-        SkinVideo.Visibility = Visibility.Visible;
+        SkinVideoHost.Visibility = Visibility.Visible;
+        skinVideo.Visibility = Visibility.Visible;
         UpdateSkinVideoPlayback();
     }
 
     private void UpdateSkinVideoPlayback()
     {
+        var skinVideo = _skinVideo;
         if (SkinService.NormalizeMode(_settings.SkinMode) != SkinService.ModeVideo ||
-            SkinVideo.Visibility != Visibility.Visible ||
-            SkinVideo.Source is null)
+            skinVideo is null ||
+            SkinVideoHost.Visibility != Visibility.Visible ||
+            skinVideo.Source is null)
         {
             return;
         }
 
         if (IsVisible)
         {
-            SkinVideo.Play();
+            skinVideo.Play();
         }
         else
         {
-            SkinVideo.Pause();
+            skinVideo.Pause();
         }
     }
 
@@ -586,8 +587,53 @@ public partial class MainWindow : Window
 
     private void SkinVideo_MediaEnded(object sender, RoutedEventArgs e)
     {
-        SkinVideo.Position = TimeSpan.Zero;
-        SkinVideo.Play();
+        if (_skinVideo is null)
+        {
+            return;
+        }
+
+        _skinVideo.Position = TimeSpan.Zero;
+        _skinVideo.Play();
+    }
+
+    private MediaElement EnsureSkinVideo()
+    {
+        if (_skinVideo is not null)
+        {
+            return _skinVideo;
+        }
+
+        var skinVideo = new MediaElement
+        {
+            LoadedBehavior = MediaState.Manual,
+            UnloadedBehavior = MediaState.Stop,
+            IsMuted = true,
+            Volume = 0,
+            Stretch = Stretch.UniformToFill,
+            Visibility = Visibility.Collapsed,
+            IsHitTestVisible = false
+        };
+        skinVideo.Loaded += SkinVideo_Loaded;
+        skinVideo.MediaEnded += SkinVideo_MediaEnded;
+        SkinVideoHost.Children.Add(skinVideo);
+        _skinVideo = skinVideo;
+        return skinVideo;
+    }
+
+    private void RemoveSkinVideo()
+    {
+        SkinVideoHost.Visibility = Visibility.Collapsed;
+        if (_skinVideo is null)
+        {
+            return;
+        }
+
+        _skinVideo.Stop();
+        _skinVideo.Source = null;
+        _skinVideo.Loaded -= SkinVideo_Loaded;
+        _skinVideo.MediaEnded -= SkinVideo_MediaEnded;
+        SkinVideoHost.Children.Clear();
+        _skinVideo = null;
     }
 
     private void UpdateCalendarModeButtons()

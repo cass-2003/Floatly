@@ -108,7 +108,7 @@
     <Border x:Name="MainBorder"
             Width="720"
             Height="1280"
-            Background="#E80A1B31"
+            Background="Transparent"
             CornerRadius="22"
             BorderBrush="#2EE4F0FF"
             BorderThickness="1"
@@ -132,10 +132,10 @@
             </ContextMenu>
         </Border.ContextMenu>
         <Grid>
-            <MediaElement x:Name="SkinVideo"
-                          LoadedBehavior="Manual" UnloadedBehavior="Stop" IsMuted="True" Volume="0"
-                          Stretch="UniformToFill" Visibility="Collapsed" IsHitTestVisible="False"
-                          MediaEnded="SkinVideo_MediaEnded" Loaded="SkinVideo_Loaded" />
+            <Grid x:Name="SkinVideoHost"
+                  Visibility="Collapsed"
+                  ClipToBounds="True"
+                  IsHitTestVisible="False" />
             <Border x:Name="SkinOverlay" Background="#8C000000" CornerRadius="22" Visibility="Collapsed" IsHitTestVisible="False" />
 
             <Border x:Name="GlassSheen" CornerRadius="22" IsHitTestVisible="False">
