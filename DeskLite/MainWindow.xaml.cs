@@ -107,7 +107,6 @@ public partial class MainWindow : Window
 
     private void Window_SourceInitialized(object? sender, EventArgs e)
     {
-        WindowHelper.EnableGlassBackdrop(this);
         WindowHelper.ApplyRoundedRegion(this, 22);
         WindowHelper.EnableBorderlessResize(this);
         WindowHelper.SetClickThrough(this, _settings.ClickThrough);
