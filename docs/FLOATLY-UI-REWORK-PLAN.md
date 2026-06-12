@@ -47,6 +47,7 @@
 - 主窗口目标稿实际尺寸是 `941 x 1672`，当前内部设计画布与最大窗口均为 `720 x 1280`，真实默认窗口仍是 `540 x 960`；需要继续确认默认缩放后的视觉密度是否与桌面小组件期望一致。
 - 主窗口的模块列表设置当前定位为“显示模块”；`MainWindow.ApplyModuleOrder()` 保持固定视觉网格，以维护 `resign-2` 的信息层级和两列/整行节奏。
 - 主窗口浅色和深色 release 截图已证明不再有窗口级深色方形 Acrylic 背板；但截图混在真实桌面背景上，只能证明背板根因修复，不能替代最终设计图像素对照。
+- 当前线程尝试用 `Process.MainWindowHandle`、`EnumWindows` 和 `PrintWindow` 抓取 release 主窗口截图时，Floatly 进程可启动且响应，但没有可枚举主窗口句柄；因此本轮不能把自动截图作为主面板验收证据，需要在可见桌面会话中手动或用其他工具重新采集。
 - `.codex-tmp/ui-audit/screen-dark-settings.png` 与 `screen-dark-settings-visible.png` 当前不是 Floatly 设置页截图，而是浏览器/资源管理器画面，必须作废，不能进入验收结论。
 - 还缺设置页深浅、旧主面板深浅、新主面板深浅这三套目标的逐项截图验收；目前只能按源码、设计图和部分运行截图审计，不能宣称完全一致。
 
@@ -165,6 +166,7 @@
 | 设置页浅色截图 | `.codex-tmp/ui-audit/settings-design3-light-current-v2.png` | 有效 | 可证明设置页浅色主题资源已生效 |
 | 主面板浅色截图 | `.codex-tmp/ui-audit/widget-release-light-no-hwnd-backdrop.png` | 需刷新 | 旧截图只能证明窗口级 Acrylic 背板已移除，不能证明本轮媒体层和初始背景修复后的状态 |
 | 主面板深色截图 | `.codex-tmp/ui-audit/widget-release-dark-no-hwnd-backdrop.png` | 需刷新 | 旧截图只能证明窗口级 Acrylic 背板已移除，不能证明本轮媒体层和初始背景修复后的状态 |
+| 主面板自动窗口截图 | `.codex-tmp/ui-audit/floatly-release-card-glare-check.png` | 未生成有效证据 | 当前会话下 `MainWindowHandle=0`，`EnumWindows` 未枚举到 Floatly 顶层窗口，不能作为验收截图 |
 | 主面板最大尺寸截图 | `.codex-tmp/ui-audit/widget-resign2-light-current-v4.png`、`.codex-tmp/ui-audit/widget-resign2-dark-current-v4.png` | 有效 | 可证明黄历摘要默认态、双列模块、工作状态、每日一句、周历/月历和底部工具条的整体结构 |
 
 必须补齐的视觉验收：
