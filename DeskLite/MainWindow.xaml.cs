@@ -283,7 +283,7 @@ public partial class MainWindow : Window
         ApplyProgressTheme(textPrimary);
         ApplySalaryTheme();
         ApplyPomodoroTheme(textPrimary);
-        DailyQuoteText.Foreground = Brush(_palette.TextMuted);
+        DailyQuoteText.Foreground = Brush(_palette.TextPrimary);
         TodoTitleText.Foreground = Brush(_palette.TextMuted);
         EmptyTodoText.Foreground = Brush(_palette.TextEmpty);
         TodoCountBadge.Background = Brush(_palette.TodoCountBadge);
@@ -1302,8 +1302,10 @@ public partial class MainWindow : Window
             return;
         }
 
-        foreach (var item in notes)
+        for (var i = 0; i < notes.Count; i++)
         {
+            var item = notes[i];
+            SplitAgendaNote(item.Note!, item.Day, out var timeText, out var noteText);
             var row = new Grid
             {
                 Margin = new Thickness(0, 0, 0, 6)
@@ -1316,16 +1318,16 @@ public partial class MainWindow : Window
             {
                 Width = 7,
                 Height = 7,
-                Fill = Brush(item.Day.Hour == 0 ? _palette.Accent : _palette.Mark),
+                Fill = i == 0 ? Brush(_palette.PomodoroBreak) : Brush(_palette.Accent),
                 VerticalAlignment = VerticalAlignment.Center,
                 Margin = new Thickness(2, 0, 9, 0)
             });
 
             var time = new TextBlock
             {
-                Text = item.Day.ToString("MM/dd"),
+                Text = timeText,
                 FontSize = FontScaleHelper.CalSize(11.5, _settings.FontScale),
-                Foreground = Brush(_palette.Accent),
+                Foreground = i == 0 ? Brush(_palette.PomodoroBreak) : Brush(_palette.Accent),
                 VerticalAlignment = VerticalAlignment.Center,
                 Margin = new Thickness(0, 0, 10, 0)
             };
@@ -1334,7 +1336,7 @@ public partial class MainWindow : Window
 
             var note = new TextBlock
             {
-                Text = item.Note!,
+                Text = noteText,
                 FontSize = FontScaleHelper.CalSize(11.5, _settings.FontScale),
                 Foreground = Brush(0xD8, 0xE8, 0xF1, 0xFF),
                 TextTrimming = TextTrimming.CharacterEllipsis,
@@ -1354,6 +1356,25 @@ public partial class MainWindow : Window
                 Child = row
             });
         }
+    }
+
+    private static void SplitAgendaNote(string note, DateTime day, out string timeText, out string noteText)
+    {
+        var trimmed = note.Trim();
+        if (trimmed.Length >= 5 &&
+            char.IsDigit(trimmed[0]) &&
+            char.IsDigit(trimmed[1]) &&
+            trimmed[2] == ':' &&
+            char.IsDigit(trimmed[3]) &&
+            char.IsDigit(trimmed[4]))
+        {
+            timeText = trimmed[..5];
+            noteText = trimmed.Length > 5 ? trimmed[5..].Trim() : "日程";
+            return;
+        }
+
+        timeText = day.ToString("MM/dd", CultureInfo.InvariantCulture);
+        noteText = trimmed;
     }
 
     private Border BuildWeekAgendaPlaceholder(string text, System.Windows.Media.Brush dotBrush)

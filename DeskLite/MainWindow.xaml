@@ -723,23 +723,27 @@
                                         </LinearGradientBrush>
                                     </Border.Background>
                                 </Border>
-                                <Grid Margin="24,14">
+                                <Grid Margin="24,14,22,14">
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="*" />
                                         <ColumnDefinition Width="Auto" />
                                     </Grid.ColumnDefinitions>
-                                    <StackPanel VerticalAlignment="Center">
-                                        <StackPanel Orientation="Horizontal" Margin="0,0,0,8">
-                                            <TextBlock Text="❝" FontSize="18" Foreground="#9BA8FF" FontWeight="Bold" VerticalAlignment="Center" Margin="0,0,8,0" />
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="*" />
+                                        <RowDefinition Height="Auto" />
+                                    </Grid.RowDefinitions>
+                                    <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="0,0,0,8">
+                                            <TextBlock Text="❝" FontSize="19" Foreground="#9BA8FF" FontWeight="Bold" VerticalAlignment="Center" Margin="0,0,8,0" />
                                             <TextBlock Text="每日一句" FontSize="15" FontWeight="SemiBold" Foreground="#DDE8FF" VerticalAlignment="Center" />
-                                        </StackPanel>
-                                        <TextBlock x:Name="DailyQuoteText" FontSize="18" Foreground="#FFFFFF" FontWeight="SemiBold"
-                                                   TextWrapping="Wrap" Visibility="Collapsed" MaxWidth="430" />
-                                        <TextBlock x:Name="DailyQuoteSourceText" Text="—— 坚持，是比努力更重要的能力。" FontSize="12"
-                                                   Foreground="#B8C4D9" Margin="0,6,0,0" MaxWidth="430"
-                                                   TextTrimming="CharacterEllipsis" />
                                     </StackPanel>
-                                    <TextBlock Grid.Column="1" Text="↻ 换一句" FontSize="11" Foreground="#DDE8FF"
+                                    <TextBlock x:Name="DailyQuoteText" Grid.Row="1" FontSize="19" Foreground="#FFFFFF" FontWeight="SemiBold"
+                                               TextWrapping="Wrap" Visibility="Collapsed" MaxWidth="460"
+                                               VerticalAlignment="Center" />
+                                    <TextBlock x:Name="DailyQuoteSourceText" Grid.Row="2" Text="—— 坚持，是比努力更重要的能力。" FontSize="12"
+                                               Foreground="#B8C4D9" MaxWidth="460"
+                                               TextTrimming="CharacterEllipsis" />
+                                    <TextBlock Grid.Column="1" Grid.Row="0" Text="↻ 换一句" FontSize="11" Foreground="#DDE8FF"
                                                HorizontalAlignment="Right" VerticalAlignment="Top" Opacity="0.9" />
                                 </Grid>
                             </Grid>
@@ -762,14 +766,18 @@
                             <Border Grid.Column="2" Style="{StaticResource FloatlyCard}" Padding="16,14,16,12">
                                 <StackPanel>
                                     <Grid Margin="0,0,0,5">
+                                        <TextBlock Text="月历" Style="{StaticResource CardTitle}"
+                                                   HorizontalAlignment="Left" VerticalAlignment="Center" />
                                         <Button x:Name="CalPrevBtn" Content="‹" Width="20" Height="20" Padding="0"
                                                 Click="CalPrev_Click" Background="Transparent" BorderThickness="0"
-                                                Foreground="#8B95A5" Cursor="Hand" FontSize="12" HorizontalAlignment="Left" />
+                                                Foreground="#8B95A5" Cursor="Hand" FontSize="12" HorizontalAlignment="Center"
+                                                Margin="-92,0,0,0" />
                                         <TextBlock x:Name="CalendarTitleText" Text="6月 2026" FontSize="12" FontWeight="SemiBold"
                                                    Foreground="#A6FFFFFF" HorizontalAlignment="Center" VerticalAlignment="Center" />
                                         <Button x:Name="CalNextBtn" Content="›" Width="20" Height="20" Padding="0"
                                                 Click="CalNext_Click" Background="Transparent" BorderThickness="0"
-                                                Foreground="#8B95A5" Cursor="Hand" FontSize="12" HorizontalAlignment="Right" />
+                                                Foreground="#8B95A5" Cursor="Hand" FontSize="12" HorizontalAlignment="Center"
+                                                Margin="92,0,0,0" />
                                     </Grid>
                                     <UniformGrid x:Name="WeekdayHeader" Rows="1" Columns="7" Margin="0,0,0,3" />
                                     <Grid x:Name="CalendarPanel" />
