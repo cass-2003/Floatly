@@ -22,14 +22,17 @@
 - 底部快捷设置已经改成横向胶囊工具条，透明度和字号滑块默认隐藏。
 - 主窗口 `OffWorkCard`、`SalaryPanel`、`DailyQuoteBanner` 已抽出主题化遮罩、文字、分割线和胶囊样式，浅色主题不再依赖固定深色遮罩与白字。
 - 主窗口浅色主题已把外壳、普通模块卡、黄历条、待办项、进度轨道和底部工具条切到浅色玻璃资源，不再套用深色 `FloatlyDesignTokens`。
+- 主窗口已移除 HWND 级 `EnableGlassBackdrop()` 深色 Acrylic 背板，避免深浅主题外层出现方形暗底；半透明玻璃质感保留在圆角 `MainBorder` 与内部卡片层。
+- 主窗口 XAML 初始外壳已调为 `#E80A1B31`，保持圆角主容器半透明，但不再依赖窗口级背板制造玻璃感。
 - 版本常量已经统一到 `AppConstants.Version = 2.0.22`，设置页运行时会使用该常量覆盖 XAML 初始文本。
+- 本轮已重新生成 `release/Floatly-Setup-2.0.22.exe` 和 `release/Floatly-2.0.22-win-x64.zip`，包内包含窗口级背板移除后的主面板实现。
 
 仍未完成或证据不足的部分：
 
 - 当前的目标设计图来自 `docs/设计图/`，但这些图片在当前 worktree 中仍是未跟踪文件；需要后续决定是否纳入版本管理，否则无法作为团队可复现验收依据。
 - 主窗口目标稿实际尺寸是 `941 x 1672`，当前内部设计画布是 `720 x 1280`，真实窗口默认是 `540 x 960`，最大宽度是 `664`；需要确认缩放后的视觉密度是否与设计图期望一致。
 - 主窗口的模块列表设置当前定位为“显示模块”；`MainWindow.ApplyModuleOrder()` 保持固定视觉网格，以维护 `resign-2` 的信息层级和两列/整行节奏。
-- 主窗口浅色和深色已有临时运行截图，可证明主题方向没有大面积反色错误；但这些截图混在真实浏览器桌面背景上，不适合作为最终像素对照证据。
+- 主窗口浅色和深色 release 截图已证明不再有窗口级深色方形 Acrylic 背板；但截图混在真实桌面背景上，只能证明背板根因修复，不能替代最终设计图像素对照。
 - `.codex-tmp/ui-audit/screen-dark-settings.png` 与 `screen-dark-settings-visible.png` 当前不是 Floatly 设置页截图，而是浏览器/资源管理器画面，必须作废，不能进入验收结论。
 - 还缺设置页深浅、旧主面板深浅、新主面板深浅这三套目标的逐项截图验收；目前只能按源码、设计图和部分运行截图审计，不能宣称完全一致。
 
@@ -106,6 +109,8 @@
 - `DailyQuoteBanner` 已是 full-width banner，而不是普通文本行。
 - `CalendarSection` 已把周历和月历放到双列底部区域。
 - `BottomToolbar` 已改为横向快捷设置胶囊，默认隐藏透明度/字号滑块。
+- `Window_SourceInitialized()` 不再调用 `WindowHelper.EnableGlassBackdrop(this)`；主面板玻璃效果由圆角 `MainBorder`、`GlassSheen` 和各模块卡片负责，避免窗口透明区域出现矩形暗底。
+- 默认 `AppSettings.HuangLiCollapsed = true`，新用户初始状态与 `resign-2` 的黄历摘要条节奏一致。
 
 ### 3.2 当前风险
 
@@ -114,8 +119,8 @@
 - 窗口默认缩放后视觉密度比设计图更紧凑，需要用最新运行截图确认是否仍足够可读。
 - `MainWindow.ApplyModuleOrder()` 当前保留固定视觉网格，设置页只表达模块显示；若未来要支持真实排序，需要重新设计主面板栅格规则，不能简单按列表重排。
 - 主窗口最大宽度被限制为 `664`，设计稿内部宽度为 `720`，如果用户期望更接近设计图尺寸，需要重新评估 `MaxWindowWidth`。
-- 当前浅色主窗口截图显示整体方向已接近 `resign-2-light.png`，但仍需继续检查字号、间距、卡片高度和底部工具条的细节可读性。
-- 当前深色主窗口截图显示深色主题在浅色玻璃改造后没有明显回退，但截图中下方日历区域未完整露出，仍不能替代完整默认尺寸验收。
+- 当前浅色主窗口 release 截图显示外层方形暗底已消失，整体方向接近 `resign-2-light.png`；仍需继续检查字号、间距、卡片高度、底部工具条对比度和桌面透底程度。
+- 当前深色主窗口 release 截图显示同样不再依赖窗口级暗色背板；但深色半透明面板会自然透出桌面内容，需要继续按设计图控制主容器和卡片的稳定可读性。
 - 背景素材不作为本轮阻塞项，但文本遮罩和可读性仍必须验收。
 - `OffWorkCard`、`SalaryPanel`、`DailyQuoteBanner` 已改为由 `ApplyWorkStateTheme()` 按深浅主题切换遮罩、文字、分割线和标签胶囊；浅色截图已证明不再残留大面积深色卡片。
 
@@ -142,8 +147,11 @@
 | --- | --- | --- | --- |
 | 设置页深色截图 | `.codex-tmp/ui-audit/screen-dark-settings.png` | 作废 | 截到浏览器页面，不是 Floatly 设置页 |
 | 设置页可见截图 | `.codex-tmp/ui-audit/screen-dark-settings-visible.png` | 作废 | 截到资源管理器/浏览器，不是 Floatly 设置页 |
-| 主面板浅色截图 | `.codex-tmp/ui-audit/screen-light-main-themed-2.png` | 临时有效 | 可证明浅色外壳和工作状态模块方向正确，但不是最终对照 |
-| 主面板深色截图 | `.codex-tmp/ui-audit/screen-dark-main-after-light-glass.png` | 临时有效 | 可证明深色主题未明显回退，但截图不完整 |
+| 设置页深色截图 | `.codex-tmp/ui-audit/settings-design3-dark-current-v2.png` | 有效 | 可证明设置页深色主题能启动并渲染 Floatly 设置面板 |
+| 设置页浅色截图 | `.codex-tmp/ui-audit/settings-design3-light-current-v2.png` | 有效 | 可证明设置页浅色主题资源已生效 |
+| 主面板浅色截图 | `.codex-tmp/ui-audit/widget-release-light-no-hwnd-backdrop.png` | 有效 | 可证明 release 包中浅色主面板不再出现窗口级深色方形背板 |
+| 主面板深色截图 | `.codex-tmp/ui-audit/widget-release-dark-no-hwnd-backdrop.png` | 有效 | 可证明 release 包中深色主面板不再依赖窗口级方形背板 |
+| 主面板最大尺寸截图 | `.codex-tmp/ui-audit/widget-resign2-light-current-v4.png`、`.codex-tmp/ui-audit/widget-resign2-dark-current-v4.png` | 有效 | 可证明黄历摘要默认态、双列模块、工作状态、每日一句、周历/月历和底部工具条的整体结构 |
 
 必须补齐的视觉验收：
 
