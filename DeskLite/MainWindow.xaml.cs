@@ -840,10 +840,8 @@ public partial class MainWindow : Window
         HuangLiDetailNavLine.Foreground = Brush(_palette.TextEmpty);
         HuangLiPrevBtn.Foreground = Brush(_palette.HuangLiAccent);
         HuangLiNextBtn.Foreground = Brush(_palette.HuangLiAccent);
-        HuangLiYiCircle.Background = Brush(_palette.HuangLiYiChipBg);
-        HuangLiJiCircle.Background = Brush(_palette.HuangLiJiChipBg);
-        HuangLiYiCircleText.Foreground = Brush(_palette.HuangLiYi);
-        HuangLiJiCircleText.Foreground = Brush(_palette.HuangLiJi);
+        HuangLiYiMarkText.Foreground = Brush(_palette.HuangLiYi);
+        HuangLiJiMarkText.Foreground = Brush(_palette.HuangLiJi);
         HuangLiCurrentYiCircle.Background = Brush(_palette.HuangLiYiCircle);
         HuangLiCurrentJiCircle.Background = Brush(_palette.HuangLiJiCircle);
         HuangLiCurrentZhiCircle.Background = Brush(_palette.HuangLiAccent);

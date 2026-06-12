@@ -286,9 +286,8 @@
                                             <ColumnDefinition Width="Auto" />
                                             <ColumnDefinition Width="*" />
                                         </Grid.ColumnDefinitions>
-                                        <Border x:Name="HuangLiYiCircle" CornerRadius="5" Padding="6,2" Margin="0,0,10,0" Background="#2255D38A">
-                                            <TextBlock x:Name="HuangLiYiCircleText" Text="宜" FontSize="14" FontWeight="SemiBold" Foreground="#55D38A" />
-                                        </Border>
+                                        <TextBlock x:Name="HuangLiYiMarkText" Text="宜" FontSize="14" FontWeight="SemiBold"
+                                                   Foreground="#55D38A" Margin="0,0,10,0" VerticalAlignment="Center" />
                                         <TextBlock x:Name="HuangLiYiText" Grid.Column="1" FontSize="14" Foreground="#DDE8FF"
                                                    TextTrimming="CharacterEllipsis" VerticalAlignment="Center" />
                                     </Grid>
@@ -297,9 +296,8 @@
                                             <ColumnDefinition Width="Auto" />
                                             <ColumnDefinition Width="*" />
                                         </Grid.ColumnDefinitions>
-                                        <Border x:Name="HuangLiJiCircle" CornerRadius="5" Padding="6,2" Margin="0,0,10,0" Background="#22FF8A72">
-                                            <TextBlock x:Name="HuangLiJiCircleText" Text="忌" FontSize="14" FontWeight="SemiBold" Foreground="#FF8A72" />
-                                        </Border>
+                                        <TextBlock x:Name="HuangLiJiMarkText" Text="忌" FontSize="14" FontWeight="SemiBold"
+                                                   Foreground="#FF8A72" Margin="0,0,10,0" VerticalAlignment="Center" />
                                         <TextBlock x:Name="HuangLiJiText" Grid.Column="1" FontSize="14" Foreground="#DDE8FF"
                                                    TextTrimming="CharacterEllipsis" VerticalAlignment="Center" />
                                     </Grid>
@@ -458,27 +456,27 @@
                                 <ColumnDefinition Width="14" />
                                 <ColumnDefinition Width="*" />
                             </Grid.ColumnDefinitions>
-                            <Border Grid.Column="0" x:Name="CountdownCard" Style="{StaticResource FloatlyCard}" Padding="18,16">
+                            <Border Grid.Column="0" x:Name="CountdownCard" Style="{StaticResource FloatlyCard}" Padding="18,12">
                                 <StackPanel x:Name="CountdownPanel" Visibility="Collapsed">
-                                    <StackPanel Orientation="Horizontal" Margin="0,0,0,8">
+                                    <StackPanel Orientation="Horizontal" Margin="0,0,0,6">
                                         <Image x:Name="CountdownIcon" Width="16" Height="16" VerticalAlignment="Center" Margin="0,0,8,0" />
                                         <TextBlock x:Name="CountdownLabel" Text="距离 618" Style="{StaticResource CardTitle}" VerticalAlignment="Center" />
                                     </StackPanel>
-                                    <TextBlock x:Name="CountdownDays" Text="12 天" FontSize="30" FontWeight="Bold" Foreground="#FFFFFF" Margin="0,0,0,8" />
-                                    <Border x:Name="CountdownTrack" Height="8" CornerRadius="4" Background="#38FFFFFF" ClipToBounds="True" Margin="0,0,0,8">
+                                    <TextBlock x:Name="CountdownDays" Text="12 天" FontSize="30" FontWeight="Bold" Foreground="#FFFFFF" Margin="0,0,0,6" />
+                                    <Border x:Name="CountdownTrack" Height="8" CornerRadius="4" Background="#38FFFFFF" ClipToBounds="True" Margin="0,0,0,6">
                                         <Border x:Name="CountdownFill" HorizontalAlignment="Left" CornerRadius="4" Background="#FF8A72" Width="0" />
                                     </Border>
                                     <TextBlock x:Name="CountdownHint" Text="目标日期" FontSize="12" Foreground="#8B95A5" />
                                 </StackPanel>
                             </Border>
-                            <Border Grid.Column="2" x:Name="YearProgressCard" Style="{StaticResource FloatlyCard}" Padding="18,16">
+                            <Border Grid.Column="2" x:Name="YearProgressCard" Style="{StaticResource FloatlyCard}" Padding="18,12">
                                 <StackPanel x:Name="YearProgressPanel" Visibility="Collapsed">
-                                    <StackPanel Orientation="Horizontal" Margin="0,0,0,8">
+                                    <StackPanel Orientation="Horizontal" Margin="0,0,0,6">
                                         <Image x:Name="YearProgressIcon" Width="17" Height="17" VerticalAlignment="Center" Margin="0,0,8,0" />
                                         <TextBlock x:Name="YearProgressLabel" Text="2026 年进度" Style="{StaticResource CardTitle}" VerticalAlignment="Center" />
                                     </StackPanel>
-                                    <TextBlock x:Name="YearProgressPercent" Text="44.1%" FontSize="30" FontWeight="Bold" Foreground="#FFFFFF" Margin="0,0,0,8" />
-                                    <Border x:Name="YearProgressTrack" Height="8" CornerRadius="4" Background="#38FFFFFF" ClipToBounds="True" Margin="0,0,0,8">
+                                    <TextBlock x:Name="YearProgressPercent" Text="44.1%" FontSize="30" FontWeight="Bold" Foreground="#FFFFFF" Margin="0,0,0,6" />
+                                    <Border x:Name="YearProgressTrack" Height="8" CornerRadius="4" Background="#38FFFFFF" ClipToBounds="True" Margin="0,0,0,6">
                                         <Border x:Name="YearProgressFill" HorizontalAlignment="Left" CornerRadius="4" Background="#5C8DFF" Width="0" />
                                     </Border>
                                     <TextBlock x:Name="YearProgressDetail" Text="已过 162 天 / 365 天" FontSize="12" Foreground="#8B95A5" />
