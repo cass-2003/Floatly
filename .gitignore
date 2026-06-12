@@ -5,6 +5,7 @@ obj/
 *.suo
 *.cache
 *.log
+*_wpftmp.csproj
 publish/
 .cursor/
 .claude/
