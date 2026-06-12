@@ -15,8 +15,8 @@ public partial class MainWindow : Window
 {
     private const double DefaultWindowWidth = 540;
     private const double DefaultWindowHeight = 960;
-    private const double MaxWindowWidth = 664;
-    private const double MaxWindowHeight = 1180;
+    private const double MaxWindowWidth = 720;
+    private const double MaxWindowHeight = 1280;
     private const double WidgetAspectRatio = DefaultWindowWidth / DefaultWindowHeight;
     private const double LegacyForcedMinWidth = 880;
     private const double LegacyForcedMinHeight = 900;
