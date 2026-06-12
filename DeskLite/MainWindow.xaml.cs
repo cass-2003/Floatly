@@ -13,10 +13,10 @@ namespace DeskLite;
 
 public partial class MainWindow : Window
 {
-    private const double DefaultWindowWidth = 720;
-    private const double DefaultWindowHeight = 1280;
-    private const double MaxWindowWidth = 980;
-    private const double MaxWindowHeight = 1320;
+    private const double DefaultWindowWidth = 540;
+    private const double DefaultWindowHeight = 960;
+    private const double MaxWindowWidth = 760;
+    private const double MaxWindowHeight = 1180;
     private const double LegacyForcedMinWidth = 880;
     private const double LegacyForcedMinHeight = 900;
     private static readonly string[] WeekLabels = ["一", "二", "三", "四", "五", "六", "日"];
@@ -907,7 +907,10 @@ public partial class MainWindow : Window
 
     private double NormalizeWindowWidth(double width)
     {
-        if (!_settings.UserCustomSize || width >= LegacyForcedMinWidth)
+        if (!_settings.UserCustomSize ||
+            width >= LegacyForcedMinWidth ||
+            width > MaxWindowWidth ||
+            _settings.WindowHeight >= LegacyForcedMinHeight)
         {
             return DefaultWindowWidth;
         }
@@ -917,7 +920,7 @@ public partial class MainWindow : Window
 
     private double NormalizeWindowHeight(double height)
     {
-        if (height >= LegacyForcedMinHeight)
+        if (height >= LegacyForcedMinHeight || height > MaxWindowHeight)
         {
             return DefaultWindowHeight;
         }

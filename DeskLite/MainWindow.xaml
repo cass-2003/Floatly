@@ -4,9 +4,9 @@
         xmlns:local="clr-namespace:DeskLite"
         Title="Floatly"
         MinWidth="360"
-        MinHeight="420"
-        Width="720"
-        Height="1280"
+        MinHeight="640"
+        Width="540"
+        Height="960"
         WindowStyle="None"
         AllowsTransparency="True"
         Background="Transparent"
@@ -67,7 +67,14 @@
         </Style>
     </Window.Resources>
 
+    <Viewbox x:Name="WidgetScaleBox"
+             Stretch="Uniform"
+             StretchDirection="Both"
+             HorizontalAlignment="Stretch"
+             VerticalAlignment="Stretch">
     <Border x:Name="MainBorder"
+            Width="720"
+            Height="1280"
             Background="#FF102239"
             CornerRadius="16"
             BorderBrush="#2EE4F0FF"
@@ -907,5 +914,6 @@
             </Grid>
         </Grid>
     </Border>
+    </Viewbox>
 </Window>
 
