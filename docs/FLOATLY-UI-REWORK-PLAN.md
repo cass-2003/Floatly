@@ -35,7 +35,7 @@
 - 设置页已补齐作用域内 ScrollBar 模板，滚动区域使用细轨道和主题化 thumb，不再显示系统默认滚动条。
 - 设置页内容区已在 `MaxWidth="1464"` 约束下居中，超宽窗口不再偏左。
 - 版本常量已经统一到 `AppConstants.Version = 2.0.22`，设置页运行时会使用该常量覆盖 XAML 初始文本。
-- 本轮已重新生成 `release/Floatly-Setup-2.0.22.exe` 和 `release/Floatly-2.0.22-win-x64.zip`，包内包含半透明主容器和视频层按需创建后的主面板实现。
+- 本轮已重新生成 `release/Floatly-Setup-2.0.22.exe` 和 `release/Floatly-2.0.22-win-x64.zip`，包内包含半透明主容器、视频层按需创建和深色白色高光弱化后的主面板实现。
 
 仍未完成或证据不足的部分：
 
