@@ -534,7 +534,7 @@
                                         <ItemsControl.ItemTemplate>
                                             <DataTemplate>
                                                 <Border Background="{DynamicResource TodoCardBgBrush}" BorderBrush="{DynamicResource TodoCardBorderBrush}"
-                                                        BorderThickness="1" CornerRadius="10" Padding="12,8" Margin="0,0,0,8" MinHeight="40">
+                                                        BorderThickness="1" CornerRadius="10" Padding="12,9" Margin="0,0,0,8" MinHeight="42">
                                                     <Grid>
                                                         <Grid.ColumnDefinitions>
                                                             <ColumnDefinition Width="Auto" /><ColumnDefinition Width="*" /><ColumnDefinition Width="Auto" />
@@ -555,7 +555,7 @@
                                                                     </Style>
                                                                 </TextBlock.Style>
                                                             </TextBlock>
-                                                            <TextBlock Text="{Binding Title}" Foreground="{DynamicResource TodoTextBrush}" FontSize="12"
+                                                            <TextBlock Text="{Binding Title}" Foreground="{DynamicResource TodoTextBrush}" FontSize="12.5"
                                                                        TextTrimming="CharacterEllipsis" VerticalAlignment="Center"
                                                                        Tag="{Binding Id}" MouseLeftButtonDown="TodoTitle_DoubleClick" Cursor="Hand" />
                                                         </StackPanel>
@@ -589,7 +589,7 @@
                                             <RowDefinition Height="Auto" />
                                             <RowDefinition Height="Auto" />
                                         </Grid.RowDefinitions>
-                                        <Border x:Name="TodoOverflowBtn" Grid.Row="0" Background="#20E8F4FF" CornerRadius="10" Padding="12,7" Margin="0,0,0,9" Cursor="Hand"
+                                        <Border x:Name="TodoOverflowBtn" Grid.Row="0" Background="#20E8F4FF" CornerRadius="10" Padding="12,8" Margin="0,0,0,9" Cursor="Hand"
                                                 MouseLeftButtonUp="TodoViewAll_Click" Visibility="Collapsed">
                                             <Grid>
                                                 <TextBlock x:Name="TodoOverflowText" Text="+ 2 条待办" FontSize="11" Foreground="{DynamicResource TodoLinkBrush}" />

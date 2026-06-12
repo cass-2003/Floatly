@@ -1305,7 +1305,7 @@ public partial class MainWindow : Window
             WeekdayHeader.Children.Add(new TextBlock
             {
                 Text = WeekLabels[i],
-                FontSize = FontScaleHelper.CalSize(11.5, _settings.FontScale),
+                FontSize = FontScaleHelper.CalSize(12.5, _settings.FontScale),
                 Foreground = Brush(_palette.WeekLabel),
                 HorizontalAlignment = System.Windows.HorizontalAlignment.Center
             });
@@ -1366,7 +1366,7 @@ public partial class MainWindow : Window
             var time = new TextBlock
             {
                 Text = timeText,
-                FontSize = FontScaleHelper.CalSize(11.5, _settings.FontScale),
+                FontSize = FontScaleHelper.CalSize(12, _settings.FontScale),
                 Foreground = i == 0 ? Brush(_palette.PomodoroBreak) : Brush(_palette.Accent),
                 VerticalAlignment = VerticalAlignment.Center,
                 Margin = new Thickness(0, 0, 10, 0)
@@ -1377,7 +1377,7 @@ public partial class MainWindow : Window
             var note = new TextBlock
             {
                 Text = noteText,
-                FontSize = FontScaleHelper.CalSize(11.5, _settings.FontScale),
+                FontSize = FontScaleHelper.CalSize(12, _settings.FontScale),
                 Foreground = Brush(0xD8, 0xE8, 0xF1, 0xFF),
                 TextTrimming = TextTrimming.CharacterEllipsis,
                 VerticalAlignment = VerticalAlignment.Center
@@ -1391,7 +1391,7 @@ public partial class MainWindow : Window
                 BorderBrush = Brush(0x18, 0xE4, 0xF0, 0xFF),
                 BorderThickness = new Thickness(1),
                 CornerRadius = new CornerRadius(9),
-                Padding = new Thickness(10, 6, 12, 6),
+                Padding = new Thickness(10, 7, 12, 7),
                 Margin = new Thickness(0, 0, 0, 4),
                 Child = row
             });
@@ -1409,7 +1409,7 @@ public partial class MainWindow : Window
         var more = new TextBlock
         {
             Text = hiddenCount > 0 ? $"...还有 {hiddenCount} 项日程" : "...还有 0 项日程",
-            FontSize = FontScaleHelper.CalSize(10.5, _settings.FontScale),
+            FontSize = FontScaleHelper.CalSize(11, _settings.FontScale),
             Foreground = Brush(_palette.TextSubtle),
             VerticalAlignment = VerticalAlignment.Center
         };
@@ -1418,7 +1418,7 @@ public partial class MainWindow : Window
         var viewAll = new TextBlock
         {
             Text = "查看全部  ›",
-            FontSize = FontScaleHelper.CalSize(10.5, _settings.FontScale),
+            FontSize = FontScaleHelper.CalSize(11, _settings.FontScale),
             Foreground = Brush(0xCC, 0xDD, 0xE8, 0xFF),
             VerticalAlignment = VerticalAlignment.Center
         };
@@ -1470,7 +1470,7 @@ public partial class MainWindow : Window
         var label = new TextBlock
         {
             Text = text,
-            FontSize = FontScaleHelper.CalSize(11.5, _settings.FontScale),
+            FontSize = FontScaleHelper.CalSize(12, _settings.FontScale),
             Foreground = Brush(0xD8, 0xE8, 0xF1, 0xFF),
             TextTrimming = TextTrimming.CharacterEllipsis,
             VerticalAlignment = VerticalAlignment.Center
@@ -1484,7 +1484,7 @@ public partial class MainWindow : Window
             BorderBrush = Brush(0x18, 0xE4, 0xF0, 0xFF),
             BorderThickness = new Thickness(1),
             CornerRadius = new CornerRadius(9),
-            Padding = new Thickness(10, 6, 12, 6),
+            Padding = new Thickness(10, 7, 12, 7),
             Margin = new Thickness(0, 0, 0, 6),
             Child = row
         };
@@ -1524,16 +1524,16 @@ public partial class MainWindow : Window
             ? day.Day.ToString()
             : isToday && preview is null ? "今" : day.Day.ToString();
 
-        var dayFontSize = compact ? 13.5 * calScale : 13 * calScale;
+        var dayFontSize = compact ? 14.5 * calScale : 13 * calScale;
         var dayForeground = isToday || isPreview ? Brush(_palette.Accent) : Brush(_palette.WeekSolar);
 
         if (compact && (isToday || isPreview))
         {
             var dayBorder = new Border
             {
-                Width = 27 * calScale,
-                Height = 27 * calScale,
-                CornerRadius = new CornerRadius(13.5 * calScale),
+                Width = 28 * calScale,
+                Height = 28 * calScale,
+                CornerRadius = new CornerRadius(14 * calScale),
                 Background = Brush(_palette.Accent),
                 HorizontalAlignment = System.Windows.HorizontalAlignment.Center,
                 Child = new TextBlock
@@ -1591,7 +1591,7 @@ public partial class MainWindow : Window
             cell.Children.Add(new TextBlock
             {
                 Text = lunarText,
-                FontSize = 9.5 * calScale,
+                FontSize = 10 * calScale,
                 Foreground = hasMark ? Brush(_palette.Mark) : Brush(_palette.WeekLunar),
                 HorizontalAlignment = System.Windows.HorizontalAlignment.Center,
                 TextTrimming = TextTrimming.CharacterEllipsis,
