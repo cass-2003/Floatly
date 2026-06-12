@@ -10,7 +10,7 @@
 
   [![.NET](https://img.shields.io/badge/.NET-8.0-512BD4?logo=dotnet)](https://dotnet.microsoft.com/)
   [![Platform](https://img.shields.io/badge/Platform-Windows%2010%2F11-0078D6?logo=windows)](https://www.microsoft.com/windows)
-  [![UI](https://img.shields.io/badge/UI-WPF%20%2B%20HandyControl-blue)](https://github.com/dotnet/wpf)
+  [![UI](https://img.shields.io/badge/UI-WPF%20custom%20controls-blue)](https://github.com/dotnet/wpf)
   [![Release](https://img.shields.io/github/v/release/cass-2003/Floatly?label=release)](https://github.com/cass-2003/Floatly/releases/tag/v2.0.22)
   [![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 
@@ -133,7 +133,7 @@ gh release create v2.0.22 `
 | 领域 | 方案 |
 |------|------|
 | 框架 | .NET 8、WPF、Windows Forms 托盘 |
-| UI 控件 | HandyControl |
+| UI 控件 | WPF 自绘控件 |
 | 农历黄历 | lunar-csharp |
 | SVG 渲染 | SharpVectors.Wpf |
 | 天气 | Open-Meteo，无需 API Key |

@@ -2,7 +2,6 @@ using System.Globalization;
 using System.Windows;
 using DeskLite.Models;
 using DeskLite.Services;
-using HcTimePicker = HandyControl.Controls.TimePicker;
 using WpfButton = System.Windows.Controls.Button;
 using WpfTextBox = System.Windows.Controls.TextBox;
 
@@ -34,16 +33,17 @@ public static class TodoEditPrompt
         };
         TodoThemeHelper.StyleInput(dueBox, palette, 13);
 
-        var timePicker = new HcTimePicker
+        var timeBox = new WpfTextBox
         {
+            Text = TryReadTime(existing?.Time, out var existingTime)
+                ? existingTime.ToString("HH:mm", CultureInfo.InvariantCulture)
+                : string.Empty,
             Margin = new Thickness(0, 6, 0, 0),
+            Padding = new Thickness(6, 4, 6, 4),
             MinWidth = 260,
-            Height = 32,
-            TimeFormat = "HH:mm",
-            SelectedTime = TryReadTime(existing?.Time, out var existingTime)
-                ? DateTime.Today.Add(existingTime.ToTimeSpan())
-                : null
+            Height = 32
         };
+        TodoThemeHelper.StyleInput(timeBox, palette, 13);
 
         var ok = false;
         Result? result = null;
@@ -60,8 +60,6 @@ public static class TodoEditPrompt
             Background = new System.Windows.Media.SolidColorBrush(palette.PanelBackground),
             Foreground = new System.Windows.Media.SolidColorBrush(palette.TextPrimary)
         };
-        MergeHandyControlResources(dialog.Resources);
-
         var panel = new System.Windows.Controls.StackPanel { Margin = new Thickness(16) };
         panel.Children.Add(MakeLabel(message, palette));
         panel.Children.Add(MakeLabel("标题", palette, 11));
@@ -69,7 +67,7 @@ public static class TodoEditPrompt
         panel.Children.Add(MakeLabel("截止日期 (yyyy-MM-dd，可选)", palette, 11));
         panel.Children.Add(dueBox);
         panel.Children.Add(MakeLabel("提醒时间（可选）", palette, 11));
-        panel.Children.Add(timePicker);
+        panel.Children.Add(timeBox);
 
         var buttons = new System.Windows.Controls.StackPanel
         {
@@ -88,7 +86,7 @@ public static class TodoEditPrompt
             }
 
             var due = NormalizeDate(dueBox.Text);
-            var time = NormalizeTime(timePicker);
+            var time = NormalizeTime(timeBox.Text);
             ok = true;
             result = new Result(parsedTitle, time, due);
             dialog!.Close();
@@ -117,18 +115,6 @@ public static class TodoEditPrompt
             TextWrapping = TextWrapping.Wrap,
             Margin = size <= 11 ? new Thickness(0, 8, 0, 0) : new Thickness(0)
         };
-
-    private static void MergeHandyControlResources(ResourceDictionary resources)
-    {
-        resources.MergedDictionaries.Add(new ResourceDictionary
-        {
-            Source = new Uri("pack://application:,,,/HandyControl;component/Themes/SkinDark.xaml")
-        });
-        resources.MergedDictionaries.Add(new ResourceDictionary
-        {
-            Source = new Uri("pack://application:,,,/HandyControl;component/Themes/Theme.xaml")
-        });
-    }
 
     private static string? NormalizeDate(string text)
     {
@@ -181,14 +167,9 @@ public static class TodoEditPrompt
         return true;
     }
 
-    private static string? NormalizeTime(HcTimePicker picker)
+    private static string? NormalizeTime(string text)
     {
-        if (picker.SelectedTime is { } selectedTime)
-        {
-            return selectedTime.ToString("HH:mm", CultureInfo.InvariantCulture);
-        }
-
-        return TryReadTime(picker.Text, out var parsed)
+        return TryReadTime(text, out var parsed)
             ? parsed.ToString("HH:mm", CultureInfo.InvariantCulture)
             : null;
     }
