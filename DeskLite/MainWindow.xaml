@@ -557,11 +557,11 @@
                                     </Grid>
                                 </Grid>
                             </Border>
-                            <Border Grid.Column="2" x:Name="PomodoroCard" Style="{StaticResource FloatlyCard}" Padding="20,16">
+                            <Border Grid.Column="2" x:Name="PomodoroCard" Style="{StaticResource FloatlyCard}" Padding="20,16,20,12">
                                 <Grid x:Name="PomodoroPanel" Visibility="Collapsed">
                                     <Grid.RowDefinitions>
                                         <RowDefinition Height="Auto" />
-                                        <RowDefinition Height="150" />
+                                        <RowDefinition Height="138" />
                                         <RowDefinition Height="Auto" />
                                         <RowDefinition Height="Auto" />
                                     </Grid.RowDefinitions>
@@ -575,24 +575,24 @@
                                                 HorizontalAlignment="Right" VerticalAlignment="Center"
                                                 ToolTip="番茄钟设置" />
                                     </Grid>
-                                    <Grid Grid.Row="1" Width="142" Height="142" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,-2,0,0">
+                                    <Grid Grid.Row="1" Width="132" Height="132" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,-2,0,0">
                                         <Path x:Name="PomodoroRingTrack" Stroke="#28FFFFFF" StrokeThickness="7" Fill="Transparent"
                                               StrokeStartLineCap="Round" StrokeEndLineCap="Round" />
                                         <Path x:Name="PomodoroRingProgress" Stroke="#5C8DFF" StrokeThickness="7" Fill="Transparent"
                                               StrokeStartLineCap="Round" StrokeEndLineCap="Round" />
                                         <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
-                                            <TextBlock x:Name="PomodoroCountdownText" Text="25:00" FontSize="34" FontWeight="SemiBold" Foreground="#FFFFFF" HorizontalAlignment="Center" />
-                                            <TextBlock x:Name="PomodoroCenterStatusText" Text="准备开始" FontSize="12" Foreground="#A6FFFFFF" HorizontalAlignment="Center" Margin="0,3,0,0" />
+                                            <TextBlock x:Name="PomodoroCountdownText" Text="25:00" FontSize="32" FontWeight="SemiBold" Foreground="#FFFFFF" HorizontalAlignment="Center" />
+                                            <TextBlock x:Name="PomodoroCenterStatusText" Text="准备开始" FontSize="11" Foreground="#A6FFFFFF" HorizontalAlignment="Center" Margin="0,2,0,0" />
                                         </StackPanel>
                                     </Grid>
                                     <Border x:Name="PomodoroTrack" Height="0" Width="0" Visibility="Collapsed">
                                         <Border x:Name="PomodoroFill" Width="0" />
                                     </Border>
-                                    <Button x:Name="PomodoroStartBtn" Grid.Row="2" Content="开始专注" Height="34" Padding="0" Width="206"
+                                    <Button x:Name="PomodoroStartBtn" Grid.Row="2" Content="开始专注" Height="32" Padding="0" Width="206"
                                             Click="PomodoroStart_Click" Background="#5C8DFF" Foreground="White"
                                             BorderThickness="0" Cursor="Hand" FontSize="15" FontWeight="SemiBold" HorizontalAlignment="Center" />
                                     <TextBlock x:Name="PomodoroHintText" Grid.Row="3" Text="专注更高效，休息更放松" FontSize="11" Foreground="#8B95A5"
-                                               HorizontalAlignment="Center" Margin="0,8,0,0" />
+                                               HorizontalAlignment="Center" Margin="0,6,0,0" />
                                     <Button x:Name="PomodoroResetBtn" Grid.Row="3" Content="重置" Height="22" Padding="0" Margin="0,6,0,0"
                                             Click="PomodoroReset_Click" Background="Transparent" Foreground="#8B95A5"
                                             BorderThickness="0" Cursor="Hand" FontSize="10" HorizontalAlignment="Right" VerticalAlignment="Top"

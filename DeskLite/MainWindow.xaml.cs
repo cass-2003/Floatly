@@ -1155,8 +1155,8 @@ public partial class MainWindow : Window
 
         PomodoroFill.Background = Brush(fillColor);
         PomodoroRingProgress.Stroke = Brush(fillColor);
-        PomodoroRingHelper.UpdateOpenArc(PomodoroRingTrack, 100, 142, 7);
-        PomodoroRingHelper.UpdateOpenArc(PomodoroRingProgress, ringProgress, 142, 7);
+        PomodoroRingHelper.UpdateOpenArc(PomodoroRingTrack, 100, 132, 7);
+        PomodoroRingHelper.UpdateOpenArc(PomodoroRingProgress, ringProgress, 132, 7);
     }
 
     private void OnPomodoroCompleted(PomodoroPhase phase)
@@ -1473,13 +1473,19 @@ public partial class MainWindow : Window
                 TextTrimming = TextTrimming.CharacterEllipsis
             });
         }
-        else if (hasMark)
+        else
         {
+            var lunarText = hasMark ? dayInfo.Mark! : dayInfo.ShortLunar;
+            if (lunarText.Length > 3 && !hasMark)
+            {
+                lunarText = lunarText[..3];
+            }
+
             cell.Children.Add(new TextBlock
             {
-                Text = dayInfo.Mark!,
+                Text = lunarText,
                 FontSize = 9 * calScale,
-                Foreground = Brush(_palette.Mark),
+                Foreground = hasMark ? Brush(_palette.Mark) : Brush(_palette.WeekLunar),
                 HorizontalAlignment = System.Windows.HorizontalAlignment.Center,
                 TextTrimming = TextTrimming.CharacterEllipsis
             });
