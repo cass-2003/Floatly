@@ -304,8 +304,8 @@ public partial class MainWindow : Window
         PinBtn.Foreground = Topmost ? Brush(FloatlyDesignTokens.AccentBlue) : Brush(_palette.TextSecondary);
         ApplyProgressTheme(textPrimary);
         ApplySalaryTheme();
+        ApplyWorkStateTheme(textPrimary);
         ApplyPomodoroTheme(textPrimary);
-        DailyQuoteText.Foreground = Brush(_palette.TextPrimary);
         TodoTitleText.Foreground = Brush(_palette.TextMuted);
         EmptyTodoText.Foreground = Brush(_palette.TextEmpty);
         TodoCountBadge.Background = Brush(_palette.TodoCountBadge);
@@ -1118,6 +1118,97 @@ public partial class MainWindow : Window
         SalaryPerSecondText.Foreground = Brush(0xFF, 0xF4, 0xD8, 0x72);
         SalaryHourlyValueText.Foreground = Brush(0xE6, 0xFF, 0xF5, 0xD6);
         SalaryWorkDurationText.Foreground = Brush(0xE6, 0xFF, 0xF5, 0xD6);
+    }
+
+    private void ApplyWorkStateTheme(System.Windows.Media.Color textPrimary)
+    {
+        var isLight = AppThemePalette.Parse(_settings.Theme) == ThemeMode.Light;
+        if (isLight)
+        {
+            OffWorkImageLayer.Opacity = 0.16;
+            OffWorkTintOverlay.Background = Brush(0xD6, 0xFF, 0xFF, 0xFF);
+            OffWorkLabel.Foreground = Brush(_palette.TextSecondary);
+            OffWorkMainText.Foreground = Brush(textPrimary);
+            OffWorkCaption.Foreground = Brush(_palette.TextSubtle);
+            OffWorkDetail.Foreground = Brush(_palette.TextSubtle);
+            OffWorkModePillBorder.Background = Brush(0x68, 0xF8, 0xFA, 0xFC);
+            OffWorkModePillBorder.BorderBrush = Brush(0x42, 0x94, 0xA3, 0xB8);
+            OffWorkModePill.Foreground = Brush(_palette.TextSubtle);
+            OffWorkTrack.Background = Brush(_palette.ProgressTrack);
+
+            SalaryImageLayer.Opacity = 0.86;
+            SalaryTintOverlay.Background = CreateLinearBrush(
+                [
+                    new GradientStop(System.Windows.Media.Color.FromArgb(0xF0, 0xFF, 0xFF, 0xFF), 0.0),
+                    new GradientStop(System.Windows.Media.Color.FromArgb(0xC8, 0xFF, 0xFB, 0xEB), 0.58),
+                    new GradientStop(System.Windows.Media.Color.FromArgb(0x40, 0xFF, 0xF4, 0xC4), 1.0)
+                ],
+                new System.Windows.Point(0, 0),
+                new System.Windows.Point(1, 1));
+            SalaryIconBadge.Background = Brush(0x18, 0xD9, 0x77, 0x06);
+            SalaryIconBadge.BorderBrush = Brush(0x9A, 0xF5, 0x9E, 0x0B);
+            SalaryLabel.Foreground = Brush(_palette.TextPrimary);
+            SalaryAmount.Foreground = Brush(0xFF, 0xF6, 0xA1, 0x13);
+            SalarySubtitle.Foreground = Brush(_palette.SalaryGoldMuted);
+            SalaryPerSecondText.Foreground = Brush(0xFF, 0x4B, 0x8F, 0x2B);
+            SalaryDivider.Background = Brush(0x28, 0xD9, 0x77, 0x06);
+            SalaryHourlyValueText.Foreground = Brush(_palette.TextSecondary);
+            SalaryWorkDurationText.Foreground = Brush(_palette.TextSecondary);
+
+            DailyQuoteImageLayer.Opacity = 0.32;
+            DailyQuoteTintOverlay.Background = CreateLinearBrush(
+                [
+                    new GradientStop(System.Windows.Media.Color.FromArgb(0xF5, 0xFF, 0xFF, 0xFF), 0.0),
+                    new GradientStop(System.Windows.Media.Color.FromArgb(0xD8, 0xF8, 0xFB, 0xFF), 0.56),
+                    new GradientStop(System.Windows.Media.Color.FromArgb(0x40, 0xE8, 0xF1, 0xFF), 1.0)
+                ],
+                new System.Windows.Point(0, 0),
+                new System.Windows.Point(1, 0));
+            DailyQuoteMarkText.Foreground = Brush(0xFF, 0x5C, 0x8D, 0xFF);
+            DailyQuoteTitleText.Foreground = Brush(_palette.TextPrimary);
+            DailyQuoteText.Foreground = Brush(_palette.TextPrimary);
+            DailyQuoteSourceText.Foreground = Brush(_palette.TextSubtle);
+            DailyQuoteRefreshText.Foreground = Brush(_palette.TextSubtle);
+            return;
+        }
+
+        OffWorkImageLayer.Opacity = 0.40;
+        OffWorkTintOverlay.Background = Brush(0x95, 0x10, 0x24, 0x3B);
+        OffWorkLabel.Foreground = Brush(_palette.TextMuted);
+        OffWorkMainText.Foreground = Brush(textPrimary);
+        OffWorkCaption.Foreground = Brush(0xA6, 0xFF, 0xFF, 0xFF);
+        OffWorkDetail.Foreground = Brush(_palette.TextSubtle);
+        OffWorkModePillBorder.Background = Brush(0x1A, 0xFF, 0xFF, 0xFF);
+        OffWorkModePillBorder.BorderBrush = Brush(0x12, 0xFF, 0xFF, 0xFF);
+        OffWorkModePill.Foreground = Brush(0xFF, 0xC9, 0xD3, 0xE6);
+        OffWorkTrack.Background = Brush(_palette.ProgressTrack);
+
+        SalaryImageLayer.Opacity = 0.62;
+        SalaryTintOverlay.Background = Brush(0x7A, 0x15, 0x10, 0x0C);
+        SalaryIconBadge.Background = Brush(0x26, 0xF8, 0xC3, 0x4A);
+        SalaryIconBadge.BorderBrush = Brush(0xDD, 0xF8, 0xC3, 0x4A);
+        SalaryLabel.Foreground = Brush(0xDD, 0xE8, 0xEC, 0xF4);
+        SalaryAmount.Foreground = Brush(0xFF, 0xF8, 0xC3, 0x4A);
+        SalarySubtitle.Foreground = Brush(_palette.SalaryGoldMuted);
+        SalaryPerSecondText.Foreground = Brush(0xFF, 0xF4, 0xD8, 0x72);
+        SalaryDivider.Background = Brush(0x30, 0xF8, 0xD4, 0x6A);
+        SalaryHourlyValueText.Foreground = Brush(0xE6, 0xFF, 0xF5, 0xD6);
+        SalaryWorkDurationText.Foreground = Brush(0xE6, 0xFF, 0xF5, 0xD6);
+
+        DailyQuoteImageLayer.Opacity = 0.78;
+        DailyQuoteTintOverlay.Background = CreateLinearBrush(
+            [
+                new GradientStop(System.Windows.Media.Color.FromArgb(0xE4, 0x0D, 0x1A, 0x2C), 0.0),
+                new GradientStop(System.Windows.Media.Color.FromArgb(0xC0, 0x12, 0x21, 0x37), 0.58),
+                new GradientStop(System.Windows.Media.Color.FromArgb(0x24, 0x12, 0x21, 0x37), 1.0)
+            ],
+            new System.Windows.Point(0, 0),
+            new System.Windows.Point(1, 0));
+        DailyQuoteMarkText.Foreground = Brush(0xFF, 0x9B, 0xA8, 0xFF);
+        DailyQuoteTitleText.Foreground = Brush(0xFF, 0xDD, 0xE8, 0xFF);
+        DailyQuoteText.Foreground = Brush(0xFF, 0xFF, 0xFF, 0xFF);
+        DailyQuoteSourceText.Foreground = Brush(0xFF, 0xB8, 0xC4, 0xD9);
+        DailyQuoteRefreshText.Foreground = Brush(0xFF, 0xDD, 0xE8, 0xFF);
     }
 
     private void ApplyPomodoroTheme(System.Windows.Media.Color textPrimary)

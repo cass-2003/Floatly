@@ -666,14 +666,14 @@
                             </Grid.ColumnDefinitions>
                             <Border Grid.Column="0" x:Name="OffWorkCard" Style="{StaticResource FloatlyCard}" Padding="0">
                                 <Grid>
-                                    <Border CornerRadius="18" Opacity="0.40" IsHitTestVisible="False">
+                                    <Border x:Name="OffWorkImageLayer" CornerRadius="18" Opacity="0.40" IsHitTestVisible="False">
                                         <Border.Background>
                                             <ImageBrush ImageSource="Assets/CardBackgrounds/star-sky-dark.png"
                                                         Stretch="UniformToFill"
                                                         RenderOptions.BitmapScalingMode="HighQuality" />
                                         </Border.Background>
                                     </Border>
-                                    <Border CornerRadius="18" Background="#9510243B" />
+                                    <Border x:Name="OffWorkTintOverlay" CornerRadius="18" Background="#9510243B" />
                                     <Border Padding="18,14,18,14">
                                         <Grid x:Name="OffWorkPanel" Visibility="Collapsed">
                                             <Grid.RowDefinitions>
@@ -700,7 +700,7 @@
                                                 </Grid.ColumnDefinitions>
                                                 <TextBlock x:Name="OffWorkDetail" Text="下班时间 18:00" FontSize="11" Foreground="#8B95A5"
                                                            VerticalAlignment="Center" TextTrimming="CharacterEllipsis" />
-                                                <Border Grid.Column="1" CornerRadius="12" Padding="9,3" Background="#1AFFFFFF" BorderBrush="#12FFFFFF" BorderThickness="1">
+                                                <Border x:Name="OffWorkModePillBorder" Grid.Column="1" CornerRadius="12" Padding="9,3" Background="#1AFFFFFF" BorderBrush="#12FFFFFF" BorderThickness="1">
                                                     <TextBlock x:Name="OffWorkModePill" Text="工作日模式" FontSize="10" Foreground="#C9D3E6" />
                                                 </Border>
                                             </Grid>
@@ -710,14 +710,14 @@
                             </Border>
                             <Border Grid.Column="2" x:Name="SalaryPanel" Style="{StaticResource FloatlyCard}" Padding="0" Visibility="Collapsed">
                                 <Grid>
-                                    <Border CornerRadius="18" Opacity="0.62" IsHitTestVisible="False">
+                                    <Border x:Name="SalaryImageLayer" CornerRadius="18" Opacity="0.62" IsHitTestVisible="False">
                                         <Border.Background>
                                             <ImageBrush ImageSource="Assets/CardBackgrounds/coins.png"
                                                         Stretch="UniformToFill"
                                                         RenderOptions.BitmapScalingMode="HighQuality" />
                                         </Border.Background>
                                     </Border>
-                                    <Border CornerRadius="18" Background="#7A15100C" />
+                                    <Border x:Name="SalaryTintOverlay" CornerRadius="18" Background="#7A15100C" />
                                     <Border Padding="20,15,20,15">
                                         <Grid>
                                             <Grid.RowDefinitions>
@@ -726,7 +726,7 @@
                                                 <RowDefinition Height="Auto" />
                                             </Grid.RowDefinitions>
                                             <StackPanel Grid.Row="0" Orientation="Horizontal" VerticalAlignment="Center">
-                                                <Border Width="18" Height="18" CornerRadius="9" Background="#26F8C34A" BorderBrush="#DDF8C34A" BorderThickness="1" Margin="0,0,8,0">
+                                                <Border x:Name="SalaryIconBadge" Width="18" Height="18" CornerRadius="9" Background="#26F8C34A" BorderBrush="#DDF8C34A" BorderThickness="1" Margin="0,0,8,0">
                                                     <Image x:Name="SalaryIcon" Width="12" Height="12"
                                                            HorizontalAlignment="Center" VerticalAlignment="Center" />
                                                 </Border>
@@ -748,7 +748,7 @@
                                                     <RowDefinition Height="1" />
                                                     <RowDefinition Height="Auto" />
                                                 </Grid.RowDefinitions>
-                                                <Border Background="#30F8D46A" />
+                                                <Border x:Name="SalaryDivider" Background="#30F8D46A" />
                                                 <Grid Grid.Row="1" Margin="0,8,0,0">
                                                     <Grid.ColumnDefinitions>
                                                         <ColumnDefinition Width="*" />
@@ -768,7 +768,7 @@
 
                         <Border x:Name="DailyQuoteBanner" Style="{StaticResource FloatlyCard}" Margin="0,0,0,10" Padding="0" Height="118" Visibility="Collapsed">
                             <Grid>
-                                <Border CornerRadius="18" Opacity="0.78" IsHitTestVisible="False">
+                                <Border x:Name="DailyQuoteImageLayer" CornerRadius="18" Opacity="0.78" IsHitTestVisible="False">
                                     <Border.Background>
                                         <ImageBrush ImageSource="Assets/CardBackgrounds/star-sky-dark.png"
                                                     Stretch="UniformToFill"
@@ -776,7 +776,7 @@
                                                     RenderOptions.BitmapScalingMode="HighQuality" />
                                     </Border.Background>
                                 </Border>
-                                <Border CornerRadius="18">
+                                <Border x:Name="DailyQuoteTintOverlay" CornerRadius="18">
                                     <Border.Background>
                                         <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
                                             <GradientStop Color="#E40D1A2C" Offset="0" />
@@ -796,8 +796,8 @@
                                         <RowDefinition Height="Auto" />
                                     </Grid.RowDefinitions>
                                     <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="0,0,0,8">
-                                            <TextBlock Text="❝" FontSize="19" Foreground="#9BA8FF" FontWeight="Bold" VerticalAlignment="Center" Margin="0,0,8,0" />
-                                            <TextBlock Text="每日一句" FontSize="15" FontWeight="SemiBold" Foreground="#DDE8FF" VerticalAlignment="Center" />
+                                            <TextBlock x:Name="DailyQuoteMarkText" Text="❝" FontSize="19" Foreground="#9BA8FF" FontWeight="Bold" VerticalAlignment="Center" Margin="0,0,8,0" />
+                                            <TextBlock x:Name="DailyQuoteTitleText" Text="每日一句" FontSize="15" FontWeight="SemiBold" Foreground="#DDE8FF" VerticalAlignment="Center" />
                                     </StackPanel>
                                     <TextBlock x:Name="DailyQuoteText" Grid.Row="1" FontSize="19" Foreground="#FFFFFF" FontWeight="SemiBold"
                                                TextWrapping="Wrap" Visibility="Collapsed" MaxWidth="460"
@@ -805,7 +805,7 @@
                                     <TextBlock x:Name="DailyQuoteSourceText" Grid.Row="2" Text="—— 坚持，是比努力更重要的能力。" FontSize="12"
                                                Foreground="#B8C4D9" MaxWidth="460"
                                                HorizontalAlignment="Left" TextAlignment="Left" TextTrimming="CharacterEllipsis" />
-                                    <TextBlock Grid.Column="1" Grid.Row="0" Text="↻ 换一句" FontSize="11" Foreground="#DDE8FF"
+                                    <TextBlock x:Name="DailyQuoteRefreshText" Grid.Column="1" Grid.Row="0" Text="↻ 换一句" FontSize="11" Foreground="#DDE8FF"
                                                HorizontalAlignment="Right" VerticalAlignment="Top" Opacity="0.9" />
                                 </Grid>
                             </Grid>
