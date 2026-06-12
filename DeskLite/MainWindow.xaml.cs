@@ -2051,7 +2051,7 @@ public partial class MainWindow : Window
 
         TodoList.ItemsSource = shown;
         EmptyTodoPanel.Visibility = shown.Count == 0 ? Visibility.Visible : Visibility.Collapsed;
-        TodoCountText.Text = $"{shown.Count}/{allToday.Count}";
+        TodoCountText.Text = allToday.Count.ToString();
 
         if (hidden > 0)
         {
