@@ -666,12 +666,14 @@
                             </Grid.ColumnDefinitions>
                             <Border Grid.Column="0" x:Name="OffWorkCard" Style="{StaticResource FloatlyCard}" Padding="0">
                                 <Grid>
-                                    <Image Source="Assets/CardBackgrounds/star-sky-dark.png"
-                                           Stretch="UniformToFill"
-                                           Opacity="0.40"
-                                           IsHitTestVisible="False"
-                                           RenderOptions.BitmapScalingMode="HighQuality" />
-                                    <Border Background="#9510243B" />
+                                    <Border CornerRadius="18" Opacity="0.40" IsHitTestVisible="False">
+                                        <Border.Background>
+                                            <ImageBrush ImageSource="Assets/CardBackgrounds/star-sky-dark.png"
+                                                        Stretch="UniformToFill"
+                                                        RenderOptions.BitmapScalingMode="HighQuality" />
+                                        </Border.Background>
+                                    </Border>
+                                    <Border CornerRadius="18" Background="#9510243B" />
                                     <Border Padding="18,14,18,14">
                                         <Grid x:Name="OffWorkPanel" Visibility="Collapsed">
                                             <Grid.RowDefinitions>
@@ -708,12 +710,14 @@
                             </Border>
                             <Border Grid.Column="2" x:Name="SalaryPanel" Style="{StaticResource FloatlyCard}" Padding="0" Visibility="Collapsed">
                                 <Grid>
-                                    <Image Source="Assets/CardBackgrounds/coins.png"
-                                           Stretch="UniformToFill"
-                                           Opacity="0.62"
-                                           IsHitTestVisible="False"
-                                           RenderOptions.BitmapScalingMode="HighQuality" />
-                                    <Border Background="#7A15100C" />
+                                    <Border CornerRadius="18" Opacity="0.62" IsHitTestVisible="False">
+                                        <Border.Background>
+                                            <ImageBrush ImageSource="Assets/CardBackgrounds/coins.png"
+                                                        Stretch="UniformToFill"
+                                                        RenderOptions.BitmapScalingMode="HighQuality" />
+                                        </Border.Background>
+                                    </Border>
+                                    <Border CornerRadius="18" Background="#7A15100C" />
                                     <Border Padding="20,15,20,15">
                                         <Grid>
                                             <Grid.RowDefinitions>
@@ -764,13 +768,15 @@
 
                         <Border x:Name="DailyQuoteBanner" Style="{StaticResource FloatlyCard}" Margin="0,0,0,10" Padding="0" Height="118" Visibility="Collapsed">
                             <Grid>
-                                <Image Source="Assets/CardBackgrounds/star-sky-dark.png"
-                                       Stretch="UniformToFill"
-                                       Opacity="0.78"
-                                       IsHitTestVisible="False"
-                                       RenderOptions.BitmapScalingMode="HighQuality"
-                                       HorizontalAlignment="Right" Width="360" />
-                                <Border>
+                                <Border CornerRadius="18" Opacity="0.78" IsHitTestVisible="False">
+                                    <Border.Background>
+                                        <ImageBrush ImageSource="Assets/CardBackgrounds/star-sky-dark.png"
+                                                    Stretch="UniformToFill"
+                                                    AlignmentX="Right"
+                                                    RenderOptions.BitmapScalingMode="HighQuality" />
+                                    </Border.Background>
+                                </Border>
+                                <Border CornerRadius="18">
                                     <Border.Background>
                                         <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
                                             <GradientStop Color="#E40D1A2C" Offset="0" />

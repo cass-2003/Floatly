@@ -43,8 +43,8 @@ public static class FontScaleHelper
         Set(window.LunarText, 10, scale);
         Set(window.LunarSubText, 9, scale);
         Set(window.YearProgressLabel, 13, scale);
-        Set(window.YearProgressPercent, 22, scale);
-        Set(window.YearProgressDetail, 10, scale);
+        Set(window.YearProgressPercent, 28, scale);
+        Set(window.YearProgressDetail, 11, scale);
         window.YearProgressTrack.Height = FloatlyDesignTokens.ProgressBarHeight * scale;
         Set(window.CityText, 12, scale);
         window.WeatherIconImage.Width = 72 * scale;
@@ -63,8 +63,8 @@ public static class FontScaleHelper
         Set(window.SunsetLineText, 12, scale);
         Set(window.TomorrowLineText, 11, scale);
         Set(window.CountdownLabel, 13, scale);
-        Set(window.CountdownDays, 22, scale);
-        Set(window.CountdownHint, 10, scale);
+        Set(window.CountdownDays, 28, scale);
+        Set(window.CountdownHint, 11, scale);
         window.CountdownTrack.Height = FloatlyDesignTokens.ProgressBarHeight * scale;
         window.OffWorkTrack.Height = FloatlyDesignTokens.ProgressBarHeight * scale;
         Set(window.PomodoroPhaseText, 13, scale);
@@ -74,10 +74,10 @@ public static class FontScaleHelper
         Set(window.PomodoroStartBtn, 15, scale);
         Set(window.PomodoroHintText, 11, scale);
         Set(window.PomodoroResetBtn, 11, scale);
-        Set(window.OffWorkMainText, 26, scale);
+        Set(window.OffWorkMainText, 32, scale);
         Set(window.OffWorkCaption, 10, scale);
         Set(window.OffWorkModePill, 10, scale);
-        Set(window.SalaryAmount, 28, scale);
+        Set(window.SalaryAmount, 32, scale);
         Set(window.SalaryPerSecondText, 12, scale);
         Set(window.SalaryHourlyValueText, 11, scale);
         Set(window.SalaryWorkDurationText, 11, scale);
@@ -116,15 +116,15 @@ public static class FontScaleHelper
     private static void ApplyHuangLi(MainWindow window, double scale)
     {
         Set(window.HuangLiSolarDate, 12, scale);
-        Set(window.HuangLiLunarLarge, 12, scale);
+        Set(window.HuangLiLunarLarge, 21, scale);
         window.HuangLiPrevBtn.FontSize = 20 * scale;
         window.HuangLiNextBtn.FontSize = 20 * scale;
-        Set(window.HuangLiMetaLineStrip, 10, scale);
+        Set(window.HuangLiMetaLineStrip, 12, scale);
         Set(window.HuangLiDetailNavLine, 10, scale);
-        Set(window.HuangLiYiCircleText, 9, scale);
-        Set(window.HuangLiJiCircleText, 9, scale);
-        Set(window.HuangLiYiText, 10, scale);
-        Set(window.HuangLiJiText, 10, scale);
+        Set(window.HuangLiYiCircleText, 12, scale);
+        Set(window.HuangLiJiCircleText, 12, scale);
+        Set(window.HuangLiYiText, 12, scale);
+        Set(window.HuangLiJiText, 12, scale);
         Set(window.HuangLiWuXingLabel, 10, scale);
         Set(window.HuangLiWuXingVal, 11, scale);
         Set(window.HuangLiChongLabel, 10, scale);
