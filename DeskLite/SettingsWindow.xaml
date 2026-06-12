@@ -1212,7 +1212,7 @@
                                             <RowDefinition Height="Auto" />
                                             <RowDefinition Height="*" />
                                         </Grid.RowDefinitions>
-                                        <TextBlock Style="{StaticResource FieldLabel}" Text="显示顺序（拖拽排序）" Margin="0,0,0,8" />
+                                        <TextBlock Style="{StaticResource FieldLabel}" Text="显示模块" Margin="0,0,0,8" />
                                         <Grid Grid.Row="1">
                                             <Grid.ColumnDefinitions>
                                                 <ColumnDefinition Width="*" />
@@ -1242,7 +1242,7 @@
                                                         <TextBlock Text="下移" />
                                                     </StackPanel>
                                                 </Button>
-                                                <Button x:Name="BtnResetModuleOrder" Grid.Row="3" Content="重置顺序"
+                                                <Button x:Name="BtnResetModuleOrder" Grid.Row="3" Content="恢复默认"
                                                         Style="{StaticResource ModuleOrderButton}" Click="BtnResetModuleOrder_Click" />
                                             </Grid>
                                         </Grid>

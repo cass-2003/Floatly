@@ -146,16 +146,16 @@ public partial class SettingsWindow : Window
         row.SetValue(FrameworkElement.MarginProperty, new Thickness(0));
         row.SetValue(DockPanel.LastChildFillProperty, true);
 
-        var handle = new FrameworkElementFactory(typeof(TextBlock));
-        handle.SetValue(TextBlock.TextProperty, "\uE712");
-        handle.SetValue(TextBlock.FontFamilyProperty, new System.Windows.Media.FontFamily("Segoe MDL2 Assets"));
-        handle.SetValue(TextBlock.FontSizeProperty, 9.0);
-        handle.SetValue(TextBlock.ForegroundProperty, FindResource("SettingsMuted"));
-        handle.SetValue(FrameworkElement.VerticalAlignmentProperty, System.Windows.VerticalAlignment.Center);
-        handle.SetValue(FrameworkElement.HorizontalAlignmentProperty, System.Windows.HorizontalAlignment.Center);
-        handle.SetValue(FrameworkElement.WidthProperty, 16.0);
-        handle.SetValue(DockPanel.DockProperty, Dock.Left);
-        row.AppendChild(handle);
+        var visibilityMark = new FrameworkElementFactory(typeof(TextBlock));
+        visibilityMark.SetValue(TextBlock.TextProperty, "\uE8FD");
+        visibilityMark.SetValue(TextBlock.FontFamilyProperty, new System.Windows.Media.FontFamily("Segoe MDL2 Assets"));
+        visibilityMark.SetValue(TextBlock.FontSizeProperty, 9.0);
+        visibilityMark.SetValue(TextBlock.ForegroundProperty, FindResource("SettingsMuted"));
+        visibilityMark.SetValue(FrameworkElement.VerticalAlignmentProperty, System.Windows.VerticalAlignment.Center);
+        visibilityMark.SetValue(FrameworkElement.HorizontalAlignmentProperty, System.Windows.HorizontalAlignment.Center);
+        visibilityMark.SetValue(FrameworkElement.WidthProperty, 16.0);
+        visibilityMark.SetValue(DockPanel.DockProperty, Dock.Left);
+        row.AppendChild(visibilityMark);
 
         var checkbox = new FrameworkElementFactory(typeof(System.Windows.Controls.CheckBox));
         checkbox.SetBinding(System.Windows.Controls.CheckBox.IsCheckedProperty, new System.Windows.Data.Binding(nameof(ModuleOrderItem.IsVisible))
