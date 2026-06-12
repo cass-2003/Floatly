@@ -439,36 +439,9 @@ public partial class MainWindow : Window
                 : Brush(0xE0, 0x0A, 0x1B, 0x31);
         }
 
-        if (IsLightTheme())
-        {
-            return new RadialGradientBrush
-            {
-                RadiusX = 1.05,
-                RadiusY = 0.92,
-                Center = new System.Windows.Point(0.30, 0.02),
-                GradientOrigin = new System.Windows.Point(0.24, -0.05),
-                GradientStops =
-                {
-                    new GradientStop(System.Windows.Media.Color.FromArgb(0xDC, 0xFF, 0xFF, 0xFF), 0.0),
-                    new GradientStop(System.Windows.Media.Color.FromArgb(0xD2, 0xF9, 0xFB, 0xFF), 0.42),
-                    new GradientStop(System.Windows.Media.Color.FromArgb(0xC6, 0xEC, 0xF4, 0xFF), 1.0)
-                }
-            };
-        }
-
-        return new RadialGradientBrush
-        {
-            RadiusX = 1.15,
-            RadiusY = 1.05,
-            Center = new System.Windows.Point(0.42, 0.10),
-            GradientOrigin = new System.Windows.Point(0.30, 0.02),
-            GradientStops =
-            {
-                new GradientStop(System.Windows.Media.Color.FromArgb(0xE2, 0x19, 0x29, 0x3C), 0.0),
-                new GradientStop(System.Windows.Media.Color.FromArgb(0xDE, 0x0C, 0x1D, 0x33), 0.46),
-                new GradientStop(System.Windows.Media.Color.FromArgb(0xDA, 0x06, 0x14, 0x26), 1.0)
-            }
-        };
+        return IsLightTheme()
+            ? Brush(0xD8, 0xFF, 0xFF, 0xFF)
+            : Brush(0xDE, 0x0B, 0x1C, 0x30);
     }
 
     private System.Windows.Media.Brush CreateGlassCardBrush() =>
@@ -487,25 +460,6 @@ public partial class MainWindow : Window
             : Brush(0x30, 0xE4, 0xF0, 0xFF);
 
     private bool IsLightTheme() => AppThemePalette.Parse(_settings.Theme) == ThemeMode.Light;
-
-    private static LinearGradientBrush CreateLinearBrush(
-        IEnumerable<GradientStop> stops,
-        System.Windows.Point start,
-        System.Windows.Point end)
-    {
-        var brush = new LinearGradientBrush
-        {
-            StartPoint = start,
-            EndPoint = end
-        };
-
-        foreach (var stop in stops)
-        {
-            brush.GradientStops.Add(stop);
-        }
-
-        return brush;
-    }
 
     private void ApplySkinVideo()
     {
