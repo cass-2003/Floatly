@@ -279,7 +279,6 @@ public partial class MainWindow : Window
         MainBorder.BorderBrush = cardBorder;
         ApplySkinVideo();
         ApplySkinOverlay();
-        ApplyContentBackdrop();
         DividerBorder.Background = new SolidColorBrush(_palette.Divider);
 
         ClockText.Foreground = Brush(textPrimary);
@@ -364,17 +363,6 @@ public partial class MainWindow : Window
             (byte)Math.Round(opacity * 255),
             0, 0, 0));
         SkinOverlay.Visibility = Visibility.Visible;
-    }
-
-    private void ApplyContentBackdrop()
-    {
-        var skinMode = SkinService.NormalizeMode(_settings.SkinMode);
-        var useBackdrop = skinMode is SkinService.ModeDefault or SkinService.ModeSolid;
-        ContentBackdrop.Visibility = useBackdrop ? Visibility.Visible : Visibility.Collapsed;
-        if (useBackdrop)
-        {
-            ContentBackdrop.Background = CreateContentBackdropBrush();
-        }
     }
 
     private void ApplyModuleCardTheme()
@@ -481,26 +469,6 @@ public partial class MainWindow : Window
             }
         };
     }
-
-    private System.Windows.Media.Brush CreateContentBackdropBrush() =>
-        IsLightTheme()
-            ? CreateLinearBrush(
-                [
-                    new GradientStop(System.Windows.Media.Color.FromArgb(0x30, 0xE8, 0xF1, 0xFF), 0.0),
-                    new GradientStop(System.Windows.Media.Color.FromArgb(0x18, 0xFF, 0xFF, 0xFF), 0.46),
-                    new GradientStop(System.Windows.Media.Color.FromArgb(0x22, 0xD9, 0xE7, 0xFF), 1.0)
-                ],
-                new System.Windows.Point(0, 0),
-                new System.Windows.Point(1, 1))
-            : CreateLinearBrush(
-                [
-                    new GradientStop(FloatlyDesignTokens.ContentBackdrop, 0.0),
-                    new GradientStop(System.Windows.Media.Color.FromArgb(0x08, 0xFF, 0xFF, 0xFF), 0.18),
-                    new GradientStop(System.Windows.Media.Color.FromArgb(0x14, 0x12, 0x2A, 0x45), 0.58),
-                    new GradientStop(System.Windows.Media.Color.FromArgb(0x32, 0x07, 0x15, 0x27), 1.0)
-                ],
-                new System.Windows.Point(0, 0),
-                new System.Windows.Point(1, 1));
 
     private System.Windows.Media.Brush CreateGlassCardBrush() =>
         IsLightTheme()
