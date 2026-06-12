@@ -25,10 +25,6 @@
 
     <Window.Resources>
         <ResourceDictionary>
-            <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="pack://application:,,,/HandyControl;component/Themes/SkinDark.xaml" />
-                <ResourceDictionary Source="pack://application:,,,/HandyControl;component/Themes/Theme.xaml" />
-            </ResourceDictionary.MergedDictionaries>
         <SolidColorBrush x:Key="SettingsBg" Color="#0B111A" />
         <SolidColorBrush x:Key="SettingsShellBg" Color="#F0121A28" />
         <SolidColorBrush x:Key="SettingsSidebarBg" Color="#C0111927" />
