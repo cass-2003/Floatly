@@ -234,22 +234,34 @@
                                                Foreground="#8B95A5" Margin="0,2,0,0" TextTrimming="CharacterEllipsis" />
                                 </StackPanel>
                                 <Border Grid.Column="2" Width="1" Background="#22FFFFFF" Margin="10,0,22,0" />
-                                <WrapPanel Grid.Column="3" VerticalAlignment="Center" HorizontalAlignment="Left">
-                                    <StackPanel Orientation="Horizontal" Margin="0,0,0,2">
-                                        <Border x:Name="HuangLiYiCircle" CornerRadius="5" Padding="6,2" Margin="0,0,8,0" Background="#2255D38A">
+                                <Grid Grid.Column="3" VerticalAlignment="Center" Margin="0,0,16,0">
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="Auto" />
+                                    </Grid.RowDefinitions>
+                                    <Grid Grid.Row="0" Margin="0,0,0,7">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="Auto" />
+                                            <ColumnDefinition Width="*" />
+                                        </Grid.ColumnDefinitions>
+                                        <Border x:Name="HuangLiYiCircle" CornerRadius="5" Padding="6,2" Margin="0,0,10,0" Background="#2255D38A">
                                             <TextBlock x:Name="HuangLiYiCircleText" Text="宜" FontSize="14" FontWeight="SemiBold" Foreground="#55D38A" />
                                         </Border>
-                                        <TextBlock x:Name="HuangLiYiText" FontSize="14" Foreground="#DDE8FF" MaxWidth="230"
-                                                   TextTrimming="CharacterEllipsis" VerticalAlignment="Center" Margin="0,0,18,0" />
-                                    </StackPanel>
-                                    <StackPanel Orientation="Horizontal">
-                                        <Border x:Name="HuangLiJiCircle" CornerRadius="5" Padding="6,2" Margin="0,0,8,0" Background="#22FF8A72">
+                                        <TextBlock x:Name="HuangLiYiText" Grid.Column="1" FontSize="14" Foreground="#DDE8FF"
+                                                   TextTrimming="CharacterEllipsis" VerticalAlignment="Center" />
+                                    </Grid>
+                                    <Grid Grid.Row="1">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="Auto" />
+                                            <ColumnDefinition Width="*" />
+                                        </Grid.ColumnDefinitions>
+                                        <Border x:Name="HuangLiJiCircle" CornerRadius="5" Padding="6,2" Margin="0,0,10,0" Background="#22FF8A72">
                                             <TextBlock x:Name="HuangLiJiCircleText" Text="忌" FontSize="14" FontWeight="SemiBold" Foreground="#FF8A72" />
                                         </Border>
-                                        <TextBlock x:Name="HuangLiJiText" FontSize="14" Foreground="#DDE8FF" MaxWidth="210"
-                                                   TextTrimming="CharacterEllipsis" VerticalAlignment="Center" Margin="0,0,4,0" />
-                                    </StackPanel>
-                                </WrapPanel>
+                                        <TextBlock x:Name="HuangLiJiText" Grid.Column="1" FontSize="14" Foreground="#DDE8FF"
+                                                   TextTrimming="CharacterEllipsis" VerticalAlignment="Center" />
+                                    </Grid>
+                                </Grid>
                                 <Button x:Name="HuangLiCollapseBtn" Grid.Column="4" Content="⌄" Width="44" Height="44" Padding="0"
                                         Click="HuangLiCollapse_Click" Background="#20E8F4FF" BorderThickness="0"
                                         Foreground="#DDE8FF" Cursor="Hand" FontSize="18" ToolTip="展开/收起" VerticalAlignment="Center" />
@@ -466,25 +478,23 @@
                                                         </Grid.ColumnDefinitions>
                                                         <local:CircleCheckBox Grid.Column="0" Margin="0,0,10,0" VerticalAlignment="Center"
                                                                               TagId="{Binding Id}" Click="TodoCheck_Click" />
-                                                        <StackPanel Grid.Column="1" VerticalAlignment="Center">
-                                                            <StackPanel Orientation="Horizontal">
-                                                                <Border Background="{DynamicResource TodoTimeBadgeBrush}" CornerRadius="6" Padding="5,2" Margin="0,0,8,0" VerticalAlignment="Center">
-                                                                    <Border.Style>
-                                                                        <Style TargetType="Border">
-                                                                            <Setter Property="Visibility" Value="Collapsed" />
-                                                                            <Style.Triggers>
-                                                                                <DataTrigger Binding="{Binding HasTime}" Value="True">
-                                                                                    <Setter Property="Visibility" Value="Visible" />
-                                                                                </DataTrigger>
-                                                                            </Style.Triggers>
-                                                                        </Style>
-                                                                    </Border.Style>
-                                                                    <TextBlock Text="{Binding Time}" FontSize="10" Foreground="{DynamicResource TodoAccentBrush}" FontWeight="SemiBold" />
-                                                                </Border>
-                                                                <TextBlock Text="{Binding Title}" Foreground="{DynamicResource TodoTextBrush}" FontSize="12"
-                                                                           TextTrimming="CharacterEllipsis" VerticalAlignment="Center"
-                                                                           Tag="{Binding Id}" MouseLeftButtonDown="TodoTitle_DoubleClick" Cursor="Hand" />
-                                                            </StackPanel>
+                                                        <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
+                                                            <TextBlock Text="{Binding Time}" FontSize="12" Foreground="#FF8A72" FontWeight="SemiBold"
+                                                                       VerticalAlignment="Center" Margin="0,0,8,0">
+                                                                <TextBlock.Style>
+                                                                    <Style TargetType="TextBlock">
+                                                                        <Setter Property="Visibility" Value="Collapsed" />
+                                                                        <Style.Triggers>
+                                                                            <DataTrigger Binding="{Binding HasTime}" Value="True">
+                                                                                <Setter Property="Visibility" Value="Visible" />
+                                                                            </DataTrigger>
+                                                                        </Style.Triggers>
+                                                                    </Style>
+                                                                </TextBlock.Style>
+                                                            </TextBlock>
+                                                            <TextBlock Text="{Binding Title}" Foreground="{DynamicResource TodoTextBrush}" FontSize="12"
+                                                                       TextTrimming="CharacterEllipsis" VerticalAlignment="Center"
+                                                                       Tag="{Binding Id}" MouseLeftButtonDown="TodoTitle_DoubleClick" Cursor="Hand" />
                                                         </StackPanel>
                                                         <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center">
                                                             <Button Content="{Binding PinIcon}" Width="24" Height="24" Padding="0" Tag="{Binding Id}" Click="TodoPin_Click"
@@ -500,8 +510,6 @@
                                                                     </Style>
                                                                 </Button.Style>
                                                             </Button>
-                                                            <Button Content="×" Width="20" Height="20" Padding="0" Tag="{Binding Id}" Click="TodoDelete_Click"
-                                                                    Background="Transparent" BorderThickness="0" Cursor="Hand" Foreground="{DynamicResource TodoDeleteBrush}" FontSize="13" />
                                                         </StackPanel>
                                                     </Grid>
                                                 </Border>

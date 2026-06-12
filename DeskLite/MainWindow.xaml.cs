@@ -694,8 +694,8 @@ public partial class MainWindow : Window
         HuangLiLunarLarge.Text = huangLi.LunarDateLarge;
         HuangLiMetaLineStrip.Text = huangLi.MetaLine;
         HuangLiDetailNavLine.Text = huangLi.MetaLine;
-        HuangLiYiText.Text = JoinHuangLiItems(huangLi.YiItems);
-        HuangLiJiText.Text = JoinHuangLiItems(huangLi.JiItems);
+        HuangLiYiText.Text = JoinHuangLiPreviewItems(huangLi.YiItems);
+        HuangLiJiText.Text = JoinHuangLiPreviewItems(huangLi.JiItems);
 
         HuangLiWuXingVal.Text = huangLi.WuXing;
         HuangLiChongVal.Text = huangLi.ChongSha;
@@ -733,6 +733,9 @@ public partial class MainWindow : Window
 
     private static string JoinHuangLiItems(IReadOnlyList<string> items) =>
         string.Join(" ", items);
+
+    private static string JoinHuangLiPreviewItems(IReadOnlyList<string> items) =>
+        string.Join(" ", items.Take(5));
 
     private void HuangLiPrev_Click(object sender, RoutedEventArgs e) => ShiftHuangLiDay(-1);
 
