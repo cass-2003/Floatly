@@ -13,7 +13,7 @@ public sealed class AppSettings
     public bool AutoLocateCity { get; set; } = true;
     public bool ShowWeekStrip { get; set; } = true;
     public bool ShowHuangLi { get; set; } = true;
-    public bool HuangLiCollapsed { get; set; }
+    public bool HuangLiCollapsed { get; set; } = true;
     public bool ShowYearProgress { get; set; } = true;
     public bool ShowCountdown { get; set; } = true;
     public bool ShowDailyQuote { get; set; } = true;
