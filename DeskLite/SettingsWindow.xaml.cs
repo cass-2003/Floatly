@@ -374,14 +374,7 @@ public partial class SettingsWindow : Window
 
     private void SetBrush(string key, WpfColor color)
     {
-        if (Resources[key] is SolidColorBrush brush)
-        {
-            brush.Color = color;
-        }
-        else
-        {
-            Resources[key] = new SolidColorBrush(color);
-        }
+        Resources[key] = new SolidColorBrush(color);
     }
 
     private void SkinToggle_Click(object sender, RoutedEventArgs e)
