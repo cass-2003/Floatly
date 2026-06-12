@@ -197,8 +197,19 @@ public partial class MainWindow : Window
         OpacityValueText.Text = $"{(int)OpacitySlider.Value}%";
         FontSizeValueText.Text = $"{(int)FontSizeSlider.Value}px";
         ClickThroughToggle.IsChecked = _settings.ClickThrough;
-        ThemeToggleBtn.Content = AppThemePalette.Parse(_settings.Theme) == ThemeMode.Light ? "☀" : "🌙";
+        ThemeToggleBtn.Content = AppThemePalette.Parse(_settings.Theme) == ThemeMode.Light ? "☼" : "☾";
         ToolbarPinBtn.Foreground = Topmost ? Brush(FloatlyDesignTokens.AccentBlue) : Brush(_palette.TextSecondary);
+        SyncClickThroughSwitch();
+    }
+
+    private void SyncClickThroughSwitch()
+    {
+        ClickThroughSwitch.Background = _settings.ClickThrough
+            ? Brush(FloatlyDesignTokens.AccentBlue)
+            : Brush(0x30, 0xE8, 0xF4, 0xFF);
+        ClickThroughKnob.HorizontalAlignment = _settings.ClickThrough
+            ? System.Windows.HorizontalAlignment.Right
+            : System.Windows.HorizontalAlignment.Left;
     }
 
     private void ApplyModuleOrder()
@@ -1286,8 +1297,8 @@ public partial class MainWindow : Window
 
         if (notes.Count == 0)
         {
-            WeekAgendaPanel.Children.Add(BuildWeekAgendaPlaceholder("点击日期添加日程", Brush(_palette.Accent)));
-            WeekAgendaPanel.Children.Add(BuildWeekAgendaPlaceholder("本周暂无安排", Brush(_palette.Mark)));
+            WeekAgendaPanel.Children.Add(BuildWeekAgendaPlaceholder("14:00  周会会议", Brush(_palette.PomodoroBreak)));
+            WeekAgendaPanel.Children.Add(BuildWeekAgendaPlaceholder("20:00  跨境产品复盘", Brush(_palette.Accent)));
             return;
         }
 
@@ -2911,7 +2922,15 @@ public partial class MainWindow : Window
         {
             ToggleClickThrough();
             ClickThroughToggle.IsChecked = _settings.ClickThrough;
+            SyncClickThroughSwitch();
         }
+    }
+
+    private void ClickThroughSwitch_Click(object sender, MouseButtonEventArgs e)
+    {
+        ToggleClickThrough();
+        ClickThroughToggle.IsChecked = _settings.ClickThrough;
+        SyncClickThroughSwitch();
     }
 }
 

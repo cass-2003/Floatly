@@ -853,15 +853,20 @@
                                     <ColumnDefinition Width="Auto" />
                                     <ColumnDefinition Width="Auto" />
                                 </Grid.ColumnDefinitions>
-                                <Button x:Name="ThemeToggleBtn" Content="🌙" Width="30" Height="30" Padding="0"
+                                <Button x:Name="ThemeToggleBtn" Content="☾" Width="30" Height="30" Padding="0"
                                         Click="ThemeToggleBtn_Click" Background="#181F2D" BorderThickness="0"
-                                        Foreground="#E8F1FF" Cursor="Hand" FontSize="14" ToolTip="切换主题" />
-                                <Button x:Name="ToolbarPinBtn" Grid.Column="1" Content="📌 置顶" Height="30" Padding="10,0"
+                                        Foreground="#E8F1FF" Cursor="Hand" FontSize="16" ToolTip="切换主题" />
+                                <Button x:Name="ToolbarPinBtn" Grid.Column="1" Content="✦ 置顶" Height="30" Padding="10,0"
                                         Click="PinBtn_Click" Background="Transparent" BorderThickness="0"
                                         Foreground="#A6FFFFFF" Cursor="Hand" FontSize="11" HorizontalAlignment="Center" />
                                 <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center" Margin="8,0,0,0">
                                     <TextBlock Text="鼠标穿透" FontSize="11" Foreground="#A6FFFFFF" VerticalAlignment="Center" Margin="0,0,8,0" />
-                                    <CheckBox x:Name="ClickThroughToggle" VerticalAlignment="Center" Click="ClickThroughToggle_Click" />
+                                    <Border x:Name="ClickThroughSwitch" Width="36" Height="22" CornerRadius="11"
+                                            Background="#5C8DFF" Cursor="Hand" MouseLeftButtonUp="ClickThroughSwitch_Click">
+                                        <Border x:Name="ClickThroughKnob" Width="18" Height="18" CornerRadius="9"
+                                                Background="#FFFFFF" HorizontalAlignment="Right" Margin="2" />
+                                    </Border>
+                                    <CheckBox x:Name="ClickThroughToggle" Visibility="Collapsed" Click="ClickThroughToggle_Click" />
                                 </StackPanel>
                             </Grid>
                         </Border>
