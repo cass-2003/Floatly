@@ -121,7 +121,7 @@ public sealed class AppThemePalette
         HuangLiCurrentBorder = WpfColor.FromRgb(0xC4, 0x7A, 0x45),
         HuangLiCircleText = WpfColor.FromRgb(0xFF, 0xFF, 0xFF),
         HuangLiMutedButton = WpfColor.FromArgb(0x20, 0xFF, 0xFF, 0xFF),
-        ProgressTrack = WpfColor.FromArgb(0x28, 0xFF, 0xFF, 0xFF),
+        ProgressTrack = WpfColor.FromArgb(0x38, 0xFF, 0xFF, 0xFF),
         ProgressFillStart = WpfColor.FromRgb(0x5C, 0x8D, 0xFF),
         ProgressFillEnd = WpfColor.FromRgb(0x60, 0xA5, 0xFA),
         PomodoroWork = WpfColor.FromRgb(0xF9, 0x73, 0x16),

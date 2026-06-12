@@ -1,3 +1,4 @@
+using System.Globalization;
 using System.IO;
 using System.Net.Http;
 using System.Text.Json;
@@ -9,6 +10,11 @@ public sealed class WeatherService
 {
     private static readonly HttpClient Http = new() { Timeout = TimeSpan.FromSeconds(8) };
     private static readonly JsonSerializerOptions JsonOptions = new() { PropertyNameCaseInsensitive = true };
+
+    static WeatherService()
+    {
+        Http.DefaultRequestHeaders.UserAgent.ParseAdd("Floatly/2.0");
+    }
 
     private static string CachePath =>
         Path.Combine(AppConstants.AppDataDir, "weather-cache.json");
@@ -41,10 +47,9 @@ public sealed class WeatherService
     {
         try
         {
-            GeoResult? geo = null;
             if (lat is null || lon is null)
             {
-                geo = await GeocodeAsync(city, ct);
+                var geo = await GeocodeAsync(city, region, ct);
                 if (geo is null)
                 {
                     var cached = LoadCache();
@@ -58,8 +63,9 @@ public sealed class WeatherService
             }
 
             var url =
-                $"https://api.open-meteo.com/v1/forecast?latitude={lat.Value:F4}&longitude={lon.Value:F4}" +
-                "&current=temperature_2m,weather_code" +
+                $"https://api.open-meteo.com/v1/forecast?latitude={lat.Value.ToString("F4", CultureInfo.InvariantCulture)}" +
+                $"&longitude={lon.Value.ToString("F4", CultureInfo.InvariantCulture)}" +
+                "&current=temperature_2m,apparent_temperature,weather_code,is_day" +
                 "&daily=temperature_2m_max,temperature_2m_min,weather_code,sunrise,sunset" +
                 "&timezone=auto&forecast_days=2";
 
@@ -70,6 +76,10 @@ public sealed class WeatherService
             var current = root.GetProperty("current");
             var code = current.GetProperty("weather_code").GetInt32();
             var temp = (int)Math.Round(current.GetProperty("temperature_2m").GetDouble());
+            var feels = current.TryGetProperty("apparent_temperature", out var feelsEl)
+                ? (int)Math.Round(feelsEl.GetDouble())
+                : temp;
+            var isDay = !current.TryGetProperty("is_day", out var isDayEl) || isDayEl.GetInt32() == 1;
 
             var daily = root.GetProperty("daily");
             var max = (int)Math.Round(daily.GetProperty("temperature_2m_max")[0].GetDouble());
@@ -79,16 +89,18 @@ public sealed class WeatherService
 
             int? tomorrowMin = null;
             int? tomorrowMax = null;
+            int? tomorrowCode = null;
             string? tomorrowDesc = null;
-            string? tomorrowIcon = null;
+            string? tomorrowIconSlug = null;
 
             if (daily.GetProperty("temperature_2m_max").GetArrayLength() > 1)
             {
                 var tCode = daily.GetProperty("weather_code")[1].GetInt32();
+                tomorrowCode = tCode;
                 tomorrowMin = (int)Math.Round(daily.GetProperty("temperature_2m_min")[1].GetDouble());
                 tomorrowMax = (int)Math.Round(daily.GetProperty("temperature_2m_max")[1].GetDouble());
                 tomorrowDesc = DescribeWeather(tCode);
-                tomorrowIcon = IconForCode(tCode);
+                tomorrowIconSlug = WeatherIconMapper.SlugForCode(tCode, isDay: true);
             }
 
             var cache = new WeatherCache
@@ -99,14 +111,18 @@ public sealed class WeatherService
                 Temperature = temp,
                 TempMin = min,
                 TempMax = max,
+                FeelsLike = feels,
+                WeatherCode = code,
+                IsDay = isDay,
                 Description = DescribeWeather(code),
-                Icon = IconForCode(code),
+                IconSlug = WeatherIconMapper.SlugForCode(code, isDay),
                 Sunrise = sunrise,
                 Sunset = sunset,
                 TomorrowMin = tomorrowMin,
                 TomorrowMax = tomorrowMax,
+                TomorrowWeatherCode = tomorrowCode,
                 TomorrowDescription = tomorrowDesc,
-                TomorrowIcon = tomorrowIcon,
+                TomorrowIconSlug = tomorrowIconSlug,
                 UpdatedAt = DateTime.Now
             };
 
@@ -140,24 +156,141 @@ public sealed class WeatherService
         File.WriteAllText(CachePath, json);
     }
 
-    private static async Task<GeoResult?> GeocodeAsync(string city, CancellationToken ct)
+    private static async Task<GeoResult?> GeocodeAsync(string city, string? region, CancellationToken ct)
     {
-        var url = $"https://geocoding-api.open-meteo.com/v1/search?name={Uri.EscapeDataString(city)}&count=1&language=zh&format=json";
-        var json = await Http.GetStringAsync(url, ct);
-        using var doc = JsonDocument.Parse(json);
-        if (!doc.RootElement.TryGetProperty("results", out var results) || results.GetArrayLength() == 0)
+        foreach (var query in BuildCityQueries(city, region))
+        {
+            var openMeteo = await GeocodeByOpenMeteoAsync(query, city, ct);
+            if (openMeteo is not null)
+            {
+                return openMeteo;
+            }
+
+            var nominatim = await GeocodeByNominatimAsync(query, city, ct);
+            if (nominatim is not null)
+            {
+                return nominatim;
+            }
+        }
+
+        return null;
+    }
+
+    private static async Task<GeoResult?> GeocodeByOpenMeteoAsync(string query, string fallbackCity, CancellationToken ct)
+    {
+        try
+        {
+            var url = $"https://geocoding-api.open-meteo.com/v1/search?name={Uri.EscapeDataString(query)}&count=5&language=zh&format=json";
+            var json = await Http.GetStringAsync(url, ct);
+            using var doc = JsonDocument.Parse(json);
+            if (!doc.RootElement.TryGetProperty("results", out var results) || results.GetArrayLength() == 0)
+            {
+                return null;
+            }
+
+            var first = results.EnumerateArray().FirstOrDefault(r =>
+                string.Equals(ReadString(r, "country_code"), "CN", StringComparison.OrdinalIgnoreCase));
+            if (first.ValueKind == JsonValueKind.Undefined)
+            {
+                first = results[0];
+            }
+
+            var name = ReadString(first, "name") ?? fallbackCity;
+            var resultRegion = ReadString(first, "admin1") ?? ReadString(first, "country");
+            return new GeoResult(
+                first.GetProperty("latitude").GetDouble(),
+                first.GetProperty("longitude").GetDouble(),
+                name,
+                resultRegion);
+        }
+        catch
         {
             return null;
         }
+    }
 
-        var first = results[0];
-        var name = first.GetProperty("name").GetString() ?? city;
-        var region = first.TryGetProperty("admin1", out var admin) ? admin.GetString() : null;
-        return new GeoResult(
-            first.GetProperty("latitude").GetDouble(),
-            first.GetProperty("longitude").GetDouble(),
-            name,
-            region);
+    private static async Task<GeoResult?> GeocodeByNominatimAsync(string query, string fallbackCity, CancellationToken ct)
+    {
+        try
+        {
+            var url =
+                $"https://nominatim.openstreetmap.org/search?format=jsonv2&q={Uri.EscapeDataString(query)}" +
+                "&limit=1&accept-language=zh-CN";
+            var json = await Http.GetStringAsync(url, ct);
+            using var doc = JsonDocument.Parse(json);
+            var root = doc.RootElement;
+            if (root.ValueKind != JsonValueKind.Array || root.GetArrayLength() == 0)
+            {
+                return null;
+            }
+
+            var first = root[0];
+            var lat = ReadDouble(first, "lat");
+            var lon = ReadDouble(first, "lon");
+            if (double.IsNaN(lat) || double.IsNaN(lon))
+            {
+                return null;
+            }
+
+            return new GeoResult(lat, lon, ReadString(first, "name") ?? fallbackCity, null);
+        }
+        catch
+        {
+            return null;
+        }
+    }
+
+    private static IEnumerable<string> BuildCityQueries(string city, string? region)
+    {
+        var trimmed = city.Trim();
+        var simplified = SimplifyChinesePlaceName(trimmed);
+        yield return trimmed;
+        if (!string.Equals(trimmed, simplified, StringComparison.Ordinal))
+        {
+            yield return simplified;
+        }
+
+        if (!string.IsNullOrWhiteSpace(region))
+        {
+            yield return $"{trimmed}, {region.Trim()}";
+            if (!string.Equals(trimmed, simplified, StringComparison.Ordinal))
+            {
+                yield return $"{simplified}, {region.Trim()}";
+            }
+        }
+    }
+
+    private static string SimplifyChinesePlaceName(string value)
+    {
+        var result = value.Trim();
+        foreach (var suffix in new[] { "特别行政区", "自治州", "地区", "盟", "市", "区", "县" })
+        {
+            if (result.EndsWith(suffix, StringComparison.Ordinal) && result.Length > suffix.Length)
+            {
+                return result[..^suffix.Length];
+            }
+        }
+
+        return result;
+    }
+
+    private static string? ReadString(JsonElement element, string propertyName) =>
+        element.TryGetProperty(propertyName, out var value) && value.ValueKind == JsonValueKind.String
+            ? value.GetString()
+            : null;
+
+    private static double ReadDouble(JsonElement element, string propertyName)
+    {
+        if (!element.TryGetProperty(propertyName, out var value))
+        {
+            return double.NaN;
+        }
+
+        return value.ValueKind == JsonValueKind.Number
+            ? value.GetDouble()
+            : double.TryParse(value.GetString(), NumberStyles.Float, CultureInfo.InvariantCulture, out var parsed)
+                ? parsed
+                : double.NaN;
     }
 
     private static string DescribeWeather(int code) => code switch
@@ -171,18 +304,6 @@ public sealed class WeatherService
         80 or 81 or 82 => "阵雨",
         95 or 96 or 99 => "雷雨",
         _ => "阴"
-    };
-
-    private static string IconForCode(int code) => code switch
-    {
-        0 => "☀",
-        1 or 2 or 3 => "⛅",
-        45 or 48 => "🌫",
-        >= 51 and <= 67 => "🌧",
-        >= 71 and <= 77 => "❄",
-        >= 80 and <= 82 => "🌦",
-        >= 95 => "⛈",
-        _ => "☁"
     };
 
     private sealed record GeoResult(double Latitude, double Longitude, string Name, string? Region);

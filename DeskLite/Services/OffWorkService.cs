@@ -103,9 +103,7 @@ public static class OffWorkService
 
         if (showSeconds)
         {
-            return span.TotalHours >= 1
-                ? $"{(int)span.TotalHours:D2}:{span.Minutes:D2}:{span.Seconds:D2}"
-                : $"{span.Minutes:D2}:{span.Seconds:D2}";
+            return $"{(int)span.TotalHours:D2}:{span.Minutes:D2}:{span.Seconds:D2}";
         }
 
         return FormatFriendly(span);

@@ -24,7 +24,10 @@ public static class CalendarViewHelper
     {
         var first = new DateTime(anchor.Year, anchor.Month, 1);
         var start = StartOfWeek(first);
-        for (var i = 0; i < 42; i++)
+        var last = first.AddMonths(1).AddDays(-1);
+        var end = StartOfWeek(last).AddDays(6);
+        var days = (end - start).Days + 1;
+        for (var i = 0; i < days; i++)
         {
             yield return start.AddDays(i);
         }

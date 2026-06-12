@@ -4,7 +4,7 @@ namespace DeskLite.Services;
 
 public sealed class TodoStore
 {
-    private const int MainPanelLimit = 5;
+    private const int MainPanelLimit = 3;
     public const int ScratchNoteLimit = 20;
     private AppDataFile _data;
 

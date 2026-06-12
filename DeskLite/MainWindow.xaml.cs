@@ -1,7 +1,8 @@
-using System.Globalization;
+﻿using System.Globalization;
 using System.IO;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Threading;
@@ -12,6 +13,13 @@ namespace DeskLite;
 
 public partial class MainWindow : Window
 {
+    private const double DefaultWindowWidth = 540;
+    private const double DefaultWindowHeight = 960;
+    private const double MaxWindowWidth = 664;
+    private const double MaxWindowHeight = 1180;
+    private const double WidgetAspectRatio = DefaultWindowWidth / DefaultWindowHeight;
+    private const double LegacyForcedMinWidth = 880;
+    private const double LegacyForcedMinHeight = 900;
     private static readonly string[] WeekLabels = ["一", "二", "三", "四", "五", "六", "日"];
 
     private readonly TodoStore _todoStore = new();
@@ -47,6 +55,7 @@ public partial class MainWindow : Window
         LoadCalendarState();
         SyncAutoStartSetting();
         InitializePomodoro();
+        LoadDashboardIcons();
         ApplySettings();
 
         RefreshClock();
@@ -98,6 +107,7 @@ public partial class MainWindow : Window
 
     private void Window_SourceInitialized(object? sender, EventArgs e)
     {
+        WindowHelper.EnableGlassBackdrop(this);
         WindowHelper.EnableBorderlessResize(this);
         WindowHelper.SetClickThrough(this, _settings.ClickThrough);
         if (_settings.EnableGlobalHotkey)
@@ -130,32 +140,34 @@ public partial class MainWindow : Window
         CityText.Visibility = _settings.ShowWeather && _settings.ShowCityName ? Visibility.Visible : Visibility.Collapsed;
         YearProgressPanel.Visibility = _settings.ShowYearProgress ? Visibility.Visible : Visibility.Collapsed;
         YearProgressCard.Visibility = _settings.ShowYearProgress ? Visibility.Visible : Visibility.Collapsed;
+        OffWorkCard.Visibility = _settings.ShowOffWorkCountdown ? Visibility.Visible : Visibility.Collapsed;
         OffWorkPanel.Visibility = _settings.ShowOffWorkCountdown ? Visibility.Visible : Visibility.Collapsed;
         SalaryPanel.Visibility = _settings.ShowSalaryHelper ? Visibility.Visible : Visibility.Collapsed;
         CountdownPanel.Visibility = _settings.ShowCountdown ? Visibility.Visible : Visibility.Collapsed;
         CountdownCard.Visibility = _settings.ShowCountdown ? Visibility.Visible : Visibility.Collapsed;
         PomodoroPanel.Visibility = _settings.ShowPomodoro ? Visibility.Visible : Visibility.Collapsed;
+        DailyQuoteBanner.Visibility = _settings.ShowDailyQuote ? Visibility.Visible : Visibility.Collapsed;
         DailyQuoteText.Visibility = _settings.ShowDailyQuote ? Visibility.Visible : Visibility.Collapsed;
         ScratchPanel.Visibility = _settings.ShowScratch ? Visibility.Visible : Visibility.Collapsed;
 
         var showSun = _settings.ShowWeather && _settings.ShowSunriseSunset;
-        SunriseLineText.Visibility = showSun ? Visibility.Visible : Visibility.Collapsed;
-        SunsetLineText.Visibility = showSun ? Visibility.Visible : Visibility.Collapsed;
-        TomorrowLineText.Visibility = _settings.ShowWeather && _settings.ShowTomorrowWeather
+        SunriseRow.Visibility = showSun ? Visibility.Visible : Visibility.Collapsed;
+        SunsetRow.Visibility = showSun ? Visibility.Visible : Visibility.Collapsed;
+        TomorrowRow.Visibility = _settings.ShowWeather && _settings.ShowTomorrowWeather
             ? Visibility.Visible
             : Visibility.Collapsed;
 
         var showWeek = _settings.ShowWeekStrip;
         CalendarSection.Visibility = showWeek ? Visibility.Visible : Visibility.Collapsed;
-        HuangLiPanel.Visibility = _settings.ShowHuangLi ? Visibility.Visible : Visibility.Collapsed;
         LunarText.Visibility = _settings.ShowHuangLi ? Visibility.Collapsed : Visibility.Visible;
         LunarSubText.Visibility = _settings.ShowHuangLi ? Visibility.Collapsed : Visibility.Visible;
+        ApplyHuangLiCollapsedState();
 
-        Width = Math.Clamp(_settings.WindowWidth, 260, 480);
+        Width = NormalizeWindowWidth(_settings.WindowWidth);
         if (_settings.UserCustomSize)
         {
             _suppressSizePersist = true;
-            Height = Math.Clamp(_settings.WindowHeight, MinHeight, 900);
+            Height = NormalizeWindowHeight(_settings.WindowHeight, Width);
             _suppressSizePersist = false;
         }
         else
@@ -188,36 +200,43 @@ public partial class MainWindow : Window
         OpacityValueText.Text = $"{(int)OpacitySlider.Value}%";
         FontSizeValueText.Text = $"{(int)FontSizeSlider.Value}px";
         ClickThroughToggle.IsChecked = _settings.ClickThrough;
-        ThemeToggleBtn.Content = AppThemePalette.Parse(_settings.Theme) == ThemeMode.Light ? "☀" : "🌙";
+        ThemeToggleIcon.Source = DashboardIconLoader.Load(
+            AppThemePalette.Parse(_settings.Theme) == ThemeMode.Light ? "taiyang" : "yueliang");
         ToolbarPinBtn.Foreground = Topmost ? Brush(FloatlyDesignTokens.AccentBlue) : Brush(_palette.TextSecondary);
+        SyncClickThroughSwitch();
+    }
+
+    private void LoadDashboardIcons()
+    {
+        PinIcon.Source = DashboardIconLoader.Load("tuding");
+        SettingsIcon.Source = DashboardIconLoader.Load("setting");
+        MoreIcon.Source = DashboardIconLoader.Load("sandian");
+        HuangLiCalendarIcon.Source = DashboardIconLoader.Load("rili");
+        SunriseIconImage.Source = DashboardIconLoader.Load("richu");
+        SunsetIconImage.Source = DashboardIconLoader.Load("richurila");
+        CountdownIcon.Source = DashboardIconLoader.Load("huomiao");
+        YearProgressIcon.Source = DashboardIconLoader.Load("sangexinhao");
+        OffWorkIcon.Source = DashboardIconLoader.Load("shizhong");
+        SalaryIcon.Source = DashboardIconLoader.Load("money");
+        QuickSettingsIcon.Source = DashboardIconLoader.Load("shang");
+        ToolbarPinIcon.Source = DashboardIconLoader.Load("tuding");
+        ThemeToggleIcon.Source = DashboardIconLoader.Load(
+            AppThemePalette.Parse(_settings.Theme) == ThemeMode.Light ? "taiyang" : "yueliang");
+    }
+
+    private void SyncClickThroughSwitch()
+    {
+        ClickThroughSwitch.Background = _settings.ClickThrough
+            ? Brush(FloatlyDesignTokens.AccentBlue)
+            : Brush(0x30, 0xE8, 0xF4, 0xFF);
+        ClickThroughKnob.HorizontalAlignment = _settings.ClickThrough
+            ? System.Windows.HorizontalAlignment.Right
+            : System.Windows.HorizontalAlignment.Left;
     }
 
     private void ApplyModuleOrder()
     {
-        var order = DeskModuleIds.Normalize(_settings.ModuleOrder);
-        var extraModules = new Dictionary<string, FrameworkElement>
-        {
-            [DeskModuleIds.OffWork] = OffWorkPanel,
-            [DeskModuleIds.Salary] = SalaryPanel,
-            [DeskModuleIds.DailyQuote] = DailyQuoteText
-        };
-
-        ExtraModuleStack.Children.Clear();
-        foreach (var id in order)
-        {
-            if (extraModules.TryGetValue(id, out var element))
-            {
-                ReparentToPanel(element, ExtraModuleStack);
-            }
-        }
-
-        foreach (var (id, element) in extraModules)
-        {
-            if (!order.Contains(id))
-            {
-                ReparentToPanel(element, ExtraModuleStack);
-            }
-        }
+        // The widget dashboard uses a fixed visual grid; settings still control visibility.
     }
 
     private static void ReparentToPanel(FrameworkElement element, System.Windows.Controls.Panel target)
@@ -253,8 +272,8 @@ public partial class MainWindow : Window
         _palette = AppThemePalette.For(AppThemePalette.Parse(_settings.Theme));
         var textPrimary = FontColorHelper.ResolvePrimary(_palette.TextPrimary, _settings.PrimaryTextColor);
 
-        MainBorder.Background = SkinService.CreatePanelBackground(_settings, _palette);
-        MainBorder.BorderBrush = new SolidColorBrush(_palette.PanelBorder);
+        MainBorder.Background = CreateMainPanelBackground();
+        MainBorder.BorderBrush = Brush(FloatlyDesignTokens.CardBorder);
         ApplySkinVideo();
         ApplySkinOverlay();
         ApplyContentBackdrop();
@@ -265,12 +284,17 @@ public partial class MainWindow : Window
         DateText.Foreground = Brush(_palette.TextSecondary);
         LunarText.Foreground = Brush(_palette.TextTertiary);
         LunarSubText.Foreground = Brush(_palette.TextSubtle);
-        HeaderBlock.Background = Brush(FloatlyDesignTokens.CardBackground);
-        HeaderBlock.BorderBrush = Brush(_palette.PanelBorder);
+        HeaderBlock.Background = System.Windows.Media.Brushes.Transparent;
+        HeaderBlock.BorderBrush = System.Windows.Media.Brushes.Transparent;
+        ApplyModuleCardTheme();
+        BottomToolbar.Background = System.Windows.Media.Brushes.Transparent;
+        QuickSettingsPill.Background = CreateToolbarBrush();
+        QuickSettingsPill.BorderBrush = Brush(FloatlyDesignTokens.CardBorder);
+        QuickActionsPill.Background = CreateToolbarBrush();
+        QuickActionsPill.BorderBrush = Brush(FloatlyDesignTokens.CardBorder);
         ApplyHuangLiTheme();
         WeatherTempText.Foreground = Brush(textPrimary);
         WeatherDescText.Foreground = Brush(textPrimary);
-        WeatherIconText.Foreground = Brush(textPrimary);
         WeatherRangeText.Foreground = Brush(_palette.TextSubtle);
         WeatherFeelsText.Foreground = Brush(_palette.TextSubtle);
         CityText.Foreground = Brush(_palette.TextMuted);
@@ -281,7 +305,7 @@ public partial class MainWindow : Window
         ApplyProgressTheme(textPrimary);
         ApplySalaryTheme();
         ApplyPomodoroTheme(textPrimary);
-        DailyQuoteText.Foreground = Brush(_palette.TextMuted);
+        DailyQuoteText.Foreground = Brush(_palette.TextPrimary);
         TodoTitleText.Foreground = Brush(_palette.TextMuted);
         EmptyTodoText.Foreground = Brush(_palette.TextEmpty);
         TodoCountBadge.Background = Brush(_palette.TodoCountBadge);
@@ -305,14 +329,16 @@ public partial class MainWindow : Window
         ScratchExpandText.Foreground = Brush(_palette.TodoLink);
         ScratchEmptyText.Foreground = Brush(_palette.TextEmpty);
         RefreshScratchPreviewTheme();
+        RefreshScratch();
         SyncBottomToolbar();
 
-        PomodoroRingTrack.Stroke = Brush(_palette.ProgressTrack);
+        PomodoroRingTrack.Stroke = Brush(0x34, 0xE8, 0xF4, 0xFF);
         CountdownFill.Background = new SolidColorBrush(FloatlyDesignTokens.AccentOrange);
 
         Resources["TodoTextBrush"] = Brush(_palette.TodoText);
         Resources["TodoDeleteBrush"] = Brush(_palette.DeleteButton);
         TodoThemeHelper.ApplyResources(Resources, _palette);
+        ApplyWidgetGlassResources();
 
         RefreshCalendar();
         RefreshTodoTheme();
@@ -344,8 +370,134 @@ public partial class MainWindow : Window
         ContentBackdrop.Visibility = useBackdrop ? Visibility.Visible : Visibility.Collapsed;
         if (useBackdrop)
         {
-            ContentBackdrop.Background = new SolidColorBrush(FloatlyDesignTokens.ContentBackdrop);
+            ContentBackdrop.Background = CreateContentBackdropBrush();
         }
+    }
+
+    private void ApplyModuleCardTheme()
+    {
+        var cardBg = CreateGlassCardBrush();
+        var cardBorder = Brush(FloatlyDesignTokens.CardBorder);
+        var trackBg = Brush(FloatlyDesignTokens.ProgressTrack);
+
+        Resources["WidgetGlassCardBrush"] = cardBg;
+        Resources["WidgetGlassBorderBrush"] = cardBorder;
+        Resources["WidgetGlassToolbarBrush"] = CreateToolbarBrush();
+
+        foreach (var card in new[]
+                 {
+                     CountdownCard, YearProgressCard, OffWorkCard, SalaryPanel, HuangLiPanel, PomodoroCard,
+                     DailyQuoteBanner, ScratchPanel
+                 })
+        {
+            card.Background = cardBg;
+            card.BorderBrush = cardBorder;
+        }
+
+        CountdownTrack.Background = trackBg;
+        YearProgressTrack.Background = trackBg;
+        OffWorkTrack.Background = trackBg;
+        CountdownTrack.CornerRadius = new CornerRadius(FloatlyDesignTokens.ProgressBarRadius);
+        YearProgressTrack.CornerRadius = new CornerRadius(FloatlyDesignTokens.ProgressBarRadius);
+        OffWorkTrack.CornerRadius = new CornerRadius(FloatlyDesignTokens.ProgressBarRadius);
+        CountdownFill.CornerRadius = new CornerRadius(FloatlyDesignTokens.ProgressBarRadius);
+        YearProgressFill.CornerRadius = new CornerRadius(FloatlyDesignTokens.ProgressBarRadius);
+        OffWorkFill.CornerRadius = new CornerRadius(FloatlyDesignTokens.ProgressBarRadius);
+        CountdownTrack.Height = FloatlyDesignTokens.ProgressBarHeight;
+        YearProgressTrack.Height = FloatlyDesignTokens.ProgressBarHeight;
+        OffWorkTrack.Height = FloatlyDesignTokens.ProgressBarHeight;
+    }
+
+    private void ApplyWidgetGlassResources()
+    {
+        Resources["TodoCardBgBrush"] = Brush(0x24, 0xE8, 0xF4, 0xFF);
+        Resources["TodoCardBorderBrush"] = Brush(0x2E, 0xE4, 0xF0, 0xFF);
+        TodoOverflowBtn.Background = Brush(0x24, 0xE8, 0xF4, 0xFF);
+        TodoCountBadge.Background = Brush(0x24, 0x5C, 0x8D, 0xFF);
+        ScratchCountBadge.Background = Brush(0x24, 0x5C, 0x8D, 0xFF);
+    }
+
+    private System.Windows.Media.Brush CreateMainPanelBackground()
+    {
+        var skinMode = SkinService.NormalizeMode(_settings.SkinMode);
+        if (skinMode == SkinService.ModeImage)
+        {
+            var imageBrush = SkinService.TryCreateImageBrush(_settings.SkinImagePath);
+            if (imageBrush is not null)
+            {
+                return imageBrush;
+            }
+        }
+
+        if (skinMode is SkinService.ModeSolid or SkinService.ModeVideo)
+        {
+            var solid = FloatlyDesignTokens.PanelBackground;
+            return Brush(solid.A, solid.R, solid.G, solid.B);
+        }
+
+        return new RadialGradientBrush
+        {
+            RadiusX = 1.05,
+            RadiusY = 0.92,
+            Center = new System.Windows.Point(0.34, 0.05),
+            GradientOrigin = new System.Windows.Point(0.28, -0.05),
+            GradientStops =
+            {
+                new GradientStop(FloatlyDesignTokens.PanelGlow, 0.0),
+                new GradientStop(FloatlyDesignTokens.PanelBackground, 0.38),
+                new GradientStop(System.Windows.Media.Color.FromArgb(0xE0, 0x07, 0x14, 0x25), 1.0)
+            }
+        };
+    }
+
+    private static System.Windows.Media.Brush CreateContentBackdropBrush() =>
+        CreateLinearBrush(
+            [
+                new GradientStop(FloatlyDesignTokens.ContentBackdrop, 0.0),
+                new GradientStop(System.Windows.Media.Color.FromArgb(0x08, 0xFF, 0xFF, 0xFF), 0.18),
+                new GradientStop(System.Windows.Media.Color.FromArgb(0x14, 0x12, 0x2A, 0x45), 0.58),
+                new GradientStop(System.Windows.Media.Color.FromArgb(0x32, 0x07, 0x15, 0x27), 1.0)
+            ],
+            new System.Windows.Point(0, 0),
+            new System.Windows.Point(1, 1));
+
+    private static System.Windows.Media.Brush CreateGlassCardBrush() =>
+        CreateLinearBrush(
+            [
+                new GradientStop(FloatlyDesignTokens.CardHighlight, 0.0),
+                new GradientStop(FloatlyDesignTokens.CardBackground, 0.22),
+                new GradientStop(FloatlyDesignTokens.CardBackgroundMid, 0.58),
+                new GradientStop(FloatlyDesignTokens.CardBackgroundDeep, 1.0)
+            ],
+            new System.Windows.Point(0, 0),
+            new System.Windows.Point(1, 1));
+
+    private static System.Windows.Media.Brush CreateToolbarBrush() =>
+        CreateLinearBrush(
+            [
+                new GradientStop(FloatlyDesignTokens.ToolbarBackground, 0.0),
+                new GradientStop(System.Windows.Media.Color.FromArgb(0x4C, 0x0F, 0x20, 0x35), 1.0)
+            ],
+            new System.Windows.Point(0, 0),
+            new System.Windows.Point(1, 0));
+
+    private static LinearGradientBrush CreateLinearBrush(
+        IEnumerable<GradientStop> stops,
+        System.Windows.Point start,
+        System.Windows.Point end)
+    {
+        var brush = new LinearGradientBrush
+        {
+            StartPoint = start,
+            EndPoint = end
+        };
+
+        foreach (var stop in stops)
+        {
+            brush.GradientStops.Add(stop);
+        }
+
+        return brush;
     }
 
     private void ApplySkinVideo()
@@ -583,8 +735,8 @@ public partial class MainWindow : Window
         HuangLiLunarLarge.Text = huangLi.LunarDateLarge;
         HuangLiMetaLineStrip.Text = huangLi.MetaLine;
         HuangLiDetailNavLine.Text = huangLi.MetaLine;
-        HuangLiYiText.Text = JoinHuangLiItems(huangLi.YiItems);
-        HuangLiJiText.Text = JoinHuangLiItems(huangLi.JiItems);
+        HuangLiYiText.Text = JoinHuangLiPreviewItems(huangLi.YiItems);
+        HuangLiJiText.Text = JoinHuangLiPreviewItems(huangLi.JiItems);
 
         HuangLiWuXingVal.Text = huangLi.WuXing;
         HuangLiChongVal.Text = huangLi.ChongSha;
@@ -622,6 +774,9 @@ public partial class MainWindow : Window
 
     private static string JoinHuangLiItems(IReadOnlyList<string> items) =>
         string.Join(" ", items);
+
+    private static string JoinHuangLiPreviewItems(IReadOnlyList<string> items) =>
+        string.Join(" ", items.Take(5));
 
     private void HuangLiPrev_Click(object sender, RoutedEventArgs e) => ShiftHuangLiDay(-1);
 
@@ -665,7 +820,8 @@ public partial class MainWindow : Window
     private void ApplyHuangLiTheme()
     {
         var border = Brush(_palette.HuangLiBorder);
-        HuangLiPanel.Background = Brush(_palette.HuangLiBackground);
+        HuangLiPanel.Background = CreateGlassCardBrush();
+        HuangLiPanel.BorderBrush = Brush(FloatlyDesignTokens.CardBorder);
         HuangLiSolarDate.Foreground = Brush(_palette.TextEmpty);
         HuangLiCollapseBtn.Foreground = Brush(_palette.TextEmpty);
         HuangLiLunarLarge.Foreground = Brush(_palette.HuangLiAccent);
@@ -774,23 +930,38 @@ public partial class MainWindow : Window
             return;
         }
 
-        var headerHeight = _settings.ShowHuangLi ? 168.0 : 128.0;
-        var scrollBody = 480;
-        const double toolbarHeight = 132;
-        const double todoInput = 44;
-        const double chrome = 44;
-
-        var height = headerHeight + scrollBody + toolbarHeight + todoInput + chrome;
-
-        if (_settings.ShowWeekStrip)
-        {
-            height += 140;
-        }
-
         _suppressSizePersist = true;
-        Height = Math.Clamp(height, MinHeight, 720);
+        Height = Math.Clamp(DefaultWindowHeight, MinHeight, MaxWindowHeight);
         _settings.WindowHeight = Height;
         _suppressSizePersist = false;
+    }
+
+    private double NormalizeWindowWidth(double width)
+    {
+        if (!_settings.UserCustomSize ||
+            width >= LegacyForcedMinWidth ||
+            width > MaxWindowWidth ||
+            _settings.WindowHeight >= LegacyForcedMinHeight)
+        {
+            return DefaultWindowWidth;
+        }
+
+        return Math.Clamp(width, MinWidth, MaxWindowWidth);
+    }
+
+    private double NormalizeWindowHeight(double height, double? normalizedWidth = null)
+    {
+        if (height >= LegacyForcedMinHeight || height > MaxWindowHeight)
+        {
+            return DefaultWindowHeight;
+        }
+
+        if (normalizedWidth is { } width)
+        {
+            return Math.Clamp(width / WidgetAspectRatio, MinHeight, MaxWindowHeight);
+        }
+
+        return Math.Clamp(height, MinHeight, MaxWindowHeight);
     }
 
     private void OnWindowSizeChanged(object sender, SizeChangedEventArgs e)
@@ -822,7 +993,7 @@ public partial class MainWindow : Window
             var info = CountdownService.GetInfo(_todoStore.Data.Countdowns, DateTime.Today);
             if (info is null)
             {
-                CountdownLabel.Text = "⏳ 暂无倒数日";
+                CountdownLabel.Text = "暂无倒数日";
                 CountdownDays.Text = "托盘可添加";
                 CountdownHint.Text = "在托盘菜单中添加目标日期";
                 QueueProgressBarUpdate(CountdownTrack, CountdownFill, 0);
@@ -867,6 +1038,15 @@ public partial class MainWindow : Window
 
         OffWorkLabel.Text = info.Title;
         OffWorkMainText.Text = info.MainText;
+        OffWorkCaption.Text = info.State switch
+        {
+            OffWorkState.BeforeWork => "距离上班还有",
+            OffWorkState.AfterWork => "今天辛苦啦",
+            OffWorkState.Overtime => "已超过下班时间",
+            OffWorkState.Weekend => "周末好好休息",
+            _ => "距离下班还有"
+        };
+        OffWorkModePill.Text = _settings.OffWorkWeekdaysOnly ? "工作日模式" : "每日模式";
         OffWorkDetail.Text = info.Detail ?? string.Empty;
         OffWorkDetail.Visibility = string.IsNullOrWhiteSpace(info.Detail)
             ? Visibility.Collapsed
@@ -888,6 +1068,9 @@ public partial class MainWindow : Window
         var info = SalaryHelperService.GetInfo(DateTime.Now, _settings);
         SalaryLabel.Text = info.Title;
         SalaryAmount.Text = info.AmountText;
+        SalaryPerSecondText.Text = info.PerSecondText;
+        SalaryHourlyValueText.Text = info.HourlyText;
+        SalaryWorkDurationText.Text = info.WorkDurationText;
         SalarySubtitle.Text = info.Subtitle ?? string.Empty;
         SalarySubtitle.Visibility = string.IsNullOrWhiteSpace(info.Subtitle)
             ? Visibility.Collapsed
@@ -928,19 +1111,22 @@ public partial class MainWindow : Window
 
     private void ApplySalaryTheme()
     {
-        SalaryPanel.Background = Brush(_palette.HuangLiMutedButton);
-        SalaryLabel.Foreground = Brush(_palette.TextMuted);
-        SalaryAmount.Foreground = Brush(_palette.SalaryGold);
-        SalaryAmount.FontWeight = FontWeights.SemiBold;
+        SalaryLabel.Foreground = Brush(0xDD, 0xE8, 0xEC, 0xF4);
+        SalaryAmount.Foreground = Brush(0xFF, 0xF8, 0xC3, 0x4A);
+        SalaryAmount.FontWeight = FontWeights.Bold;
         SalarySubtitle.Foreground = Brush(_palette.SalaryGoldMuted);
+        SalaryPerSecondText.Foreground = Brush(0xFF, 0xF4, 0xD8, 0x72);
+        SalaryHourlyValueText.Foreground = Brush(0xE6, 0xFF, 0xF5, 0xD6);
+        SalaryWorkDurationText.Foreground = Brush(0xE6, 0xFF, 0xF5, 0xD6);
     }
 
     private void ApplyPomodoroTheme(System.Windows.Media.Color textPrimary)
     {
-        PomodoroPanel.Background = Brush(_palette.HuangLiMutedButton);
         PomodoroPhaseText.Foreground = Brush(_palette.TextMuted);
         PomodoroSessionText.Foreground = Brush(_palette.TextSubtle);
         PomodoroCountdownText.Foreground = Brush(textPrimary);
+        PomodoroCenterStatusText.Foreground = Brush(_palette.TextSecondary);
+        PomodoroHintText.Foreground = Brush(_palette.TextSubtle);
         PomodoroTrack.Background = Brush(_palette.ProgressTrack);
         PomodoroStartBtn.Background = Brush(_palette.TodoAccentButton);
         PomodoroStartBtn.Foreground = System.Windows.Media.Brushes.White;
@@ -984,6 +1170,18 @@ public partial class MainWindow : Window
             PomodoroPhase.LongBreak => "长休息",
             _ => "番茄钟"
         };
+        PomodoroCenterStatusText.Text = _pomodoro.Phase switch
+        {
+            PomodoroPhase.Working => "保持专注",
+            PomodoroPhase.ShortBreak => "短暂休息",
+            PomodoroPhase.LongBreak => "长休息",
+            _ => "准备开始"
+        };
+        PomodoroHintText.Text = _pomodoro.Phase switch
+        {
+            PomodoroPhase.ShortBreak or PomodoroPhase.LongBreak => "放松一下，准备下一轮",
+            _ => "专注更高效，休息更放松"
+        };
 
         var sessions = _pomodoro.CompletedWorkSessions;
         PomodoroSessionText.Text = sessions > 0 ? $"第 {sessions} 个番茄" : "准备开始";
@@ -995,12 +1193,20 @@ public partial class MainWindow : Window
             _ => "继续"
         };
 
-        var fillColor = _pomodoro.Phase is PomodoroPhase.ShortBreak or PomodoroPhase.LongBreak
-            ? _palette.PomodoroBreak
-            : _palette.PomodoroWork;
+        var fillColor = _pomodoro.Phase switch
+        {
+            PomodoroPhase.Idle => FloatlyDesignTokens.AccentBlue,
+            PomodoroPhase.ShortBreak or PomodoroPhase.LongBreak => _palette.PomodoroBreak,
+            _ => FloatlyDesignTokens.AccentBlue
+        };
+        var ringProgress = _pomodoro.Phase == PomodoroPhase.Idle
+            ? 92
+            : Math.Max(2, _pomodoro.ProgressPercent);
+
         PomodoroFill.Background = Brush(fillColor);
         PomodoroRingProgress.Stroke = Brush(fillColor);
-        PomodoroRingHelper.Update(PomodoroRingProgress, _pomodoro.ProgressPercent, 72, 4);
+        PomodoroRingHelper.UpdateOpenArc(PomodoroRingTrack, 100, 148, 8);
+        PomodoroRingHelper.UpdateOpenArc(PomodoroRingProgress, ringProgress, 148, 8);
     }
 
     private void OnPomodoroCompleted(PomodoroPhase phase)
@@ -1086,9 +1292,10 @@ public partial class MainWindow : Window
         var weekGrid = new System.Windows.Controls.Primitives.UniformGrid { Rows = 1, Columns = 7 };
         foreach (var day in weekDays)
         {
-            weekGrid.Children.Add(BuildCalendarCell(day, today, preview, calScale * 0.9, compact: true));
+            weekGrid.Children.Add(BuildCalendarCell(day, today, preview, calScale * 1.05, compact: true));
         }
         WeekCalendarPanel.Children.Add(weekGrid);
+        RefreshWeekAgenda(weekDays);
 
         CalendarPanel.Children.Clear();
         WeekdayHeader.Children.Clear();
@@ -1098,19 +1305,189 @@ public partial class MainWindow : Window
             WeekdayHeader.Children.Add(new TextBlock
             {
                 Text = WeekLabels[i],
-                FontSize = FontScaleHelper.CalSize(9, _settings.FontScale),
+                FontSize = FontScaleHelper.CalSize(12.5, _settings.FontScale),
                 Foreground = Brush(_palette.WeekLabel),
                 HorizontalAlignment = System.Windows.HorizontalAlignment.Center
             });
         }
 
         var monthDays = CalendarViewHelper.GetMonthGridDays(_calendarAnchor).ToList();
-        var monthGrid = new System.Windows.Controls.Primitives.UniformGrid { Rows = 6, Columns = 7 };
+        var monthGrid = new System.Windows.Controls.Primitives.UniformGrid
+        {
+            Rows = Math.Max(1, monthDays.Count / 7),
+            Columns = 7
+        };
         foreach (var day in monthDays)
         {
-            monthGrid.Children.Add(BuildCalendarCell(day, today, preview, calScale * 0.85, compact: true));
+            monthGrid.Children.Add(BuildCalendarCell(day, today, preview, calScale * 1.0, compact: true));
         }
         CalendarPanel.Children.Add(monthGrid);
+    }
+
+    private void RefreshWeekAgenda(IReadOnlyList<DateTime> weekDays)
+    {
+        WeekAgendaPanel.Children.Clear();
+
+        var notes = weekDays
+            .Select(day => new { Day = day, Note = _dateNoteStore.GetNote(day) })
+            .Where(item => !string.IsNullOrWhiteSpace(item.Note))
+            .ToList();
+
+        if (notes.Count == 0)
+        {
+            WeekAgendaPanel.Children.Add(BuildWeekAgendaPlaceholder("14:00  周会会议", Brush(_palette.PomodoroBreak)));
+            WeekAgendaPanel.Children.Add(BuildWeekAgendaPlaceholder("20:00  跨境产品复盘", Brush(_palette.Accent)));
+            WeekAgendaPanel.Children.Add(BuildWeekAgendaFooter(2));
+            return;
+        }
+
+        var shownNotes = notes.Take(2).ToList();
+        for (var i = 0; i < shownNotes.Count; i++)
+        {
+            var item = shownNotes[i];
+            SplitAgendaNote(item.Note!, item.Day, out var timeText, out var noteText);
+            var row = new Grid
+            {
+                Margin = new Thickness(0, 0, 0, 6)
+            };
+            row.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
+            row.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
+            row.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
+
+            row.Children.Add(new System.Windows.Shapes.Ellipse
+            {
+                Width = 7,
+                Height = 7,
+                Fill = i == 0 ? Brush(_palette.PomodoroBreak) : Brush(_palette.Accent),
+                VerticalAlignment = VerticalAlignment.Center,
+                Margin = new Thickness(2, 0, 9, 0)
+            });
+
+            var time = new TextBlock
+            {
+                Text = timeText,
+                FontSize = FontScaleHelper.CalSize(12, _settings.FontScale),
+                Foreground = i == 0 ? Brush(_palette.PomodoroBreak) : Brush(_palette.Accent),
+                VerticalAlignment = VerticalAlignment.Center,
+                Margin = new Thickness(0, 0, 10, 0)
+            };
+            Grid.SetColumn(time, 1);
+            row.Children.Add(time);
+
+            var note = new TextBlock
+            {
+                Text = noteText,
+                FontSize = FontScaleHelper.CalSize(12, _settings.FontScale),
+                Foreground = Brush(0xD8, 0xE8, 0xF1, 0xFF),
+                TextTrimming = TextTrimming.CharacterEllipsis,
+                VerticalAlignment = VerticalAlignment.Center
+            };
+            Grid.SetColumn(note, 2);
+            row.Children.Add(note);
+
+            WeekAgendaPanel.Children.Add(new Border
+            {
+                Background = Brush(0x34, 0xE8, 0xF4, 0xFF),
+                BorderBrush = Brush(0x18, 0xE4, 0xF0, 0xFF),
+                BorderThickness = new Thickness(1),
+                CornerRadius = new CornerRadius(9),
+                Padding = new Thickness(10, 7, 12, 7),
+                Margin = new Thickness(0, 0, 0, 4),
+                Child = row
+            });
+        }
+
+        WeekAgendaPanel.Children.Add(BuildWeekAgendaFooter(Math.Max(0, notes.Count - shownNotes.Count)));
+    }
+
+    private Border BuildWeekAgendaFooter(int hiddenCount)
+    {
+        var footer = new Grid { Margin = new Thickness(2, 2, 2, 0) };
+        footer.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
+        footer.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
+
+        var more = new TextBlock
+        {
+            Text = hiddenCount > 0 ? $"...还有 {hiddenCount} 项日程" : "...还有 0 项日程",
+            FontSize = FontScaleHelper.CalSize(11, _settings.FontScale),
+            Foreground = Brush(_palette.TextSubtle),
+            VerticalAlignment = VerticalAlignment.Center
+        };
+        footer.Children.Add(more);
+
+        var viewAll = new TextBlock
+        {
+            Text = "查看全部  ›",
+            FontSize = FontScaleHelper.CalSize(11, _settings.FontScale),
+            Foreground = Brush(0xCC, 0xDD, 0xE8, 0xFF),
+            VerticalAlignment = VerticalAlignment.Center
+        };
+        Grid.SetColumn(viewAll, 1);
+        footer.Children.Add(viewAll);
+
+        return new Border
+        {
+            Background = System.Windows.Media.Brushes.Transparent,
+            Padding = new Thickness(2, 3, 2, 0),
+            Child = footer
+        };
+    }
+
+    private static void SplitAgendaNote(string note, DateTime day, out string timeText, out string noteText)
+    {
+        var trimmed = note.Trim();
+        if (trimmed.Length >= 5 &&
+            char.IsDigit(trimmed[0]) &&
+            char.IsDigit(trimmed[1]) &&
+            trimmed[2] == ':' &&
+            char.IsDigit(trimmed[3]) &&
+            char.IsDigit(trimmed[4]))
+        {
+            timeText = trimmed[..5];
+            noteText = trimmed.Length > 5 ? trimmed[5..].Trim() : "日程";
+            return;
+        }
+
+        timeText = day.ToString("MM/dd", CultureInfo.InvariantCulture);
+        noteText = trimmed;
+    }
+
+    private Border BuildWeekAgendaPlaceholder(string text, System.Windows.Media.Brush dotBrush)
+    {
+        var row = new Grid();
+        row.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
+        row.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
+
+        row.Children.Add(new System.Windows.Shapes.Ellipse
+        {
+            Width = 7,
+            Height = 7,
+            Fill = dotBrush,
+            VerticalAlignment = VerticalAlignment.Center,
+            Margin = new Thickness(2, 0, 9, 0)
+        });
+
+        var label = new TextBlock
+        {
+            Text = text,
+            FontSize = FontScaleHelper.CalSize(12, _settings.FontScale),
+            Foreground = Brush(0xD8, 0xE8, 0xF1, 0xFF),
+            TextTrimming = TextTrimming.CharacterEllipsis,
+            VerticalAlignment = VerticalAlignment.Center
+        };
+        Grid.SetColumn(label, 1);
+        row.Children.Add(label);
+
+        return new Border
+        {
+            Background = Brush(0x34, 0xE8, 0xF4, 0xFF),
+            BorderBrush = Brush(0x18, 0xE4, 0xF0, 0xFF),
+            BorderThickness = new Thickness(1),
+            CornerRadius = new CornerRadius(9),
+            Padding = new Thickness(10, 7, 12, 7),
+            Margin = new Thickness(0, 0, 0, 6),
+            Child = row
+        };
     }
 
     private UIElement BuildCalendarCell(DateTime day, DateTime today, DateTime? preview, double calScale, bool compact = false)
@@ -1128,7 +1505,7 @@ public partial class MainWindow : Window
             HorizontalAlignment = System.Windows.HorizontalAlignment.Center,
             Cursor = System.Windows.Input.Cursors.Hand,
             Tag = day,
-            Margin = new Thickness(0, 0, 0, 0)
+            Margin = new Thickness(0, 0, 0, compact ? 1 : 0)
         };
         cell.MouseLeftButtonDown += CalendarDay_Click;
 
@@ -1145,18 +1522,18 @@ public partial class MainWindow : Window
 
         var dayDisplay = isToday && preview is null && compact
             ? day.Day.ToString()
-            : isToday && preview is null ? "●" : day.Day.ToString();
+            : isToday && preview is null ? "今" : day.Day.ToString();
 
-        var dayFontSize = compact ? 11 * calScale : 13 * calScale;
+        var dayFontSize = compact ? 14.5 * calScale : 13 * calScale;
         var dayForeground = isToday || isPreview ? Brush(_palette.Accent) : Brush(_palette.WeekSolar);
 
         if (compact && (isToday || isPreview))
         {
             var dayBorder = new Border
             {
-                Width = 20 * calScale,
-                Height = 20 * calScale,
-                CornerRadius = new CornerRadius(10 * calScale),
+                Width = 28 * calScale,
+                Height = 28 * calScale,
+                CornerRadius = new CornerRadius(14 * calScale),
                 Background = Brush(_palette.Accent),
                 HorizontalAlignment = System.Windows.HorizontalAlignment.Center,
                 Child = new TextBlock
@@ -1203,15 +1580,22 @@ public partial class MainWindow : Window
                 TextTrimming = TextTrimming.CharacterEllipsis
             });
         }
-        else if (hasMark)
+        else
         {
+            var lunarText = hasMark ? dayInfo.Mark! : dayInfo.ShortLunar;
+            if (lunarText.Length > 3 && !hasMark)
+            {
+                lunarText = lunarText[..3];
+            }
+
             cell.Children.Add(new TextBlock
             {
-                Text = dayInfo.Mark!,
-                FontSize = 8 * calScale,
-                Foreground = Brush(_palette.Mark),
+                Text = lunarText,
+                FontSize = 10 * calScale,
+                Foreground = hasMark ? Brush(_palette.Mark) : Brush(_palette.WeekLunar),
                 HorizontalAlignment = System.Windows.HorizontalAlignment.Center,
-                TextTrimming = TextTrimming.CharacterEllipsis
+                TextTrimming = TextTrimming.CharacterEllipsis,
+                Margin = new Thickness(0, 1, 0, 0)
             });
         }
 
@@ -1255,16 +1639,61 @@ public partial class MainWindow : Window
             return;
         }
 
-        var city = cache?.City ?? _settings.ResolvedCityName ?? _settings.City;
-        var region = cache?.Region ?? _settings.ResolvedRegion;
+        string city;
+        string? region;
 
-        CityText.Text = string.IsNullOrWhiteSpace(region)
-            ? $"📍 {city}"
-            : $"📍 {city} {region}";
+        if (!_settings.AutoLocateCity && LocationService.HasUsableCityName(_settings.City))
+        {
+            city = _settings.City;
+            region = _settings.ResolvedRegion;
+        }
+        else
+        {
+            city = LocationService.HasUsableCityName(cache?.City)
+                ? cache!.City
+                : LocationService.HasUsableCityName(_settings.ResolvedCityName)
+                    ? _settings.ResolvedCityName!
+                    : LocationService.HasUsableCityName(_settings.City)
+                        ? _settings.City
+                        : string.Empty;
+            region = cache?.Region ?? _settings.ResolvedRegion;
+        }
+
+        CityText.Text = FormatCityLabel(city, region);
         CityText.Visibility = Visibility.Visible;
     }
 
+    private static string FormatCityLabel(string city, string? region)
+    {
+        if (string.IsNullOrWhiteSpace(city))
+        {
+            city = "未知";
+        }
+
+        var trimmedCity = city.Trim();
+        if (string.IsNullOrWhiteSpace(region) || CityLabelsDuplicate(trimmedCity, region.Trim()))
+        {
+            return $"📍 {trimmedCity}";
+        }
+
+        return $"📍 {trimmedCity} {region.Trim()}";
+    }
+
+    private static bool CityLabelsDuplicate(string city, string region)
+    {
+        if (string.Equals(city, region, StringComparison.OrdinalIgnoreCase))
+        {
+            return true;
+        }
+
+        return city.Contains(region, StringComparison.OrdinalIgnoreCase)
+               || region.Contains(city, StringComparison.OrdinalIgnoreCase);
+    }
+
     private SolidColorBrush Brush(System.Windows.Media.Color color) => new(color);
+
+    private static SolidColorBrush Brush(byte a, byte r, byte g, byte b) =>
+        new(System.Windows.Media.Color.FromArgb(a, r, g, b));
 
     private static SolidColorBrush Brush(byte r, byte g, byte b) =>
         new(System.Windows.Media.Color.FromRgb(r, g, b));
@@ -1330,20 +1759,23 @@ public partial class MainWindow : Window
             _settings.WeatherLatitude,
             _settings.WeatherLongitude,
             _settings.ResolvedRegion,
-            oldCache?.LocationSource ?? (_settings.AutoLocateCity ? "auto" : "manual"));
+            _settings.AutoLocateCity
+                ? oldCache?.LocationSource ?? "auto"
+                : "manual");
         _lastWeatherFetch = DateTime.Now;
 
         if (result is null)
         {
-            WeatherDescText.Text = "加载失败";
-            WeatherIconText.Text = "—";
+            WeatherIconImage.Source = null;
             WeatherTempText.Text = string.Empty;
+            WeatherDescText.Text = string.Empty;
+            WeatherDescText.Visibility = Visibility.Collapsed;
             WeatherRangeText.Text = string.Empty;
-            WeatherFeelsText.Text = string.Empty;
+            WeatherFeelsText.Text = "加载失败";
             RefreshCityDisplay();
-            SunriseLineText.Visibility = Visibility.Collapsed;
-            SunsetLineText.Visibility = Visibility.Collapsed;
-            TomorrowLineText.Visibility = Visibility.Collapsed;
+            SunriseRow.Visibility = Visibility.Collapsed;
+            SunsetRow.Visibility = Visibility.Collapsed;
+            TomorrowRow.Visibility = Visibility.Collapsed;
             return;
         }
 
@@ -1353,7 +1785,10 @@ public partial class MainWindow : Window
             _settings.WeatherLongitude = result.Longitude;
             _settings.ResolvedCityName = result.Cache.City;
             _settings.ResolvedRegion = result.Cache.Region;
-            _settings.City = result.Cache.City;
+            if (_settings.AutoLocateCity)
+            {
+                _settings.City = result.Cache.City;
+            }
             JsonStore.SaveSettings(_settings);
         }
 
@@ -1390,6 +1825,11 @@ public partial class MainWindow : Window
         }
 
         var loc = await _locationService.DetectAsync();
+        if (!_settings.AutoLocateCity)
+        {
+            return;
+        }
+
         if (loc is null)
         {
             if (notify)
@@ -1436,47 +1876,75 @@ public partial class MainWindow : Window
 
     private void ApplyWeather(WeatherCache cache)
     {
-        WeatherIconText.Text = cache.Icon;
+        var isDay = cache.WeatherCode == 0 && cache.Sunrise is not null
+            ? WeatherIconMapper.InferIsDay(DateTime.Now, cache.Sunrise, cache.Sunset)
+            : cache.IsDay;
+
+        var iconSlug = ResolveIconSlug(cache);
+        WeatherIconImage.Source = WeatherIconLoader.Load(iconSlug, WeatherIconStyle.Fill);
+
         WeatherTempText.Text = $"{cache.Temperature}°";
         WeatherDescText.Text = cache.Description;
-        WeatherRangeText.Text = $"{cache.TempMin}°~{cache.TempMax}°";
-        WeatherFeelsText.Text = $"体感 {cache.Temperature}°";
+        WeatherDescText.Visibility = string.IsNullOrWhiteSpace(cache.Description)
+            ? Visibility.Collapsed
+            : Visibility.Visible;
+        WeatherRangeText.Text = $"{cache.TempMin}° ~ {cache.TempMax}°";
+        var feels = cache.FeelsLike ?? cache.Temperature;
+        WeatherFeelsText.Text = $"体感 {feels}°";
 
         var showSun = _settings.ShowWeather && _settings.ShowSunriseSunset;
         if (showSun && cache.Sunrise is not null)
         {
-            SunriseLineText.Text = $"🌅 日出 {cache.Sunrise}";
-            SunriseLineText.Visibility = Visibility.Visible;
+            SunriseIconImage.Source ??= DashboardIconLoader.Load("richu");
+            SunriseLineText.Text = $"日出 {cache.Sunrise}";
+            SunriseRow.Visibility = Visibility.Visible;
         }
         else
         {
-            SunriseLineText.Visibility = Visibility.Collapsed;
+            SunriseRow.Visibility = Visibility.Collapsed;
         }
 
         if (showSun && cache.Sunset is not null)
         {
-            SunsetLineText.Text = $"🌇 日落 {cache.Sunset}";
-            SunsetLineText.Visibility = Visibility.Visible;
+            SunsetIconImage.Source ??= DashboardIconLoader.Load("richurila");
+            SunsetLineText.Text = $"日落 {cache.Sunset}";
+            SunsetRow.Visibility = Visibility.Visible;
         }
         else
         {
-            SunsetLineText.Visibility = Visibility.Collapsed;
+            SunsetRow.Visibility = Visibility.Collapsed;
         }
 
         if (_settings.ShowWeather && _settings.ShowTomorrowWeather
             && cache.TomorrowMin is not null && cache.TomorrowMax is not null)
         {
-            var tomorrowIcon = cache.TomorrowIcon ?? "☁";
-            var tomorrowDesc = cache.TomorrowDescription ?? string.Empty;
-            TomorrowLineText.Text = string.IsNullOrWhiteSpace(tomorrowDesc)
-                ? $"明天 {tomorrowIcon} {cache.TomorrowMin}°~{cache.TomorrowMax}°"
-                : $"明天 {tomorrowIcon} {tomorrowDesc} {cache.TomorrowMin}°~{cache.TomorrowMax}°";
-            TomorrowLineText.Visibility = Visibility.Visible;
+            var tomorrowSlug = cache.TomorrowIconSlug
+                ?? (cache.TomorrowWeatherCode is int code
+                    ? WeatherIconMapper.SlugForCode(code, isDay: true)
+                    : "partly-cloudy-day");
+            TomorrowIconImage.Source = WeatherIconLoader.Load(tomorrowSlug, WeatherIconStyle.Line);
+            TomorrowLineText.Text = $"明天 {cache.TomorrowMin}° ~ {cache.TomorrowMax}°";
+            TomorrowRow.Visibility = Visibility.Visible;
         }
         else
         {
-            TomorrowLineText.Visibility = Visibility.Collapsed;
+            TomorrowRow.Visibility = Visibility.Collapsed;
         }
+    }
+
+    private static string ResolveIconSlug(WeatherCache cache)
+    {
+        if (!string.IsNullOrWhiteSpace(cache.IconSlug) && cache.IconSlug.Contains('-'))
+        {
+            return cache.IconSlug;
+        }
+
+        if (cache.WeatherCode != 0)
+        {
+            return WeatherIconMapper.SlugForCode(cache.WeatherCode, cache.IsDay);
+        }
+
+        return WeatherIconMapper.SlugForCode(0, cache.IsDay);
     }
 
     private void CheckTodoReminders()
@@ -1506,7 +1974,7 @@ public partial class MainWindow : Window
         if (hidden > 0)
         {
             TodoOverflowBtn.Visibility = Visibility.Visible;
-            TodoOverflowText.Text = $"还有 {hidden} 条未显示 ›";
+            TodoOverflowText.Text = $"+ {hidden} 条待办";
             TodoViewAllBtn.Visibility = Visibility.Collapsed;
         }
         else
@@ -1576,16 +2044,17 @@ public partial class MainWindow : Window
         var notes = _todoStore.GetScratchNotes();
         ScratchCountText.Text = notes.Count.ToString();
         ScratchCountBadge.Visibility = notes.Count > 0 ? Visibility.Visible : Visibility.Collapsed;
+        ScratchPreviewGrid.Children.Clear();
 
         var preview = _todoStore.GetScratchPreviewNote();
         if (preview is null)
         {
-            ScratchPreviewCard.Visibility = Visibility.Collapsed;
+            ScratchPreviewGrid.Visibility = Visibility.Collapsed;
             ScratchEmptyText.Visibility = Visibility.Visible;
             return;
         }
 
-        ScratchPreviewCard.Visibility = Visibility.Visible;
+        ScratchPreviewGrid.Visibility = Visibility.Visible;
         ScratchEmptyText.Visibility = Visibility.Collapsed;
         ScratchPreviewTitle.Text = string.IsNullOrWhiteSpace(preview.Title) ? "无标题" : preview.Title;
         if (preview.Pinned)
@@ -1596,6 +2065,127 @@ public partial class MainWindow : Window
         var content = preview.Content.Replace('\r', ' ').Replace('\n', ' ').Trim();
         ScratchPreviewContent.Text = string.IsNullOrEmpty(content) ? "（空便签）" : content;
         RefreshScratchPreviewTheme(preview);
+
+        var shown = notes.Take(2).ToList();
+        for (var i = 0; i < shown.Count; i++)
+        {
+            ScratchPreviewGrid.Children.Add(BuildScratchPreviewCard(shown[i], i));
+        }
+
+        if (shown.Count == 1)
+        {
+            ScratchPreviewGrid.Children.Add(BuildScratchAddCard());
+        }
+    }
+
+    private Border BuildScratchPreviewCard(ScratchNote note, int index)
+    {
+        var theme = AppThemePalette.Parse(_settings.Theme);
+        var title = string.IsNullOrWhiteSpace(note.Title) ? "无标题" : note.Title.Trim();
+        var content = note.Content.Replace('\r', ' ').Replace('\n', ' ').Trim();
+        if (string.IsNullOrEmpty(content))
+        {
+            content = "（空便签）";
+        }
+
+        var titleGrid = new Grid();
+        titleGrid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
+        titleGrid.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
+        titleGrid.Children.Add(new TextBlock
+        {
+            Text = title,
+            FontSize = 12 * FontScaleHelper.ClampScale(_settings.FontScale),
+            FontWeight = FontWeights.SemiBold,
+            Foreground = Brush(_palette.TextPrimary),
+            TextTrimming = TextTrimming.CharacterEllipsis,
+            VerticalAlignment = VerticalAlignment.Center
+        });
+        if (note.Pinned)
+        {
+            var pin = new TextBlock
+            {
+                Text = "📌",
+                FontSize = 12 * FontScaleHelper.ClampScale(_settings.FontScale),
+                Foreground = Brush(_palette.SalaryGold),
+                VerticalAlignment = VerticalAlignment.Center,
+                Margin = new Thickness(8, 0, 0, 0)
+            };
+            Grid.SetColumn(pin, 1);
+            titleGrid.Children.Add(pin);
+        }
+
+        var stack = new StackPanel { VerticalAlignment = VerticalAlignment.Center };
+        stack.Children.Add(titleGrid);
+        stack.Children.Add(new TextBlock
+        {
+            Text = content,
+            FontSize = 11 * FontScaleHelper.ClampScale(_settings.FontScale),
+            Foreground = Brush(_palette.TextSecondary),
+            TextWrapping = TextWrapping.Wrap,
+            MaxHeight = 34,
+            Margin = new Thickness(0, 5, 0, 0),
+            TextTrimming = TextTrimming.CharacterEllipsis
+        });
+        stack.Children.Add(new TextBlock
+        {
+            Text = ScratchColorHelper.FormatRelativeTime(note.UpdatedAt),
+            FontSize = 10 * FontScaleHelper.ClampScale(_settings.FontScale),
+            Foreground = Brush(_palette.TextSubtle),
+            Margin = new Thickness(0, 6, 0, 0)
+        });
+
+        var card = new Border
+        {
+            CornerRadius = new CornerRadius(10),
+            Padding = new Thickness(12, 10, 12, 9),
+            Margin = index == 0 ? new Thickness(0, 0, 7, 0) : new Thickness(7, 0, 0, 0),
+            MinHeight = 78,
+            Background = new SolidColorBrush(ScratchColorHelper.GetCardBackground(note.Color, theme)),
+            BorderBrush = Brush(_palette.TodoCardBorder),
+            BorderThickness = new Thickness(1),
+            Cursor = System.Windows.Input.Cursors.Hand,
+            Child = stack
+        };
+        card.MouseLeftButtonUp += ScratchExpand_Click;
+        return card;
+    }
+
+    private Border BuildScratchAddCard()
+    {
+        var stack = new StackPanel
+        {
+            VerticalAlignment = VerticalAlignment.Center,
+            HorizontalAlignment = System.Windows.HorizontalAlignment.Center
+        };
+        stack.Children.Add(new TextBlock
+        {
+            Text = "+",
+            FontSize = 24,
+            Foreground = Brush(_palette.TextSecondary),
+            HorizontalAlignment = System.Windows.HorizontalAlignment.Center
+        });
+        stack.Children.Add(new TextBlock
+        {
+            Text = "新建便签",
+            FontSize = 11 * FontScaleHelper.ClampScale(_settings.FontScale),
+            Foreground = Brush(_palette.TextSubtle),
+            HorizontalAlignment = System.Windows.HorizontalAlignment.Center
+        });
+
+        var card = new Border
+        {
+            CornerRadius = new CornerRadius(10),
+            Padding = new Thickness(12, 10, 12, 9),
+            Margin = new Thickness(7, 0, 0, 0),
+            MinHeight = 78,
+            Background = Brush(_palette.HuangLiMutedButton),
+            BorderBrush = Brush(_palette.TodoCardBorder),
+            BorderThickness = new Thickness(1),
+            Cursor = System.Windows.Input.Cursors.Hand,
+            Child = stack
+        };
+        card.MouseLeftButtonUp += ScratchExpand_Click;
+        return card;
     }
 
     private void RefreshScratchPreviewTheme(ScratchNote? note = null)
@@ -1604,9 +2194,9 @@ public partial class MainWindow : Window
         var theme = AppThemePalette.Parse(_settings.Theme);
         if (note is null)
         {
-            ScratchPreviewCard.Background = Brush(_palette.TodoCardBackground);
-            ScratchPreviewCard.BorderBrush = Brush(_palette.TodoCardBorder);
-            ScratchPreviewTitle.Foreground = Brush(_palette.TextSecondary);
+            ScratchPreviewCard.Background = Brush(FloatlyDesignTokens.ScratchYellow);
+            ScratchPreviewCard.BorderBrush = Brush(FloatlyDesignTokens.CardBorder);
+            ScratchPreviewTitle.Foreground = Brush(System.Windows.Media.Color.FromRgb(0xE8, 0xD5, 0xA0));
             ScratchPreviewContent.Foreground = Brush(_palette.TextSubtle);
             return;
         }
@@ -1708,13 +2298,13 @@ public partial class MainWindow : Window
 
     public void AddCountdown()
     {
-        var title = InputPrompt.Show("添加倒数日", "事件名称：");
+        var title = InputPrompt.Show("添加倒数日", "事件名称");
         if (string.IsNullOrWhiteSpace(title))
         {
             return;
         }
 
-        var dateText = InputPrompt.Show("添加倒数日", "目标日期 (yyyy-MM-dd)：", DateTime.Today.AddDays(30).ToString("yyyy-MM-dd"));
+        var dateText = InputPrompt.Show("添加倒数日", "目标日期 (yyyy-MM-dd)", DateTime.Today.AddDays(30).ToString("yyyy-MM-dd"));
         if (!DateTime.TryParse(dateText, out var date))
         {
             return;
@@ -2012,7 +2602,7 @@ public partial class MainWindow : Window
 
     public void JumpToCalendarDate()
     {
-        var text = InputPrompt.Show("跳转日期", "输入日期 (yyyy-MM-dd)：", DateTime.Today.ToString("yyyy-MM-dd"));
+        var text = InputPrompt.Show("跳转日期", "输入日期 (yyyy-MM-dd)", DateTime.Today.ToString("yyyy-MM-dd"));
         if (!DateTime.TryParse(text, out var date))
         {
             return;
@@ -2062,7 +2652,7 @@ public partial class MainWindow : Window
 
     private void SetCity()
     {
-        var city = InputPrompt.Show("设置城市", "输入城市名称：", _settings.City);
+        var city = InputPrompt.Show("设置城市", "输入城市名称", _settings.City);
         if (string.IsNullOrWhiteSpace(city))
         {
             return;
@@ -2143,8 +2733,76 @@ public partial class MainWindow : Window
         }
         catch
         {
-            // 拖动边界偶发异常，忽略
+            // 拖动边界偶发异常，忽略。
         }
+    }
+
+    private void ResizeLeft_DragDelta(object sender, DragDeltaEventArgs e) => ResizeWindow(leftDelta: e.HorizontalChange);
+
+    private void ResizeRight_DragDelta(object sender, DragDeltaEventArgs e) => ResizeWindow(rightDelta: e.HorizontalChange);
+
+    private void ResizeTop_DragDelta(object sender, DragDeltaEventArgs e) => ResizeWindow(topDelta: e.VerticalChange);
+
+    private void ResizeBottom_DragDelta(object sender, DragDeltaEventArgs e) => ResizeWindow(bottomDelta: e.VerticalChange);
+
+    private void ResizeTopLeft_DragDelta(object sender, DragDeltaEventArgs e) =>
+        ResizeWindow(leftDelta: e.HorizontalChange, topDelta: e.VerticalChange);
+
+    private void ResizeTopRight_DragDelta(object sender, DragDeltaEventArgs e) =>
+        ResizeWindow(rightDelta: e.HorizontalChange, topDelta: e.VerticalChange);
+
+    private void ResizeBottomLeft_DragDelta(object sender, DragDeltaEventArgs e) =>
+        ResizeWindow(leftDelta: e.HorizontalChange, bottomDelta: e.VerticalChange);
+
+    private void ResizeBottomRight_DragDelta(object sender, DragDeltaEventArgs e) =>
+        ResizeWindow(rightDelta: e.HorizontalChange, bottomDelta: e.VerticalChange);
+
+    private void ResizeWindow(
+        double leftDelta = 0,
+        double rightDelta = 0,
+        double topDelta = 0,
+        double bottomDelta = 0)
+    {
+        if (_settings.ClickThrough || WindowState != WindowState.Normal)
+        {
+            return;
+        }
+
+        var oldLeft = Left;
+        var oldTop = Top;
+        var oldWidth = ActualWidth > 0 ? ActualWidth : Width;
+        var oldHeight = ActualHeight > 0 ? ActualHeight : Height;
+        var rawWidth = oldWidth + rightDelta - leftDelta;
+        var rawHeight = oldHeight + bottomDelta - topDelta;
+        var widthDriven = Math.Abs(rightDelta - leftDelta) >= Math.Abs(bottomDelta - topDelta);
+        var targetWidth = widthDriven
+            ? Math.Clamp(rawWidth, MinWidth, MaxWindowWidth)
+            : Math.Clamp(rawHeight * WidgetAspectRatio, MinWidth, MaxWindowWidth);
+        var targetHeight = targetWidth / WidgetAspectRatio;
+        if (targetHeight < MinHeight)
+        {
+            targetHeight = MinHeight;
+            targetWidth = targetHeight * WidgetAspectRatio;
+        }
+        else if (targetHeight > MaxWindowHeight)
+        {
+            targetHeight = MaxWindowHeight;
+            targetWidth = targetHeight * WidgetAspectRatio;
+        }
+
+        if (Math.Abs(leftDelta) > double.Epsilon)
+        {
+            Left = oldLeft + (oldWidth - targetWidth);
+        }
+
+        if (Math.Abs(topDelta) > double.Epsilon)
+        {
+            Top = oldTop + (oldHeight - targetHeight);
+        }
+
+        Width = targetWidth;
+        Height = targetHeight;
+        _settings.UserCustomSize = true;
     }
 
     private bool IsInHeaderArea(DependencyObject? source)
@@ -2376,6 +3034,15 @@ public partial class MainWindow : Window
         {
             ToggleClickThrough();
             ClickThroughToggle.IsChecked = _settings.ClickThrough;
+            SyncClickThroughSwitch();
         }
     }
+
+    private void ClickThroughSwitch_Click(object sender, MouseButtonEventArgs e)
+    {
+        ToggleClickThrough();
+        ClickThroughToggle.IsChecked = _settings.ClickThrough;
+        SyncClickThroughSwitch();
+    }
 }
+

@@ -6,18 +6,12 @@ public static class FontColorHelper
 {
     public static readonly string[] PresetHexColors =
     [
-        "#F5F7FA",
-        "#E8ECF1",
-        "#B8C0CC",
-        "#3B82F6",
-        "#60A5FA",
-        "#22C55E",
-        "#F59E0B",
-        "#F97316",
-        "#EF4444",
-        "#EC4899",
-        "#A78BFA",
-        "#0F172A"
+        "#FFFFFF",
+        "#4D82FF",
+        "#55D38A",
+        "#F5A142",
+        "#8B5CF6",
+        "#D94693"
     ];
 
     public static WpfColor? TryParseHex(string? hex)

@@ -19,6 +19,9 @@ public static class WindowHelper
     private const int HtBottom = 15;
     private const int HtBottomLeft = 16;
     private const int HtBottomRight = 17;
+    private const int AccentEnableBlurbehind = 3;
+    private const int AccentEnableAcrylicBlurbehind = 4;
+    private const int WcaAccentPolicy = 19;
 
     private static readonly HashSet<IntPtr> ResizeHookedWindows = [];
 
@@ -27,6 +30,9 @@ public static class WindowHelper
 
     [DllImport("user32.dll")]
     private static extern int SetWindowLong(IntPtr hwnd, int index, int newStyle);
+
+    [DllImport("user32.dll")]
+    private static extern int SetWindowCompositionAttribute(IntPtr hwnd, ref WindowCompositionAttributeData data);
 
     public static void SetClickThrough(Window window, bool enabled)
     {
@@ -44,6 +50,20 @@ public static class WindowHelper
         else
         {
             SetWindowLong(hwnd, GwlExstyle, style & ~WsExTransparent);
+        }
+    }
+
+    public static void EnableGlassBackdrop(Window window)
+    {
+        var hwnd = new WindowInteropHelper(window).Handle;
+        if (hwnd == IntPtr.Zero)
+        {
+            return;
+        }
+
+        if (!TryApplyAccent(hwnd, AccentEnableAcrylicBlurbehind, 0x660A1B31))
+        {
+            TryApplyAccent(hwnd, AccentEnableBlurbehind, 0x220A1B31);
         }
     }
 
@@ -146,5 +166,51 @@ public static class WindowHelper
         {
             window.SourceInitialized += (_, _) => AttachHook();
         }
+    }
+
+    private static bool TryApplyAccent(IntPtr hwnd, int state, uint tint)
+    {
+        var accent = new AccentPolicy
+        {
+            AccentState = state,
+            AccentFlags = 2,
+            GradientColor = tint
+        };
+
+        var size = Marshal.SizeOf<AccentPolicy>();
+        var accentPtr = Marshal.AllocHGlobal(size);
+        try
+        {
+            Marshal.StructureToPtr(accent, accentPtr, false);
+            var data = new WindowCompositionAttributeData
+            {
+                Attribute = WcaAccentPolicy,
+                SizeOfData = size,
+                Data = accentPtr
+            };
+
+            return SetWindowCompositionAttribute(hwnd, ref data) != 0;
+        }
+        finally
+        {
+            Marshal.FreeHGlobal(accentPtr);
+        }
+    }
+
+    [StructLayout(LayoutKind.Sequential)]
+    private struct AccentPolicy
+    {
+        public int AccentState;
+        public int AccentFlags;
+        public uint GradientColor;
+        public int AnimationId;
+    }
+
+    [StructLayout(LayoutKind.Sequential)]
+    private struct WindowCompositionAttributeData
+    {
+        public int Attribute;
+        public IntPtr Data;
+        public int SizeOfData;
     }
 }

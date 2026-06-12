@@ -12,13 +12,13 @@ public static class ScratchColorHelper
         {
             ScratchNoteColors.Yellow => isLight
                 ? WpfColor.FromArgb(0x55, 0xFE, 0xF3, 0xC7)
-                : WpfColor.FromArgb(0x33, 0xCA, 0x8A, 0x04),
+                : WpfColor.FromArgb(0x66, 0x5C, 0x4A, 0x1E),
             ScratchNoteColors.Green => isLight
                 ? WpfColor.FromArgb(0x55, 0xD1, 0xFA, 0xE5)
                 : WpfColor.FromArgb(0x33, 0x16, 0xA3, 0x4A),
             ScratchNoteColors.Blue => isLight
                 ? WpfColor.FromArgb(0x55, 0xDB, 0xEA, 0xFE)
-                : WpfColor.FromArgb(0x33, 0x25, 0x63, 0xEB),
+                : WpfColor.FromArgb(0x55, 0x1A, 0x2A, 0x42),
             ScratchNoteColors.Pink => isLight
                 ? WpfColor.FromArgb(0x55, 0xFC, 0xE7, 0xF3)
                 : WpfColor.FromArgb(0x33, 0xDB, 0x27, 0x77),

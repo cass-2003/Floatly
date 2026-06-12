@@ -12,6 +12,10 @@
     <RootNamespace>DeskLite</RootNamespace>
     <AssemblyName>Floatly</AssemblyName>
     <ApplicationTitle>Floatly</ApplicationTitle>
+    <Version>2.0.22</Version>
+    <AssemblyVersion>2.0.22.0</AssemblyVersion>
+    <FileVersion>2.0.22.0</FileVersion>
+    <InformationalVersion>2.0.22</InformationalVersion>
     <AssemblyTitle>Floatly（浮岛）</AssemblyTitle>
     <Product>Floatly（浮岛）</Product>
     <Description>轻量级 Windows 桌面小组件</Description>
@@ -24,10 +28,24 @@
     <Content Include="Assets\app-icon.png">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Content>
+    <Content Include="Assets\CardBackgrounds\*.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\WeatherIcons\line\*.svg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\WeatherIcons\fill\*.svg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\Icons\**\*.svg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="HandyControl" Version="3.5.1" />
     <PackageReference Include="lunar-csharp" Version="1.6.8" />
+    <PackageReference Include="SharpVectors.Wpf" Version="1.8.5" />
   </ItemGroup>
 
 </Project>
