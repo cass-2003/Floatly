@@ -870,15 +870,15 @@
                 </ScrollViewer>
 
                 <!-- Bottom toolbar -->
-                <Border Grid.Row="2" x:Name="BottomToolbar" Background="Transparent" Padding="0" Margin="0,8,0,4">
+                <Border Grid.Row="2" x:Name="BottomToolbar" CornerRadius="18" Padding="14,4" Margin="0,8,0,4"
+                        Background="#4210243A" BorderBrush="#2EE4F0FF" BorderThickness="1">
                     <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="Auto" />
                             <ColumnDefinition Width="*" />
                             <ColumnDefinition Width="Auto" />
                         </Grid.ColumnDefinitions>
-                        <Border x:Name="QuickSettingsPill" CornerRadius="18" Padding="14,7" Background="#96162A43"
-                                BorderBrush="#2EE4F0FF" BorderThickness="1">
+                        <Border x:Name="QuickSettingsPill" CornerRadius="14" Padding="0">
                             <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                                 <Image x:Name="QuickSettingsIcon" Width="13" Height="13" VerticalAlignment="Center" Margin="0,0,8,0" />
                                 <TextBlock x:Name="QuickSettingsText" Text="快捷设置" FontSize="12" Foreground="#DDE8FF" VerticalAlignment="Center" />
@@ -894,8 +894,7 @@
                                     ValueChanged="FontSizeSlider_ValueChanged" Margin="8,0,10,0" />
                             <TextBlock x:Name="FontSizeValueText" Text="12px" FontSize="10" Foreground="#A6FFFFFF" VerticalAlignment="Center" />
                         </StackPanel>
-                        <Border x:Name="QuickActionsPill" Grid.Column="2" CornerRadius="18" Padding="9,4"
-                                Background="#96162A43" BorderBrush="#2EE4F0FF" BorderThickness="1">
+                        <Border x:Name="QuickActionsPill" Grid.Column="2" CornerRadius="14" Padding="0">
                             <Grid>
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="Auto" />

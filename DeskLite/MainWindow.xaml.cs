@@ -290,11 +290,12 @@ public partial class MainWindow : Window
         HeaderBlock.Background = System.Windows.Media.Brushes.Transparent;
         HeaderBlock.BorderBrush = System.Windows.Media.Brushes.Transparent;
         ApplyModuleCardTheme();
-        BottomToolbar.Background = System.Windows.Media.Brushes.Transparent;
-        QuickSettingsPill.Background = CreateToolbarBrush();
-        QuickSettingsPill.BorderBrush = cardBorder;
-        QuickActionsPill.Background = CreateToolbarBrush();
-        QuickActionsPill.BorderBrush = cardBorder;
+        BottomToolbar.Background = CreateToolbarBrush();
+        BottomToolbar.BorderBrush = cardBorder;
+        QuickSettingsPill.Background = System.Windows.Media.Brushes.Transparent;
+        QuickSettingsPill.BorderBrush = System.Windows.Media.Brushes.Transparent;
+        QuickActionsPill.Background = System.Windows.Media.Brushes.Transparent;
+        QuickActionsPill.BorderBrush = System.Windows.Media.Brushes.Transparent;
         ApplyHuangLiTheme();
         WeatherTempText.Foreground = Brush(textPrimary);
         WeatherDescText.Foreground = Brush(textPrimary);
