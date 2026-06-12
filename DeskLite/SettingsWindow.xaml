@@ -71,29 +71,29 @@
         <Style x:Key="CardTitle" TargetType="TextBlock">
             <Setter Property="FontSize" Value="14" />
             <Setter Property="FontWeight" Value="SemiBold" />
-            <Setter Property="Foreground" Value="{StaticResource SettingsText}" />
+            <Setter Property="Foreground" Value="{DynamicResource SettingsText}" />
             <Setter Property="Margin" Value="0,0,0,14" />
         </Style>
         <Style x:Key="FieldLabel" TargetType="TextBlock">
-            <Setter Property="Foreground" Value="{StaticResource SettingsMuted}" />
+            <Setter Property="Foreground" Value="{DynamicResource SettingsMuted}" />
             <Setter Property="FontSize" Value="12" />
             <Setter Property="VerticalAlignment" Value="Center" />
         </Style>
         <Style x:Key="InfoGlyph" TargetType="TextBlock">
             <Setter Property="FontFamily" Value="Segoe MDL2 Assets" />
             <Setter Property="FontSize" Value="12" />
-            <Setter Property="Foreground" Value="{StaticResource SettingsMuted}" />
+            <Setter Property="Foreground" Value="{DynamicResource SettingsMuted}" />
             <Setter Property="VerticalAlignment" Value="Center" />
         </Style>
         <Style x:Key="HintText" TargetType="TextBlock">
             <Setter Property="FontSize" Value="11" />
-            <Setter Property="Foreground" Value="{StaticResource SettingsMuted}" />
+            <Setter Property="Foreground" Value="{DynamicResource SettingsMuted}" />
             <Setter Property="TextWrapping" Value="Wrap" />
         </Style>
 
         <Style x:Key="SettingsCard" TargetType="Border">
-            <Setter Property="Background" Value="{StaticResource SettingsCardBg}" />
-            <Setter Property="BorderBrush" Value="{StaticResource SettingsCardBorder}" />
+            <Setter Property="Background" Value="{DynamicResource SettingsCardBg}" />
+            <Setter Property="BorderBrush" Value="{DynamicResource SettingsCardBorder}" />
             <Setter Property="BorderThickness" Value="1" />
             <Setter Property="CornerRadius" Value="16" />
             <Setter Property="Padding" Value="18" />
@@ -102,12 +102,12 @@
 
         <Style x:Key="SettingsTextBox" TargetType="TextBox">
             <Setter Property="Height" Value="34" />
-            <Setter Property="Background" Value="{StaticResource SettingsInputBg}" />
-            <Setter Property="Foreground" Value="{StaticResource SettingsText}" />
-            <Setter Property="BorderBrush" Value="{StaticResource SettingsBorder}" />
+            <Setter Property="Background" Value="{DynamicResource SettingsInputBg}" />
+            <Setter Property="Foreground" Value="{DynamicResource SettingsText}" />
+            <Setter Property="BorderBrush" Value="{DynamicResource SettingsBorder}" />
             <Setter Property="BorderThickness" Value="1" />
             <Setter Property="Padding" Value="12,0" />
-            <Setter Property="CaretBrush" Value="{StaticResource SettingsText}" />
+            <Setter Property="CaretBrush" Value="{DynamicResource SettingsText}" />
             <Setter Property="VerticalContentAlignment" Value="Center" />
             <Setter Property="Template">
                 <Setter.Value>
@@ -127,9 +127,9 @@
         </Style>
         <Style x:Key="SettingsComboBox" TargetType="ComboBox">
             <Setter Property="Height" Value="34" />
-            <Setter Property="Background" Value="{StaticResource SettingsInputBg}" />
-            <Setter Property="Foreground" Value="{StaticResource SettingsText}" />
-            <Setter Property="BorderBrush" Value="{StaticResource SettingsBorder}" />
+            <Setter Property="Background" Value="{DynamicResource SettingsInputBg}" />
+            <Setter Property="Foreground" Value="{DynamicResource SettingsText}" />
+            <Setter Property="BorderBrush" Value="{DynamicResource SettingsBorder}" />
             <Setter Property="BorderThickness" Value="1" />
             <Setter Property="Padding" Value="12,0,34,0" />
             <Setter Property="Template">
@@ -151,7 +151,7 @@
                             <TextBox x:Name="PART_EditableTextBox"
                                      Style="{x:Null}"
                                      Background="Transparent"
-                                     Foreground="{StaticResource SettingsText}"
+                                     Foreground="{DynamicResource SettingsText}"
                                      BorderThickness="0"
                                      Margin="{TemplateBinding Padding}"
                                      VerticalContentAlignment="Center"
@@ -169,7 +169,7 @@
                                     <ControlTemplate TargetType="ToggleButton">
                                         <TextBlock Text="&#xE70D;"
                                                    FontFamily="Segoe MDL2 Assets"
-                                                   Foreground="{StaticResource SettingsMuted}"
+                                                   Foreground="{DynamicResource SettingsMuted}"
                                                    FontSize="10"
                                                    HorizontalAlignment="Center"
                                                    VerticalAlignment="Center" />
@@ -182,8 +182,8 @@
                                    AllowsTransparency="True"
                                    Focusable="False"
                                    PopupAnimation="Fade">
-                                <Border Background="{StaticResource SettingsInputBg}"
-                                        BorderBrush="{StaticResource SettingsBorder}"
+                                <Border Background="{DynamicResource SettingsInputBg}"
+                                        BorderBrush="{DynamicResource SettingsBorder}"
                                         BorderThickness="1"
                                         CornerRadius="10"
                                         MinWidth="{TemplateBinding ActualWidth}"
@@ -200,7 +200,7 @@
                                 <Setter TargetName="ContentSite" Property="Visibility" Value="Hidden" />
                             </Trigger>
                             <Trigger Property="IsKeyboardFocusWithin" Value="True">
-                                <Setter TargetName="Chrome" Property="BorderBrush" Value="{StaticResource SettingsAccent}" />
+                                <Setter TargetName="Chrome" Property="BorderBrush" Value="{DynamicResource SettingsAccent}" />
                             </Trigger>
                         </ControlTemplate.Triggers>
                     </ControlTemplate>
@@ -213,7 +213,7 @@
             <Setter Property="Height" Value="20" />
             <Setter Property="VerticalAlignment" Value="Center" />
             <Setter Property="Margin" Value="0,0,12,0" />
-            <Setter Property="Foreground" Value="{StaticResource SettingsAccent}" />
+            <Setter Property="Foreground" Value="{DynamicResource SettingsAccent}" />
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="Slider">
@@ -221,13 +221,13 @@
                             <Border Height="4"
                                     Margin="7,0"
                                     CornerRadius="2"
-                                    Background="{StaticResource SettingsSliderTrack}"
+                                    Background="{DynamicResource SettingsSliderTrack}"
                                     VerticalAlignment="Center" />
                             <Track x:Name="PART_Track" Margin="7,0">
                                 <Track.DecreaseRepeatButton>
                                     <RepeatButton Command="Slider.DecreaseLarge"
                                                   BorderThickness="0"
-                                                  Background="{StaticResource SettingsAccent}"
+                                                  Background="{DynamicResource SettingsAccent}"
                                                   IsTabStop="False">
                                         <RepeatButton.Template>
                                             <ControlTemplate TargetType="RepeatButton">
@@ -296,7 +296,7 @@
             </Setter>
         </Style>
         <Style x:Key="SettingsCheckBox" TargetType="CheckBox">
-            <Setter Property="Foreground" Value="{StaticResource SettingsText}" />
+            <Setter Property="Foreground" Value="{DynamicResource SettingsText}" />
             <Setter Property="Cursor" Value="Hand" />
             <Setter Property="MinHeight" Value="24" />
             <Setter Property="Template">
@@ -307,8 +307,8 @@
                                     Width="18"
                                     Height="18"
                                     CornerRadius="4"
-                                    Background="{StaticResource SettingsCheckboxBg}"
-                                    BorderBrush="{StaticResource SettingsCheckboxBorder}"
+                                    Background="{DynamicResource SettingsCheckboxBg}"
+                                    BorderBrush="{DynamicResource SettingsCheckboxBorder}"
                                     BorderThickness="1"
                                     VerticalAlignment="Center">
                                 <TextBlock x:Name="CheckGlyph"
@@ -324,8 +324,8 @@
                         </StackPanel>
                         <ControlTemplate.Triggers>
                             <Trigger Property="IsChecked" Value="True">
-                                <Setter TargetName="Box" Property="Background" Value="{StaticResource SettingsAccent}" />
-                                <Setter TargetName="Box" Property="BorderBrush" Value="{StaticResource SettingsAccent}" />
+                                <Setter TargetName="Box" Property="Background" Value="{DynamicResource SettingsAccent}" />
+                                <Setter TargetName="Box" Property="BorderBrush" Value="{DynamicResource SettingsAccent}" />
                                 <Setter TargetName="CheckGlyph" Property="Visibility" Value="Visible" />
                             </Trigger>
                             <Trigger Property="IsEnabled" Value="False">
@@ -338,7 +338,7 @@
         </Style>
 
         <Style x:Key="FloatlyToggle" TargetType="CheckBox">
-            <Setter Property="Foreground" Value="{StaticResource SettingsText}" />
+            <Setter Property="Foreground" Value="{DynamicResource SettingsText}" />
             <Setter Property="Cursor" Value="Hand" />
             <Setter Property="MinHeight" Value="28" />
             <Setter Property="Template">
@@ -351,14 +351,14 @@
                             </Grid.ColumnDefinitions>
                             <ContentPresenter Grid.Column="0" VerticalAlignment="Center" />
                             <Border x:Name="Track" Grid.Column="1" Width="38" Height="22" CornerRadius="11"
-                                    Background="{StaticResource SettingsToggleOffBg}" BorderBrush="{StaticResource SettingsToggleOffBorder}" BorderThickness="1" Margin="12,0,0,0">
+                                    Background="{DynamicResource SettingsToggleOffBg}" BorderBrush="{DynamicResource SettingsToggleOffBorder}" BorderThickness="1" Margin="12,0,0,0">
                                 <Border x:Name="Thumb" Width="16" Height="16" CornerRadius="8"
                                         Background="#E9EEF7" HorizontalAlignment="Left" Margin="3,0,0,0" />
                             </Border>
                         </Grid>
                         <ControlTemplate.Triggers>
                             <Trigger Property="IsChecked" Value="True">
-                                <Setter TargetName="Track" Property="Background" Value="{StaticResource SettingsAccent}" />
+                                <Setter TargetName="Track" Property="Background" Value="{DynamicResource SettingsAccent}" />
                                 <Setter TargetName="Thumb" Property="HorizontalAlignment" Value="Right" />
                                 <Setter TargetName="Thumb" Property="Margin" Value="0,0,3,0" />
                                 <Setter TargetName="Thumb" Property="Background" Value="White" />
@@ -375,7 +375,7 @@
         <Style x:Key="NavItemStyle" TargetType="ListBoxItem">
             <Setter Property="Padding" Value="16,11" />
             <Setter Property="Margin" Value="10,4" />
-            <Setter Property="Foreground" Value="{StaticResource SettingsMuted}" />
+            <Setter Property="Foreground" Value="{DynamicResource SettingsMuted}" />
             <Setter Property="Cursor" Value="Hand" />
             <Setter Property="Template">
                 <Setter.Value>
@@ -386,14 +386,14 @@
                         </Border>
                         <ControlTemplate.Triggers>
                             <Trigger Property="IsSelected" Value="True">
-                                <Setter TargetName="Bd" Property="Background" Value="{StaticResource SettingsAccentDim}" />
-                                <Setter TargetName="Bd" Property="BorderBrush" Value="{StaticResource SettingsAccent}" />
-                                <Setter Property="Foreground" Value="{StaticResource SettingsText}" />
+                                <Setter TargetName="Bd" Property="Background" Value="{DynamicResource SettingsAccentDim}" />
+                                <Setter TargetName="Bd" Property="BorderBrush" Value="{DynamicResource SettingsAccent}" />
+                                <Setter Property="Foreground" Value="{DynamicResource SettingsText}" />
                                 <Setter Property="FontWeight" Value="SemiBold" />
                             </Trigger>
                             <Trigger Property="IsMouseOver" Value="True">
-                                <Setter TargetName="Bd" Property="Background" Value="{StaticResource SettingsAccentDim}" />
-                                <Setter Property="Foreground" Value="{StaticResource SettingsText}" />
+                                <Setter TargetName="Bd" Property="Background" Value="{DynamicResource SettingsAccentDim}" />
+                                <Setter Property="Foreground" Value="{DynamicResource SettingsText}" />
                             </Trigger>
                         </ControlTemplate.Triggers>
                     </ControlTemplate>
@@ -402,7 +402,7 @@
         </Style>
 
         <Style x:Key="PrimaryButton" TargetType="Button">
-            <Setter Property="Background" Value="{StaticResource SettingsAccent}" />
+            <Setter Property="Background" Value="{DynamicResource SettingsAccent}" />
             <Setter Property="Foreground" Value="White" />
             <Setter Property="BorderThickness" Value="0" />
             <Setter Property="Padding" Value="22,10" />
@@ -428,9 +428,9 @@
             </Setter>
         </Style>
         <Style x:Key="SecondaryButton" TargetType="Button">
-            <Setter Property="Background" Value="{StaticResource SettingsSecondaryBg}" />
-            <Setter Property="Foreground" Value="{StaticResource SettingsText}" />
-            <Setter Property="BorderBrush" Value="{StaticResource SettingsBorder}" />
+            <Setter Property="Background" Value="{DynamicResource SettingsSecondaryBg}" />
+            <Setter Property="Foreground" Value="{DynamicResource SettingsText}" />
+            <Setter Property="BorderBrush" Value="{DynamicResource SettingsBorder}" />
             <Setter Property="BorderThickness" Value="1" />
             <Setter Property="Padding" Value="14,8" />
             <Setter Property="Cursor" Value="Hand" />
@@ -445,11 +445,11 @@
                         </Border>
                         <ControlTemplate.Triggers>
                             <Trigger Property="IsMouseOver" Value="True">
-                                <Setter TargetName="Bd" Property="Background" Value="{StaticResource SettingsSecondaryHoverBg}" />
-                                <Setter TargetName="Bd" Property="BorderBrush" Value="{StaticResource SettingsAccent}" />
+                                <Setter TargetName="Bd" Property="Background" Value="{DynamicResource SettingsSecondaryHoverBg}" />
+                                <Setter TargetName="Bd" Property="BorderBrush" Value="{DynamicResource SettingsAccent}" />
                             </Trigger>
                             <Trigger Property="IsPressed" Value="True">
-                                <Setter TargetName="Bd" Property="Background" Value="{StaticResource SettingsSecondaryPressedBg}" />
+                                <Setter TargetName="Bd" Property="Background" Value="{DynamicResource SettingsSecondaryPressedBg}" />
                             </Trigger>
                         </ControlTemplate.Triggers>
                     </ControlTemplate>
@@ -457,9 +457,9 @@
             </Setter>
         </Style>
         <Style x:Key="SecondaryToggleButton" TargetType="ToggleButton">
-            <Setter Property="Background" Value="{StaticResource SettingsSecondaryBg}" />
-            <Setter Property="Foreground" Value="{StaticResource SettingsText}" />
-            <Setter Property="BorderBrush" Value="{StaticResource SettingsBorder}" />
+            <Setter Property="Background" Value="{DynamicResource SettingsSecondaryBg}" />
+            <Setter Property="Foreground" Value="{DynamicResource SettingsText}" />
+            <Setter Property="BorderBrush" Value="{DynamicResource SettingsBorder}" />
             <Setter Property="BorderThickness" Value="1" />
             <Setter Property="Padding" Value="10,7" />
             <Setter Property="Cursor" Value="Hand" />
@@ -474,12 +474,12 @@
                         </Border>
                         <ControlTemplate.Triggers>
                             <Trigger Property="IsChecked" Value="True">
-                                <Setter TargetName="Bd" Property="BorderBrush" Value="{StaticResource SettingsAccent}" />
+                                <Setter TargetName="Bd" Property="BorderBrush" Value="{DynamicResource SettingsAccent}" />
                                 <Setter TargetName="Bd" Property="BorderThickness" Value="2" />
                                 <Setter TargetName="Bd" Property="Background" Value="#1E4D82FF" />
                             </Trigger>
                             <Trigger Property="IsMouseOver" Value="True">
-                                <Setter TargetName="Bd" Property="Background" Value="{StaticResource SettingsSecondaryHoverBg}" />
+                                <Setter TargetName="Bd" Property="Background" Value="{DynamicResource SettingsSecondaryHoverBg}" />
                             </Trigger>
                         </ControlTemplate.Triggers>
                     </ControlTemplate>
@@ -488,7 +488,7 @@
         </Style>
         <Style x:Key="LinkButton" TargetType="Button">
             <Setter Property="Background" Value="Transparent" />
-            <Setter Property="Foreground" Value="{StaticResource SettingsMuted}" />
+            <Setter Property="Foreground" Value="{DynamicResource SettingsMuted}" />
             <Setter Property="BorderThickness" Value="0" />
             <Setter Property="Padding" Value="8,6" />
             <Setter Property="Cursor" Value="Hand" />
@@ -504,7 +504,7 @@
             </Setter>
             <Style.Triggers>
                 <Trigger Property="IsMouseOver" Value="True">
-                    <Setter Property="Foreground" Value="{StaticResource SettingsText}" />
+                    <Setter Property="Foreground" Value="{DynamicResource SettingsText}" />
                 </Trigger>
             </Style.Triggers>
         </Style>
@@ -516,9 +516,9 @@
             <Setter Property="VerticalContentAlignment" Value="Center" />
         </Style>
         <Style x:Key="ModuleOrderListBox" TargetType="ListBox">
-            <Setter Property="Background" Value="{StaticResource SettingsListBg}" />
-            <Setter Property="Foreground" Value="{StaticResource SettingsText}" />
-            <Setter Property="BorderBrush" Value="{StaticResource SettingsListBorder}" />
+            <Setter Property="Background" Value="{DynamicResource SettingsListBg}" />
+            <Setter Property="Foreground" Value="{DynamicResource SettingsText}" />
+            <Setter Property="BorderBrush" Value="{DynamicResource SettingsListBorder}" />
             <Setter Property="BorderThickness" Value="1" />
             <Setter Property="Padding" Value="0" />
             <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Disabled" />
@@ -532,15 +532,15 @@
                         <Setter Property="Template">
                             <Setter.Value>
                                 <ControlTemplate TargetType="ListBoxItem">
-                                    <Border x:Name="Bd" Background="Transparent" BorderBrush="{StaticResource SettingsListItemBorder}" BorderThickness="0,0,0,1">
+                                    <Border x:Name="Bd" Background="Transparent" BorderBrush="{DynamicResource SettingsListItemBorder}" BorderThickness="0,0,0,1">
                                         <ContentPresenter />
                                     </Border>
                                     <ControlTemplate.Triggers>
                                         <Trigger Property="IsSelected" Value="True">
-                                            <Setter TargetName="Bd" Property="Background" Value="{StaticResource SettingsListSelectedBg}" />
+                                            <Setter TargetName="Bd" Property="Background" Value="{DynamicResource SettingsListSelectedBg}" />
                                         </Trigger>
                                         <Trigger Property="IsMouseOver" Value="True">
-                                            <Setter TargetName="Bd" Property="Background" Value="{StaticResource SettingsListHoverBg}" />
+                                            <Setter TargetName="Bd" Property="Background" Value="{DynamicResource SettingsListHoverBg}" />
                                         </Trigger>
                                     </ControlTemplate.Triggers>
                                 </ControlTemplate>
@@ -576,11 +576,11 @@
             <Setter Property="Height" Value="32" />
             <Setter Property="MinWidth" Value="34" />
             <Setter Property="Padding" Value="0" />
-            <Setter Property="Background" Value="{StaticResource SettingsInputBg}" />
-            <Setter Property="BorderBrush" Value="{StaticResource SettingsBorder}" />
+            <Setter Property="Background" Value="{DynamicResource SettingsInputBg}" />
+            <Setter Property="BorderBrush" Value="{DynamicResource SettingsBorder}" />
         </Style>
         <Style TargetType="RadioButton">
-            <Setter Property="Foreground" Value="{StaticResource SettingsText}" />
+            <Setter Property="Foreground" Value="{DynamicResource SettingsText}" />
             <Setter Property="Margin" Value="0,0,26,0" />
             <Setter Property="Cursor" Value="Hand" />
             <Setter Property="Template">
@@ -588,15 +588,15 @@
                     <ControlTemplate TargetType="RadioButton">
                         <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                             <Grid Width="18" Height="18" VerticalAlignment="Center">
-                                <Ellipse x:Name="Ring" Stroke="{StaticResource SettingsRadioBorder}" StrokeThickness="1.4" Fill="{StaticResource SettingsRadioBg}" />
+                                <Ellipse x:Name="Ring" Stroke="{DynamicResource SettingsRadioBorder}" StrokeThickness="1.4" Fill="{DynamicResource SettingsRadioBg}" />
                                 <Ellipse x:Name="Dot" Width="6" Height="6" Fill="White" Visibility="Collapsed" />
                             </Grid>
                             <ContentPresenter Margin="10,0,0,0" VerticalAlignment="Center" />
                         </StackPanel>
                         <ControlTemplate.Triggers>
                             <Trigger Property="IsChecked" Value="True">
-                                <Setter TargetName="Ring" Property="Fill" Value="{StaticResource SettingsAccent}" />
-                                <Setter TargetName="Ring" Property="Stroke" Value="{StaticResource SettingsAccent}" />
+                                <Setter TargetName="Ring" Property="Fill" Value="{DynamicResource SettingsAccent}" />
+                                <Setter TargetName="Ring" Property="Stroke" Value="{DynamicResource SettingsAccent}" />
                                 <Setter TargetName="Dot" Property="Visibility" Value="Visible" />
                             </Trigger>
                             <Trigger Property="IsEnabled" Value="False">
@@ -613,7 +613,7 @@
         </ResourceDictionary>
     </Window.Resources>
 
-    <Border x:Name="ShellBorder" Background="{StaticResource SettingsShellBg}" BorderBrush="{StaticResource SettingsShellBorder}" BorderThickness="1">
+    <Border x:Name="ShellBorder" Background="{DynamicResource SettingsShellBg}" BorderBrush="{DynamicResource SettingsShellBorder}" BorderThickness="1">
         <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition Height="44" />
@@ -621,14 +621,14 @@
                 <RowDefinition Height="58" />
             </Grid.RowDefinitions>
 
-            <Grid x:Name="TitleBar" Grid.Row="0" Background="{StaticResource SettingsTitleBarBg}" MouseLeftButtonDown="TitleBar_MouseLeftButtonDown">
+            <Grid x:Name="TitleBar" Grid.Row="0" Background="{DynamicResource SettingsTitleBarBg}" MouseLeftButtonDown="TitleBar_MouseLeftButtonDown">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
                 <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="18,0,0,0">
-                    <TextBlock Text="&#xE713;" FontFamily="Segoe MDL2 Assets" FontSize="17" Foreground="{StaticResource SettingsTitleIcon}" Margin="0,0,12,0" />
-                    <TextBlock Text="Floatly 2.0 - 设置" FontSize="15" Foreground="{StaticResource SettingsText}" VerticalAlignment="Center" />
+                    <TextBlock Text="&#xE713;" FontFamily="Segoe MDL2 Assets" FontSize="17" Foreground="{DynamicResource SettingsTitleIcon}" Margin="0,0,12,0" />
+                    <TextBlock Text="Floatly 2.0 - 设置" FontSize="15" Foreground="{DynamicResource SettingsText}" VerticalAlignment="Center" />
                 </StackPanel>
                 <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center" Margin="0,0,10,0">
                     <Button Style="{StaticResource TitleButton}" Click="TitleMinimize_Click" ToolTip="最小化">
@@ -665,7 +665,7 @@
                                             <ColumnDefinition Width="*" />
                                             <ColumnDefinition Width="Auto" />
                                         </Grid.ColumnDefinitions>
-                                        <TextBlock Text="窗口置顶" Foreground="{StaticResource SettingsText}" VerticalAlignment="Center" />
+                                        <TextBlock Text="窗口置顶" Foreground="{DynamicResource SettingsText}" VerticalAlignment="Center" />
                                         <CheckBox x:Name="ChkAlwaysOnTop" Grid.Column="1" Style="{StaticResource FloatlyToggle}" />
                                     </Grid>
                                     <Grid Margin="0,0,0,10">
@@ -673,7 +673,7 @@
                                             <ColumnDefinition Width="*" />
                                             <ColumnDefinition Width="Auto" />
                                         </Grid.ColumnDefinitions>
-                                        <TextBlock Text="开机自动启动" Foreground="{StaticResource SettingsText}" VerticalAlignment="Center" />
+                                        <TextBlock Text="开机自动启动" Foreground="{DynamicResource SettingsText}" VerticalAlignment="Center" />
                                         <CheckBox x:Name="ChkAutoStart" Grid.Column="1" Style="{StaticResource FloatlyToggle}" />
                                     </Grid>
                                     <Grid Margin="0,0,0,10">
@@ -682,7 +682,7 @@
                                             <ColumnDefinition Width="Auto" />
                                         </Grid.ColumnDefinitions>
                                         <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                                            <TextBlock Text="鼠标穿透（开启后无法拖动窗口）" Foreground="{StaticResource SettingsText}" VerticalAlignment="Center" />
+                                            <TextBlock Text="鼠标穿透（开启后无法拖动窗口）" Foreground="{DynamicResource SettingsText}" VerticalAlignment="Center" />
                                             <TextBlock Text="&#xE946;" Style="{StaticResource InfoGlyph}" Margin="8,0,0,0" />
                                         </StackPanel>
                                         <CheckBox x:Name="ChkClickThrough" Grid.Column="1" Style="{StaticResource FloatlyToggle}" />
@@ -693,7 +693,7 @@
                                             <ColumnDefinition Width="Auto" />
                                         </Grid.ColumnDefinitions>
                                         <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                                            <TextBlock Text="启用全局快捷键" Foreground="{StaticResource SettingsText}" VerticalAlignment="Center" />
+                                            <TextBlock Text="启用全局快捷键" Foreground="{DynamicResource SettingsText}" VerticalAlignment="Center" />
                                             <TextBlock Text="&#xE946;" Style="{StaticResource InfoGlyph}" Margin="8,0,0,0" />
                                         </StackPanel>
                                         <CheckBox x:Name="ChkGlobalHotkey" Grid.Column="1" Style="{StaticResource FloatlyToggle}" />
@@ -708,7 +708,7 @@
                                             <ColumnDefinition Width="112" />
                                             <ColumnDefinition Width="*" />
                                         </Grid.ColumnDefinitions>
-                                        <TextBlock Text="上班时间" Foreground="{StaticResource SettingsText}" VerticalAlignment="Center" />
+                                        <TextBlock Text="上班时间" Foreground="{DynamicResource SettingsText}" VerticalAlignment="Center" />
                                         <hc:TimePicker x:Name="WorkStartTimePicker"
                                                        Grid.Column="1"
                                                        Width="142"
@@ -721,7 +721,7 @@
                                             <ColumnDefinition Width="112" />
                                             <ColumnDefinition Width="*" />
                                         </Grid.ColumnDefinitions>
-                                        <TextBlock Text="下班时间" Foreground="{StaticResource SettingsText}" VerticalAlignment="Center" />
+                                        <TextBlock Text="下班时间" Foreground="{DynamicResource SettingsText}" VerticalAlignment="Center" />
                                         <hc:TimePicker x:Name="WorkEndTimePicker"
                                                        Grid.Column="1"
                                                        Width="142"
@@ -742,7 +742,7 @@
                                             <ColumnDefinition Width="74" />
                                             <ColumnDefinition Width="*" />
                                         </Grid.ColumnDefinitions>
-                                        <TextBlock Text="时间格式" Foreground="{StaticResource SettingsText}" VerticalAlignment="Center" />
+                                        <TextBlock Text="时间格式" Foreground="{DynamicResource SettingsText}" VerticalAlignment="Center" />
                                         <StackPanel Grid.Column="1" Orientation="Horizontal" Margin="24,0,0,0">
                                             <RadioButton x:Name="RbTime24h" Content="24 小时制" GroupName="TimeFormat" />
                                             <RadioButton x:Name="RbTime12h" Content="12 小时制" GroupName="TimeFormat" />
@@ -753,7 +753,7 @@
                                             <ColumnDefinition Width="*" />
                                             <ColumnDefinition Width="Auto" />
                                         </Grid.ColumnDefinitions>
-                                        <TextBlock Text="显示秒" Foreground="{StaticResource SettingsText}" VerticalAlignment="Center" />
+                                        <TextBlock Text="显示秒" Foreground="{DynamicResource SettingsText}" VerticalAlignment="Center" />
                                         <CheckBox x:Name="ChkShowSeconds" Grid.Column="1" Style="{StaticResource FloatlyToggle}" />
                                     </Grid>
                                 </StackPanel>
@@ -782,10 +782,10 @@
                                         <CheckBox x:Name="ChkShowTomorrow" Style="{StaticResource FloatlyToggle}" Content="显示明日天气" />
                                     </StackPanel>
 
-                                    <Border Grid.Row="1" Grid.Column="2" Background="{StaticResource SettingsDivider}" Width="1" Margin="0,2,0,0" />
+                                    <Border Grid.Row="1" Grid.Column="2" Background="{DynamicResource SettingsDivider}" Width="1" Margin="0,2,0,0" />
 
                                     <StackPanel Grid.Row="1" Grid.Column="4">
-                                        <TextBlock Text="城市定位" Foreground="{StaticResource SettingsText}" FontWeight="SemiBold" Margin="0,0,0,10" />
+                                        <TextBlock Text="城市定位" Foreground="{DynamicResource SettingsText}" FontWeight="SemiBold" Margin="0,0,0,10" />
                                         <StackPanel Orientation="Horizontal" Margin="0,0,0,12">
                                             <RadioButton x:Name="RbAutoLocate" Content="自动定位城市" GroupName="CityLocate" />
                                             <TextBlock Text="启动时 + 每24小时刷新" Style="{StaticResource HintText}" VerticalAlignment="Center" Margin="-10,0,0,0" />
@@ -808,14 +808,14 @@
                                                     Click="BtnDetectLocation_Click" />
                                         </Grid>
                                         <StackPanel Orientation="Horizontal" Margin="0,0,0,4">
-                                            <TextBlock Text="定位状态：" Foreground="{StaticResource SettingsText}" VerticalAlignment="Center" />
-                                            <Ellipse Width="8" Height="8" Fill="{StaticResource SettingsGreen}" Margin="0,0,8,0" VerticalAlignment="Center" />
-                                            <TextBlock x:Name="LocationStateText" Text="已定位" Foreground="{StaticResource SettingsText}" FontSize="12" VerticalAlignment="Center" Margin="0,0,12,0" />
+                                            <TextBlock Text="定位状态：" Foreground="{DynamicResource SettingsText}" VerticalAlignment="Center" />
+                                            <Ellipse Width="8" Height="8" Fill="{DynamicResource SettingsGreen}" Margin="0,0,8,0" VerticalAlignment="Center" />
+                                            <TextBlock x:Name="LocationStateText" Text="已定位" Foreground="{DynamicResource SettingsText}" FontSize="12" VerticalAlignment="Center" Margin="0,0,12,0" />
                                             <TextBlock x:Name="LocationStatusText" Style="{StaticResource HintText}" Text="Tokyo, Japan" VerticalAlignment="Center" />
                                         </StackPanel>
                                         <TextBlock x:Name="LocationIpWarningText" Style="{StaticResource HintText}"
                                                    Text="当前结果可能来自 IP 定位，建议开启 Windows 位置服务"
-                                                   Foreground="{StaticResource SettingsWarning}" Visibility="Collapsed" />
+                                                   Foreground="{DynamicResource SettingsWarning}" Visibility="Collapsed" />
                                     </StackPanel>
                                 </Grid>
                             </Border>
@@ -833,7 +833,7 @@
                                             <ColumnDefinition Width="8" />
                                             <ColumnDefinition Width="Auto" />
                                         </Grid.ColumnDefinitions>
-                                        <TextBlock Grid.Column="0" Text="显示 / 隐藏快捷键" Foreground="{StaticResource SettingsText}" VerticalAlignment="Center" />
+                                        <TextBlock Grid.Column="0" Text="显示 / 隐藏快捷键" Foreground="{DynamicResource SettingsText}" VerticalAlignment="Center" />
                                         <TextBox x:Name="TxtHotkeyShowHide" Grid.Column="2" Style="{StaticResource HotkeyDisplayBox}" IsReadOnly="True"
                                                  PreviewKeyDown="HotkeyTextBox_PreviewKeyDown"
                                                  GotFocus="HotkeyShowHide_GotFocus" LostFocus="HotkeyTextBox_LostFocus" />
@@ -851,7 +851,7 @@
                                             <ColumnDefinition Width="8" />
                                             <ColumnDefinition Width="Auto" />
                                         </Grid.ColumnDefinitions>
-                                        <TextBlock Grid.Column="0" Text="快速待办快捷键" Foreground="{StaticResource SettingsText}" VerticalAlignment="Center" />
+                                        <TextBlock Grid.Column="0" Text="快速待办快捷键" Foreground="{DynamicResource SettingsText}" VerticalAlignment="Center" />
                                         <TextBox x:Name="TxtHotkeyQuickTodo" Grid.Column="2" Style="{StaticResource HotkeyDisplayBox}" IsReadOnly="True"
                                                  PreviewKeyDown="HotkeyTextBox_PreviewKeyDown"
                                                  GotFocus="HotkeyQuickTodo_GotFocus" LostFocus="HotkeyTextBox_LostFocus" />
@@ -861,14 +861,14 @@
                                             <TextBlock Text="&#xE70F;" FontFamily="Segoe MDL2 Assets" />
                                         </Button>
                                     </Grid>
-                                    <Border BorderBrush="{StaticResource SettingsDivider}" BorderThickness="0,1,0,0" Margin="0,0,0,10" />
+                                    <Border BorderBrush="{DynamicResource SettingsDivider}" BorderThickness="0,1,0,0" Margin="0,0,0,10" />
                                     <Grid>
                                         <Grid.ColumnDefinitions>
                                             <ColumnDefinition Width="*" />
                                             <ColumnDefinition Width="52" />
                                         </Grid.ColumnDefinitions>
                                         <StackPanel>
-                                            <TextBlock Text="录制模式" Foreground="{StaticResource SettingsText}" Margin="0,0,0,4" />
+                                            <TextBlock Text="录制模式" Foreground="{DynamicResource SettingsText}" Margin="0,0,0,4" />
                                             <TextBlock x:Name="HotkeyStatusText" Style="{StaticResource HintText}"
                                                        Text="点击录制后，按下新的快捷键..." />
                                         </StackPanel>
@@ -891,7 +891,7 @@
                                             <ColumnDefinition Width="14" />
                                             <ColumnDefinition Width="*" />
                                         </Grid.ColumnDefinitions>
-                                        <TextBlock Text="月薪设置（元）" Foreground="{StaticResource SettingsText}" VerticalAlignment="Center" />
+                                        <TextBlock Text="月薪设置（元）" Foreground="{DynamicResource SettingsText}" VerticalAlignment="Center" />
                                         <TextBox x:Name="TxtMonthlySalary" Grid.Column="2" Style="{StaticResource UnitInputBox}" TextAlignment="Left" />
                                     </Grid>
                                     <Grid Margin="0,0,0,10">
@@ -901,9 +901,9 @@
                                             <ColumnDefinition Width="*" />
                                             <ColumnDefinition Width="42" />
                                         </Grid.ColumnDefinitions>
-                                        <TextBlock Text="每月工作天数" Foreground="{StaticResource SettingsText}" VerticalAlignment="Center" />
+                                        <TextBlock Text="每月工作天数" Foreground="{DynamicResource SettingsText}" VerticalAlignment="Center" />
                                         <TextBox x:Name="TxtWorkDaysPerMonth" Grid.Column="2" Style="{StaticResource UnitInputBox}" />
-                                        <TextBlock Grid.Column="3" Text="天" Foreground="{StaticResource SettingsMuted}"
+                                        <TextBlock Grid.Column="3" Text="天" Foreground="{DynamicResource SettingsMuted}"
                                                    HorizontalAlignment="Right" VerticalAlignment="Center" />
                                     </Grid>
                                     <Grid>
@@ -913,9 +913,9 @@
                                             <ColumnDefinition Width="*" />
                                             <ColumnDefinition Width="42" />
                                         </Grid.ColumnDefinitions>
-                                        <TextBlock Text="每日工作小时" Foreground="{StaticResource SettingsText}" VerticalAlignment="Center" />
+                                        <TextBlock Text="每日工作小时" Foreground="{DynamicResource SettingsText}" VerticalAlignment="Center" />
                                         <TextBox x:Name="TxtWorkHoursPerDay" Grid.Column="2" Style="{StaticResource UnitInputBox}" />
-                                        <TextBlock Grid.Column="3" Text="小时" Foreground="{StaticResource SettingsMuted}"
+                                        <TextBlock Grid.Column="3" Text="小时" Foreground="{DynamicResource SettingsMuted}"
                                                    HorizontalAlignment="Right" VerticalAlignment="Center" />
                                     </Grid>
                                 </StackPanel>
@@ -926,8 +926,8 @@
                                     <TextBlock Style="{StaticResource CardTitle}" Text="日历" Margin="0,0,0,12" />
                                     <CheckBox x:Name="ChkShowWeekStrip" Style="{StaticResource FloatlyToggle}" Content="显示万年历" Margin="0,0,0,12" />
                                     <CheckBox x:Name="ChkShowHuangLi" Style="{StaticResource FloatlyToggle}" Content="显示黄历详情（宜忌、神煞、时辰）" Margin="0,0,0,14" />
-                                    <Border Background="{StaticResource SettingsDivider}" Height="1" Margin="0,0,0,16" />
-                                    <TextBlock Text="默认视图" Foreground="{StaticResource SettingsText}" FontWeight="SemiBold" Margin="0,0,0,12" />
+                                    <Border Background="{DynamicResource SettingsDivider}" Height="1" Margin="0,0,0,16" />
+                                    <TextBlock Text="默认视图" Foreground="{DynamicResource SettingsText}" FontWeight="SemiBold" Margin="0,0,0,12" />
                                     <StackPanel Orientation="Horizontal">
                                         <RadioButton x:Name="RbCalWeek" Content="周历" GroupName="Calendar" />
                                         <RadioButton x:Name="RbCalMonth" Content="月历" GroupName="Calendar" />
@@ -948,7 +948,7 @@
                                             <ColumnDefinition Width="114" />
                                             <ColumnDefinition Width="*" />
                                         </Grid.ColumnDefinitions>
-                                        <Border x:Name="ThemeDarkCard" CornerRadius="8" BorderThickness="2" BorderBrush="{StaticResource SettingsAccent}"
+                                        <Border x:Name="ThemeDarkCard" CornerRadius="8" BorderThickness="2" BorderBrush="{DynamicResource SettingsAccent}"
                                                 Background="#172238" Padding="12,10" Cursor="Hand" MouseLeftButtonUp="ThemeDarkCard_Click"
                                                 Height="58">
                                             <Grid>
@@ -958,9 +958,9 @@
                                                     <ColumnDefinition Width="Auto" />
                                                 </Grid.ColumnDefinitions>
                                                 <Border Width="24" Height="24" CornerRadius="6" Background="#0F172A" VerticalAlignment="Center" />
-                                                <TextBlock Grid.Column="1" Text="深色" Foreground="{StaticResource SettingsText}" VerticalAlignment="Center" Margin="12,0,0,0" />
+                                                <TextBlock Grid.Column="1" Text="深色" Foreground="{DynamicResource SettingsText}" VerticalAlignment="Center" Margin="12,0,0,0" />
                                                 <TextBlock x:Name="ThemeDarkCheck" Grid.Column="2" Text="&#xE73E;" FontFamily="Segoe MDL2 Assets"
-                                                           Foreground="{StaticResource SettingsAccent}" VerticalAlignment="Center" />
+                                                           Foreground="{DynamicResource SettingsAccent}" VerticalAlignment="Center" />
                                             </Grid>
                                         </Border>
                                         <Border x:Name="ThemeLightCard" Grid.Column="2" CornerRadius="8" BorderThickness="2" BorderBrush="#24FFFFFF"
@@ -975,7 +975,7 @@
                                                 <Border Width="24" Height="24" CornerRadius="6" Background="#F5F7FA" VerticalAlignment="Center" />
                                                 <TextBlock Grid.Column="1" Text="浅色" Foreground="#1F2937" VerticalAlignment="Center" Margin="12,0,0,0" />
                                                 <TextBlock x:Name="ThemeLightCheck" Grid.Column="2" Text="&#xE73E;" FontFamily="Segoe MDL2 Assets"
-                                                           Foreground="{StaticResource SettingsAccent}" VerticalAlignment="Center"
+                                                           Foreground="{DynamicResource SettingsAccent}" VerticalAlignment="Center"
                                                            Visibility="Collapsed" />
                                             </Grid>
                                         </Border>
@@ -983,7 +983,7 @@
                                         <RadioButton x:Name="RbThemeLight" GroupName="Theme" Visibility="Collapsed" />
                                     </Grid>
 
-                                    <Border Height="1" Background="{StaticResource SettingsDivider}" Margin="0,0,0,8" />
+                                    <Border Height="1" Background="{DynamicResource SettingsDivider}" Margin="0,0,0,8" />
                                     <Grid Margin="0,0,0,12">
                                         <Grid.RowDefinitions>
                                             <RowDefinition Height="Auto" />
@@ -995,7 +995,7 @@
                                             <ColumnDefinition Width="54" />
                                             <ColumnDefinition Width="62" />
                                         </Grid.ColumnDefinitions>
-                                        <TextBlock Grid.ColumnSpan="3" Style="{StaticResource FieldLabel}" Text="窗口透明度" FontWeight="SemiBold" Foreground="{StaticResource SettingsText}" />
+                                        <TextBlock Grid.ColumnSpan="3" Style="{StaticResource FieldLabel}" Text="窗口透明度" FontWeight="SemiBold" Foreground="{DynamicResource SettingsText}" />
                                         <TextBox x:Name="TxtOpacity" Grid.Column="3" Style="{StaticResource CompactValueBox}"
                                                  LostFocus="TxtOpacity_LostFocus" KeyDown="TxtOpacity_KeyDown" />
                                         <TextBlock Grid.Row="1" Grid.Column="0" Text="30%" Style="{StaticResource HintText}" VerticalAlignment="Center" HorizontalAlignment="Left" />
@@ -1005,7 +1005,7 @@
                                         <TextBlock Grid.Row="1" Grid.Column="2" Text="100%" Style="{StaticResource HintText}" VerticalAlignment="Center" HorizontalAlignment="Right" />
                                     </Grid>
 
-                                    <Border Height="1" Background="{StaticResource SettingsDivider}" Margin="0,0,0,8" />
+                                    <Border Height="1" Background="{DynamicResource SettingsDivider}" Margin="0,0,0,8" />
                                     <Grid Margin="0,0,0,12">
                                         <Grid.RowDefinitions>
                                             <RowDefinition Height="Auto" />
@@ -1017,7 +1017,7 @@
                                             <ColumnDefinition Width="54" />
                                             <ColumnDefinition Width="62" />
                                         </Grid.ColumnDefinitions>
-                                        <TextBlock Grid.ColumnSpan="3" Style="{StaticResource FieldLabel}" Text="字号大小" FontWeight="SemiBold" Foreground="{StaticResource SettingsText}" />
+                                        <TextBlock Grid.ColumnSpan="3" Style="{StaticResource FieldLabel}" Text="字号大小" FontWeight="SemiBold" Foreground="{DynamicResource SettingsText}" />
                                         <TextBox x:Name="TxtFontSize" Grid.Column="3" Style="{StaticResource CompactValueBox}"
                                                  LostFocus="TxtFontSize_LostFocus" KeyDown="TxtFontSize_KeyDown" />
                                         <TextBlock Grid.Row="1" Grid.Column="0" Text="10 pt" Style="{StaticResource HintText}" VerticalAlignment="Center" HorizontalAlignment="Left" />
@@ -1034,7 +1034,7 @@
                                             <ColumnDefinition Width="12" />
                                             <ColumnDefinition Width="0.92*" />
                                         </Grid.ColumnDefinitions>
-                                        <TextBlock Style="{StaticResource FieldLabel}" Text="字体" FontWeight="SemiBold" Foreground="{StaticResource SettingsText}" Margin="0,0,18,0" />
+                                        <TextBlock Style="{StaticResource FieldLabel}" Text="字体" FontWeight="SemiBold" Foreground="{DynamicResource SettingsText}" Margin="0,0,18,0" />
                                         <ComboBox x:Name="CmbFontFamily" Grid.Column="1" Style="{StaticResource SettingsComboBox}" IsEditable="True"
                                                   MaxDropDownHeight="260" />
                                         <Grid Grid.Column="3">
@@ -1043,7 +1043,7 @@
                                                      ToolTip="输入字体名称" />
                                             <TextBlock x:Name="FontSearchPlaceholder"
                                                        Text="或输入字体名称"
-                                                       Foreground="{StaticResource SettingsMuted}"
+                                                       Foreground="{DynamicResource SettingsMuted}"
                                                        Margin="12,0,0,0"
                                                        IsHitTestVisible="False"
                                                        VerticalAlignment="Center" />
@@ -1057,7 +1057,7 @@
                                             <ColumnDefinition Width="154" />
                                             <ColumnDefinition Width="Auto" />
                                         </Grid.ColumnDefinitions>
-                                        <TextBlock Style="{StaticResource FieldLabel}" Text="字体颜色" FontWeight="SemiBold" Foreground="{StaticResource SettingsText}" Margin="0,0,18,0" />
+                                        <TextBlock Style="{StaticResource FieldLabel}" Text="字体颜色" FontWeight="SemiBold" Foreground="{DynamicResource SettingsText}" Margin="0,0,18,0" />
                                         <UniformGrid x:Name="FontColorPalette" Grid.Column="1" Columns="6" VerticalAlignment="Center" />
                                         <Grid Grid.Column="2" Margin="10,0,0,0">
                                             <Grid.ColumnDefinitions>
@@ -1070,11 +1070,11 @@
                                             <Border Grid.Column="2"
                                                     Height="34"
                                                     CornerRadius="10"
-                                                    BorderBrush="{StaticResource SettingsBorder}"
+                                                    BorderBrush="{DynamicResource SettingsBorder}"
                                                     BorderThickness="1"
-                                                    Background="{StaticResource SettingsInputBg}">
+                                                    Background="{DynamicResource SettingsInputBg}">
                                                 <TextBlock Text="&#xE70F;" FontFamily="Segoe MDL2 Assets"
-                                                           Foreground="{StaticResource SettingsMuted}"
+                                                           Foreground="{DynamicResource SettingsMuted}"
                                                            HorizontalAlignment="Center"
                                                            VerticalAlignment="Center"
                                                            IsHitTestVisible="False" />
@@ -1085,7 +1085,7 @@
                                                 Padding="12,6" Click="BtnClearFontColor_Click" />
                                     </Grid>
 
-                                    <Border Height="1" Background="{StaticResource SettingsDivider}" Margin="0,0,0,8" />
+                                    <Border Height="1" Background="{DynamicResource SettingsDivider}" Margin="0,0,0,8" />
                                     <TextBlock Style="{StaticResource CardTitle}" Text="皮肤系统" Margin="0,0,0,8" />
                                     <UniformGrid Columns="4" Margin="0,0,0,8">
                                         <ToggleButton x:Name="TbSkinDefault" Margin="0,0,8,0" Padding="10,8" Style="{StaticResource SecondaryToggleButton}"
@@ -1152,7 +1152,7 @@
                                             <ColumnDefinition Width="54" />
                                             <ColumnDefinition Width="62" />
                                         </Grid.ColumnDefinitions>
-                                        <TextBlock Grid.ColumnSpan="3" Style="{StaticResource FieldLabel}" Text="背景遮罩透明度" FontWeight="SemiBold" Foreground="{StaticResource SettingsText}" />
+                                        <TextBlock Grid.ColumnSpan="3" Style="{StaticResource FieldLabel}" Text="背景遮罩透明度" FontWeight="SemiBold" Foreground="{DynamicResource SettingsText}" />
                                         <TextBox x:Name="TxtSkinOverlay" Grid.Column="3" Style="{StaticResource CompactValueBox}"
                                                  LostFocus="TxtSkinOverlay_LostFocus" KeyDown="TxtSkinOverlay_KeyDown" />
                                         <TextBlock Grid.Row="1" Grid.Column="0" Text="0%" Style="{StaticResource HintText}" VerticalAlignment="Center" HorizontalAlignment="Left" />
@@ -1162,7 +1162,7 @@
                                         <TextBlock Grid.Row="1" Grid.Column="2" Text="85%" Style="{StaticResource HintText}" VerticalAlignment="Center" HorizontalAlignment="Right" />
                                     </Grid>
 
-                                    <Border Height="1" Background="{StaticResource SettingsDivider}" Margin="0,0,0,8" />
+                                    <Border Height="1" Background="{DynamicResource SettingsDivider}" Margin="0,0,0,8" />
                                     <Grid>
                                         <Grid.ColumnDefinitions>
                                             <ColumnDefinition Width="Auto" />
@@ -1174,12 +1174,12 @@
                                         <TextBlock Grid.Column="2" Style="{StaticResource HintText}"
                                                    Text="拖拽窗口四边或四角可调整大小"
                                                    VerticalAlignment="Center" />
-                                        <Border Grid.Column="3" Height="42" CornerRadius="8" BorderBrush="{StaticResource SettingsBorder}" BorderThickness="1"
-                                                Background="{StaticResource SettingsPreviewBg}" HorizontalAlignment="Right" Width="112">
+                                        <Border Grid.Column="3" Height="42" CornerRadius="8" BorderBrush="{DynamicResource SettingsBorder}" BorderThickness="1"
+                                                Background="{DynamicResource SettingsPreviewBg}" HorizontalAlignment="Right" Width="112">
                                             <Grid>
-                                                <Border Margin="14,10" BorderBrush="{StaticResource SettingsPreviewBorder}" BorderThickness="1" CornerRadius="4" />
+                                                <Border Margin="14,10" BorderBrush="{DynamicResource SettingsPreviewBorder}" BorderThickness="1" CornerRadius="4" />
                                                 <TextBlock Text="&#xE71B;" FontFamily="Segoe MDL2 Assets" FontSize="10"
-                                                           Foreground="{StaticResource SettingsMuted}" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="6" />
+                                                           Foreground="{DynamicResource SettingsMuted}" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="6" />
                                             </Grid>
                                         </Border>
                                     </Grid>
@@ -1203,7 +1203,7 @@
 
                                     <StackPanel Grid.ColumnSpan="5" Orientation="Horizontal" Margin="0,0,0,12">
                                         <TextBlock Text="&#xECAA;" FontFamily="Segoe MDL2 Assets" FontSize="13"
-                                                   Foreground="{StaticResource SettingsMuted}" VerticalAlignment="Center" Margin="0,0,8,0" />
+                                                   Foreground="{DynamicResource SettingsMuted}" VerticalAlignment="Center" Margin="0,0,8,0" />
                                         <TextBlock Style="{StaticResource CardTitle}" Text="模块" Margin="0" />
                                     </StackPanel>
 
@@ -1248,9 +1248,9 @@
                                         </Grid>
                                     </Grid>
 
-                                    <Border Grid.Row="1" Grid.Column="2" Background="{StaticResource SettingsDivider}" />
+                                    <Border Grid.Row="1" Grid.Column="2" Background="{DynamicResource SettingsDivider}" />
 
-                                    <Border Grid.Row="1" Grid.Column="4" Background="{StaticResource SettingsInnerPanelBg}" CornerRadius="8" Padding="12,12">
+                                    <Border Grid.Row="1" Grid.Column="4" Background="{DynamicResource SettingsInnerPanelBg}" CornerRadius="8" Padding="12,12">
                                         <StackPanel>
                                             <TextBlock Style="{StaticResource CardTitle}" Text="番茄钟配置" Margin="0,0,0,14" />
                                             <Grid Margin="0,0,0,10">
@@ -1258,10 +1258,10 @@
                                                     <ColumnDefinition Width="128" />
                                                     <ColumnDefinition Width="Auto" />
                                                 </Grid.ColumnDefinitions>
-                                                <TextBlock Style="{StaticResource FieldLabel}" Text="专注时长" Foreground="{StaticResource SettingsText}" />
+                                                <TextBlock Style="{StaticResource FieldLabel}" Text="专注时长" Foreground="{DynamicResource SettingsText}" />
                                                 <Grid Grid.Column="1">
                                                     <TextBox x:Name="TxtPomodoroWork" Style="{StaticResource PomodoroValueBox}" />
-                                                    <TextBlock Text="分钟" Foreground="{StaticResource SettingsMuted}" HorizontalAlignment="Right" Margin="0,0,12,0" VerticalAlignment="Center" />
+                                                    <TextBlock Text="分钟" Foreground="{DynamicResource SettingsMuted}" HorizontalAlignment="Right" Margin="0,0,12,0" VerticalAlignment="Center" />
                                                 </Grid>
                                             </Grid>
                                             <Grid Margin="0,0,0,10">
@@ -1269,10 +1269,10 @@
                                                     <ColumnDefinition Width="128" />
                                                     <ColumnDefinition Width="Auto" />
                                                 </Grid.ColumnDefinitions>
-                                                <TextBlock Style="{StaticResource FieldLabel}" Text="短休息时长" Foreground="{StaticResource SettingsText}" />
+                                                <TextBlock Style="{StaticResource FieldLabel}" Text="短休息时长" Foreground="{DynamicResource SettingsText}" />
                                                 <Grid Grid.Column="1">
                                                     <TextBox x:Name="TxtPomodoroBreak" Style="{StaticResource PomodoroValueBox}" />
-                                                    <TextBlock Text="分钟" Foreground="{StaticResource SettingsMuted}" HorizontalAlignment="Right" Margin="0,0,12,0" VerticalAlignment="Center" />
+                                                    <TextBlock Text="分钟" Foreground="{DynamicResource SettingsMuted}" HorizontalAlignment="Right" Margin="0,0,12,0" VerticalAlignment="Center" />
                                                 </Grid>
                                             </Grid>
                                             <Grid Margin="0,0,0,10">
@@ -1280,10 +1280,10 @@
                                                     <ColumnDefinition Width="128" />
                                                     <ColumnDefinition Width="Auto" />
                                                 </Grid.ColumnDefinitions>
-                                                <TextBlock Style="{StaticResource FieldLabel}" Text="长休息时长" Foreground="{StaticResource SettingsText}" />
+                                                <TextBlock Style="{StaticResource FieldLabel}" Text="长休息时长" Foreground="{DynamicResource SettingsText}" />
                                                 <Grid Grid.Column="1">
                                                     <TextBox x:Name="TxtPomodoroLongBreak" Style="{StaticResource PomodoroValueBox}" />
-                                                    <TextBlock Text="分钟" Foreground="{StaticResource SettingsMuted}" HorizontalAlignment="Right" Margin="0,0,12,0" VerticalAlignment="Center" />
+                                                    <TextBlock Text="分钟" Foreground="{DynamicResource SettingsMuted}" HorizontalAlignment="Right" Margin="0,0,12,0" VerticalAlignment="Center" />
                                                 </Grid>
                                             </Grid>
                                             <Grid>
@@ -1291,10 +1291,10 @@
                                                     <ColumnDefinition Width="128" />
                                                     <ColumnDefinition Width="Auto" />
                                                 </Grid.ColumnDefinitions>
-                                                <TextBlock Style="{StaticResource FieldLabel}" Text="长休息前番茄数" Foreground="{StaticResource SettingsText}" />
+                                                <TextBlock Style="{StaticResource FieldLabel}" Text="长休息前番茄数" Foreground="{DynamicResource SettingsText}" />
                                                 <Grid Grid.Column="1">
                                                     <TextBox x:Name="TxtPomodoroSessions" Style="{StaticResource PomodoroValueBox}" />
-                                                    <TextBlock Text="个" Foreground="{StaticResource SettingsMuted}" HorizontalAlignment="Right" Margin="0,0,12,0" VerticalAlignment="Center" />
+                                                    <TextBlock Text="个" Foreground="{DynamicResource SettingsMuted}" HorizontalAlignment="Right" Margin="0,0,12,0" VerticalAlignment="Center" />
                                                 </Grid>
                                             </Grid>
                                         </StackPanel>
@@ -1306,7 +1306,7 @@
                 </ScrollViewer>
             </Grid>
 
-            <Border x:Name="FooterBar" Grid.Row="2" Background="{StaticResource SettingsFooterBg}" BorderBrush="{StaticResource SettingsListBorder}" BorderThickness="0,1,0,0" Padding="18,10">
+            <Border x:Name="FooterBar" Grid.Row="2" Background="{DynamicResource SettingsFooterBg}" BorderBrush="{DynamicResource SettingsListBorder}" BorderThickness="0,1,0,0" Padding="18,10">
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*" />
@@ -1329,7 +1329,7 @@
                             </StackPanel>
                         </Button>
                         <TextBlock x:Name="VersionText" Text="版本"
-                                   FontSize="11" Foreground="{StaticResource SettingsMuted}" VerticalAlignment="Center" />
+                                   FontSize="11" Foreground="{DynamicResource SettingsMuted}" VerticalAlignment="Center" />
                     </StackPanel>
 
                     <StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right">
@@ -1345,5 +1345,4 @@
         </Grid>
     </Border>
 </Window>
-
 
