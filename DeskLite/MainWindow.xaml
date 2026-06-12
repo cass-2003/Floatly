@@ -29,16 +29,8 @@
         <SolidColorBrush x:Key="TodoMutedBrush" Color="#8B95A5" />
         <SolidColorBrush x:Key="TodoEmptyBrush" Color="#6B7280" />
         <SolidColorBrush x:Key="TodoAccentBrush" Color="#5C8DFF" />
-        <LinearGradientBrush x:Key="WidgetGlassCardBrush" StartPoint="0,0" EndPoint="1,1">
-            <GradientStop Color="#22FFFFFF" Offset="0" />
-            <GradientStop Color="#32223C5A" Offset="0.22" />
-            <GradientStop Color="#3A132A44" Offset="0.58" />
-            <GradientStop Color="#5E08182D" Offset="1" />
-        </LinearGradientBrush>
-        <LinearGradientBrush x:Key="WidgetGlassToolbarBrush" StartPoint="0,0" EndPoint="1,0">
-            <GradientStop Color="#30162A43" Offset="0" />
-            <GradientStop Color="#240A1728" Offset="1" />
-        </LinearGradientBrush>
+        <SolidColorBrush x:Key="WidgetGlassCardBrush" Color="#4210243A" />
+        <SolidColorBrush x:Key="WidgetGlassToolbarBrush" Color="#4210243A" />
         <SolidColorBrush x:Key="WidgetGlassBorderBrush" Color="#42E4F0FF" />
 
         <Style x:Key="FloatlyCard" TargetType="Border">
@@ -771,11 +763,7 @@
                                 </Border>
                                 <Border x:Name="DailyQuoteTintOverlay" CornerRadius="18">
                                     <Border.Background>
-                                        <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
-                                            <GradientStop Color="#E40D1A2C" Offset="0" />
-                                            <GradientStop Color="#C0122137" Offset="0.58" />
-                                            <GradientStop Color="#24122137" Offset="1" />
-                                        </LinearGradientBrush>
+                                        <SolidColorBrush Color="#C8122137" />
                                     </Border.Background>
                                 </Border>
                                 <Grid Margin="24,14,22,14">

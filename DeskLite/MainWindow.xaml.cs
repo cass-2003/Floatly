@@ -1196,14 +1196,7 @@ public partial class MainWindow : Window
             OffWorkTrack.Background = Brush(_palette.ProgressTrack);
 
             SalaryImageLayer.Opacity = 0.86;
-            SalaryTintOverlay.Background = CreateLinearBrush(
-                [
-                    new GradientStop(System.Windows.Media.Color.FromArgb(0xF0, 0xFF, 0xFF, 0xFF), 0.0),
-                    new GradientStop(System.Windows.Media.Color.FromArgb(0xC8, 0xFF, 0xFB, 0xEB), 0.58),
-                    new GradientStop(System.Windows.Media.Color.FromArgb(0x40, 0xFF, 0xF4, 0xC4), 1.0)
-                ],
-                new System.Windows.Point(0, 0),
-                new System.Windows.Point(1, 1));
+            SalaryTintOverlay.Background = Brush(0xD8, 0xFF, 0xFB, 0xEB);
             SalaryIconBadge.Background = Brush(0x18, 0xD9, 0x77, 0x06);
             SalaryIconBadge.BorderBrush = Brush(0x9A, 0xF5, 0x9E, 0x0B);
             SalaryLabel.Foreground = Brush(_palette.TextPrimary);
@@ -1215,14 +1208,7 @@ public partial class MainWindow : Window
             SalaryWorkDurationText.Foreground = Brush(_palette.TextSecondary);
 
             DailyQuoteImageLayer.Opacity = 0.32;
-            DailyQuoteTintOverlay.Background = CreateLinearBrush(
-                [
-                    new GradientStop(System.Windows.Media.Color.FromArgb(0xF5, 0xFF, 0xFF, 0xFF), 0.0),
-                    new GradientStop(System.Windows.Media.Color.FromArgb(0xD8, 0xF8, 0xFB, 0xFF), 0.56),
-                    new GradientStop(System.Windows.Media.Color.FromArgb(0x40, 0xE8, 0xF1, 0xFF), 1.0)
-                ],
-                new System.Windows.Point(0, 0),
-                new System.Windows.Point(1, 0));
+            DailyQuoteTintOverlay.Background = Brush(0xE8, 0xFF, 0xFF, 0xFF);
             DailyQuoteMarkText.Foreground = Brush(0xFF, 0x5C, 0x8D, 0xFF);
             DailyQuoteTitleText.Foreground = Brush(_palette.TextPrimary);
             DailyQuoteText.Foreground = Brush(_palette.TextPrimary);
@@ -1255,14 +1241,7 @@ public partial class MainWindow : Window
         SalaryWorkDurationText.Foreground = Brush(0xE6, 0xFF, 0xF5, 0xD6);
 
         DailyQuoteImageLayer.Opacity = 0.78;
-        DailyQuoteTintOverlay.Background = CreateLinearBrush(
-            [
-                new GradientStop(System.Windows.Media.Color.FromArgb(0xE4, 0x0D, 0x1A, 0x2C), 0.0),
-                new GradientStop(System.Windows.Media.Color.FromArgb(0xC0, 0x12, 0x21, 0x37), 0.58),
-                new GradientStop(System.Windows.Media.Color.FromArgb(0x24, 0x12, 0x21, 0x37), 1.0)
-            ],
-            new System.Windows.Point(0, 0),
-            new System.Windows.Point(1, 0));
+        DailyQuoteTintOverlay.Background = Brush(0xC8, 0x12, 0x21, 0x37);
         DailyQuoteMarkText.Foreground = Brush(0xFF, 0x9B, 0xA8, 0xFF);
         DailyQuoteTitleText.Foreground = Brush(0xFF, 0xDD, 0xE8, 0xFF);
         DailyQuoteText.Foreground = Brush(0xFF, 0xFF, 0xFF, 0xFF);
