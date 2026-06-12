@@ -108,7 +108,7 @@
     <Border x:Name="MainBorder"
             Width="720"
             Height="1280"
-            Background="#D80A1B31"
+            Background="#E80A1B31"
             CornerRadius="22"
             BorderBrush="#2EE4F0FF"
             BorderThickness="1"
