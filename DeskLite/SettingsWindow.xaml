@@ -63,6 +63,10 @@
         <SolidColorBrush x:Key="SettingsListSelectedBg" Color="#223149" />
         <SolidColorBrush x:Key="SettingsListHoverBg" Color="#1B2A40" />
         <SolidColorBrush x:Key="SettingsInnerPanelBg" Color="#30141D2B" />
+        <SolidColorBrush x:Key="SettingsTitleIcon" Color="#D8E5FF" />
+        <SolidColorBrush x:Key="SettingsWarning" Color="#FFB86C" />
+        <SolidColorBrush x:Key="SettingsPreviewBg" Color="#121820" />
+        <SolidColorBrush x:Key="SettingsPreviewBorder" Color="#44FFFFFF" />
 
         <Style x:Key="CardTitle" TargetType="TextBlock">
             <Setter Property="FontSize" Value="14" />
@@ -623,7 +627,7 @@
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
                 <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="18,0,0,0">
-                    <TextBlock Text="&#xE713;" FontFamily="Segoe MDL2 Assets" FontSize="17" Foreground="#D8E5FF" Margin="0,0,12,0" />
+                    <TextBlock Text="&#xE713;" FontFamily="Segoe MDL2 Assets" FontSize="17" Foreground="{StaticResource SettingsTitleIcon}" Margin="0,0,12,0" />
                     <TextBlock Text="Floatly 2.0 - 设置" FontSize="15" Foreground="{StaticResource SettingsText}" VerticalAlignment="Center" />
                 </StackPanel>
                 <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center" Margin="0,0,10,0">
@@ -778,7 +782,7 @@
                                         <CheckBox x:Name="ChkShowTomorrow" Style="{StaticResource FloatlyToggle}" Content="显示明日天气" />
                                     </StackPanel>
 
-                                    <Border Grid.Row="1" Grid.Column="2" Background="#1AFFFFFF" Width="1" Margin="0,2,0,0" />
+                                    <Border Grid.Row="1" Grid.Column="2" Background="{StaticResource SettingsDivider}" Width="1" Margin="0,2,0,0" />
 
                                     <StackPanel Grid.Row="1" Grid.Column="4">
                                         <TextBlock Text="城市定位" Foreground="{StaticResource SettingsText}" FontWeight="SemiBold" Margin="0,0,0,10" />
@@ -811,7 +815,7 @@
                                         </StackPanel>
                                         <TextBlock x:Name="LocationIpWarningText" Style="{StaticResource HintText}"
                                                    Text="当前结果可能来自 IP 定位，建议开启 Windows 位置服务"
-                                                   Foreground="#FFB86C" Visibility="Collapsed" />
+                                                   Foreground="{StaticResource SettingsWarning}" Visibility="Collapsed" />
                                     </StackPanel>
                                 </Grid>
                             </Border>
@@ -857,7 +861,7 @@
                                             <TextBlock Text="&#xE70F;" FontFamily="Segoe MDL2 Assets" />
                                         </Button>
                                     </Grid>
-                                    <Border BorderBrush="#18FFFFFF" BorderThickness="0,1,0,0" Margin="0,0,0,10" />
+                                    <Border BorderBrush="{StaticResource SettingsDivider}" BorderThickness="0,1,0,0" Margin="0,0,0,10" />
                                     <Grid>
                                         <Grid.ColumnDefinitions>
                                             <ColumnDefinition Width="*" />
@@ -1039,7 +1043,7 @@
                                                      ToolTip="输入字体名称" />
                                             <TextBlock x:Name="FontSearchPlaceholder"
                                                        Text="或输入字体名称"
-                                                       Foreground="#66758A"
+                                                       Foreground="{StaticResource SettingsMuted}"
                                                        Margin="12,0,0,0"
                                                        IsHitTestVisible="False"
                                                        VerticalAlignment="Center" />
@@ -1171,9 +1175,9 @@
                                                    Text="拖拽窗口四边或四角可调整大小"
                                                    VerticalAlignment="Center" />
                                         <Border Grid.Column="3" Height="42" CornerRadius="8" BorderBrush="{StaticResource SettingsBorder}" BorderThickness="1"
-                                                Background="#121820" HorizontalAlignment="Right" Width="112">
+                                                Background="{StaticResource SettingsPreviewBg}" HorizontalAlignment="Right" Width="112">
                                             <Grid>
-                                                <Border Margin="14,10" BorderBrush="#44FFFFFF" BorderThickness="1" CornerRadius="4" />
+                                                <Border Margin="14,10" BorderBrush="{StaticResource SettingsPreviewBorder}" BorderThickness="1" CornerRadius="4" />
                                                 <TextBlock Text="&#xE71B;" FontFamily="Segoe MDL2 Assets" FontSize="10"
                                                            Foreground="{StaticResource SettingsMuted}" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="6" />
                                             </Grid>
@@ -1199,7 +1203,7 @@
 
                                     <StackPanel Grid.ColumnSpan="5" Orientation="Horizontal" Margin="0,0,0,12">
                                         <TextBlock Text="&#xECAA;" FontFamily="Segoe MDL2 Assets" FontSize="13"
-                                                   Foreground="#B7C7E2" VerticalAlignment="Center" Margin="0,0,8,0" />
+                                                   Foreground="{StaticResource SettingsMuted}" VerticalAlignment="Center" Margin="0,0,8,0" />
                                         <TextBlock Style="{StaticResource CardTitle}" Text="模块" Margin="0" />
                                     </StackPanel>
 

@@ -358,6 +358,10 @@ public partial class SettingsWindow : Window
         SetBrush("SettingsListSelectedBg", light ? Color(0xFF, 0xEA, 0xF1, 0xFF) : Color(0xFF, 0x22, 0x31, 0x49));
         SetBrush("SettingsListHoverBg", light ? Color(0xFF, 0xF3, 0xF7, 0xFC) : Color(0xFF, 0x1B, 0x2A, 0x40));
         SetBrush("SettingsInnerPanelBg", light ? Color(0xB8, 0xF8, 0xFB, 0xFF) : Color(0x30, 0x14, 0x1D, 0x2B));
+        SetBrush("SettingsTitleIcon", light ? Color(0xFF, 0x4D, 0x82, 0xFF) : Color(0xFF, 0xD8, 0xE5, 0xFF));
+        SetBrush("SettingsWarning", light ? Color(0xFF, 0xC2, 0x66, 0x15) : Color(0xFF, 0xFF, 0xB8, 0x6C));
+        SetBrush("SettingsPreviewBg", light ? Color(0xE8, 0xFF, 0xFF, 0xFF) : Color(0xFF, 0x12, 0x18, 0x20));
+        SetBrush("SettingsPreviewBorder", light ? Color(0xFF, 0xC8, 0xD2, 0xE2) : Color(0x44, 0xFF, 0xFF, 0xFF));
 
         Background = (System.Windows.Media.Brush)Resources["SettingsBg"];
         Foreground = (System.Windows.Media.Brush)Resources["SettingsText"];
@@ -552,7 +556,7 @@ public partial class SettingsWindow : Window
             var btn = new System.Windows.Controls.Button
             {
                 Background = new SolidColorBrush(color.Value),
-                BorderBrush = new SolidColorBrush(WpfColor.FromArgb(0x40, 0xFF, 0xFF, 0xFF)),
+                BorderBrush = (System.Windows.Media.Brush)FindResource("SettingsBorder"),
                 BorderThickness = new Thickness(1),
                 Tag = hex,
                 ToolTip = hex,
