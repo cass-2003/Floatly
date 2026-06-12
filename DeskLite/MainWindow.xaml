@@ -746,32 +746,32 @@
                         </Border>
 
                         <!-- Calendar: week + month side by side -->
-                        <Grid x:Name="CalendarSection" Margin="0,0,0,10" Height="232" Visibility="Collapsed">
+                        <Grid x:Name="CalendarSection" Margin="0,0,0,10" Height="238" Visibility="Collapsed">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*" />
                                 <ColumnDefinition Width="14" />
                                 <ColumnDefinition Width="*" />
                             </Grid.ColumnDefinitions>
-                            <Border Grid.Column="0" Style="{StaticResource FloatlyCard}" Padding="16,14">
+                            <Border Grid.Column="0" Style="{StaticResource FloatlyCard}" Padding="16,14,16,13">
                                 <StackPanel>
-                                    <TextBlock x:Name="WeekCalendarTitleText" Text="周历" Style="{StaticResource CardTitle}" Margin="0,0,0,10" />
+                                    <TextBlock x:Name="WeekCalendarTitleText" Text="周历" Style="{StaticResource CardTitle}" Margin="0,0,0,11" />
                                     <Grid x:Name="WeekCalendarPanel" />
-                                    <StackPanel x:Name="WeekAgendaPanel" Margin="0,10,0,0" />
+                                    <StackPanel x:Name="WeekAgendaPanel" Margin="0,11,0,0" />
                                 </StackPanel>
                             </Border>
-                            <Border Grid.Column="2" Style="{StaticResource FloatlyCard}" Padding="16,14">
+                            <Border Grid.Column="2" Style="{StaticResource FloatlyCard}" Padding="16,14,16,12">
                                 <StackPanel>
-                                    <Grid Margin="0,0,0,4">
+                                    <Grid Margin="0,0,0,5">
                                         <Button x:Name="CalPrevBtn" Content="‹" Width="20" Height="20" Padding="0"
                                                 Click="CalPrev_Click" Background="Transparent" BorderThickness="0"
                                                 Foreground="#8B95A5" Cursor="Hand" FontSize="12" HorizontalAlignment="Left" />
-                                        <TextBlock x:Name="CalendarTitleText" Text="6月 2026" FontSize="11" FontWeight="SemiBold"
+                                        <TextBlock x:Name="CalendarTitleText" Text="6月 2026" FontSize="12" FontWeight="SemiBold"
                                                    Foreground="#A6FFFFFF" HorizontalAlignment="Center" VerticalAlignment="Center" />
                                         <Button x:Name="CalNextBtn" Content="›" Width="20" Height="20" Padding="0"
                                                 Click="CalNext_Click" Background="Transparent" BorderThickness="0"
                                                 Foreground="#8B95A5" Cursor="Hand" FontSize="12" HorizontalAlignment="Right" />
                                     </Grid>
-                                    <UniformGrid x:Name="WeekdayHeader" Rows="1" Columns="7" Margin="0,0,0,2" />
+                                    <UniformGrid x:Name="WeekdayHeader" Rows="1" Columns="7" Margin="0,0,0,3" />
                                     <Grid x:Name="CalendarPanel" />
                                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,4,0,0" Visibility="Collapsed">
                                         <Button x:Name="CalWeekModeBtn" Content="周" Width="22" Height="18" Padding="0" Click="CalWeekMode_Click"
@@ -821,14 +821,14 @@
                 </ScrollViewer>
 
                 <!-- Bottom toolbar -->
-                <Border Grid.Row="2" x:Name="BottomToolbar" Background="Transparent" Padding="0" Margin="0,10,0,6">
+                <Border Grid.Row="2" x:Name="BottomToolbar" Background="Transparent" Padding="0" Margin="0,8,0,4">
                     <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="Auto" />
                             <ColumnDefinition Width="*" />
                             <ColumnDefinition Width="Auto" />
                         </Grid.ColumnDefinitions>
-                        <Border x:Name="QuickSettingsPill" CornerRadius="18" Padding="14,8" Background="#96162A43"
+                        <Border x:Name="QuickSettingsPill" CornerRadius="18" Padding="14,7" Background="#96162A43"
                                 BorderBrush="#2EE4F0FF" BorderThickness="1">
                             <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                                 <TextBlock Text="⌃" FontSize="13" Foreground="#A6FFFFFF" VerticalAlignment="Center" Margin="0,0,8,0" />
@@ -845,7 +845,7 @@
                                     ValueChanged="FontSizeSlider_ValueChanged" Margin="8,0,10,0" />
                             <TextBlock x:Name="FontSizeValueText" Text="12px" FontSize="10" Foreground="#A6FFFFFF" VerticalAlignment="Center" />
                         </StackPanel>
-                        <Border x:Name="QuickActionsPill" Grid.Column="2" CornerRadius="18" Padding="10,5"
+                        <Border x:Name="QuickActionsPill" Grid.Column="2" CornerRadius="18" Padding="9,4"
                                 Background="#96162A43" BorderBrush="#2EE4F0FF" BorderThickness="1">
                             <Grid>
                                 <Grid.ColumnDefinitions>
@@ -853,10 +853,10 @@
                                     <ColumnDefinition Width="Auto" />
                                     <ColumnDefinition Width="Auto" />
                                 </Grid.ColumnDefinitions>
-                                <Button x:Name="ThemeToggleBtn" Content="☾" Width="30" Height="30" Padding="0"
+                                <Button x:Name="ThemeToggleBtn" Content="☾" Width="28" Height="28" Padding="0"
                                         Click="ThemeToggleBtn_Click" Background="#181F2D" BorderThickness="0"
                                         Foreground="#E8F1FF" Cursor="Hand" FontSize="16" ToolTip="切换主题" />
-                                <Button x:Name="ToolbarPinBtn" Grid.Column="1" Content="✦ 置顶" Height="30" Padding="10,0"
+                                <Button x:Name="ToolbarPinBtn" Grid.Column="1" Content="✦ 置顶" Height="28" Padding="9,0"
                                         Click="PinBtn_Click" Background="Transparent" BorderThickness="0"
                                         Foreground="#A6FFFFFF" Cursor="Hand" FontSize="11" HorizontalAlignment="Center" />
                                 <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center" Margin="8,0,0,0">

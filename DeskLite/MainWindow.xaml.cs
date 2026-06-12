@@ -1266,7 +1266,7 @@ public partial class MainWindow : Window
             WeekdayHeader.Children.Add(new TextBlock
             {
                 Text = WeekLabels[i],
-                FontSize = FontScaleHelper.CalSize(11, _settings.FontScale),
+                FontSize = FontScaleHelper.CalSize(11.5, _settings.FontScale),
                 Foreground = Brush(_palette.WeekLabel),
                 HorizontalAlignment = System.Windows.HorizontalAlignment.Center
             });
@@ -1306,7 +1306,7 @@ public partial class MainWindow : Window
         {
             var row = new Grid
             {
-                Margin = new Thickness(0, 0, 0, 8)
+                Margin = new Thickness(0, 0, 0, 6)
             };
             row.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
             row.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
@@ -1318,13 +1318,13 @@ public partial class MainWindow : Window
                 Height = 7,
                 Fill = Brush(item.Day.Hour == 0 ? _palette.Accent : _palette.Mark),
                 VerticalAlignment = VerticalAlignment.Center,
-                Margin = new Thickness(0, 0, 8, 0)
+                Margin = new Thickness(2, 0, 9, 0)
             });
 
             var time = new TextBlock
             {
                 Text = item.Day.ToString("MM/dd"),
-                FontSize = FontScaleHelper.CalSize(11, _settings.FontScale),
+                FontSize = FontScaleHelper.CalSize(11.5, _settings.FontScale),
                 Foreground = Brush(_palette.Accent),
                 VerticalAlignment = VerticalAlignment.Center,
                 Margin = new Thickness(0, 0, 10, 0)
@@ -1335,8 +1335,8 @@ public partial class MainWindow : Window
             var note = new TextBlock
             {
                 Text = item.Note!,
-                FontSize = FontScaleHelper.CalSize(11, _settings.FontScale),
-                Foreground = Brush(_palette.TextSecondary),
+                FontSize = FontScaleHelper.CalSize(11.5, _settings.FontScale),
+                Foreground = Brush(0xD8, 0xE8, 0xF1, 0xFF),
                 TextTrimming = TextTrimming.CharacterEllipsis,
                 VerticalAlignment = VerticalAlignment.Center
             };
@@ -1345,12 +1345,12 @@ public partial class MainWindow : Window
 
             WeekAgendaPanel.Children.Add(new Border
             {
-                Background = Brush(0x24, 0xE8, 0xF4, 0xFF),
+                Background = Brush(0x34, 0xE8, 0xF4, 0xFF),
                 BorderBrush = Brush(0x18, 0xE4, 0xF0, 0xFF),
                 BorderThickness = new Thickness(1),
-                CornerRadius = new CornerRadius(10),
-                Padding = new Thickness(12, 7, 12, 7),
-                Margin = new Thickness(0, 0, 0, 2),
+                CornerRadius = new CornerRadius(9),
+                Padding = new Thickness(10, 6, 12, 6),
+                Margin = new Thickness(0, 0, 0, 4),
                 Child = row
             });
         }
@@ -1368,14 +1368,14 @@ public partial class MainWindow : Window
             Height = 7,
             Fill = dotBrush,
             VerticalAlignment = VerticalAlignment.Center,
-            Margin = new Thickness(0, 0, 8, 0)
+            Margin = new Thickness(2, 0, 9, 0)
         });
 
         var label = new TextBlock
         {
             Text = text,
-            FontSize = FontScaleHelper.CalSize(11, _settings.FontScale),
-            Foreground = Brush(_palette.TextSubtle),
+            FontSize = FontScaleHelper.CalSize(11.5, _settings.FontScale),
+            Foreground = Brush(0xD8, 0xE8, 0xF1, 0xFF),
             TextTrimming = TextTrimming.CharacterEllipsis,
             VerticalAlignment = VerticalAlignment.Center
         };
@@ -1384,12 +1384,12 @@ public partial class MainWindow : Window
 
         return new Border
         {
-            Background = Brush(0x24, 0xE8, 0xF4, 0xFF),
+            Background = Brush(0x34, 0xE8, 0xF4, 0xFF),
             BorderBrush = Brush(0x18, 0xE4, 0xF0, 0xFF),
             BorderThickness = new Thickness(1),
-            CornerRadius = new CornerRadius(10),
-            Padding = new Thickness(12, 7, 12, 7),
-            Margin = new Thickness(0, 0, 0, 7),
+            CornerRadius = new CornerRadius(9),
+            Padding = new Thickness(10, 6, 12, 6),
+            Margin = new Thickness(0, 0, 0, 6),
             Child = row
         };
     }
@@ -1409,7 +1409,7 @@ public partial class MainWindow : Window
             HorizontalAlignment = System.Windows.HorizontalAlignment.Center,
             Cursor = System.Windows.Input.Cursors.Hand,
             Tag = day,
-            Margin = new Thickness(0, 0, 0, 0)
+            Margin = new Thickness(0, 0, 0, compact ? 1 : 0)
         };
         cell.MouseLeftButtonDown += CalendarDay_Click;
 
@@ -1428,16 +1428,16 @@ public partial class MainWindow : Window
             ? day.Day.ToString()
             : isToday && preview is null ? "今" : day.Day.ToString();
 
-        var dayFontSize = compact ? 13 * calScale : 13 * calScale;
+        var dayFontSize = compact ? 13.5 * calScale : 13 * calScale;
         var dayForeground = isToday || isPreview ? Brush(_palette.Accent) : Brush(_palette.WeekSolar);
 
         if (compact && (isToday || isPreview))
         {
             var dayBorder = new Border
             {
-                Width = 26 * calScale,
-                Height = 26 * calScale,
-                CornerRadius = new CornerRadius(13 * calScale),
+                Width = 27 * calScale,
+                Height = 27 * calScale,
+                CornerRadius = new CornerRadius(13.5 * calScale),
                 Background = Brush(_palette.Accent),
                 HorizontalAlignment = System.Windows.HorizontalAlignment.Center,
                 Child = new TextBlock
@@ -1495,10 +1495,11 @@ public partial class MainWindow : Window
             cell.Children.Add(new TextBlock
             {
                 Text = lunarText,
-                FontSize = 9 * calScale,
+                FontSize = 9.5 * calScale,
                 Foreground = hasMark ? Brush(_palette.Mark) : Brush(_palette.WeekLunar),
                 HorizontalAlignment = System.Windows.HorizontalAlignment.Center,
-                TextTrimming = TextTrimming.CharacterEllipsis
+                TextTrimming = TextTrimming.CharacterEllipsis,
+                Margin = new Thickness(0, 1, 0, 0)
             });
         }
 
