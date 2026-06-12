@@ -32,6 +32,7 @@
 - 主窗口普通模块卡片和底部工具条已移除方向性 `LinearGradientBrush`，统一改为均匀半透明玻璃面；外层 `GlassSheen` 也已置为透明，避免卡片出现偏光/扫光。
 - 主窗口图片类卡片的遮罩层也已移除方向性渐变：每日一句、浅色薪水遮罩和默认卡片/工具条 fallback 都改为均匀半透明 tint。
 - 主窗口最大尺寸已放开到 `720 x 1280`，与内部设计画布一致；默认 `540 x 960` 仍保留为桌面小组件尺寸。
+- 主窗口 XAML 顶层 `MaxWidth` / `MaxHeight` 已补齐到 `720 x 1280`，与运行时 `MaxWindowWidth` / `MaxWindowHeight` 常量和内部设计画布一致，避免最大化/拖拽验收被旧上限 `664 x 1180` 卡住。
 - 设置页工作时间控件已从 HandyControl `TimePicker` 替换为项目自有 `SettingsTextBox`，浅色主题不再出现第三方黑色时间输入框。
 - 设置页已移除 HandyControl 主题资源合并，设置页表面控件不再受第三方默认皮肤影响。
 - 待办编辑弹窗的提醒时间控件已改为项目自有文本输入，项目已移除 HandyControl 包依赖，减少第三方控件视觉漂移和 release 体积。
@@ -135,7 +136,7 @@
 - 旧版 `resign-1` 里的“速记便签”和展开式透明度/字号滑块，在新版 `resign-2` 中分别让位给工作状态模块和折叠快捷设置；不能再把它们当作最终缺失项。
 - 窗口默认缩放后视觉密度比设计图更紧凑，需要用最新运行截图确认是否仍足够可读。
 - `MainWindow.ApplyModuleOrder()` 当前保留固定视觉网格，设置页只表达模块显示；若未来要支持真实排序，需要重新设计主面板栅格规则，不能简单按列表重排。
-- 主窗口最大尺寸已与内部 `720 x 1280` 设计画布一致；后续重点转为默认 `540 x 960` 的可读性和窄尺寸表现。
+- 主窗口最大尺寸已与内部 `720 x 1280` 设计画布一致，且 XAML 顶层最大值也已同步；后续重点转为默认 `540 x 960` 的可读性和窄尺寸表现。
 - 当前浅色主窗口已去掉 XAML 深色默认底、常驻媒体层和默认主容器径向亮区，release 包需要用新截图复核是否彻底消除黑色方形背板与卡片偏光。
 - 当前深色主窗口同样改为半透明圆角容器，不再依赖窗口级或媒体层背板；白色聚光感和默认主容器径向亮区已移除，普通卡片和图片卡片遮罩偏光均已移除，仍需继续按设计图控制卡片层次和稳定可读性。
 - 背景素材不作为本轮阻塞项，但文本遮罩和可读性仍必须验收。
@@ -169,7 +170,7 @@
 | 主面板浅色截图 | `.codex-tmp/ui-audit/widget-release-light-no-hwnd-backdrop.png` | 需刷新 | 旧截图只能证明窗口级 Acrylic 背板已移除，不能证明本轮媒体层、初始背景和主容器径向亮区移除后的状态 |
 | 主面板深色截图 | `.codex-tmp/ui-audit/widget-release-dark-no-hwnd-backdrop.png` | 需刷新 | 旧截图只能证明窗口级 Acrylic 背板已移除，不能证明本轮媒体层、初始背景和主容器径向亮区移除后的状态 |
 | 主面板自动窗口截图 | `.codex-tmp/ui-audit/floatly-release-card-glare-check.png` | 未生成有效证据 | 当前会话下 `MainWindowHandle=0`，`EnumWindows` 未枚举到 Floatly 顶层窗口，不能作为验收截图 |
-| 主面板最大尺寸截图 | `.codex-tmp/ui-audit/widget-resign2-light-current-v4.png`、`.codex-tmp/ui-audit/widget-resign2-dark-current-v4.png` | 有效 | 可证明黄历摘要默认态、双列模块、工作状态、每日一句、周历/月历和底部工具条的整体结构 |
+| 主面板最大尺寸截图 | `.codex-tmp/ui-audit/widget-resign2-light-current-v4.png`、`.codex-tmp/ui-audit/widget-resign2-dark-current-v4.png` | 需刷新 | 旧截图可证明黄历摘要默认态、双列模块、工作状态、每日一句、周历/月历和底部工具条的整体结构；本轮 XAML 最大尺寸上限已从 `664 x 1180` 补齐到 `720 x 1280`，需要重新采集最大尺寸截图 |
 
 必须补齐的视觉验收：
 
