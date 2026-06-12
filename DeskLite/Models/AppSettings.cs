@@ -46,6 +46,8 @@ public sealed class AppSettings
     public double WindowWidth { get; set; } = 720;
     public double WindowHeight { get; set; } = 1280;
     public bool UserCustomSize { get; set; }
+    /// <summary>uniform | free</summary>
+    public string ResizeMode { get; set; } = "uniform";
     public double FontScale { get; set; } = 1.0;
     /// <summary>UI font size in pt (10-16). Null in older settings files migrates from <see cref="FontScale"/>.</summary>
     public int? FontSizePt { get; set; }

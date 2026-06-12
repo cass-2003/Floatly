@@ -1260,6 +1260,10 @@
 
                                     <Border Height="1" Background="{DynamicResource SettingsDivider}" Margin="0,0,0,8" />
                                     <Grid>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="Auto" />
+                                            <RowDefinition Height="Auto" />
+                                        </Grid.RowDefinitions>
                                         <Grid.ColumnDefinitions>
                                             <ColumnDefinition Width="Auto" />
                                             <ColumnDefinition Width="12" />
@@ -1278,6 +1282,13 @@
                                                            Foreground="{DynamicResource SettingsMuted}" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="6" />
                                             </Grid>
                                         </Border>
+                                        <TextBlock Grid.Row="1" Style="{StaticResource FieldLabel}" Text="缩放方式"
+                                                   FontWeight="SemiBold" Foreground="{DynamicResource SettingsText}"
+                                                   VerticalAlignment="Center" Margin="0,12,18,0" />
+                                        <StackPanel Grid.Row="1" Grid.Column="2" Grid.ColumnSpan="2" Orientation="Horizontal" Margin="0,12,0,0">
+                                            <RadioButton x:Name="RbResizeUniform" Content="等比缩放" GroupName="ResizeMode" />
+                                            <RadioButton x:Name="RbResizeFree" Content="自由缩放" GroupName="ResizeMode" />
+                                        </StackPanel>
                                     </Grid>
                                 </StackPanel>
                             </Border>

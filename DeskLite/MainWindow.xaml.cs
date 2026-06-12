@@ -131,6 +131,7 @@ public partial class MainWindow : Window
 
     private void ApplySettings()
     {
+        _settings.ResizeMode = ResizeModeHelper.Normalize(_settings.ResizeMode);
         Topmost = _settings.AlwaysOnTop;
         Left = _settings.Left;
         Top = _settings.Top;
@@ -278,6 +279,7 @@ public partial class MainWindow : Window
 
         MainBorder.Background = CreateMainPanelBackground();
         MainBorder.BorderBrush = cardBorder;
+        WidgetScaleBox.Stretch = IsFreeResizeMode() ? Stretch.Fill : Stretch.Uniform;
         ApplySkinVideo();
         ApplySkinOverlay();
         DividerBorder.Background = new SolidColorBrush(_palette.Divider);
@@ -966,13 +968,16 @@ public partial class MainWindow : Window
             return DefaultWindowHeight;
         }
 
-        if (normalizedWidth is { } width)
+        if (!IsFreeResizeMode() && normalizedWidth is { } width)
         {
             return Math.Clamp(width / WidgetAspectRatio, MinHeight, MaxWindowHeight);
         }
 
         return Math.Clamp(height, MinHeight, MaxWindowHeight);
     }
+
+    private bool IsFreeResizeMode() =>
+        ResizeModeHelper.Normalize(_settings.ResizeMode) == ResizeModeHelper.Free;
 
     private void OnWindowSizeChanged(object sender, SizeChangedEventArgs e)
     {
@@ -2567,6 +2572,7 @@ public partial class MainWindow : Window
         _settings.SkinImagePath = next.SkinImagePath;
         _settings.SkinVideoPath = next.SkinVideoPath;
         _settings.SkinOverlayOpacity = next.SkinOverlayOpacity;
+        _settings.ResizeMode = ResizeModeHelper.Normalize(next.ResizeMode);
         _settings.City = next.City;
         _settings.CalendarMode = next.CalendarMode;
         _settings.Left = left;
@@ -2856,20 +2862,32 @@ public partial class MainWindow : Window
         var oldHeight = ActualHeight > 0 ? ActualHeight : Height;
         var rawWidth = oldWidth + rightDelta - leftDelta;
         var rawHeight = oldHeight + bottomDelta - topDelta;
-        var widthDriven = Math.Abs(rightDelta - leftDelta) >= Math.Abs(bottomDelta - topDelta);
-        var targetWidth = widthDriven
-            ? Math.Clamp(rawWidth, MinWidth, MaxWindowWidth)
-            : Math.Clamp(rawHeight * WidgetAspectRatio, MinWidth, MaxWindowWidth);
-        var targetHeight = targetWidth / WidgetAspectRatio;
-        if (targetHeight < MinHeight)
+        var freeResize = IsFreeResizeMode();
+        var targetWidth = Math.Clamp(rawWidth, MinWidth, MaxWindowWidth);
+        var targetHeight = Math.Clamp(rawHeight, MinHeight, MaxWindowHeight);
+
+        if (!freeResize)
         {
-            targetHeight = MinHeight;
-            targetWidth = targetHeight * WidgetAspectRatio;
-        }
-        else if (targetHeight > MaxWindowHeight)
-        {
-            targetHeight = MaxWindowHeight;
-            targetWidth = targetHeight * WidgetAspectRatio;
+            var horizontalResize = Math.Abs(leftDelta) > double.Epsilon || Math.Abs(rightDelta) > double.Epsilon;
+            if (horizontalResize)
+            {
+                targetHeight = targetWidth / WidgetAspectRatio;
+            }
+            else
+            {
+                targetWidth = targetHeight * WidgetAspectRatio;
+            }
+
+            if (targetHeight < MinHeight)
+            {
+                targetHeight = MinHeight;
+                targetWidth = targetHeight * WidgetAspectRatio;
+            }
+            else if (targetHeight > MaxWindowHeight)
+            {
+                targetHeight = MaxWindowHeight;
+                targetWidth = targetHeight * WidgetAspectRatio;
+            }
         }
 
         if (Math.Abs(leftDelta) > double.Epsilon)

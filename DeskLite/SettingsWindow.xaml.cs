@@ -268,6 +268,14 @@ public partial class SettingsWindow : Window
         LoadFontFamilies(s.FontFamily);
         LoadFontColorSettings(s);
         LoadSkinSettings(s);
+        if (ResizeModeHelper.Normalize(s.ResizeMode) == ResizeModeHelper.Free)
+        {
+            RbResizeFree.IsChecked = true;
+        }
+        else
+        {
+            RbResizeUniform.IsChecked = true;
+        }
 
         ChkShowWeather.IsChecked = s.ShowWeather;
         ChkShowCityName.IsChecked = s.ShowCityName;
@@ -1038,6 +1046,9 @@ public partial class SettingsWindow : Window
                 : RbSkinSolid.IsChecked == true
                     ? SkinService.ModeSolid
                     : SkinService.ModeDefault;
+        s.ResizeMode = RbResizeFree.IsChecked == true
+            ? ResizeModeHelper.Free
+            : ResizeModeHelper.Uniform;
         s.SkinOverlayOpacity = ReadSkinOverlayPercent() / 100.0;
         if (s.SkinMode != SkinService.ModeImage)
         {

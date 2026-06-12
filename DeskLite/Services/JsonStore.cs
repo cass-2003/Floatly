@@ -62,6 +62,7 @@ public static class JsonStore
             settings.FontFamily = FontFamilyHelper.ResolveName(settings.FontFamily);
             settings.SkinMode = SkinService.NormalizeMode(settings.SkinMode);
             settings.SkinOverlayOpacity = SkinService.ClampOverlayOpacity(settings.SkinOverlayOpacity);
+            settings.ResizeMode = ResizeModeHelper.Normalize(settings.ResizeMode);
             settings.HotkeyShowHide = HotkeyComboHelper.Sanitize(settings.HotkeyShowHide, HotkeyComboHelper.DefaultShowHide);
             settings.HotkeyQuickTodo = HotkeyComboHelper.Sanitize(settings.HotkeyQuickTodo, HotkeyComboHelper.DefaultQuickTodo);
             if (HotkeyComboHelper.Conflicts(settings.HotkeyShowHide, settings.HotkeyQuickTodo))
