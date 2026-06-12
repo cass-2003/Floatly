@@ -44,7 +44,8 @@
             <Setter Property="BorderThickness" Value="0" />
             <Setter Property="Foreground" Value="#A6FFFFFF" />
             <Setter Property="Cursor" Value="Hand" />
-            <Setter Property="FontSize" Value="13" />
+            <Setter Property="FontSize" Value="17" />
+            <Setter Property="FontFamily" Value="Segoe UI Symbol" />
         </Style>
         <Style x:Key="HeroCard" TargetType="Border">
             <Setter Property="Background" Value="Transparent" />
@@ -148,16 +149,16 @@
                                         HorizontalAlignment="Center" Margin="8,0,8,0" Visibility="Collapsed"
                                         ClipToBounds="False">
                                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Bottom">
-                                    <Image x:Name="WeatherIconImage" Width="54" Height="54" VerticalAlignment="Center"
-                                           Margin="0,0,12,0" RenderOptions.BitmapScalingMode="HighQuality" />
+                                    <Image x:Name="WeatherIconImage" Width="72" Height="72" VerticalAlignment="Center"
+                                           Margin="0,0,14,0" RenderOptions.BitmapScalingMode="HighQuality" />
                                     <Grid VerticalAlignment="Center">
                                         <Grid.ColumnDefinitions>
                                             <ColumnDefinition Width="Auto" />
                                             <ColumnDefinition Width="Auto" />
                                         </Grid.ColumnDefinitions>
-                                        <TextBlock x:Name="WeatherTempText" Grid.Column="0" Text="25°" FontSize="38" FontWeight="Medium"
+                                        <TextBlock x:Name="WeatherTempText" Grid.Column="0" Text="25°" FontSize="48" FontWeight="Medium"
                                                    Foreground="#FFFFFF" VerticalAlignment="Center" />
-                                        <TextBlock x:Name="WeatherDescText" Grid.Column="1" Text="多云" FontSize="13" FontWeight="Medium"
+                                        <TextBlock x:Name="WeatherDescText" Grid.Column="1" Text="多云" FontSize="16" FontWeight="Medium"
                                                    Foreground="#FFFFFF" VerticalAlignment="Bottom" Margin="6,0,0,6"
                                                    Visibility="Visible" />
                                     </Grid>
@@ -179,7 +180,7 @@
                             <StackPanel Grid.Column="2" VerticalAlignment="Top" HorizontalAlignment="Right"
                                         Margin="0,0,-4,0" ClipToBounds="False">
                                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
-                                    <Button x:Name="PinBtn" Content="📌" Style="{StaticResource HeaderIconBtn}"
+                                    <Button x:Name="PinBtn" Content="✧" Style="{StaticResource HeaderIconBtn}"
                                             Click="PinBtn_Click" ToolTip="置顶" />
                                     <Button x:Name="SettingsBtn" Content="⚙" Style="{StaticResource HeaderIconBtn}"
                                             Margin="2,0,0,0" Click="OpenSettings_Click" ToolTip="设置" />
@@ -418,7 +419,10 @@
                             </Grid.ColumnDefinitions>
                             <Border Grid.Column="0" x:Name="CountdownCard" Style="{StaticResource FloatlyCard}" Padding="18,16">
                                 <StackPanel x:Name="CountdownPanel" Visibility="Collapsed">
-                                    <TextBlock x:Name="CountdownLabel" Text="距离 618" Style="{StaticResource CardTitle}" Margin="0,0,0,8" />
+                                    <StackPanel Orientation="Horizontal" Margin="0,0,0,8">
+                                        <TextBlock Text="◆" FontSize="15" Foreground="#FF8A72" VerticalAlignment="Center" Margin="0,0,8,0" />
+                                        <TextBlock x:Name="CountdownLabel" Text="距离 618" Style="{StaticResource CardTitle}" VerticalAlignment="Center" />
+                                    </StackPanel>
                                     <TextBlock x:Name="CountdownDays" Text="12 天" FontSize="30" FontWeight="Bold" Foreground="#FFFFFF" Margin="0,0,0,8" />
                                     <Border x:Name="CountdownTrack" Height="8" CornerRadius="4" Background="#38FFFFFF" ClipToBounds="True" Margin="0,0,0,8">
                                         <Border x:Name="CountdownFill" HorizontalAlignment="Left" CornerRadius="4" Background="#FF8A72" Width="0" />
@@ -428,7 +432,10 @@
                             </Border>
                             <Border Grid.Column="2" x:Name="YearProgressCard" Style="{StaticResource FloatlyCard}" Padding="18,16">
                                 <StackPanel x:Name="YearProgressPanel" Visibility="Collapsed">
-                                    <TextBlock x:Name="YearProgressLabel" Text="2026 年进度" Style="{StaticResource CardTitle}" Margin="0,0,0,8" />
+                                    <StackPanel Orientation="Horizontal" Margin="0,0,0,8">
+                                        <TextBlock Text="▮▮▮" FontSize="14" Foreground="#5C8DFF" VerticalAlignment="Center" Margin="0,0,8,0" />
+                                        <TextBlock x:Name="YearProgressLabel" Text="2026 年进度" Style="{StaticResource CardTitle}" VerticalAlignment="Center" />
+                                    </StackPanel>
                                     <TextBlock x:Name="YearProgressPercent" Text="44.1%" FontSize="30" FontWeight="Bold" Foreground="#FFFFFF" Margin="0,0,0,8" />
                                     <Border x:Name="YearProgressTrack" Height="8" CornerRadius="4" Background="#38FFFFFF" ClipToBounds="True" Margin="0,0,0,8">
                                         <Border x:Name="YearProgressFill" HorizontalAlignment="Left" CornerRadius="4" Background="#5C8DFF" Width="0" />
@@ -550,20 +557,25 @@
                                     </Grid>
                                 </Grid>
                             </Border>
-                            <Border Grid.Column="2" x:Name="PomodoroCard" Style="{StaticResource FloatlyCard}" Padding="20,18">
+                            <Border Grid.Column="2" x:Name="PomodoroCard" Style="{StaticResource FloatlyCard}" Padding="20,16">
                                 <Grid x:Name="PomodoroPanel" Visibility="Collapsed">
                                     <Grid.RowDefinitions>
                                         <RowDefinition Height="Auto" />
-                                        <RowDefinition Height="158" />
+                                        <RowDefinition Height="150" />
                                         <RowDefinition Height="Auto" />
                                         <RowDefinition Height="Auto" />
                                     </Grid.RowDefinitions>
                                     <Grid Grid.Row="0" Margin="0,0,0,4">
                                         <TextBlock x:Name="PomodoroPhaseText" Text="番茄钟" Style="{StaticResource CardTitle}" />
                                         <TextBlock x:Name="PomodoroSessionText" Text="准备开始" FontSize="10" Foreground="#8B95A5"
-                                                   HorizontalAlignment="Right" VerticalAlignment="Center" />
+                                                   HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,28,0" />
+                                        <Button Content="⚙" Width="24" Height="24" Padding="0"
+                                                Click="OpenSettings_Click" Background="Transparent" BorderThickness="0"
+                                                Foreground="#BFD0EA" Cursor="Hand" FontSize="14"
+                                                HorizontalAlignment="Right" VerticalAlignment="Center"
+                                                ToolTip="番茄钟设置" />
                                     </Grid>
-                                    <Grid Grid.Row="1" Width="148" Height="148" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,-2,0,0">
+                                    <Grid Grid.Row="1" Width="142" Height="142" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,-2,0,0">
                                         <Path x:Name="PomodoroRingTrack" Stroke="#28FFFFFF" StrokeThickness="7" Fill="Transparent"
                                               StrokeStartLineCap="Round" StrokeEndLineCap="Round" />
                                         <Path x:Name="PomodoroRingProgress" Stroke="#5C8DFF" StrokeThickness="7" Fill="Transparent"

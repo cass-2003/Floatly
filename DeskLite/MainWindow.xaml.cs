@@ -1155,8 +1155,8 @@ public partial class MainWindow : Window
 
         PomodoroFill.Background = Brush(fillColor);
         PomodoroRingProgress.Stroke = Brush(fillColor);
-        PomodoroRingHelper.UpdateOpenArc(PomodoroRingTrack, 100, 148, 7);
-        PomodoroRingHelper.UpdateOpenArc(PomodoroRingProgress, ringProgress, 148, 7);
+        PomodoroRingHelper.UpdateOpenArc(PomodoroRingTrack, 100, 142, 7);
+        PomodoroRingHelper.UpdateOpenArc(PomodoroRingProgress, ringProgress, 142, 7);
     }
 
     private void OnPomodoroCompleted(PomodoroPhase phase)
