@@ -15,8 +15,9 @@ public partial class MainWindow : Window
 {
     private const double DefaultWindowWidth = 540;
     private const double DefaultWindowHeight = 960;
-    private const double MaxWindowWidth = 760;
+    private const double MaxWindowWidth = 664;
     private const double MaxWindowHeight = 1180;
+    private const double WidgetAspectRatio = DefaultWindowWidth / DefaultWindowHeight;
     private const double LegacyForcedMinWidth = 880;
     private const double LegacyForcedMinHeight = 900;
     private static readonly string[] WeekLabels = ["一", "二", "三", "四", "五", "六", "日"];
@@ -164,7 +165,7 @@ public partial class MainWindow : Window
         if (_settings.UserCustomSize)
         {
             _suppressSizePersist = true;
-            Height = NormalizeWindowHeight(_settings.WindowHeight);
+            Height = NormalizeWindowHeight(_settings.WindowHeight, Width);
             _suppressSizePersist = false;
         }
         else
@@ -918,11 +919,16 @@ public partial class MainWindow : Window
         return Math.Clamp(width, MinWidth, MaxWindowWidth);
     }
 
-    private double NormalizeWindowHeight(double height)
+    private double NormalizeWindowHeight(double height, double? normalizedWidth = null)
     {
         if (height >= LegacyForcedMinHeight || height > MaxWindowHeight)
         {
             return DefaultWindowHeight;
+        }
+
+        if (normalizedWidth is { } width)
+        {
+            return Math.Clamp(width / WidgetAspectRatio, MinHeight, MaxWindowHeight);
         }
 
         return Math.Clamp(height, MinHeight, MaxWindowHeight);
@@ -2700,8 +2706,23 @@ public partial class MainWindow : Window
         var oldTop = Top;
         var oldWidth = ActualWidth > 0 ? ActualWidth : Width;
         var oldHeight = ActualHeight > 0 ? ActualHeight : Height;
-        var targetWidth = Math.Clamp(oldWidth + rightDelta - leftDelta, MinWidth, MaxWindowWidth);
-        var targetHeight = Math.Clamp(oldHeight + bottomDelta - topDelta, MinHeight, MaxWindowHeight);
+        var rawWidth = oldWidth + rightDelta - leftDelta;
+        var rawHeight = oldHeight + bottomDelta - topDelta;
+        var widthDriven = Math.Abs(rightDelta - leftDelta) >= Math.Abs(bottomDelta - topDelta);
+        var targetWidth = widthDriven
+            ? Math.Clamp(rawWidth, MinWidth, MaxWindowWidth)
+            : Math.Clamp(rawHeight * WidgetAspectRatio, MinWidth, MaxWindowWidth);
+        var targetHeight = targetWidth / WidgetAspectRatio;
+        if (targetHeight < MinHeight)
+        {
+            targetHeight = MinHeight;
+            targetWidth = targetHeight * WidgetAspectRatio;
+        }
+        else if (targetHeight > MaxWindowHeight)
+        {
+            targetHeight = MaxWindowHeight;
+            targetWidth = targetHeight * WidgetAspectRatio;
+        }
 
         if (Math.Abs(leftDelta) > double.Epsilon)
         {

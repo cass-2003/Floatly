@@ -5,6 +5,8 @@
         Title="Floatly"
         MinWidth="360"
         MinHeight="640"
+        MaxWidth="664"
+        MaxHeight="1180"
         Width="540"
         Height="960"
         WindowStyle="None"
