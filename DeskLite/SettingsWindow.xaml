@@ -43,6 +43,26 @@
         <SolidColorBrush x:Key="SettingsAccentDim" Color="#234D82FF" />
         <SolidColorBrush x:Key="SettingsGreen" Color="#55D38A" />
         <SolidColorBrush x:Key="SettingsRecord" Color="#F05252" />
+        <SolidColorBrush x:Key="SettingsTitleBarBg" Color="#B80D1521" />
+        <SolidColorBrush x:Key="SettingsFooterBg" Color="#B80D1521" />
+        <SolidColorBrush x:Key="SettingsShellBorder" Color="#26FFFFFF" />
+        <SolidColorBrush x:Key="SettingsDivider" Color="#14FFFFFF" />
+        <SolidColorBrush x:Key="SettingsSecondaryBg" Color="#B51D2736" />
+        <SolidColorBrush x:Key="SettingsSecondaryHoverBg" Color="#C21F2A3D" />
+        <SolidColorBrush x:Key="SettingsSecondaryPressedBg" Color="#D71A2333" />
+        <SolidColorBrush x:Key="SettingsToggleOffBg" Color="#2A3140" />
+        <SolidColorBrush x:Key="SettingsToggleOffBorder" Color="#33FFFFFF" />
+        <SolidColorBrush x:Key="SettingsCheckboxBg" Color="#1C2737" />
+        <SolidColorBrush x:Key="SettingsCheckboxBorder" Color="#5A6A7F" />
+        <SolidColorBrush x:Key="SettingsSliderTrack" Color="#354154" />
+        <SolidColorBrush x:Key="SettingsRadioBg" Color="#162131" />
+        <SolidColorBrush x:Key="SettingsRadioBorder" Color="#6A778D" />
+        <SolidColorBrush x:Key="SettingsListBg" Color="#5C172234" />
+        <SolidColorBrush x:Key="SettingsListBorder" Color="#18FFFFFF" />
+        <SolidColorBrush x:Key="SettingsListItemBorder" Color="#12FFFFFF" />
+        <SolidColorBrush x:Key="SettingsListSelectedBg" Color="#223149" />
+        <SolidColorBrush x:Key="SettingsListHoverBg" Color="#1B2A40" />
+        <SolidColorBrush x:Key="SettingsInnerPanelBg" Color="#30141D2B" />
 
         <Style x:Key="CardTitle" TargetType="TextBlock">
             <Setter Property="FontSize" Value="14" />
@@ -158,7 +178,7 @@
                                    AllowsTransparency="True"
                                    Focusable="False"
                                    PopupAnimation="Fade">
-                                <Border Background="#F01A2433"
+                                <Border Background="{StaticResource SettingsInputBg}"
                                         BorderBrush="{StaticResource SettingsBorder}"
                                         BorderThickness="1"
                                         CornerRadius="10"
@@ -197,7 +217,7 @@
                             <Border Height="4"
                                     Margin="7,0"
                                     CornerRadius="2"
-                                    Background="#354154"
+                                    Background="{StaticResource SettingsSliderTrack}"
                                     VerticalAlignment="Center" />
                             <Track x:Name="PART_Track" Margin="7,0">
                                 <Track.DecreaseRepeatButton>
@@ -283,8 +303,8 @@
                                     Width="18"
                                     Height="18"
                                     CornerRadius="4"
-                                    Background="#1C2737"
-                                    BorderBrush="#5A6A7F"
+                                    Background="{StaticResource SettingsCheckboxBg}"
+                                    BorderBrush="{StaticResource SettingsCheckboxBorder}"
                                     BorderThickness="1"
                                     VerticalAlignment="Center">
                                 <TextBlock x:Name="CheckGlyph"
@@ -327,7 +347,7 @@
                             </Grid.ColumnDefinitions>
                             <ContentPresenter Grid.Column="0" VerticalAlignment="Center" />
                             <Border x:Name="Track" Grid.Column="1" Width="38" Height="22" CornerRadius="11"
-                                    Background="#2A3140" BorderBrush="#33FFFFFF" BorderThickness="1" Margin="12,0,0,0">
+                                    Background="{StaticResource SettingsToggleOffBg}" BorderBrush="{StaticResource SettingsToggleOffBorder}" BorderThickness="1" Margin="12,0,0,0">
                                 <Border x:Name="Thumb" Width="16" Height="16" CornerRadius="8"
                                         Background="#E9EEF7" HorizontalAlignment="Left" Margin="3,0,0,0" />
                             </Border>
@@ -368,7 +388,7 @@
                                 <Setter Property="FontWeight" Value="SemiBold" />
                             </Trigger>
                             <Trigger Property="IsMouseOver" Value="True">
-                                <Setter TargetName="Bd" Property="Background" Value="#18FFFFFF" />
+                                <Setter TargetName="Bd" Property="Background" Value="{StaticResource SettingsAccentDim}" />
                                 <Setter Property="Foreground" Value="{StaticResource SettingsText}" />
                             </Trigger>
                         </ControlTemplate.Triggers>
@@ -404,7 +424,7 @@
             </Setter>
         </Style>
         <Style x:Key="SecondaryButton" TargetType="Button">
-            <Setter Property="Background" Value="#B51D2736" />
+            <Setter Property="Background" Value="{StaticResource SettingsSecondaryBg}" />
             <Setter Property="Foreground" Value="{StaticResource SettingsText}" />
             <Setter Property="BorderBrush" Value="{StaticResource SettingsBorder}" />
             <Setter Property="BorderThickness" Value="1" />
@@ -421,11 +441,11 @@
                         </Border>
                         <ControlTemplate.Triggers>
                             <Trigger Property="IsMouseOver" Value="True">
-                                <Setter TargetName="Bd" Property="Background" Value="#C21F2A3D" />
-                                <Setter TargetName="Bd" Property="BorderBrush" Value="#46FFFFFF" />
+                                <Setter TargetName="Bd" Property="Background" Value="{StaticResource SettingsSecondaryHoverBg}" />
+                                <Setter TargetName="Bd" Property="BorderBrush" Value="{StaticResource SettingsAccent}" />
                             </Trigger>
                             <Trigger Property="IsPressed" Value="True">
-                                <Setter TargetName="Bd" Property="Background" Value="#D71A2333" />
+                                <Setter TargetName="Bd" Property="Background" Value="{StaticResource SettingsSecondaryPressedBg}" />
                             </Trigger>
                         </ControlTemplate.Triggers>
                     </ControlTemplate>
@@ -433,7 +453,7 @@
             </Setter>
         </Style>
         <Style x:Key="SecondaryToggleButton" TargetType="ToggleButton">
-            <Setter Property="Background" Value="#B51D2736" />
+            <Setter Property="Background" Value="{StaticResource SettingsSecondaryBg}" />
             <Setter Property="Foreground" Value="{StaticResource SettingsText}" />
             <Setter Property="BorderBrush" Value="{StaticResource SettingsBorder}" />
             <Setter Property="BorderThickness" Value="1" />
@@ -455,7 +475,7 @@
                                 <Setter TargetName="Bd" Property="Background" Value="#1E4D82FF" />
                             </Trigger>
                             <Trigger Property="IsMouseOver" Value="True">
-                                <Setter TargetName="Bd" Property="Background" Value="#C21F2A3D" />
+                                <Setter TargetName="Bd" Property="Background" Value="{StaticResource SettingsSecondaryHoverBg}" />
                             </Trigger>
                         </ControlTemplate.Triggers>
                     </ControlTemplate>
@@ -492,9 +512,9 @@
             <Setter Property="VerticalContentAlignment" Value="Center" />
         </Style>
         <Style x:Key="ModuleOrderListBox" TargetType="ListBox">
-            <Setter Property="Background" Value="#5C172234" />
+            <Setter Property="Background" Value="{StaticResource SettingsListBg}" />
             <Setter Property="Foreground" Value="{StaticResource SettingsText}" />
-            <Setter Property="BorderBrush" Value="#18FFFFFF" />
+            <Setter Property="BorderBrush" Value="{StaticResource SettingsListBorder}" />
             <Setter Property="BorderThickness" Value="1" />
             <Setter Property="Padding" Value="0" />
             <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Disabled" />
@@ -508,15 +528,15 @@
                         <Setter Property="Template">
                             <Setter.Value>
                                 <ControlTemplate TargetType="ListBoxItem">
-                                    <Border x:Name="Bd" Background="Transparent" BorderBrush="#12FFFFFF" BorderThickness="0,0,0,1">
+                                    <Border x:Name="Bd" Background="Transparent" BorderBrush="{StaticResource SettingsListItemBorder}" BorderThickness="0,0,0,1">
                                         <ContentPresenter />
                                     </Border>
                                     <ControlTemplate.Triggers>
                                         <Trigger Property="IsSelected" Value="True">
-                                            <Setter TargetName="Bd" Property="Background" Value="#223149" />
+                                            <Setter TargetName="Bd" Property="Background" Value="{StaticResource SettingsListSelectedBg}" />
                                         </Trigger>
                                         <Trigger Property="IsMouseOver" Value="True">
-                                            <Setter TargetName="Bd" Property="Background" Value="#1B2A40" />
+                                            <Setter TargetName="Bd" Property="Background" Value="{StaticResource SettingsListHoverBg}" />
                                         </Trigger>
                                     </ControlTemplate.Triggers>
                                 </ControlTemplate>
@@ -552,8 +572,8 @@
             <Setter Property="Height" Value="32" />
             <Setter Property="MinWidth" Value="34" />
             <Setter Property="Padding" Value="0" />
-            <Setter Property="Background" Value="#1A2435" />
-            <Setter Property="BorderBrush" Value="#3C4B62" />
+            <Setter Property="Background" Value="{StaticResource SettingsInputBg}" />
+            <Setter Property="BorderBrush" Value="{StaticResource SettingsBorder}" />
         </Style>
         <Style TargetType="RadioButton">
             <Setter Property="Foreground" Value="{StaticResource SettingsText}" />
@@ -564,7 +584,7 @@
                     <ControlTemplate TargetType="RadioButton">
                         <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                             <Grid Width="18" Height="18" VerticalAlignment="Center">
-                                <Ellipse x:Name="Ring" Stroke="#6A778D" StrokeThickness="1.4" Fill="#162131" />
+                                <Ellipse x:Name="Ring" Stroke="{StaticResource SettingsRadioBorder}" StrokeThickness="1.4" Fill="{StaticResource SettingsRadioBg}" />
                                 <Ellipse x:Name="Dot" Width="6" Height="6" Fill="White" Visibility="Collapsed" />
                             </Grid>
                             <ContentPresenter Margin="10,0,0,0" VerticalAlignment="Center" />
@@ -589,7 +609,7 @@
         </ResourceDictionary>
     </Window.Resources>
 
-    <Border Background="{StaticResource SettingsShellBg}" BorderBrush="#26FFFFFF" BorderThickness="1">
+    <Border x:Name="ShellBorder" Background="{StaticResource SettingsShellBg}" BorderBrush="{StaticResource SettingsShellBorder}" BorderThickness="1">
         <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition Height="44" />
@@ -597,7 +617,7 @@
                 <RowDefinition Height="58" />
             </Grid.RowDefinitions>
 
-            <Grid x:Name="TitleBar" Grid.Row="0" Background="#B80D1521" MouseLeftButtonDown="TitleBar_MouseLeftButtonDown">
+            <Grid x:Name="TitleBar" Grid.Row="0" Background="{StaticResource SettingsTitleBarBg}" MouseLeftButtonDown="TitleBar_MouseLeftButtonDown">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="Auto" />
@@ -902,7 +922,7 @@
                                     <TextBlock Style="{StaticResource CardTitle}" Text="日历" Margin="0,0,0,12" />
                                     <CheckBox x:Name="ChkShowWeekStrip" Style="{StaticResource FloatlyToggle}" Content="显示万年历" Margin="0,0,0,12" />
                                     <CheckBox x:Name="ChkShowHuangLi" Style="{StaticResource FloatlyToggle}" Content="显示黄历详情（宜忌、神煞、时辰）" Margin="0,0,0,14" />
-                                    <Border Background="#1AFFFFFF" Height="1" Margin="0,0,0,16" />
+                                    <Border Background="{StaticResource SettingsDivider}" Height="1" Margin="0,0,0,16" />
                                     <TextBlock Text="默认视图" Foreground="{StaticResource SettingsText}" FontWeight="SemiBold" Margin="0,0,0,12" />
                                     <StackPanel Orientation="Horizontal">
                                         <RadioButton x:Name="RbCalWeek" Content="周历" GroupName="Calendar" />
@@ -959,7 +979,7 @@
                                         <RadioButton x:Name="RbThemeLight" GroupName="Theme" Visibility="Collapsed" />
                                     </Grid>
 
-                                    <Border Height="1" Background="#14FFFFFF" Margin="0,0,0,8" />
+                                    <Border Height="1" Background="{StaticResource SettingsDivider}" Margin="0,0,0,8" />
                                     <Grid Margin="0,0,0,12">
                                         <Grid.RowDefinitions>
                                             <RowDefinition Height="Auto" />
@@ -981,7 +1001,7 @@
                                         <TextBlock Grid.Row="1" Grid.Column="2" Text="100%" Style="{StaticResource HintText}" VerticalAlignment="Center" HorizontalAlignment="Right" />
                                     </Grid>
 
-                                    <Border Height="1" Background="#14FFFFFF" Margin="0,0,0,8" />
+                                    <Border Height="1" Background="{StaticResource SettingsDivider}" Margin="0,0,0,8" />
                                     <Grid Margin="0,0,0,12">
                                         <Grid.RowDefinitions>
                                             <RowDefinition Height="Auto" />
@@ -1061,7 +1081,7 @@
                                                 Padding="12,6" Click="BtnClearFontColor_Click" />
                                     </Grid>
 
-                                    <Border Height="1" Background="#14FFFFFF" Margin="0,0,0,8" />
+                                    <Border Height="1" Background="{StaticResource SettingsDivider}" Margin="0,0,0,8" />
                                     <TextBlock Style="{StaticResource CardTitle}" Text="皮肤系统" Margin="0,0,0,8" />
                                     <UniformGrid Columns="4" Margin="0,0,0,8">
                                         <ToggleButton x:Name="TbSkinDefault" Margin="0,0,8,0" Padding="10,8" Style="{StaticResource SecondaryToggleButton}"
@@ -1138,7 +1158,7 @@
                                         <TextBlock Grid.Row="1" Grid.Column="2" Text="85%" Style="{StaticResource HintText}" VerticalAlignment="Center" HorizontalAlignment="Right" />
                                     </Grid>
 
-                                    <Border Height="1" Background="#14FFFFFF" Margin="0,0,0,8" />
+                                    <Border Height="1" Background="{StaticResource SettingsDivider}" Margin="0,0,0,8" />
                                     <Grid>
                                         <Grid.ColumnDefinitions>
                                             <ColumnDefinition Width="Auto" />
@@ -1224,9 +1244,9 @@
                                         </Grid>
                                     </Grid>
 
-                                    <Border Grid.Row="1" Grid.Column="2" Background="#12FFFFFF" />
+                                    <Border Grid.Row="1" Grid.Column="2" Background="{StaticResource SettingsDivider}" />
 
-                                    <Border Grid.Row="1" Grid.Column="4" Background="#30141D2B" CornerRadius="8" Padding="12,12">
+                                    <Border Grid.Row="1" Grid.Column="4" Background="{StaticResource SettingsInnerPanelBg}" CornerRadius="8" Padding="12,12">
                                         <StackPanel>
                                             <TextBlock Style="{StaticResource CardTitle}" Text="番茄钟配置" Margin="0,0,0,14" />
                                             <Grid Margin="0,0,0,10">
@@ -1282,7 +1302,7 @@
                 </ScrollViewer>
             </Grid>
 
-            <Border Grid.Row="2" Background="#B80D1521" BorderBrush="#18FFFFFF" BorderThickness="0,1,0,0" Padding="18,10">
+            <Border x:Name="FooterBar" Grid.Row="2" Background="{StaticResource SettingsFooterBg}" BorderBrush="{StaticResource SettingsListBorder}" BorderThickness="0,1,0,0" Padding="18,10">
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*" />
@@ -1304,8 +1324,8 @@
                                 <TextBlock Text="关于" VerticalAlignment="Center" />
                             </StackPanel>
                         </Button>
-                        <TextBlock x:Name="VersionText" Text="版本 2.0.9"
-                                   FontSize="11" Foreground="#66FFFFFF" VerticalAlignment="Center" />
+                        <TextBlock x:Name="VersionText" Text="版本"
+                                   FontSize="11" Foreground="{StaticResource SettingsMuted}" VerticalAlignment="Center" />
                     </StackPanel>
 
                     <StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right">

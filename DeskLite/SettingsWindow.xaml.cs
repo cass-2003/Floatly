@@ -98,6 +98,7 @@ public partial class SettingsWindow : Window
         RbAutoLocate.Checked += (_, _) => UpdateCityControls();
         RbManualCity.Checked += (_, _) => UpdateCityControls();
         LoadFromSettings(_original);
+        ApplySettingsThemeResources(AppThemePalette.Parse(_original.Theme));
         _isInitializing = false;
     }
 
@@ -297,12 +298,14 @@ public partial class SettingsWindow : Window
     {
         RbThemeDark.IsChecked = true;
         UpdateThemeCards();
+        ApplySettingsThemeResources(ThemeMode.Dark);
     }
 
     private void ThemeLightCard_Click(object sender, MouseButtonEventArgs e)
     {
         RbThemeLight.IsChecked = true;
         UpdateThemeCards();
+        ApplySettingsThemeResources(ThemeMode.Light);
     }
 
     private void UpdateThemeCards()
@@ -316,6 +319,65 @@ public partial class SettingsWindow : Window
             : (System.Windows.Media.Brush)FindResource("SettingsAccent");
         ThemeDarkCheck.Visibility = dark ? Visibility.Visible : Visibility.Collapsed;
         ThemeLightCheck.Visibility = dark ? Visibility.Collapsed : Visibility.Visible;
+    }
+
+    private void ApplySettingsThemeResources(ThemeMode mode)
+    {
+        var light = mode == ThemeMode.Light;
+
+        SetBrush("SettingsBg", light ? Color(0xFF, 0xF8, 0xFB, 0xFF) : Color(0xFF, 0x0B, 0x11, 0x1A));
+        SetBrush("SettingsShellBg", light ? Color(0xF8, 0xFF, 0xFF, 0xFF) : Color(0xF0, 0x12, 0x1A, 0x28));
+        SetBrush("SettingsSidebarBg", light ? Color(0xF0, 0xF4, 0xF8, 0xFF) : Color(0xC0, 0x11, 0x19, 0x27));
+        SetBrush("SettingsCardBg", light ? Color(0xE9, 0xFF, 0xFF, 0xFF) : Color(0xC2, 0x1A, 0x23, 0x32));
+        SetBrush("SettingsCardBorder", light ? Color(0x70, 0xD8, 0xE0, 0xEC) : Color(0x1E, 0xFF, 0xFF, 0xFF));
+        SetBrush("SettingsText", light ? Color(0xFF, 0x1E, 0x29, 0x3B) : Color(0xFF, 0xF7, 0xFA, 0xFF));
+        SetBrush("SettingsMuted", light ? Color(0xFF, 0x6B, 0x78, 0x8D) : Color(0xFF, 0x9E, 0xAC, 0xC0));
+        SetBrush("SettingsInputBg", light ? Color(0xEE, 0xFF, 0xFF, 0xFF) : Color(0xF0, 0x1A, 0x24, 0x35));
+        SetBrush("SettingsBorder", light ? Color(0xFF, 0xD7, 0xDF, 0xEA) : Color(0x32, 0xFF, 0xFF, 0xFF));
+        SetBrush("SettingsAccent", Color(0xFF, 0x4D, 0x82, 0xFF));
+        SetBrush("SettingsAccentDim", light ? Color(0x18, 0x4D, 0x82, 0xFF) : Color(0x23, 0x4D, 0x82, 0xFF));
+        SetBrush("SettingsGreen", Color(0xFF, 0x55, 0xD3, 0x8A));
+        SetBrush("SettingsRecord", Color(0xFF, 0xF0, 0x52, 0x52));
+        SetBrush("SettingsTitleBarBg", light ? Color(0xEA, 0xFF, 0xFF, 0xFF) : Color(0xB8, 0x0D, 0x15, 0x21));
+        SetBrush("SettingsFooterBg", light ? Color(0xEA, 0xFF, 0xFF, 0xFF) : Color(0xB8, 0x0D, 0x15, 0x21));
+        SetBrush("SettingsShellBorder", light ? Color(0xFF, 0xDE, 0xE6, 0xF7) : Color(0x26, 0xFF, 0xFF, 0xFF));
+        SetBrush("SettingsDivider", light ? Color(0xFF, 0xE5, 0xEA, 0xF2) : Color(0x14, 0xFF, 0xFF, 0xFF));
+        SetBrush("SettingsSecondaryBg", light ? Color(0xF2, 0xFF, 0xFF, 0xFF) : Color(0xB5, 0x1D, 0x27, 0x36));
+        SetBrush("SettingsSecondaryHoverBg", light ? Color(0xFF, 0xF2, 0xF6, 0xFC) : Color(0xC2, 0x1F, 0x2A, 0x3D));
+        SetBrush("SettingsSecondaryPressedBg", light ? Color(0xFF, 0xE8, 0xEF, 0xFA) : Color(0xD7, 0x1A, 0x23, 0x33));
+        SetBrush("SettingsToggleOffBg", light ? Color(0xFF, 0xEC, 0xF1, 0xF7) : Color(0xFF, 0x2A, 0x31, 0x40));
+        SetBrush("SettingsToggleOffBorder", light ? Color(0xFF, 0xD7, 0xDF, 0xEA) : Color(0x33, 0xFF, 0xFF, 0xFF));
+        SetBrush("SettingsCheckboxBg", light ? Color(0xFF, 0xF8, 0xFB, 0xFF) : Color(0xFF, 0x1C, 0x27, 0x37));
+        SetBrush("SettingsCheckboxBorder", light ? Color(0xFF, 0xC7, 0xD2, 0xE0) : Color(0xFF, 0x5A, 0x6A, 0x7F));
+        SetBrush("SettingsSliderTrack", light ? Color(0xFF, 0xE1, 0xE8, 0xF2) : Color(0xFF, 0x35, 0x41, 0x54));
+        SetBrush("SettingsRadioBg", light ? Color(0xFF, 0xF8, 0xFB, 0xFF) : Color(0xFF, 0x16, 0x21, 0x31));
+        SetBrush("SettingsRadioBorder", light ? Color(0xFF, 0xA8, 0xB4, 0xC6) : Color(0xFF, 0x6A, 0x77, 0x8D));
+        SetBrush("SettingsListBg", light ? Color(0xCC, 0xFF, 0xFF, 0xFF) : Color(0x5C, 0x17, 0x22, 0x34));
+        SetBrush("SettingsListBorder", light ? Color(0xFF, 0xE4, 0xE9, 0xF2) : Color(0x18, 0xFF, 0xFF, 0xFF));
+        SetBrush("SettingsListItemBorder", light ? Color(0xFF, 0xEA, 0xEE, 0xF5) : Color(0x12, 0xFF, 0xFF, 0xFF));
+        SetBrush("SettingsListSelectedBg", light ? Color(0xFF, 0xEA, 0xF1, 0xFF) : Color(0xFF, 0x22, 0x31, 0x49));
+        SetBrush("SettingsListHoverBg", light ? Color(0xFF, 0xF3, 0xF7, 0xFC) : Color(0xFF, 0x1B, 0x2A, 0x40));
+        SetBrush("SettingsInnerPanelBg", light ? Color(0xB8, 0xF8, 0xFB, 0xFF) : Color(0x30, 0x14, 0x1D, 0x2B));
+
+        Background = (System.Windows.Media.Brush)Resources["SettingsBg"];
+        Foreground = (System.Windows.Media.Brush)Resources["SettingsText"];
+        UpdateThemeCards();
+        UpdateSkinToggles();
+        SetupModuleListTemplate();
+    }
+
+    private static WpfColor Color(byte a, byte r, byte g, byte b) => WpfColor.FromArgb(a, r, g, b);
+
+    private void SetBrush(string key, WpfColor color)
+    {
+        if (Resources[key] is SolidColorBrush brush)
+        {
+            brush.Color = color;
+        }
+        else
+        {
+            Resources[key] = new SolidColorBrush(color);
+        }
     }
 
     private void SkinToggle_Click(object sender, RoutedEventArgs e)
