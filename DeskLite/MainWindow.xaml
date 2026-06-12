@@ -30,16 +30,16 @@
         <SolidColorBrush x:Key="TodoEmptyBrush" Color="#6B7280" />
         <SolidColorBrush x:Key="TodoAccentBrush" Color="#5C8DFF" />
         <LinearGradientBrush x:Key="WidgetGlassCardBrush" StartPoint="0,0" EndPoint="1,1">
-            <GradientStop Color="#44FFFFFF" Offset="0" />
-            <GradientStop Color="#2FD8EAFF" Offset="0.22" />
-            <GradientStop Color="#22789EC8" Offset="0.58" />
-            <GradientStop Color="#42091A30" Offset="1" />
+            <GradientStop Color="#22FFFFFF" Offset="0" />
+            <GradientStop Color="#32223C5A" Offset="0.22" />
+            <GradientStop Color="#3A132A44" Offset="0.58" />
+            <GradientStop Color="#5E08182D" Offset="1" />
         </LinearGradientBrush>
         <LinearGradientBrush x:Key="WidgetGlassToolbarBrush" StartPoint="0,0" EndPoint="1,0">
-            <GradientStop Color="#3EE8F4FF" Offset="0" />
-            <GradientStop Color="#220F2035" Offset="1" />
+            <GradientStop Color="#30162A43" Offset="0" />
+            <GradientStop Color="#240A1728" Offset="1" />
         </LinearGradientBrush>
-        <SolidColorBrush x:Key="WidgetGlassBorderBrush" Color="#5CE4F0FF" />
+        <SolidColorBrush x:Key="WidgetGlassBorderBrush" Color="#42E4F0FF" />
 
         <Style x:Key="FloatlyCard" TargetType="Border">
             <Setter Property="Background" Value="{DynamicResource WidgetGlassCardBrush}" />
@@ -48,11 +48,6 @@
             <Setter Property="CornerRadius" Value="18" />
             <Setter Property="Padding" Value="14" />
             <Setter Property="ClipToBounds" Value="True" />
-            <Setter Property="Effect">
-                <Setter.Value>
-                    <DropShadowEffect BlurRadius="24" ShadowDepth="10" Direction="270" Opacity="0.18" Color="#020914" />
-                </Setter.Value>
-            </Setter>
         </Style>
         <Style x:Key="HeaderIconBtn" TargetType="Button">
             <Setter Property="Width" Value="26" />
@@ -64,6 +59,26 @@
             <Setter Property="Cursor" Value="Hand" />
             <Setter Property="FontSize" Value="17" />
             <Setter Property="FontFamily" Value="Segoe UI Symbol" />
+        </Style>
+        <Style x:Key="RoundGlassButton" TargetType="Button">
+            <Setter Property="Padding" Value="0" />
+            <Setter Property="BorderThickness" Value="0" />
+            <Setter Property="Foreground" Value="#DDE8FF" />
+            <Setter Property="Background" Value="#1EE8F4FF" />
+            <Setter Property="Cursor" Value="Hand" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}"
+                                CornerRadius="22"
+                                SnapsToDevicePixels="True">
+                            <ContentPresenter HorizontalAlignment="Center"
+                                              VerticalAlignment="Center"
+                                              RecognizesAccessKey="True" />
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
         </Style>
         <Style x:Key="HeroCard" TargetType="Border">
             <Setter Property="Background" Value="Transparent" />
@@ -128,10 +143,10 @@
             <Border x:Name="GlassSheen" CornerRadius="14" Margin="8" IsHitTestVisible="False">
                 <Border.Background>
                     <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
-                        <GradientStop Color="#42FFFFFF" Offset="0" />
-                        <GradientStop Color="#08FFFFFF" Offset="0.18" />
+                        <GradientStop Color="#18FFFFFF" Offset="0" />
+                        <GradientStop Color="#04FFFFFF" Offset="0.18" />
                         <GradientStop Color="#00000000" Offset="0.5" />
-                        <GradientStop Color="#18000000" Offset="1" />
+                        <GradientStop Color="#10000000" Offset="1" />
                     </LinearGradientBrush>
                 </Border.Background>
             </Border>
@@ -229,24 +244,24 @@
                                     </Button>
                                 </StackPanel>
                                 <StackPanel x:Name="SunriseRow" Orientation="Horizontal" HorizontalAlignment="Right"
-                                            Margin="0,8,0,0" Visibility="Collapsed">
-                                    <Image x:Name="SunriseIconImage" Width="14" Height="14" VerticalAlignment="Center"
-                                           Margin="0,0,4,0" RenderOptions.BitmapScalingMode="HighQuality" />
-                                    <TextBlock x:Name="SunriseLineText" Text="日出 04:24" FontSize="11" Foreground="#8B95A5"
+                                            Margin="0,9,0,0" Visibility="Collapsed">
+                                    <Image x:Name="SunriseIconImage" Width="16" Height="16" VerticalAlignment="Center"
+                                           Margin="0,0,7,0" RenderOptions.BitmapScalingMode="HighQuality" />
+                                    <TextBlock x:Name="SunriseLineText" Text="日出 04:24" FontSize="12" Foreground="#8B95A5"
                                                VerticalAlignment="Center" TextTrimming="None" />
                                 </StackPanel>
                                 <StackPanel x:Name="SunsetRow" Orientation="Horizontal" HorizontalAlignment="Right"
-                                            Margin="0,2,0,0" Visibility="Collapsed">
-                                    <Image x:Name="SunsetIconImage" Width="14" Height="14" VerticalAlignment="Center"
-                                           Margin="0,0,4,0" RenderOptions.BitmapScalingMode="HighQuality" />
-                                    <TextBlock x:Name="SunsetLineText" Text="日落 18:56" FontSize="11" Foreground="#8B95A5"
+                                            Margin="0,4,0,0" Visibility="Collapsed">
+                                    <Image x:Name="SunsetIconImage" Width="16" Height="16" VerticalAlignment="Center"
+                                           Margin="0,0,7,0" RenderOptions.BitmapScalingMode="HighQuality" />
+                                    <TextBlock x:Name="SunsetLineText" Text="日落 18:56" FontSize="12" Foreground="#8B95A5"
                                                VerticalAlignment="Center" TextTrimming="None" />
                                 </StackPanel>
                                 <StackPanel x:Name="TomorrowRow" Orientation="Horizontal" HorizontalAlignment="Right"
-                                            Margin="0,4,-8,0" Visibility="Collapsed" ClipToBounds="False">
-                                    <Image x:Name="TomorrowIconImage" Width="13" Height="13" VerticalAlignment="Center"
-                                           Margin="0,0,3,0" RenderOptions.BitmapScalingMode="HighQuality" />
-                                    <TextBlock x:Name="TomorrowLineText" Text="明天 19° ~ 28°" FontSize="9"
+                                            Margin="0,8,0,0" Visibility="Collapsed" ClipToBounds="False">
+                                    <Image x:Name="TomorrowIconImage" Width="15" Height="15" VerticalAlignment="Center"
+                                           Margin="0,0,7,0" RenderOptions.BitmapScalingMode="HighQuality" />
+                                    <TextBlock x:Name="TomorrowLineText" Text="明天 19° ~ 28°" FontSize="11"
                                                Foreground="#8B95A5" VerticalAlignment="Center" TextTrimming="None" />
                                 </StackPanel>
                             </StackPanel>
@@ -304,9 +319,9 @@
                                                    TextTrimming="CharacterEllipsis" VerticalAlignment="Center" />
                                     </Grid>
                                 </Grid>
-                                <Button x:Name="HuangLiCollapseBtn" Grid.Column="4" Content="⌄" Width="44" Height="44" Padding="0"
-                                        Click="HuangLiCollapse_Click" Background="#20E8F4FF" BorderThickness="0"
-                                        Foreground="#DDE8FF" Cursor="Hand" FontSize="18" ToolTip="展开/收起" VerticalAlignment="Center" />
+                                <Button x:Name="HuangLiCollapseBtn" Grid.Column="4" Content="⌄" Width="44" Height="44"
+                                        Click="HuangLiCollapse_Click" Style="{StaticResource RoundGlassButton}"
+                                        FontSize="18" ToolTip="展开/收起" VerticalAlignment="Center" />
                             </Grid>
                         </Border>
                     </StackPanel>

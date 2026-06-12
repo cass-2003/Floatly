@@ -19,15 +19,15 @@ public static class FloatlyDesignTokens
     public const double ProgressBarRadius = 4;
 
     public static WpfColor Background => WpfColor.FromArgb(0xFF, 0x07, 0x14, 0x25);
-    public static WpfColor PanelBackground => WpfColor.FromArgb(0xD8, 0x0A, 0x1B, 0x31);
-    public static WpfColor PanelGlow => WpfColor.FromArgb(0xA8, 0x4D, 0x77, 0xA5);
-    public static WpfColor CardBackground => WpfColor.FromArgb(0x34, 0xD8, 0xEA, 0xFF);
-    public static WpfColor CardBackgroundMid => WpfColor.FromArgb(0x2A, 0x78, 0x9E, 0xC8);
-    public static WpfColor CardBackgroundDeep => WpfColor.FromArgb(0x42, 0x09, 0x1A, 0x30);
-    public static WpfColor CardHighlight => WpfColor.FromArgb(0x4C, 0xFF, 0xFF, 0xFF);
-    public static WpfColor ContentBackdrop => WpfColor.FromArgb(0x16, 0xD8, 0xEA, 0xFF);
-    public static WpfColor ToolbarBackground => WpfColor.FromArgb(0x42, 0xE8, 0xF4, 0xFF);
-    public static WpfColor CardBorder => WpfColor.FromArgb(0x5C, 0xE4, 0xF0, 0xFF);
+    public static WpfColor PanelBackground => WpfColor.FromArgb(0xE2, 0x09, 0x19, 0x2E);
+    public static WpfColor PanelGlow => WpfColor.FromArgb(0x72, 0x5B, 0x82, 0xB2);
+    public static WpfColor CardBackground => WpfColor.FromArgb(0x32, 0x22, 0x3C, 0x5A);
+    public static WpfColor CardBackgroundMid => WpfColor.FromArgb(0x3A, 0x13, 0x2A, 0x44);
+    public static WpfColor CardBackgroundDeep => WpfColor.FromArgb(0x5E, 0x08, 0x18, 0x2D);
+    public static WpfColor CardHighlight => WpfColor.FromArgb(0x22, 0xFF, 0xFF, 0xFF);
+    public static WpfColor ContentBackdrop => WpfColor.FromArgb(0x0E, 0xD8, 0xEA, 0xFF);
+    public static WpfColor ToolbarBackground => WpfColor.FromArgb(0x30, 0xE8, 0xF4, 0xFF);
+    public static WpfColor CardBorder => WpfColor.FromArgb(0x42, 0xE4, 0xF0, 0xFF);
     public static WpfColor CardInnerBorder => WpfColor.FromArgb(0x22, 0xFF, 0xFF, 0xFF);
     public static WpfColor AccentBlue => WpfColor.FromRgb(0x5C, 0x8D, 0xFF);
     public static WpfColor AccentOrange => WpfColor.FromRgb(0xFF, 0x8A, 0x72);

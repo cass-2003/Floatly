@@ -410,9 +410,9 @@ public partial class MainWindow : Window
 
     private void ApplyWidgetGlassResources()
     {
-        Resources["TodoCardBgBrush"] = Brush(0x2C, 0xE8, 0xF4, 0xFF);
-        Resources["TodoCardBorderBrush"] = Brush(0x3C, 0xE4, 0xF0, 0xFF);
-        TodoOverflowBtn.Background = Brush(0x2E, 0xE8, 0xF4, 0xFF);
+        Resources["TodoCardBgBrush"] = Brush(0x24, 0xE8, 0xF4, 0xFF);
+        Resources["TodoCardBorderBrush"] = Brush(0x2E, 0xE4, 0xF0, 0xFF);
+        TodoOverflowBtn.Background = Brush(0x24, 0xE8, 0xF4, 0xFF);
         TodoCountBadge.Background = Brush(0x24, 0x5C, 0x8D, 0xFF);
         ScratchCountBadge.Background = Brush(0x24, 0x5C, 0x8D, 0xFF);
     }
@@ -445,7 +445,7 @@ public partial class MainWindow : Window
             {
                 new GradientStop(FloatlyDesignTokens.PanelGlow, 0.0),
                 new GradientStop(FloatlyDesignTokens.PanelBackground, 0.38),
-                new GradientStop(System.Windows.Media.Color.FromArgb(0xCC, 0x07, 0x14, 0x25), 1.0)
+                new GradientStop(System.Windows.Media.Color.FromArgb(0xE0, 0x07, 0x14, 0x25), 1.0)
             }
         };
     }
@@ -454,9 +454,9 @@ public partial class MainWindow : Window
         CreateLinearBrush(
             [
                 new GradientStop(FloatlyDesignTokens.ContentBackdrop, 0.0),
-                new GradientStop(System.Windows.Media.Color.FromArgb(0x10, 0xFF, 0xFF, 0xFF), 0.18),
-                new GradientStop(System.Windows.Media.Color.FromArgb(0x12, 0x12, 0x2A, 0x45), 0.58),
-                new GradientStop(System.Windows.Media.Color.FromArgb(0x26, 0x07, 0x15, 0x27), 1.0)
+                new GradientStop(System.Windows.Media.Color.FromArgb(0x08, 0xFF, 0xFF, 0xFF), 0.18),
+                new GradientStop(System.Windows.Media.Color.FromArgb(0x14, 0x12, 0x2A, 0x45), 0.58),
+                new GradientStop(System.Windows.Media.Color.FromArgb(0x32, 0x07, 0x15, 0x27), 1.0)
             ],
             new System.Windows.Point(0, 0),
             new System.Windows.Point(1, 1));
