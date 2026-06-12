@@ -320,24 +320,32 @@ public partial class SettingsWindow : Window
 
     private void UpdateThemeCards()
     {
-        var dark = RbThemeDark.IsChecked == true;
+        var selectedDark = RbThemeDark.IsChecked == true;
+        var currentWindowDark = selectedDark;
         var border = (System.Windows.Media.Brush)FindResource("SettingsBorder");
         var accent = (System.Windows.Media.Brush)FindResource("SettingsAccent");
+        var lightCardBackground = currentWindowDark
+            ? Color(0xFF, 0xF7, 0xF9, 0xFC)
+            : Color(0xEE, 0xFF, 0xFF, 0xFF);
 
-        ThemeDarkCard.BorderBrush = dark
+        ThemeDarkCard.BorderBrush = selectedDark
             ? accent
             : border;
-        ThemeDarkCard.Background = new SolidColorBrush(Color(0xFF, 0x17, 0x22, 0x38));
-        ThemeLightCard.BorderBrush = dark
+        ThemeDarkCard.Background = currentWindowDark
+            ? new SolidColorBrush(Color(0xFF, 0x17, 0x22, 0x38))
+            : new SolidColorBrush(lightCardBackground);
+        ThemeLightCard.BorderBrush = selectedDark
             ? border
             : accent;
-        ThemeLightCard.Background = new SolidColorBrush(Color(0xFF, 0xF7, 0xF9, 0xFC));
-        ThemeDarkText.Foreground = System.Windows.Media.Brushes.White;
+        ThemeLightCard.Background = new SolidColorBrush(lightCardBackground);
+        ThemeDarkText.Foreground = currentWindowDark
+            ? System.Windows.Media.Brushes.White
+            : new SolidColorBrush(Color(0xFF, 0x1F, 0x29, 0x37));
         ThemeLightText.Foreground = new SolidColorBrush(Color(0xFF, 0x1F, 0x29, 0x37));
         ThemeDarkSwatch.Background = new SolidColorBrush(Color(0xFF, 0x0F, 0x17, 0x2A));
         ThemeLightSwatch.Background = new SolidColorBrush(Color(0xFF, 0xFF, 0xFF, 0xFF));
-        ThemeDarkCheck.Visibility = dark ? Visibility.Visible : Visibility.Collapsed;
-        ThemeLightCheck.Visibility = dark ? Visibility.Collapsed : Visibility.Visible;
+        ThemeDarkCheck.Visibility = selectedDark ? Visibility.Visible : Visibility.Collapsed;
+        ThemeLightCheck.Visibility = selectedDark ? Visibility.Collapsed : Visibility.Visible;
     }
 
     private void ApplySettingsThemeResources(ThemeMode mode)
