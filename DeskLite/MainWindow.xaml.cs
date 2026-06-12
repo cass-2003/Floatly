@@ -473,40 +473,13 @@ public partial class MainWindow : Window
 
     private System.Windows.Media.Brush CreateGlassCardBrush() =>
         IsLightTheme()
-            ? CreateLinearBrush(
-                [
-                    new GradientStop(System.Windows.Media.Color.FromArgb(0xF2, 0xFF, 0xFF, 0xFF), 0.0),
-                    new GradientStop(System.Windows.Media.Color.FromArgb(0xDC, 0xFF, 0xFF, 0xFF), 0.36),
-                    new GradientStop(System.Windows.Media.Color.FromArgb(0xCC, 0xF6, 0xFA, 0xFF), 1.0)
-                ],
-                new System.Windows.Point(0, 0),
-                new System.Windows.Point(1, 1))
-            : CreateLinearBrush(
-                [
-                    new GradientStop(System.Windows.Media.Color.FromArgb(0x38, 0xFF, 0xFF, 0xFF), 0.0),
-                    new GradientStop(System.Windows.Media.Color.FromArgb(0x34, 0x27, 0x42, 0x62), 0.24),
-                    new GradientStop(System.Windows.Media.Color.FromArgb(0x3A, 0x12, 0x2A, 0x45), 0.62),
-                    new GradientStop(System.Windows.Media.Color.FromArgb(0x52, 0x07, 0x18, 0x2D), 1.0)
-                ],
-                new System.Windows.Point(0, 0),
-                new System.Windows.Point(1, 1));
+            ? Brush(0xE6, 0xFF, 0xFF, 0xFF)
+            : Brush(0x42, 0x10, 0x24, 0x3A);
 
     private System.Windows.Media.Brush CreateToolbarBrush() =>
         IsLightTheme()
-            ? CreateLinearBrush(
-                [
-                    new GradientStop(System.Windows.Media.Color.FromArgb(0xEA, 0xFF, 0xFF, 0xFF), 0.0),
-                    new GradientStop(System.Windows.Media.Color.FromArgb(0xD2, 0xF3, 0xF7, 0xFF), 1.0)
-                ],
-                new System.Windows.Point(0, 0),
-                new System.Windows.Point(1, 0))
-            : CreateLinearBrush(
-                [
-                    new GradientStop(System.Windows.Media.Color.FromArgb(0x36, 0xE8, 0xF4, 0xFF), 0.0),
-                    new GradientStop(System.Windows.Media.Color.FromArgb(0x28, 0x0F, 0x20, 0x35), 1.0)
-                ],
-                new System.Windows.Point(0, 0),
-                new System.Windows.Point(1, 0));
+            ? Brush(0xE2, 0xFF, 0xFF, 0xFF)
+            : Brush(0x42, 0x10, 0x24, 0x3A);
 
     private System.Windows.Media.Brush CreateGlassBorderBrush() =>
         IsLightTheme()
