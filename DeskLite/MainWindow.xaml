@@ -141,10 +141,10 @@
             <Border x:Name="GlassSheen" CornerRadius="22" IsHitTestVisible="False">
                 <Border.Background>
                     <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
-                        <GradientStop Color="#20FFFFFF" Offset="0" />
-                        <GradientStop Color="#08FFFFFF" Offset="0.22" />
+                        <GradientStop Color="#08FFFFFF" Offset="0" />
+                        <GradientStop Color="#02FFFFFF" Offset="0.22" />
                         <GradientStop Color="#00000000" Offset="0.5" />
-                        <GradientStop Color="#08000000" Offset="1" />
+                        <GradientStop Color="#04000000" Offset="1" />
                     </LinearGradientBrush>
                 </Border.Background>
             </Border>

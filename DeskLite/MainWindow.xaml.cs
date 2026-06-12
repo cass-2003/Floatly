@@ -458,15 +458,15 @@ public partial class MainWindow : Window
 
         return new RadialGradientBrush
         {
-            RadiusX = 1.05,
-            RadiusY = 0.92,
-            Center = new System.Windows.Point(0.34, 0.05),
-            GradientOrigin = new System.Windows.Point(0.28, -0.05),
+            RadiusX = 1.15,
+            RadiusY = 1.05,
+            Center = new System.Windows.Point(0.42, 0.10),
+            GradientOrigin = new System.Windows.Point(0.30, 0.02),
             GradientStops =
             {
-                new GradientStop(FloatlyDesignTokens.PanelGlow, 0.0),
-                new GradientStop(System.Windows.Media.Color.FromArgb(0xB8, 0x09, 0x19, 0x2E), 0.38),
-                new GradientStop(System.Windows.Media.Color.FromArgb(0xAA, 0x07, 0x14, 0x25), 1.0)
+                new GradientStop(System.Windows.Media.Color.FromArgb(0xCC, 0x22, 0x32, 0x45), 0.0),
+                new GradientStop(System.Windows.Media.Color.FromArgb(0xC4, 0x0D, 0x1D, 0x32), 0.46),
+                new GradientStop(System.Windows.Media.Color.FromArgb(0xB8, 0x07, 0x14, 0x25), 1.0)
             }
         };
     }
