@@ -545,7 +545,7 @@
         </Style>
         <Style x:Key="UnitInputBox" TargetType="TextBox" BasedOn="{StaticResource SettingsTextBox}">
             <Setter Property="Height" Value="36" />
-            <Setter Property="Padding" Value="14,0,52,0" />
+            <Setter Property="Padding" Value="14,0" />
         </Style>
         <Style x:Key="IconSquareButton" TargetType="Button" BasedOn="{StaticResource SecondaryButton}">
             <Setter Property="Width" Value="34" />
@@ -875,24 +875,24 @@
                                             <ColumnDefinition Width="126" />
                                             <ColumnDefinition Width="14" />
                                             <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="42" />
                                         </Grid.ColumnDefinitions>
                                         <TextBlock Text="每月工作天数" Foreground="{StaticResource SettingsText}" VerticalAlignment="Center" />
-                                        <Grid Grid.Column="2">
-                                            <TextBox x:Name="TxtWorkDaysPerMonth" Style="{StaticResource UnitInputBox}" />
-                                            <TextBlock Text="天" Foreground="{StaticResource SettingsMuted}" HorizontalAlignment="Right" Margin="0,0,14,0" VerticalAlignment="Center" />
-                                        </Grid>
+                                        <TextBox x:Name="TxtWorkDaysPerMonth" Grid.Column="2" Style="{StaticResource UnitInputBox}" />
+                                        <TextBlock Grid.Column="3" Text="天" Foreground="{StaticResource SettingsMuted}"
+                                                   HorizontalAlignment="Right" VerticalAlignment="Center" />
                                     </Grid>
                                     <Grid>
                                         <Grid.ColumnDefinitions>
                                             <ColumnDefinition Width="126" />
                                             <ColumnDefinition Width="14" />
                                             <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="42" />
                                         </Grid.ColumnDefinitions>
                                         <TextBlock Text="每日工作小时" Foreground="{StaticResource SettingsText}" VerticalAlignment="Center" />
-                                        <Grid Grid.Column="2">
-                                            <TextBox x:Name="TxtWorkHoursPerDay" Style="{StaticResource UnitInputBox}" />
-                                            <TextBlock Text="小时" Foreground="{StaticResource SettingsMuted}" HorizontalAlignment="Right" Margin="0,0,14,0" VerticalAlignment="Center" />
-                                        </Grid>
+                                        <TextBox x:Name="TxtWorkHoursPerDay" Grid.Column="2" Style="{StaticResource UnitInputBox}" />
+                                        <TextBlock Grid.Column="3" Text="小时" Foreground="{StaticResource SettingsMuted}"
+                                                   HorizontalAlignment="Right" VerticalAlignment="Center" />
                                     </Grid>
                                 </StackPanel>
                             </Border>
