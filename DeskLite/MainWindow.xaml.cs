@@ -55,6 +55,7 @@ public partial class MainWindow : Window
         LoadCalendarState();
         SyncAutoStartSetting();
         InitializePomodoro();
+        LoadDashboardIcons();
         ApplySettings();
 
         RefreshClock();
@@ -198,9 +199,26 @@ public partial class MainWindow : Window
         OpacityValueText.Text = $"{(int)OpacitySlider.Value}%";
         FontSizeValueText.Text = $"{(int)FontSizeSlider.Value}px";
         ClickThroughToggle.IsChecked = _settings.ClickThrough;
-        ThemeToggleBtn.Content = AppThemePalette.Parse(_settings.Theme) == ThemeMode.Light ? "☼" : "☾";
+        ThemeToggleIcon.Source = DashboardIconLoader.Load(
+            AppThemePalette.Parse(_settings.Theme) == ThemeMode.Light ? "taiyang" : "yueliang");
         ToolbarPinBtn.Foreground = Topmost ? Brush(FloatlyDesignTokens.AccentBlue) : Brush(_palette.TextSecondary);
         SyncClickThroughSwitch();
+    }
+
+    private void LoadDashboardIcons()
+    {
+        PinIcon.Source = DashboardIconLoader.Load("tuding");
+        SettingsIcon.Source = DashboardIconLoader.Load("setting");
+        MoreIcon.Source = DashboardIconLoader.Load("sandian");
+        HuangLiCalendarIcon.Source = DashboardIconLoader.Load("rili");
+        CountdownIcon.Source = DashboardIconLoader.Load("huomiao");
+        YearProgressIcon.Source = DashboardIconLoader.Load("sangexinhao");
+        OffWorkIcon.Source = DashboardIconLoader.Load("shizhong");
+        SalaryIcon.Source = DashboardIconLoader.Load("money");
+        QuickSettingsIcon.Source = DashboardIconLoader.Load("shang");
+        ToolbarPinIcon.Source = DashboardIconLoader.Load("tuding");
+        ThemeToggleIcon.Source = DashboardIconLoader.Load(
+            AppThemePalette.Parse(_settings.Theme) == ThemeMode.Light ? "taiyang" : "yueliang");
     }
 
     private void SyncClickThroughSwitch()
@@ -384,9 +402,9 @@ public partial class MainWindow : Window
 
     private void ApplyWidgetGlassResources()
     {
-        Resources["TodoCardBgBrush"] = Brush(0x18, 0xE8, 0xF4, 0xFF);
-        Resources["TodoCardBorderBrush"] = Brush(0x24, 0xE4, 0xF0, 0xFF);
-        TodoOverflowBtn.Background = Brush(0x20, 0xE8, 0xF4, 0xFF);
+        Resources["TodoCardBgBrush"] = Brush(0x24, 0xE8, 0xF4, 0xFF);
+        Resources["TodoCardBorderBrush"] = Brush(0x32, 0xE4, 0xF0, 0xFF);
+        TodoOverflowBtn.Background = Brush(0x26, 0xE8, 0xF4, 0xFF);
         TodoCountBadge.Background = Brush(0x24, 0x5C, 0x8D, 0xFF);
         ScratchCountBadge.Background = Brush(0x24, 0x5C, 0x8D, 0xFF);
     }
@@ -406,20 +424,20 @@ public partial class MainWindow : Window
         if (skinMode is SkinService.ModeSolid or SkinService.ModeVideo)
         {
             var solid = FloatlyDesignTokens.PanelBackground;
-            return Brush(0xFF, solid.R, solid.G, solid.B);
+            return Brush(solid.A, solid.R, solid.G, solid.B);
         }
 
         return new RadialGradientBrush
         {
-            RadiusX = 0.96,
-            RadiusY = 0.82,
+            RadiusX = 1.05,
+            RadiusY = 0.92,
             Center = new System.Windows.Point(0.34, 0.05),
             GradientOrigin = new System.Windows.Point(0.28, -0.05),
             GradientStops =
             {
                 new GradientStop(FloatlyDesignTokens.PanelGlow, 0.0),
-                new GradientStop(FloatlyDesignTokens.PanelBackground, 0.45),
-                new GradientStop(FloatlyDesignTokens.Background, 1.0)
+                new GradientStop(FloatlyDesignTokens.PanelBackground, 0.42),
+                new GradientStop(System.Windows.Media.Color.FromArgb(0xF6, 0x07, 0x14, 0x25), 1.0)
             }
         };
     }
@@ -428,8 +446,9 @@ public partial class MainWindow : Window
         CreateLinearBrush(
             [
                 new GradientStop(FloatlyDesignTokens.ContentBackdrop, 0.0),
-                new GradientStop(System.Windows.Media.Color.FromArgb(0x34, 0x12, 0x2A, 0x45), 0.52),
-                new GradientStop(System.Windows.Media.Color.FromArgb(0x48, 0x07, 0x15, 0x27), 1.0)
+                new GradientStop(System.Windows.Media.Color.FromArgb(0x18, 0xFF, 0xFF, 0xFF), 0.18),
+                new GradientStop(System.Windows.Media.Color.FromArgb(0x1C, 0x12, 0x2A, 0x45), 0.58),
+                new GradientStop(System.Windows.Media.Color.FromArgb(0x32, 0x07, 0x15, 0x27), 1.0)
             ],
             new System.Windows.Point(0, 0),
             new System.Windows.Point(1, 1));
@@ -437,7 +456,8 @@ public partial class MainWindow : Window
     private static System.Windows.Media.Brush CreateGlassCardBrush() =>
         CreateLinearBrush(
             [
-                new GradientStop(FloatlyDesignTokens.CardBackground, 0.0),
+                new GradientStop(FloatlyDesignTokens.CardHighlight, 0.0),
+                new GradientStop(FloatlyDesignTokens.CardBackground, 0.28),
                 new GradientStop(FloatlyDesignTokens.CardBackgroundDeep, 1.0)
             ],
             new System.Windows.Point(0, 0),
@@ -447,7 +467,7 @@ public partial class MainWindow : Window
         CreateLinearBrush(
             [
                 new GradientStop(FloatlyDesignTokens.ToolbarBackground, 0.0),
-                new GradientStop(System.Windows.Media.Color.FromArgb(0x84, 0x0F, 0x20, 0x35), 1.0)
+                new GradientStop(System.Windows.Media.Color.FromArgb(0x4C, 0x0F, 0x20, 0x35), 1.0)
             ],
             new System.Windows.Point(0, 0),
             new System.Windows.Point(1, 0));
@@ -1301,19 +1321,20 @@ public partial class MainWindow : Window
         var notes = weekDays
             .Select(day => new { Day = day, Note = _dateNoteStore.GetNote(day) })
             .Where(item => !string.IsNullOrWhiteSpace(item.Note))
-            .Take(2)
             .ToList();
 
         if (notes.Count == 0)
         {
             WeekAgendaPanel.Children.Add(BuildWeekAgendaPlaceholder("14:00  周会会议", Brush(_palette.PomodoroBreak)));
             WeekAgendaPanel.Children.Add(BuildWeekAgendaPlaceholder("20:00  跨境产品复盘", Brush(_palette.Accent)));
+            WeekAgendaPanel.Children.Add(BuildWeekAgendaFooter(2));
             return;
         }
 
-        for (var i = 0; i < notes.Count; i++)
+        var shownNotes = notes.Take(2).ToList();
+        for (var i = 0; i < shownNotes.Count; i++)
         {
-            var item = notes[i];
+            var item = shownNotes[i];
             SplitAgendaNote(item.Note!, item.Day, out var timeText, out var noteText);
             var row = new Grid
             {
@@ -1365,6 +1386,41 @@ public partial class MainWindow : Window
                 Child = row
             });
         }
+
+        WeekAgendaPanel.Children.Add(BuildWeekAgendaFooter(Math.Max(0, notes.Count - shownNotes.Count)));
+    }
+
+    private Border BuildWeekAgendaFooter(int hiddenCount)
+    {
+        var footer = new Grid { Margin = new Thickness(2, 2, 2, 0) };
+        footer.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
+        footer.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
+
+        var more = new TextBlock
+        {
+            Text = hiddenCount > 0 ? $"...还有 {hiddenCount} 项日程" : "...还有 0 项日程",
+            FontSize = FontScaleHelper.CalSize(10.5, _settings.FontScale),
+            Foreground = Brush(_palette.TextSubtle),
+            VerticalAlignment = VerticalAlignment.Center
+        };
+        footer.Children.Add(more);
+
+        var viewAll = new TextBlock
+        {
+            Text = "查看全部  ›",
+            FontSize = FontScaleHelper.CalSize(10.5, _settings.FontScale),
+            Foreground = Brush(0xCC, 0xDD, 0xE8, 0xFF),
+            VerticalAlignment = VerticalAlignment.Center
+        };
+        Grid.SetColumn(viewAll, 1);
+        footer.Children.Add(viewAll);
+
+        return new Border
+        {
+            Background = System.Windows.Media.Brushes.Transparent,
+            Padding = new Thickness(2, 3, 2, 0),
+            Child = footer
+        };
     }
 
     private static void SplitAgendaNote(string note, DateTime day, out string timeText, out string noteText)
