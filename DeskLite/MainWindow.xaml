@@ -212,45 +212,45 @@
 
                         <!-- Row 2: lunar / huangli compact strip (full width, below row 1) -->
                         <Border x:Name="HeroLunarStrip" Visibility="Collapsed" BorderBrush="#2EE4F0FF"
-                                BorderThickness="1" CornerRadius="14" Background="#6A1F3855"
-                                Margin="0,24,0,0" Padding="18,14">
+                                BorderThickness="1" CornerRadius="16" Background="#6A1F3855"
+                                Margin="0,24,0,0" Padding="20,15">
                             <Grid>
                                 <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="64" />
-                                    <ColumnDefinition Width="220" />
+                                    <ColumnDefinition Width="70" />
+                                    <ColumnDefinition Width="230" />
                                     <ColumnDefinition Width="1" />
                                     <ColumnDefinition Width="*" />
                                     <ColumnDefinition Width="Auto" />
                                 </Grid.ColumnDefinitions>
-                                <TextBlock Grid.Column="0" Text="📅" FontSize="26" VerticalAlignment="Center" HorizontalAlignment="Center"
+                                <TextBlock Grid.Column="0" Text="📅" FontSize="28" VerticalAlignment="Center" HorizontalAlignment="Center"
                                            Foreground="#DDE8FF" />
                                 <StackPanel Grid.Column="1" VerticalAlignment="Center">
                                     <StackPanel Orientation="Horizontal">
-                                        <TextBlock Text="农历 " FontSize="14" Foreground="#A6FFFFFF" VerticalAlignment="Center" />
-                                        <TextBlock x:Name="HuangLiLunarLarge" Text="四月廿六" FontSize="19" FontWeight="SemiBold"
+                                        <TextBlock Text="农历 " FontSize="15" Foreground="#A6FFFFFF" VerticalAlignment="Center" />
+                                        <TextBlock x:Name="HuangLiLunarLarge" Text="四月廿六" FontSize="21" FontWeight="SemiBold"
                                                    Foreground="#FF8A72" VerticalAlignment="Center" />
                                     </StackPanel>
-                                    <TextBlock x:Name="HuangLiMetaLineStrip" Text="丙午年 甲午月 戊申日" FontSize="13"
+                                    <TextBlock x:Name="HuangLiMetaLineStrip" Text="丙午年 甲午月 戊申日" FontSize="14"
                                                Foreground="#8B95A5" Margin="0,2,0,0" TextTrimming="CharacterEllipsis" />
                                 </StackPanel>
                                 <Border Grid.Column="2" Width="1" Background="#22FFFFFF" Margin="10,0,22,0" />
                                 <WrapPanel Grid.Column="3" VerticalAlignment="Center" HorizontalAlignment="Left">
                                     <StackPanel Orientation="Horizontal" Margin="0,0,0,2">
-                                        <Border x:Name="HuangLiYiCircle" CornerRadius="5" Padding="5,2" Margin="0,0,8,0" Background="#2255D38A">
-                                            <TextBlock x:Name="HuangLiYiCircleText" Text="宜" FontSize="13" FontWeight="SemiBold" Foreground="#55D38A" />
+                                        <Border x:Name="HuangLiYiCircle" CornerRadius="5" Padding="6,2" Margin="0,0,8,0" Background="#2255D38A">
+                                            <TextBlock x:Name="HuangLiYiCircleText" Text="宜" FontSize="14" FontWeight="SemiBold" Foreground="#55D38A" />
                                         </Border>
-                                        <TextBlock x:Name="HuangLiYiText" FontSize="13" Foreground="#DDE8FF" MaxWidth="220"
+                                        <TextBlock x:Name="HuangLiYiText" FontSize="14" Foreground="#DDE8FF" MaxWidth="230"
                                                    TextTrimming="CharacterEllipsis" VerticalAlignment="Center" Margin="0,0,18,0" />
                                     </StackPanel>
                                     <StackPanel Orientation="Horizontal">
-                                        <Border x:Name="HuangLiJiCircle" CornerRadius="5" Padding="5,2" Margin="0,0,8,0" Background="#22FF8A72">
-                                            <TextBlock x:Name="HuangLiJiCircleText" Text="忌" FontSize="13" FontWeight="SemiBold" Foreground="#FF8A72" />
+                                        <Border x:Name="HuangLiJiCircle" CornerRadius="5" Padding="6,2" Margin="0,0,8,0" Background="#22FF8A72">
+                                            <TextBlock x:Name="HuangLiJiCircleText" Text="忌" FontSize="14" FontWeight="SemiBold" Foreground="#FF8A72" />
                                         </Border>
-                                        <TextBlock x:Name="HuangLiJiText" FontSize="13" Foreground="#DDE8FF" MaxWidth="200"
+                                        <TextBlock x:Name="HuangLiJiText" FontSize="14" Foreground="#DDE8FF" MaxWidth="210"
                                                    TextTrimming="CharacterEllipsis" VerticalAlignment="Center" Margin="0,0,4,0" />
                                     </StackPanel>
                                 </WrapPanel>
-                                <Button x:Name="HuangLiCollapseBtn" Grid.Column="4" Content="⌄" Width="42" Height="42" Padding="0"
+                                <Button x:Name="HuangLiCollapseBtn" Grid.Column="4" Content="⌄" Width="44" Height="44" Padding="0"
                                         Click="HuangLiCollapse_Click" Background="#20E8F4FF" BorderThickness="0"
                                         Foreground="#DDE8FF" Cursor="Hand" FontSize="18" ToolTip="展开/收起" VerticalAlignment="Center" />
                             </Grid>
@@ -398,36 +398,36 @@
                         <StackPanel x:Name="ExtraModuleStack" Margin="0,0,0,0" Visibility="Collapsed" />
 
                         <!-- Countdown + Year Progress row -->
-                        <Grid Margin="0,0,0,10" MinHeight="92">
+                        <Grid Margin="0,0,0,10" Height="128">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*" />
                                 <ColumnDefinition Width="14" />
                                 <ColumnDefinition Width="*" />
                             </Grid.ColumnDefinitions>
-                            <Border Grid.Column="0" x:Name="CountdownCard" Style="{StaticResource FloatlyCard}" Padding="16">
+                            <Border Grid.Column="0" x:Name="CountdownCard" Style="{StaticResource FloatlyCard}" Padding="18,16">
                                 <StackPanel x:Name="CountdownPanel" Visibility="Collapsed">
-                                    <TextBlock x:Name="CountdownLabel" Text="距离 618" Style="{StaticResource CardTitle}" Margin="0,0,0,4" />
-                                    <TextBlock x:Name="CountdownDays" Text="12 天" FontSize="22" FontWeight="Bold" Foreground="#FFFFFF" Margin="0,0,0,6" />
-                                    <Border x:Name="CountdownTrack" Height="8" CornerRadius="4" Background="#38FFFFFF" ClipToBounds="True" Margin="0,0,0,4">
+                                    <TextBlock x:Name="CountdownLabel" Text="距离 618" Style="{StaticResource CardTitle}" Margin="0,0,0,8" />
+                                    <TextBlock x:Name="CountdownDays" Text="12 天" FontSize="30" FontWeight="Bold" Foreground="#FFFFFF" Margin="0,0,0,8" />
+                                    <Border x:Name="CountdownTrack" Height="8" CornerRadius="4" Background="#38FFFFFF" ClipToBounds="True" Margin="0,0,0,8">
                                         <Border x:Name="CountdownFill" HorizontalAlignment="Left" CornerRadius="4" Background="#FF8A72" Width="0" />
                                     </Border>
-                                    <TextBlock x:Name="CountdownHint" Text="目标日期" FontSize="10" Foreground="#8B95A5" />
+                                    <TextBlock x:Name="CountdownHint" Text="目标日期" FontSize="12" Foreground="#8B95A5" />
                                 </StackPanel>
                             </Border>
-                            <Border Grid.Column="2" x:Name="YearProgressCard" Style="{StaticResource FloatlyCard}" Padding="16">
+                            <Border Grid.Column="2" x:Name="YearProgressCard" Style="{StaticResource FloatlyCard}" Padding="18,16">
                                 <StackPanel x:Name="YearProgressPanel" Visibility="Collapsed">
-                                    <TextBlock x:Name="YearProgressLabel" Text="2026 年进度" Style="{StaticResource CardTitle}" Margin="0,0,0,4" />
-                                    <TextBlock x:Name="YearProgressPercent" Text="44.1%" FontSize="22" FontWeight="Bold" Foreground="#FFFFFF" Margin="0,0,0,6" />
-                                    <Border x:Name="YearProgressTrack" Height="8" CornerRadius="4" Background="#38FFFFFF" ClipToBounds="True" Margin="0,0,0,4">
+                                    <TextBlock x:Name="YearProgressLabel" Text="2026 年进度" Style="{StaticResource CardTitle}" Margin="0,0,0,8" />
+                                    <TextBlock x:Name="YearProgressPercent" Text="44.1%" FontSize="30" FontWeight="Bold" Foreground="#FFFFFF" Margin="0,0,0,8" />
+                                    <Border x:Name="YearProgressTrack" Height="8" CornerRadius="4" Background="#38FFFFFF" ClipToBounds="True" Margin="0,0,0,8">
                                         <Border x:Name="YearProgressFill" HorizontalAlignment="Left" CornerRadius="4" Background="#5C8DFF" Width="0" />
                                     </Border>
-                                    <TextBlock x:Name="YearProgressDetail" Text="已过 162 天 / 365 天" FontSize="10" Foreground="#8B95A5" />
+                                    <TextBlock x:Name="YearProgressDetail" Text="已过 162 天 / 365 天" FontSize="12" Foreground="#8B95A5" />
                                 </StackPanel>
                             </Border>
                         </Grid>
 
                         <!-- Todo + Pomodoro row -->
-                        <Grid Margin="0,0,0,10" Height="224">
+                        <Grid Margin="0,0,0,10" Height="260">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*" />
                                 <ColumnDefinition Width="14" />
@@ -437,13 +437,13 @@
                                 <Grid x:Name="TodoPanel" ClipToBounds="False">
                                     <Border Width="4" HorizontalAlignment="Left" Margin="0,14,0,0" CornerRadius="0,4,4,0"
                                             Background="#5C8DFF" VerticalAlignment="Top" Height="30" />
-                                    <Grid Margin="16,14,16,14">
+                                    <Grid Margin="18,16,18,16">
                                         <Grid.RowDefinitions>
                                             <RowDefinition Height="Auto" />
                                             <RowDefinition Height="Auto" />
                                             <RowDefinition Height="Auto" />
                                         </Grid.RowDefinitions>
-                                    <Grid Grid.Row="0" Margin="0,0,0,8">
+                                    <Grid Grid.Row="0" Margin="0,0,0,10">
                                         <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                                             <TextBlock x:Name="TodoTitleText" Text="今日待办" Style="{StaticResource CardTitle}" />
                                             <Border x:Name="TodoCountBadge" CornerRadius="8" Padding="5,1" Margin="5,0,0,0" Background="#225C8DFF">
@@ -459,7 +459,7 @@
                                         <ItemsControl.ItemTemplate>
                                             <DataTemplate>
                                                 <Border Background="{DynamicResource TodoCardBgBrush}" BorderBrush="{DynamicResource TodoCardBorderBrush}"
-                                                        BorderThickness="1" CornerRadius="10" Padding="9,6" Margin="0,0,0,6" MinHeight="34">
+                                                        BorderThickness="1" CornerRadius="10" Padding="12,8" Margin="0,0,0,8" MinHeight="40">
                                                     <Grid>
                                                         <Grid.ColumnDefinitions>
                                                             <ColumnDefinition Width="Auto" /><ColumnDefinition Width="*" /><ColumnDefinition Width="Auto" />
@@ -509,7 +509,7 @@
                                         </ItemsControl.ItemTemplate>
                                     </ItemsControl>
                                     <Border x:Name="EmptyTodoPanel" Grid.Row="1" Background="{DynamicResource TodoCardBgBrush}" BorderBrush="{DynamicResource TodoCardBorderBrush}"
-                                            BorderThickness="1" CornerRadius="10" Padding="12,12" Margin="0,0,0,8" MinHeight="56" Visibility="Collapsed">
+                                            BorderThickness="1" CornerRadius="10" Padding="12,22" Margin="0,0,0,10" MinHeight="76" Visibility="Collapsed">
                                         <TextBlock x:Name="EmptyTodoText" Text="暂无待办" Foreground="{DynamicResource TodoEmptyBrush}" FontSize="11"
                                                    TextAlignment="Center" VerticalAlignment="Center" />
                                     </Border>
@@ -518,7 +518,7 @@
                                             <RowDefinition Height="Auto" />
                                             <RowDefinition Height="Auto" />
                                         </Grid.RowDefinitions>
-                                        <Border x:Name="TodoOverflowBtn" Grid.Row="0" Background="#20E8F4FF" CornerRadius="10" Padding="10,5" Margin="0,0,0,7" Cursor="Hand"
+                                        <Border x:Name="TodoOverflowBtn" Grid.Row="0" Background="#20E8F4FF" CornerRadius="10" Padding="12,7" Margin="0,0,0,9" Cursor="Hand"
                                                 MouseLeftButtonUp="TodoViewAll_Click" Visibility="Collapsed">
                                             <Grid>
                                                 <TextBlock x:Name="TodoOverflowText" Text="+ 2 条待办" FontSize="11" Foreground="{DynamicResource TodoLinkBrush}" />
@@ -542,11 +542,11 @@
                                     </Grid>
                                 </Grid>
                             </Border>
-                            <Border Grid.Column="2" x:Name="PomodoroCard" Style="{StaticResource FloatlyCard}" Padding="18,16">
+                            <Border Grid.Column="2" x:Name="PomodoroCard" Style="{StaticResource FloatlyCard}" Padding="20,18">
                                 <Grid x:Name="PomodoroPanel" Visibility="Collapsed">
                                     <Grid.RowDefinitions>
                                         <RowDefinition Height="Auto" />
-                                        <RowDefinition Height="136" />
+                                        <RowDefinition Height="158" />
                                         <RowDefinition Height="Auto" />
                                         <RowDefinition Height="Auto" />
                                     </Grid.RowDefinitions>
@@ -555,20 +555,20 @@
                                         <TextBlock x:Name="PomodoroSessionText" Text="准备开始" FontSize="10" Foreground="#8B95A5"
                                                    HorizontalAlignment="Right" VerticalAlignment="Center" />
                                     </Grid>
-                                    <Grid Grid.Row="1" Width="124" Height="124" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,-2,0,0">
+                                    <Grid Grid.Row="1" Width="148" Height="148" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,-2,0,0">
                                         <Path x:Name="PomodoroRingTrack" Stroke="#28FFFFFF" StrokeThickness="7" Fill="Transparent"
                                               StrokeStartLineCap="Round" StrokeEndLineCap="Round" />
                                         <Path x:Name="PomodoroRingProgress" Stroke="#5C8DFF" StrokeThickness="7" Fill="Transparent"
                                               StrokeStartLineCap="Round" StrokeEndLineCap="Round" />
                                         <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
-                                            <TextBlock x:Name="PomodoroCountdownText" Text="25:00" FontSize="28" FontWeight="SemiBold" Foreground="#FFFFFF" HorizontalAlignment="Center" />
+                                            <TextBlock x:Name="PomodoroCountdownText" Text="25:00" FontSize="34" FontWeight="SemiBold" Foreground="#FFFFFF" HorizontalAlignment="Center" />
                                             <TextBlock x:Name="PomodoroCenterStatusText" Text="准备开始" FontSize="12" Foreground="#A6FFFFFF" HorizontalAlignment="Center" Margin="0,3,0,0" />
                                         </StackPanel>
                                     </Grid>
                                     <Border x:Name="PomodoroTrack" Height="0" Width="0" Visibility="Collapsed">
                                         <Border x:Name="PomodoroFill" Width="0" />
                                     </Border>
-                                    <Button x:Name="PomodoroStartBtn" Grid.Row="2" Content="开始专注" Height="30" Padding="0" Width="188"
+                                    <Button x:Name="PomodoroStartBtn" Grid.Row="2" Content="开始专注" Height="34" Padding="0" Width="206"
                                             Click="PomodoroStart_Click" Background="#5C8DFF" Foreground="White"
                                             BorderThickness="0" Cursor="Hand" FontSize="15" FontWeight="SemiBold" HorizontalAlignment="Center" />
                                     <TextBlock x:Name="PomodoroHintText" Grid.Row="3" Text="专注更高效，休息更放松" FontSize="11" Foreground="#8B95A5"
@@ -582,7 +582,7 @@
                         </Grid>
 
                         <!-- OffWork + Salary row -->
-                        <Grid Margin="0,0,0,10" Height="154">
+                        <Grid Margin="0,0,0,10" Height="160">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*" />
                                 <ColumnDefinition Width="14" />
@@ -596,7 +596,7 @@
                                            IsHitTestVisible="False"
                                            RenderOptions.BitmapScalingMode="HighQuality" />
                                     <Border Background="#9510243B" />
-                                    <Border Padding="16,11,16,11">
+                                    <Border Padding="18,14,18,14">
                                         <Grid x:Name="OffWorkPanel" Visibility="Collapsed">
                                             <Grid.RowDefinitions>
                                                 <RowDefinition Height="Auto" />
@@ -608,7 +608,7 @@
                                                 <TextBlock x:Name="OffWorkLabel" Text="下班倒计时" Style="{StaticResource CardTitle}" />
                                             </StackPanel>
                                             <StackPanel Grid.Row="1" VerticalAlignment="Center" Margin="0,3,0,4">
-                                                <TextBlock x:Name="OffWorkMainText" Text="07:56:05" FontSize="26" FontWeight="SemiBold"
+                                                <TextBlock x:Name="OffWorkMainText" Text="07:56:05" FontSize="34" FontWeight="SemiBold"
                                                            FontFamily="Consolas" Foreground="#F7FAFF" Margin="0,0,0,2" />
                                                 <TextBlock x:Name="OffWorkCaption" Text="距离下班还有" FontSize="10" Foreground="#A6FFFFFF" Margin="0,0,0,4" />
                                                 <Border x:Name="OffWorkTrack" Height="7" CornerRadius="4" Background="#27344D" ClipToBounds="True">
@@ -638,7 +638,7 @@
                                            IsHitTestVisible="False"
                                            RenderOptions.BitmapScalingMode="HighQuality" />
                                     <Border Background="#7A15100C" />
-                                    <Border Padding="18,13,18,13">
+                                    <Border Padding="20,15,20,15">
                                         <Grid>
                                             <Grid.RowDefinitions>
                                                 <RowDefinition Height="Auto" />
@@ -653,7 +653,7 @@
                                                 <TextBlock x:Name="SalaryLabel" Text="今日已赚薪水" Style="{StaticResource CardTitle}" />
                                             </StackPanel>
                                             <StackPanel Grid.Row="1" VerticalAlignment="Center" Margin="0,1,0,5">
-                                                <TextBlock x:Name="SalaryAmount" Text="¥0.00" FontSize="32" FontWeight="Bold"
+                                                <TextBlock x:Name="SalaryAmount" Text="¥0.00" FontSize="36" FontWeight="Bold"
                                                            FontFamily="Consolas" Foreground="#F8C34A" Margin="0,0,0,2" />
                                                 <StackPanel Orientation="Horizontal">
                                                     <TextBlock Text="•" FontSize="16" Foreground="#6BDB74" VerticalAlignment="Center" Margin="0,0,6,0" />
@@ -686,15 +686,24 @@
                             </Border>
                         </Grid>
 
-                        <Border x:Name="DailyQuoteBanner" Style="{StaticResource FloatlyCard}" Margin="0,0,0,10" Padding="0" Height="114" Visibility="Collapsed">
+                        <Border x:Name="DailyQuoteBanner" Style="{StaticResource FloatlyCard}" Margin="0,0,0,10" Padding="0" Height="118" Visibility="Collapsed">
                             <Grid>
                                 <Image Source="Assets/CardBackgrounds/star-sky-dark.png"
                                        Stretch="UniformToFill"
-                                       Opacity="0.64"
+                                       Opacity="0.78"
                                        IsHitTestVisible="False"
-                                       RenderOptions.BitmapScalingMode="HighQuality" />
-                                <Border Background="#8A10243D" />
-                                <Grid Margin="22,14">
+                                       RenderOptions.BitmapScalingMode="HighQuality"
+                                       HorizontalAlignment="Right" Width="360" />
+                                <Border>
+                                    <Border.Background>
+                                        <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
+                                            <GradientStop Color="#E40D1A2C" Offset="0" />
+                                            <GradientStop Color="#C0122137" Offset="0.58" />
+                                            <GradientStop Color="#24122137" Offset="1" />
+                                        </LinearGradientBrush>
+                                    </Border.Background>
+                                </Border>
+                                <Grid Margin="24,14">
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="*" />
                                         <ColumnDefinition Width="Auto" />
@@ -705,9 +714,10 @@
                                             <TextBlock Text="每日一句" FontSize="15" FontWeight="SemiBold" Foreground="#DDE8FF" VerticalAlignment="Center" />
                                         </StackPanel>
                                         <TextBlock x:Name="DailyQuoteText" FontSize="18" Foreground="#FFFFFF" FontWeight="SemiBold"
-                                                   TextWrapping="Wrap" Visibility="Collapsed" MaxWidth="480" />
+                                                   TextWrapping="Wrap" Visibility="Collapsed" MaxWidth="430" />
                                         <TextBlock x:Name="DailyQuoteSourceText" Text="—— 坚持，是比努力更重要的能力。" FontSize="12"
-                                                   Foreground="#B8C4D9" Margin="0,6,0,0" />
+                                                   Foreground="#B8C4D9" Margin="0,6,0,0" MaxWidth="430"
+                                                   TextTrimming="CharacterEllipsis" />
                                     </StackPanel>
                                     <TextBlock Grid.Column="1" Text="↻ 换一句" FontSize="11" Foreground="#DDE8FF"
                                                HorizontalAlignment="Right" VerticalAlignment="Top" Opacity="0.9" />
@@ -716,20 +726,20 @@
                         </Border>
 
                         <!-- Calendar: week + month side by side -->
-                        <Grid x:Name="CalendarSection" Margin="0,0,0,10" Height="220" Visibility="Collapsed">
+                        <Grid x:Name="CalendarSection" Margin="0,0,0,10" Height="232" Visibility="Collapsed">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*" />
                                 <ColumnDefinition Width="14" />
                                 <ColumnDefinition Width="*" />
                             </Grid.ColumnDefinitions>
-                            <Border Grid.Column="0" Style="{StaticResource FloatlyCard}" Padding="18,16">
+                            <Border Grid.Column="0" Style="{StaticResource FloatlyCard}" Padding="16,14">
                                 <StackPanel>
-                                    <TextBlock x:Name="WeekCalendarTitleText" Text="周历" Style="{StaticResource CardTitle}" Margin="0,0,0,12" />
+                                    <TextBlock x:Name="WeekCalendarTitleText" Text="周历" Style="{StaticResource CardTitle}" Margin="0,0,0,10" />
                                     <Grid x:Name="WeekCalendarPanel" />
-                                    <StackPanel x:Name="WeekAgendaPanel" Margin="0,12,0,0" />
+                                    <StackPanel x:Name="WeekAgendaPanel" Margin="0,10,0,0" />
                                 </StackPanel>
                             </Border>
-                            <Border Grid.Column="2" Style="{StaticResource FloatlyCard}" Padding="18,16">
+                            <Border Grid.Column="2" Style="{StaticResource FloatlyCard}" Padding="16,14">
                                 <StackPanel>
                                     <Grid Margin="0,0,0,4">
                                         <Button x:Name="CalPrevBtn" Content="‹" Width="20" Height="20" Padding="0"

@@ -1152,8 +1152,8 @@ public partial class MainWindow : Window
 
         PomodoroFill.Background = Brush(fillColor);
         PomodoroRingProgress.Stroke = Brush(fillColor);
-        PomodoroRingHelper.UpdateOpenArc(PomodoroRingTrack, 100, 124, 7);
-        PomodoroRingHelper.UpdateOpenArc(PomodoroRingProgress, ringProgress, 124, 7);
+        PomodoroRingHelper.UpdateOpenArc(PomodoroRingTrack, 100, 148, 7);
+        PomodoroRingHelper.UpdateOpenArc(PomodoroRingProgress, ringProgress, 148, 7);
     }
 
     private void OnPomodoroCompleted(PomodoroPhase phase)
@@ -1331,9 +1331,11 @@ public partial class MainWindow : Window
 
             WeekAgendaPanel.Children.Add(new Border
             {
-                Background = Brush(_palette.HuangLiMutedButton),
+                Background = Brush(0x24, 0xE8, 0xF4, 0xFF),
+                BorderBrush = Brush(0x18, 0xE4, 0xF0, 0xFF),
+                BorderThickness = new Thickness(1),
                 CornerRadius = new CornerRadius(10),
-                Padding = new Thickness(12, 8, 12, 8),
+                Padding = new Thickness(12, 7, 12, 7),
                 Margin = new Thickness(0, 0, 0, 2),
                 Child = row
             });
@@ -1368,10 +1370,12 @@ public partial class MainWindow : Window
 
         return new Border
         {
-            Background = Brush(_palette.HuangLiMutedButton),
+            Background = Brush(0x24, 0xE8, 0xF4, 0xFF),
+            BorderBrush = Brush(0x18, 0xE4, 0xF0, 0xFF),
+            BorderThickness = new Thickness(1),
             CornerRadius = new CornerRadius(10),
-            Padding = new Thickness(12, 8, 12, 8),
-            Margin = new Thickness(0, 0, 0, 8),
+            Padding = new Thickness(12, 7, 12, 7),
+            Margin = new Thickness(0, 0, 0, 7),
             Child = row
         };
     }
