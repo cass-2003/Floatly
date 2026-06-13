@@ -240,16 +240,14 @@
         <Style x:Key="SettingsSlider" TargetType="Slider">
             <Setter Property="Minimum" Value="0" />
             <Setter Property="Maximum" Value="100" />
-            <Setter Property="Height" Value="20" />
+            <Setter Property="Height" Value="22" />
             <Setter Property="IsMoveToPointEnabled" Value="True" />
             <Setter Property="LargeChange" Value="1" />
             <Setter Property="VerticalAlignment" Value="Center" />
             <Setter Property="Margin" Value="0,0,12,0" />
             <Setter Property="Foreground" Value="{DynamicResource SettingsAccent}" />
-            <EventSetter Event="PreviewMouseLeftButtonDown" Handler="SettingsSlider_PreviewMouseLeftButtonDown" />
-            <EventSetter Event="PreviewMouseMove" Handler="SettingsSlider_PreviewMouseMove" />
-            <EventSetter Event="PreviewMouseLeftButtonUp" Handler="SettingsSlider_PreviewMouseLeftButtonUp" />
-            <EventSetter Event="LostMouseCapture" Handler="SettingsSlider_LostMouseCapture" />
+            <Setter Property="Cursor" Value="Hand" />
+            <Setter Property="Focusable" Value="False" />
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="Slider">
@@ -265,6 +263,7 @@
                                                   CommandTarget="{Binding RelativeSource={RelativeSource TemplatedParent}}"
                                                   BorderThickness="0"
                                                   Background="{DynamicResource SettingsAccent}"
+                                                  IsHitTestVisible="False"
                                                   IsTabStop="False">
                                         <RepeatButton.Template>
                                             <ControlTemplate TargetType="RepeatButton">
@@ -283,6 +282,7 @@
                                                   CommandTarget="{Binding RelativeSource={RelativeSource TemplatedParent}}"
                                                   BorderThickness="0"
                                                   Background="Transparent"
+                                                  IsHitTestVisible="False"
                                                   IsTabStop="False">
                                         <RepeatButton.Template>
                                             <ControlTemplate TargetType="RepeatButton">

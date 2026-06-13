@@ -99,6 +99,9 @@ public partial class SettingsWindow : Window
         RbSkinVideo.Checked += (_, _) => UpdateSkinControls();
         RbAutoLocate.Checked += (_, _) => UpdateCityControls();
         RbManualCity.Checked += (_, _) => UpdateCityControls();
+        RegisterSettingsSliderHandlers(SliderOpacity);
+        RegisterSettingsSliderHandlers(SliderFontSize);
+        RegisterSettingsSliderHandlers(SliderSkinOverlay);
         LoadFromSettings(_original);
         ApplySettingsThemeResources(AppThemePalette.Parse(_original.Theme));
         _isInitializing = false;
@@ -139,9 +142,17 @@ public partial class SettingsWindow : Window
         MaximizeIcon.Text = WindowState == WindowState.Maximized ? "\uE923" : "\uE922";
     }
 
+    private void RegisterSettingsSliderHandlers(Slider slider)
+    {
+        slider.AddHandler(PreviewMouseLeftButtonDownEvent, new MouseButtonEventHandler(SettingsSlider_PreviewMouseLeftButtonDown), true);
+        slider.AddHandler(PreviewMouseMoveEvent, new System.Windows.Input.MouseEventHandler(SettingsSlider_PreviewMouseMove), true);
+        slider.AddHandler(PreviewMouseLeftButtonUpEvent, new MouseButtonEventHandler(SettingsSlider_PreviewMouseLeftButtonUp), true);
+    }
+
     private void SettingsSlider_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
     {
-        if (sender is not Slider slider || !slider.IsEnabled)
+        var slider = ResolveSettingsSlider(sender, e.OriginalSource);
+        if (slider is null || !slider.IsEnabled)
         {
             return;
         }
@@ -154,7 +165,8 @@ public partial class SettingsWindow : Window
 
     private void SettingsSlider_PreviewMouseMove(object sender, System.Windows.Input.MouseEventArgs e)
     {
-        if (sender is not Slider slider || _draggingSettingsSlider != slider || e.LeftButton != MouseButtonState.Pressed)
+        var slider = ResolveSettingsSlider(sender, e.OriginalSource);
+        if (slider is null || _draggingSettingsSlider != slider || e.LeftButton != MouseButtonState.Pressed)
         {
             return;
         }
@@ -165,7 +177,8 @@ public partial class SettingsWindow : Window
 
     private void SettingsSlider_PreviewMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
     {
-        if (sender is not Slider slider || _draggingSettingsSlider != slider)
+        var slider = ResolveSettingsSlider(sender, e.OriginalSource);
+        if (slider is null || _draggingSettingsSlider != slider)
         {
             return;
         }
@@ -182,6 +195,31 @@ public partial class SettingsWindow : Window
         {
             _draggingSettingsSlider = null;
         }
+    }
+
+    private static Slider? ResolveSettingsSlider(object sender, object originalSource)
+    {
+        if (sender is Slider slider)
+        {
+            return slider;
+        }
+
+        if (originalSource is not DependencyObject source)
+        {
+            return null;
+        }
+
+        while (source is not null)
+        {
+            if (source is Slider sourceSlider)
+            {
+                return sourceSlider;
+            }
+
+            source = VisualTreeHelper.GetParent(source);
+        }
+
+        return null;
     }
 
     private static void UpdateSettingsSliderFromPointer(Slider slider, System.Windows.Point position)
@@ -738,15 +776,14 @@ public partial class SettingsWindow : Window
     {
         var imageMode = RbSkinImage.IsChecked == true;
         var videoMode = RbSkinVideo.IsChecked == true;
-        var mediaOverlay = imageMode || videoMode;
         TxtSkinImagePath.IsEnabled = imageMode;
         BtnBrowseSkin.IsEnabled = imageMode;
         TxtSkinVideoPath.IsEnabled = videoMode;
         BtnBrowseSkinVideo.IsEnabled = videoMode;
         SkinImagePathRow.Visibility = imageMode ? Visibility.Visible : Visibility.Collapsed;
         SkinVideoPathRow.Visibility = videoMode ? Visibility.Visible : Visibility.Collapsed;
-        SliderSkinOverlay.IsEnabled = mediaOverlay;
-        TxtSkinOverlay.IsEnabled = mediaOverlay;
+        SliderSkinOverlay.IsEnabled = true;
+        TxtSkinOverlay.IsEnabled = true;
     }
 
     private void SetSkinOverlayUi(int percent)
