@@ -202,6 +202,8 @@
 | 设置页可见截图 | `.codex-tmp/ui-audit/screen-dark-settings-visible.png` | 作废 | 截到资源管理器/浏览器，不是 Floatly 设置页 |
 | 设置页深色截图 | `.codex-tmp/ui-audit/settings-design3-dark-release-v3.png` | 有效 | 最新 release 深色设置页截图，尺寸 `1520 x 980`，可直接对照 `design-3-dark.png` |
 | 设置页浅色截图 | `.codex-tmp/ui-audit/settings-design3-light-release-v4.png` | 有效 | 最新 release 浅色设置页截图，已重新定位到主屏完整裁剪，尺寸 `1520 x 980` |
+| 设置页当前深色 release 截图 | `.codex-tmp/ui-audit/settings-design3-dark-release-current-v12.png` | 有效 | 最新 release 默认尺寸截图，尺寸 `1520 x 980`，用于对照 `design-3-dark.png` 当前实物状态 |
+| 设置页当前浅色 release 截图 | `.codex-tmp/ui-audit/settings-design3-light-release-current-v12.png` | 有效 | 最新 release 默认尺寸截图，尺寸 `1520 x 980`，用于对照 `design-3-light.png` 当前实物状态 |
 | 设置页浅色字体色截图 | `.codex-tmp/ui-audit/settings-design3-light-fontcolor-v5.png` | 有效源码验证 | Debug 构建截图，证明旧配置 `#FFFFFF` 在浅色设置页显示为实际生效的深灰蓝默认色 |
 | 设置页最小尺寸浅色截图 | `.codex-tmp/ui-audit/settings-design3-light-min-1180x760-print-v7.png` | 有效 | PrintWindow release 截图，证明 `1180 x 760` 最小尺寸下底部栏固定、主体内容滚动，不被错误遮挡 |
 | 设置页收入助手最小尺寸截图 | `.codex-tmp/ui-audit/settings-design3-light-min-income-release-v10.png` | 有效 | PrintWindow release 截图，证明 `1180 x 760` 浅色最小尺寸下 `22 天` 与 `8 小时` 完整显示，不再被单位文字遮挡或裁切 |
@@ -227,8 +229,8 @@
 
 必须补齐的视觉验收：
 
-- 设置页对照 `design-3-dark.png` 的默认尺寸截图。
-- 设置页对照 `design-3-light.png` 的默认尺寸截图。
+- 设置页对照 `design-3-dark.png` 的默认尺寸截图已补齐 v12 release 证据；后续需要继续逐项比对控件密度、模块列表和右侧主题卡细节。
+- 设置页对照 `design-3-light.png` 的默认尺寸截图已补齐 v12 release 证据；后续需要继续逐项比对控件密度、模块列表和右侧主题卡细节。
 - 设置页最大化/超宽截图已补齐 PrintWindow release 证据。
 - 设置页最小尺寸截图已补齐 PrintWindow release 证据。
 - 主面板对照 `resign-2-dark.png` 的默认尺寸截图已补齐 v11 release 证据；后续需要基于截图判断默认 `540 x 960` 是否作为压缩态接受，还是要调整默认窗口尺寸/字体密度。
