@@ -72,6 +72,7 @@ public partial class SettingsWindow : Window
     private bool _syncFontSize;
     private bool _syncSkinOverlay;
     private bool _isInitializing = true;
+    private Slider? _draggingSettingsSlider;
     private System.Windows.Controls.TextBox? _recordingHotkeyBox;
     private string? _selectedFontColor;
     private bool _fontColorUsesThemeDefault;
@@ -136,6 +137,69 @@ public partial class SettingsWindow : Window
     {
         WindowState = WindowState == WindowState.Maximized ? WindowState.Normal : WindowState.Maximized;
         MaximizeIcon.Text = WindowState == WindowState.Maximized ? "\uE923" : "\uE922";
+    }
+
+    private void SettingsSlider_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+    {
+        if (sender is not Slider slider || !slider.IsEnabled)
+        {
+            return;
+        }
+
+        _draggingSettingsSlider = slider;
+        slider.CaptureMouse();
+        UpdateSettingsSliderFromPointer(slider, e.GetPosition(slider));
+        e.Handled = true;
+    }
+
+    private void SettingsSlider_PreviewMouseMove(object sender, System.Windows.Input.MouseEventArgs e)
+    {
+        if (sender is not Slider slider || _draggingSettingsSlider != slider || e.LeftButton != MouseButtonState.Pressed)
+        {
+            return;
+        }
+
+        UpdateSettingsSliderFromPointer(slider, e.GetPosition(slider));
+        e.Handled = true;
+    }
+
+    private void SettingsSlider_PreviewMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+    {
+        if (sender is not Slider slider || _draggingSettingsSlider != slider)
+        {
+            return;
+        }
+
+        UpdateSettingsSliderFromPointer(slider, e.GetPosition(slider));
+        slider.ReleaseMouseCapture();
+        _draggingSettingsSlider = null;
+        e.Handled = true;
+    }
+
+    private void SettingsSlider_LostMouseCapture(object sender, System.Windows.Input.MouseEventArgs e)
+    {
+        if (sender == _draggingSettingsSlider)
+        {
+            _draggingSettingsSlider = null;
+        }
+    }
+
+    private static void UpdateSettingsSliderFromPointer(Slider slider, System.Windows.Point position)
+    {
+        var minimum = slider.Minimum;
+        var maximum = slider.Maximum;
+        var width = Math.Max(1, slider.ActualWidth);
+        var horizontalInset = width > 14 ? 7.0 : 0.0;
+        var usableWidth = Math.Max(1, width - horizontalInset * 2);
+        var ratio = Math.Clamp((position.X - horizontalInset) / usableWidth, 0.0, 1.0);
+        var value = minimum + ratio * (maximum - minimum);
+
+        if (slider.IsSnapToTickEnabled && slider.TickFrequency > 0)
+        {
+            value = minimum + Math.Round((value - minimum) / slider.TickFrequency) * slider.TickFrequency;
+        }
+
+        slider.Value = Math.Clamp(value, minimum, maximum);
     }
 
     private void SetupModuleListTemplate()
