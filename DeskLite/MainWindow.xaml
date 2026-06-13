@@ -142,7 +142,7 @@
                 </Border.Background>
             </Border>
 
-            <Grid x:Name="ContentRoot" Margin="30,40,30,16" PreviewMouseLeftButtonDown="Grid_PreviewMouseLeftButtonDown" Cursor="SizeAll">
+            <Grid x:Name="ContentRoot" Margin="30,40,30,16" PreviewMouseLeftButtonDown="Grid_PreviewMouseLeftButtonDown">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="*" MinHeight="200" />

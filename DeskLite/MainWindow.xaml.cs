@@ -2810,7 +2810,8 @@ public partial class MainWindow : Window
 
     private void Grid_PreviewMouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
     {
-        if (IsInteractiveElement(e.OriginalSource as DependencyObject))
+        var source = e.OriginalSource as DependencyObject;
+        if (IsInteractiveElement(source) || !IsInHeaderArea(source))
         {
             return;
         }
@@ -2946,6 +2947,15 @@ public partial class MainWindow : Window
                 case System.Windows.Controls.TextBox:
                 case System.Windows.Controls.Button:
                 case System.Windows.Controls.CheckBox:
+                case System.Windows.Controls.Primitives.ToggleButton:
+                case System.Windows.Controls.Primitives.Thumb:
+                case System.Windows.Controls.Slider:
+                case System.Windows.Controls.Primitives.ScrollBar:
+                case System.Windows.Controls.Primitives.Selector:
+                    return true;
+                case FrameworkElement { Cursor: not null } element
+                    when element.Cursor == System.Windows.Input.Cursors.Hand ||
+                         element.Cursor == System.Windows.Input.Cursors.IBeam:
                     return true;
                 case StackPanel { Tag: DateTime }:
                     return true;
