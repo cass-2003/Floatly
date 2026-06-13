@@ -1667,7 +1667,7 @@ public partial class MainWindow : Window
             FontSize = dayFontSize,
             FontWeight = isPreview ? FontWeights.SemiBold : FontWeights.Normal,
             Foreground = !inMonth
-                ? Brush(0x4B, 0x55, 0x63)
+                ? Brush(_palette.TextEmpty)
                 : dayForeground,
             HorizontalAlignment = System.Windows.HorizontalAlignment.Center,
             Margin = new Thickness(0, 0, 0, 0)
@@ -1732,7 +1732,7 @@ public partial class MainWindow : Window
         {
             Width = 5 * calScale,
             Height = 5 * calScale,
-            Fill = Brush(0xA7, 0x8B, 0xFA),
+            Fill = Brush(_palette.Accent),
             HorizontalAlignment = System.Windows.HorizontalAlignment.Right,
             VerticalAlignment = VerticalAlignment.Top,
             Margin = new Thickness(0, 1, 1, 0),
