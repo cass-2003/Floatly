@@ -1006,24 +1006,28 @@
                                             <ColumnDefinition Width="126" />
                                             <ColumnDefinition Width="14" />
                                             <ColumnDefinition Width="*" />
-                                            <ColumnDefinition Width="42" />
                                         </Grid.ColumnDefinitions>
                                         <TextBlock Text="每月工作天数" Foreground="{DynamicResource SettingsText}" VerticalAlignment="Center" />
-                                        <TextBox x:Name="TxtWorkDaysPerMonth" Grid.Column="2" Style="{StaticResource UnitInputBox}" />
-                                        <TextBlock Grid.Column="3" Text="天" Foreground="{DynamicResource SettingsMuted}"
-                                                   HorizontalAlignment="Right" VerticalAlignment="Center" />
+                                        <Grid Grid.Column="2">
+                                            <TextBox x:Name="TxtWorkDaysPerMonth" Style="{StaticResource UnitInputBox}" Padding="12,0,34,0" />
+                                            <TextBlock Text="天" Foreground="{DynamicResource SettingsMuted}"
+                                                       HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,12,0"
+                                                       IsHitTestVisible="False" />
+                                        </Grid>
                                     </Grid>
                                     <Grid>
                                         <Grid.ColumnDefinitions>
                                             <ColumnDefinition Width="126" />
                                             <ColumnDefinition Width="14" />
                                             <ColumnDefinition Width="*" />
-                                            <ColumnDefinition Width="42" />
                                         </Grid.ColumnDefinitions>
                                         <TextBlock Text="每日工作小时" Foreground="{DynamicResource SettingsText}" VerticalAlignment="Center" />
-                                        <TextBox x:Name="TxtWorkHoursPerDay" Grid.Column="2" Style="{StaticResource UnitInputBox}" />
-                                        <TextBlock Grid.Column="3" Text="小时" Foreground="{DynamicResource SettingsMuted}"
-                                                   HorizontalAlignment="Right" VerticalAlignment="Center" />
+                                        <Grid Grid.Column="2">
+                                            <TextBox x:Name="TxtWorkHoursPerDay" Style="{StaticResource UnitInputBox}" Padding="12,0,34,0" />
+                                            <TextBlock Text="小时" Foreground="{DynamicResource SettingsMuted}"
+                                                       HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,8,0"
+                                                       IsHitTestVisible="False" />
+                                        </Grid>
                                     </Grid>
                                 </StackPanel>
                             </Border>
