@@ -211,6 +211,8 @@
 | 主面板浅色 release 截图 | `.codex-tmp/ui-audit/widget-release-light-glass-density-v6.png` | 有效 | 最新 release 截图，证明 v6 雾面密度调整已进入安装包/zip 产物，浅色无黑色方底 |
 | 主面板深色 release 截图 | `.codex-tmp/ui-audit/widget-release-dark-glass-density-v6.png` | 有效 | 最新 release 截图，证明 v6 雾面密度调整已进入安装包/zip 产物，深色仍为半透明玻璃而非实心背板 |
 | 主面板自动窗口截图 | `.codex-tmp/ui-audit/floatly-release-card-glare-check.png` | 未生成有效证据 | 当前会话下 `MainWindowHandle=0`，`EnumWindows` 未枚举到 Floatly 顶层窗口，不能作为验收截图 |
+| 主面板当前浅色 release 截图 | `.codex-tmp/ui-audit/widget-release-light-current-v9.png` | 有效 | 最新 release 截图，尺寸 `720 x 1280`，证明番茄钟主按钮圆角模板已进入 release；截图背景仍有文字穿透，后续需继续复核玻璃雾面密度与可读性 |
+| 主面板当前深色 release 截图 | `.codex-tmp/ui-audit/widget-release-dark-current-v9.png` | 有效 | 最新 release 截图，尺寸 `720 x 1280`，证明深色模式下番茄钟主按钮圆角和主面板结构进入 release；背景文字穿透仍需作为后续半透明密度验收点 |
 | 主面板最大尺寸浅色截图 | `.codex-tmp/ui-audit/widget-release-light-max-720x1280-v8.png` | 有效 | 最新 release 截图，证明合法 `720 x 1280` 最大尺寸不再被启动规范化回落到默认尺寸 |
 | 主面板最大尺寸深色截图 | `.codex-tmp/ui-audit/widget-release-dark-max-720x1280-v8.png` | 有效 | 最新 release 截图，证明深色主题最大尺寸完整填满内部设计画布 |
 | 主面板自由低高度浅色截图 | `.codex-tmp/ui-audit/widget-release-light-free-540x620-v8.png` | 有效 | 最新 release 截图，证明自由缩放低高度下内容按宽度等比显示，不被纵向压扁，剩余内容通过垂直滚动查看 |
@@ -222,8 +224,8 @@
 - 设置页对照 `design-3-light.png` 的默认尺寸截图。
 - 设置页最大化/超宽截图已补齐 PrintWindow release 证据。
 - 设置页最小尺寸截图已补齐 PrintWindow release 证据。
-- 主面板对照 `resign-2-dark.png` 的默认尺寸截图。
-- 主面板对照 `resign-2-light.png` 的默认尺寸截图，重点复核黄历摘要“宜/忌”裸字、倒数日/年进度说明行完整显示和番茄钟标题不被环形进度遮挡。
+- 主面板对照 `resign-2-dark.png` 的默认尺寸截图；当前已补最大尺寸 v9 release 截图，但还缺默认 `540 x 960` 桌面小组件尺寸截图。
+- 主面板对照 `resign-2-light.png` 的默认尺寸截图，重点复核黄历摘要“宜/忌”裸字、倒数日/年进度说明行完整显示和番茄钟标题不被环形进度遮挡；当前已补最大尺寸 v9 release 截图，证明番茄钟主按钮圆角进入 release。
 - 主面板最大尺寸截图已补齐 v8 release 证据。
 - 主面板窄尺寸/低高度自由缩放截图已补齐 v8 release 证据。
 - 主面板对照 `resign-1-dark.png`、`resign-1-light.png` 的基础模块复核截图。
