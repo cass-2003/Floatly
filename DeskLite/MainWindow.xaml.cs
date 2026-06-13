@@ -956,10 +956,12 @@ public partial class MainWindow : Window
 
     private double NormalizeWindowWidth(double width)
     {
-        if (!_settings.UserCustomSize ||
-            width >= LegacyForcedMinWidth ||
-            width > MaxWindowWidth ||
-            _settings.WindowHeight >= LegacyForcedMinHeight)
+        if (!_settings.UserCustomSize)
+        {
+            return DefaultWindowWidth;
+        }
+
+        if (width > MaxWindowWidth || IsLegacyForcedSize(width, _settings.WindowHeight))
         {
             return DefaultWindowWidth;
         }
@@ -969,7 +971,7 @@ public partial class MainWindow : Window
 
     private double NormalizeWindowHeight(double height, double? normalizedWidth = null)
     {
-        if (height >= LegacyForcedMinHeight || height > MaxWindowHeight)
+        if (height > MaxWindowHeight)
         {
             return DefaultWindowHeight;
         }
@@ -981,6 +983,9 @@ public partial class MainWindow : Window
 
         return Math.Clamp(height, MinHeight, MaxWindowHeight);
     }
+
+    private static bool IsLegacyForcedSize(double width, double height) =>
+        width >= LegacyForcedMinWidth && height >= LegacyForcedMinHeight;
 
     private bool IsFreeResizeMode() =>
         ResizeModeHelper.Normalize(_settings.ResizeMode) == ResizeModeHelper.Free;
