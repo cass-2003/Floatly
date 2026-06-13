@@ -842,6 +842,7 @@ public partial class MainWindow : Window
         HuangLiStripDivider.Background = Brush(_palette.Divider);
         HuangLiSolarDate.Foreground = Brush(_palette.TextEmpty);
         HuangLiCollapseBtn.Foreground = Brush(_palette.TextEmpty);
+        HuangLiLunarLabelText.Foreground = Brush(_palette.TextSecondary);
         HuangLiLunarLarge.Foreground = Brush(_palette.HuangLiAccent);
         HuangLiMetaLineStrip.Foreground = Brush(_palette.TextEmpty);
         HuangLiDetailNavLine.Foreground = Brush(_palette.TextEmpty);

@@ -274,7 +274,7 @@
                                        VerticalAlignment="Center" HorizontalAlignment="Center" />
                                 <StackPanel Grid.Column="1" VerticalAlignment="Center">
                                     <StackPanel Orientation="Horizontal">
-                                        <TextBlock Text="农历 " FontSize="15" Foreground="#A6FFFFFF" VerticalAlignment="Center" />
+                                        <TextBlock x:Name="HuangLiLunarLabelText" Text="农历 " FontSize="15" Foreground="#A6FFFFFF" VerticalAlignment="Center" />
                                         <TextBlock x:Name="HuangLiLunarLarge" Text="四月廿六" FontSize="21" FontWeight="SemiBold"
                                                    Foreground="#FF8A72" VerticalAlignment="Center" />
                                     </StackPanel>
