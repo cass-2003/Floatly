@@ -58,6 +58,7 @@
 - 设置页主题选择卡的背景、文字、边框和色块已改为随当前主题与选中状态动态更新，不再依赖硬编码卡面色造成深浅主题割裂。
 - 设置页主题选择卡已按 `design-3` 深浅稿细化状态：深色设置页中浅色卡保留浅底深字的浅色预览；浅色设置页中深色卡不整块变成深色面板，只用深色色块表达主题，当前选中态统一靠蓝色边框和勾选表达。
 - 设置页通用 Slider 模板已修复交互命中：保留 4px 细轨道视觉，但外层提供 22px 透明命中区，`Track`、`Thumb` 和两侧 `RepeatButton` 重新按标准 Slider 命令目标工作；窗口透明度、字号大小、背景遮罩透明度等进度条可以拖动，点击轨道也能定位数值。
+- 设置页浅色主题字体颜色字段已改为显示实际生效颜色：当旧配置保存了 `#FFFFFF` 这类在浅色背景下不可读的颜色时，设置页会显示主面板实际回退使用的浅色主题默认深灰蓝，而不是继续误导性显示白色自定义值；保存时不会把这个回退显示值写成新的自定义色。
 - 版本常量已经统一到 `AppConstants.Version = 2.0.22`，设置页运行时会使用该常量覆盖 XAML 初始文本。
 - 上一轮已重新生成 `release/Floatly-Setup-2.0.22.exe` 和 `release/Floatly-2.0.22-win-x64.zip`；在本轮底部工具条、周历占位、黄历“农历”标签、卡片右上角 action 按钮、番茄钟环形轨道主题化和番茄钟遮挡修复代码提交后，需要再次刷新 release 包，确保安装包包含最新浅色主题与布局修复。
 
@@ -116,13 +117,13 @@
 
 ### 2.2 当前风险
 
-- 设置页已接入浅色动态资源，且 `Floatly.exe --settings` 启动冒烟测试已通过；但还没有和 `design-3-dark.png`、`design-3-light.png` 做逐项运行截图对比。
+- 设置页已接入浅色动态资源，且 `Floatly.exe --settings` 启动冒烟测试已通过；已补 `settings-design3-dark-release-v3.png`、`settings-design3-light-release-v4.png` 作为最新 release 深浅截图，但还需要继续做逐项运行截图对比和交互复测。
 - XAML 初始版本文本已改为 `版本`，但需要继续确保 release 文档和截图中的版本展示跟 `AppConstants.Version` 同步。
 - `ContentScrollViewer` 内部内容已居中，并保持 `MaxWidth="1464"`，超宽屏下不再向左贴边。
 - 设置页目前是单页滚动 + 锚点导航，不是真正分页。这个行为可接受，但文档和验收不能写成多页 Tab。
 - 工作时间输入与待办提醒时间输入均已换为项目自有控件，HandyControl 依赖已移除，ComboBox 弹层项、滚动条、模块列表排序 handle、主题选择卡和 Slider 命中区也已主题化；仍需继续检查列表项在深浅背景下是否完全融入 Floatly 风格。
 - 主题卡验收要同时看 `design-3-dark.png` 和 `design-3-light.png`：深色页里的“浅色”卡必须保留浅底深字；浅色页里的“深色”卡不能整块变成深色大色块，只保留深色色块预览和选中边框。
-- 当前 `.codex-tmp/ui-audit/` 中的设置页截图证据无效，需要重新采集并用清晰命名替换。
+- 旧的 `.codex-tmp/ui-audit/screen-dark-settings*.png` 设置页截图证据无效，已保留为作废记录；后续以 `settings-design3-dark-release-v3.png`、`settings-design3-light-release-v4.png` 和 `settings-design3-light-fontcolor-v5.png` 为准。
 
 ### 2.3 下一步设置页任务
 
@@ -189,8 +190,9 @@
 | --- | --- | --- | --- |
 | 设置页深色截图 | `.codex-tmp/ui-audit/screen-dark-settings.png` | 作废 | 截到浏览器页面，不是 Floatly 设置页 |
 | 设置页可见截图 | `.codex-tmp/ui-audit/screen-dark-settings-visible.png` | 作废 | 截到资源管理器/浏览器，不是 Floatly 设置页 |
-| 设置页深色截图 | `.codex-tmp/ui-audit/settings-design3-dark-current-v2.png` | 有效 | 可证明设置页深色主题能启动并渲染 Floatly 设置面板 |
-| 设置页浅色截图 | `.codex-tmp/ui-audit/settings-design3-light-current-v2.png` | 有效 | 可证明设置页浅色主题资源已生效 |
+| 设置页深色截图 | `.codex-tmp/ui-audit/settings-design3-dark-release-v3.png` | 有效 | 最新 release 深色设置页截图，尺寸 `1520 x 980`，可直接对照 `design-3-dark.png` |
+| 设置页浅色截图 | `.codex-tmp/ui-audit/settings-design3-light-release-v4.png` | 有效 | 最新 release 浅色设置页截图，已重新定位到主屏完整裁剪，尺寸 `1520 x 980` |
+| 设置页浅色字体色截图 | `.codex-tmp/ui-audit/settings-design3-light-fontcolor-v5.png` | 有效源码验证 | Debug 构建截图，证明旧配置 `#FFFFFF` 在浅色设置页显示为实际生效的深灰蓝默认色 |
 | 主面板浅色截图 | `.codex-tmp/ui-audit/widget-resign2-light-glass-density-v6.png` | 有效源码验证 | Debug 构建截图，证明浅色主容器仍为圆角半透明玻璃，没有黑色方底；背景文档穿透比 v5 下降 |
 | 主面板深色截图 | `.codex-tmp/ui-audit/widget-resign2-dark-glass-density-v6.png` | 有效源码验证 | Debug 构建截图，证明深色主容器和卡片提高雾面密度后仍保持半透明，不回到额外背板或实心块 |
 | 主面板浅色 release 截图 | `.codex-tmp/ui-audit/widget-release-light-glass-density-v6.png` | 有效 | 最新 release 截图，证明 v6 雾面密度调整已进入安装包/zip 产物，浅色无黑色方底 |
