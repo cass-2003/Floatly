@@ -449,18 +449,18 @@ public partial class MainWindow : Window
 
         return IsLightTheme()
             ? Brush(0xEE, 0xFF, 0xFF, 0xFF)
-            : Brush(0xEA, 0x0B, 0x1C, 0x30);
+            : Brush(0xF0, 0x0B, 0x1C, 0x30);
     }
 
     private System.Windows.Media.Brush CreateGlassCardBrush() =>
         IsLightTheme()
             ? Brush(0xF0, 0xFF, 0xFF, 0xFF)
-            : Brush(0x82, 0x10, 0x24, 0x3A);
+            : Brush(0x92, 0x10, 0x24, 0x3A);
 
     private System.Windows.Media.Brush CreateToolbarBrush() =>
         IsLightTheme()
             ? Brush(0xEC, 0xFF, 0xFF, 0xFF)
-            : Brush(0x78, 0x10, 0x24, 0x3A);
+            : Brush(0x86, 0x10, 0x24, 0x3A);
 
     private System.Windows.Media.Brush CreateGlassBorderBrush() =>
         IsLightTheme()
