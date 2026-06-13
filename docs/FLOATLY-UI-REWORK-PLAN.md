@@ -60,6 +60,7 @@
 - 设置页主题选择卡已按 `design-3` 深浅稿细化状态：深色设置页中浅色卡保留浅底深字的浅色预览；浅色设置页中深色卡不整块变成深色面板，只用深色色块表达主题，当前选中态统一靠蓝色边框和勾选表达。
 - 设置页通用 Slider 模板已修复交互命中：保留 4px 细轨道视觉，但外层提供 22px 透明命中区；`SettingsSlider` 统一接管 `PreviewMouseLeftButtonDown` / `PreviewMouseMove` / `PreviewMouseLeftButtonUp`，按鼠标在整条轨道上的位置实时计算数值，窗口透明度、字号大小、背景遮罩透明度都支持从轨道任意位置按住拖动。
 - 设置页 Slider 已完成 release 运行态拖动复测：`settings-slider-before-drag.png` 到 `settings-slider-after-drag.png` 证明窗口透明度从 `100%` 变为 `51%`、字号从 `12 pt` 变为 `14 pt`；`settings-slider-overlay-after-drag.png` 证明背景遮罩透明度从 `55%` 变为 `58%`，覆盖用户点名的背景遮罩进度条。
+- 设置页“摸鱼收入助手”在最小窗口宽度下已修复输入框单位裁切：`settings-design3-light-min-income-release-v10.png` 证明 release 浅色 `1180 x 760` 状态下“每月工作天数”显示为完整 `22 天`，“每日工作小时”显示为完整 `8 小时`。
 - 设置页浅色主题字体颜色字段已改为显示实际生效颜色：当旧配置保存了 `#FFFFFF` 这类在浅色背景下不可读的颜色时，设置页会显示主面板实际回退使用的浅色主题默认深灰蓝，而不是继续误导性显示白色自定义值；保存时不会把这个回退显示值写成新的自定义色。
 - 版本常量已经统一到 `AppConstants.Version = 2.0.22`，设置页运行时会使用该常量覆盖 XAML 初始文本。
 - 最新一轮已重新生成 `release/Floatly-Setup-2.0.22.exe` 和 `release/Floatly-2.0.22-win-x64.zip`，产物时间为 `2026-06-13 12:17` 左右；安装包和 zip 已包含设置页整条 Slider 轨道拖拽修复。
@@ -123,6 +124,7 @@
 - XAML 初始版本文本已改为 `版本`，但需要继续确保 release 文档和截图中的版本展示跟 `AppConstants.Version` 同步。
 - `ContentScrollViewer` 内部内容已居中，并保持 `MaxWidth="1464"`，超宽屏下不再向左贴边。
 - 设置页已补齐 release 尺寸状态证据：`settings-design3-light-min-1180x760-print-v7.png` 证明最小尺寸下底部栏固定、主体内容滚动；`settings-design3-light-wide-1920x1040-print-v7.png` 证明超宽窗口下内容仍按 `MaxWidth="1464"` 居中，不会无限横向拉伸。
+- 设置页收入助手输入框已补齐 release 最小尺寸证据：`settings-design3-light-min-income-release-v10.png` 证明单位文字改为输入框内叠层后不再挤压数值，不再出现 `2.` 或只剩 `小时` 的裁切。
 - 设置页目前是单页滚动 + 锚点导航，不是真正分页。这个行为可接受，但文档和验收不能写成多页 Tab。
 - 工作时间输入与待办提醒时间输入均已换为项目自有控件，HandyControl 依赖已移除，ComboBox 弹层项、滚动条、模块列表排序 handle、主题选择卡和 Slider 命中区也已主题化；仍需继续检查列表项在深浅背景下是否完全融入 Floatly 风格。
 - 主题卡验收要同时看 `design-3-dark.png` 和 `design-3-light.png`：深色页里的“浅色”卡必须保留浅底深字；浅色页里的“深色”卡不能整块变成深色大色块，只保留深色色块预览和选中边框。
@@ -131,7 +133,7 @@
 ### 2.3 下一步设置页任务
 
 1. 以 `design-3-dark.png` 和 `design-3-light.png` 建立设置页逐项对照表。
-2. 设置页深色默认、浅色默认、最小尺寸、超宽尺寸截图已补齐；后续只需继续做逐项对照和交互回归。
+2. 设置页深色默认、浅色默认、最小尺寸、超宽尺寸截图已补齐；收入助手最小尺寸输入框不裁切也已补齐 release 证据，后续只需继续做逐项对照和交互回归。
 3. 检查列表项在深浅背景下是否仍有原生/第三方割裂感。
 4. 继续用超宽截图复核内容区居中和最大宽度表现。
 5. 检查保存、应用、取消、恢复默认、导航跳转、主题切换、皮肤模式、模块显示开关是否仍可用。
@@ -197,6 +199,7 @@
 | 设置页浅色截图 | `.codex-tmp/ui-audit/settings-design3-light-release-v4.png` | 有效 | 最新 release 浅色设置页截图，已重新定位到主屏完整裁剪，尺寸 `1520 x 980` |
 | 设置页浅色字体色截图 | `.codex-tmp/ui-audit/settings-design3-light-fontcolor-v5.png` | 有效源码验证 | Debug 构建截图，证明旧配置 `#FFFFFF` 在浅色设置页显示为实际生效的深灰蓝默认色 |
 | 设置页最小尺寸浅色截图 | `.codex-tmp/ui-audit/settings-design3-light-min-1180x760-print-v7.png` | 有效 | PrintWindow release 截图，证明 `1180 x 760` 最小尺寸下底部栏固定、主体内容滚动，不被错误遮挡 |
+| 设置页收入助手最小尺寸截图 | `.codex-tmp/ui-audit/settings-design3-light-min-income-release-v10.png` | 有效 | PrintWindow release 截图，证明 `1180 x 760` 浅色最小尺寸下 `22 天` 与 `8 小时` 完整显示，不再被单位文字遮挡或裁切 |
 | 设置页超宽浅色截图 | `.codex-tmp/ui-audit/settings-design3-light-wide-1920x1040-print-v7.png` | 有效 | PrintWindow release 截图，证明超宽窗口下内容区居中且 `MaxWidth` 约束生效 |
 | 设置页 Slider 拖动前 | `.codex-tmp/ui-audit/settings-slider-before-drag.png` | 有效 | release 设置页拖动前截图，透明度 `100%`、字号 `12 pt`、背景遮罩 `55%` |
 | 设置页 Slider 拖动后 | `.codex-tmp/ui-audit/settings-slider-after-drag.png` | 有效 | release 设置页拖动后截图，透明度 `51%`、字号 `14 pt`，证明通用 Slider 可拖动 |
