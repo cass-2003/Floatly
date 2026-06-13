@@ -317,6 +317,8 @@ public partial class MainWindow : Window
         ApplyWorkStateTheme(textPrimary);
         ApplyPomodoroTheme(textPrimary);
         TodoTitleText.Foreground = Brush(_palette.TextMuted);
+        TodoAddBtn.Background = Brush(_palette.HuangLiMutedButton);
+        TodoAddBtn.Foreground = Brush(_palette.Accent);
         EmptyTodoText.Foreground = Brush(_palette.TextEmpty);
         TodoCountBadge.Background = Brush(_palette.TodoCountBadge);
         TodoCountText.Foreground = Brush(_palette.Accent);
@@ -1238,6 +1240,7 @@ public partial class MainWindow : Window
         PomodoroTrack.Background = Brush(_palette.ProgressTrack);
         PomodoroStartBtn.Background = Brush(_palette.TodoAccentButton);
         PomodoroStartBtn.Foreground = System.Windows.Media.Brushes.White;
+        PomodoroSettingsBtn.Foreground = Brush(_palette.TextSecondary);
         PomodoroResetBtn.Foreground = Brush(_palette.TodoLink);
         PomodoroResetBtn.BorderBrush = Brush(_palette.InputBorder);
         RefreshPomodoroUi();

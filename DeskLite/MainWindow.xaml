@@ -514,7 +514,7 @@
                                                 <TextBlock x:Name="TodoCountText" Text="0" FontSize="10" Foreground="#5C8DFF" FontWeight="SemiBold" />
                                             </Border>
                                         </StackPanel>
-                                        <Button Content="+" Width="28" Height="28" HorizontalAlignment="Right" VerticalAlignment="Center"
+                                        <Button x:Name="TodoAddBtn" Content="+" Width="28" Height="28" HorizontalAlignment="Right" VerticalAlignment="Center"
                                                 Click="AddTodo_Click" Background="#20E8F4FF" BorderThickness="0"
                                                 Foreground="#DDE8FF" Cursor="Hand" FontSize="20" />
                                     </Grid>
@@ -614,7 +614,7 @@
                                         <TextBlock x:Name="PomodoroPhaseText" Text="番茄钟" Style="{StaticResource CardTitle}" />
                                         <TextBlock x:Name="PomodoroSessionText" Text="准备开始" FontSize="10" Foreground="#8B95A5"
                                                    HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,28,0" />
-                                        <Button Content="⚙" Width="24" Height="24" Padding="0"
+                                        <Button x:Name="PomodoroSettingsBtn" Content="⚙" Width="24" Height="24" Padding="0"
                                                 Click="OpenSettings_Click" Background="Transparent" BorderThickness="0"
                                                 Foreground="#BFD0EA" Cursor="Hand" FontSize="14"
                                                 HorizontalAlignment="Right" VerticalAlignment="Center"
