@@ -193,8 +193,8 @@
 | 设置页浅色截图 | `.codex-tmp/ui-audit/settings-design3-light-current-v2.png` | 有效 | 可证明设置页浅色主题资源已生效 |
 | 主面板浅色截图 | `.codex-tmp/ui-audit/widget-resign2-light-glass-density-v6.png` | 有效源码验证 | Debug 构建截图，证明浅色主容器仍为圆角半透明玻璃，没有黑色方底；背景文档穿透比 v5 下降 |
 | 主面板深色截图 | `.codex-tmp/ui-audit/widget-resign2-dark-glass-density-v6.png` | 有效源码验证 | Debug 构建截图，证明深色主容器和卡片提高雾面密度后仍保持半透明，不回到额外背板或实心块 |
-| 主面板浅色 release 截图 | `.codex-tmp/ui-audit/widget-release-light-no-hwnd-backdrop.png` | 需刷新 | 旧截图只能证明窗口级 Acrylic 背板已移除，不能证明本轮 v6 雾面密度调整后的 release 状态 |
-| 主面板深色 release 截图 | `.codex-tmp/ui-audit/widget-release-dark-no-hwnd-backdrop.png` | 需刷新 | 旧截图只能证明窗口级 Acrylic 背板已移除，不能证明本轮 v6 雾面密度调整后的 release 状态 |
+| 主面板浅色 release 截图 | `.codex-tmp/ui-audit/widget-release-light-glass-density-v6.png` | 有效 | 最新 release 截图，证明 v6 雾面密度调整已进入安装包/zip 产物，浅色无黑色方底 |
+| 主面板深色 release 截图 | `.codex-tmp/ui-audit/widget-release-dark-glass-density-v6.png` | 有效 | 最新 release 截图，证明 v6 雾面密度调整已进入安装包/zip 产物，深色仍为半透明玻璃而非实心背板 |
 | 主面板自动窗口截图 | `.codex-tmp/ui-audit/floatly-release-card-glare-check.png` | 未生成有效证据 | 当前会话下 `MainWindowHandle=0`，`EnumWindows` 未枚举到 Floatly 顶层窗口，不能作为验收截图 |
 | 主面板最大尺寸截图 | `.codex-tmp/ui-audit/widget-resign2-light-current-v4.png`、`.codex-tmp/ui-audit/widget-resign2-dark-current-v4.png` | 需刷新 | 旧截图可证明黄历摘要默认态、双列模块、工作状态、每日一句、周历/月历和底部工具条的整体结构；本轮 XAML 最大尺寸上限已从 `664 x 1180` 补齐到 `720 x 1280`，需要重新采集最大尺寸截图 |
 
