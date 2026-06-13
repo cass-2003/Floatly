@@ -122,15 +122,16 @@
 - 设置页已接入浅色动态资源，且 `Floatly.exe --settings` 启动冒烟测试已通过；已补 `settings-design3-dark-release-v3.png`、`settings-design3-light-release-v4.png` 作为最新 release 深浅截图，且窗口透明度、字号大小、背景遮罩透明度 Slider 已完成 release 拖动复测；后续还需要继续做逐项运行截图对比。
 - XAML 初始版本文本已改为 `版本`，但需要继续确保 release 文档和截图中的版本展示跟 `AppConstants.Version` 同步。
 - `ContentScrollViewer` 内部内容已居中，并保持 `MaxWidth="1464"`，超宽屏下不再向左贴边。
+- 设置页已补齐 release 尺寸状态证据：`settings-design3-light-min-1180x760-print-v7.png` 证明最小尺寸下底部栏固定、主体内容滚动；`settings-design3-light-wide-1920x1040-print-v7.png` 证明超宽窗口下内容仍按 `MaxWidth="1464"` 居中，不会无限横向拉伸。
 - 设置页目前是单页滚动 + 锚点导航，不是真正分页。这个行为可接受，但文档和验收不能写成多页 Tab。
 - 工作时间输入与待办提醒时间输入均已换为项目自有控件，HandyControl 依赖已移除，ComboBox 弹层项、滚动条、模块列表排序 handle、主题选择卡和 Slider 命中区也已主题化；仍需继续检查列表项在深浅背景下是否完全融入 Floatly 风格。
 - 主题卡验收要同时看 `design-3-dark.png` 和 `design-3-light.png`：深色页里的“浅色”卡必须保留浅底深字；浅色页里的“深色”卡不能整块变成深色大色块，只保留深色色块预览和选中边框。
-- 旧的 `.codex-tmp/ui-audit/screen-dark-settings*.png` 设置页截图证据无效，已保留为作废记录；后续以 `settings-design3-dark-release-v3.png`、`settings-design3-light-release-v4.png` 和 `settings-design3-light-fontcolor-v5.png` 为准。
+- 旧的 `.codex-tmp/ui-audit/screen-dark-settings*.png` 设置页截图证据无效，已保留为作废记录；固定坐标截到浏览器的 `settings-design3-light-min-1180x760-v6/v7.png`、`settings-design3-dark-min-1180x760-v6.png` 也必须作废；后续以 `settings-design3-dark-release-v3.png`、`settings-design3-light-release-v4.png`、`settings-design3-light-fontcolor-v5.png` 和 `*-print-v7.png` 为准。
 
 ### 2.3 下一步设置页任务
 
 1. 以 `design-3-dark.png` 和 `design-3-light.png` 建立设置页逐项对照表。
-2. 重新运行并截图验证深色默认尺寸、浅色默认尺寸、最大化、最小尺寸四种状态，删除或忽略旧的无效 settings 截图。
+2. 设置页深色默认、浅色默认、最小尺寸、超宽尺寸截图已补齐；后续只需继续做逐项对照和交互回归。
 3. 检查列表项在深浅背景下是否仍有原生/第三方割裂感。
 4. 继续用超宽截图复核内容区居中和最大宽度表现。
 5. 检查保存、应用、取消、恢复默认、导航跳转、主题切换、皮肤模式、模块显示开关是否仍可用。
@@ -195,6 +196,8 @@
 | 设置页深色截图 | `.codex-tmp/ui-audit/settings-design3-dark-release-v3.png` | 有效 | 最新 release 深色设置页截图，尺寸 `1520 x 980`，可直接对照 `design-3-dark.png` |
 | 设置页浅色截图 | `.codex-tmp/ui-audit/settings-design3-light-release-v4.png` | 有效 | 最新 release 浅色设置页截图，已重新定位到主屏完整裁剪，尺寸 `1520 x 980` |
 | 设置页浅色字体色截图 | `.codex-tmp/ui-audit/settings-design3-light-fontcolor-v5.png` | 有效源码验证 | Debug 构建截图，证明旧配置 `#FFFFFF` 在浅色设置页显示为实际生效的深灰蓝默认色 |
+| 设置页最小尺寸浅色截图 | `.codex-tmp/ui-audit/settings-design3-light-min-1180x760-print-v7.png` | 有效 | PrintWindow release 截图，证明 `1180 x 760` 最小尺寸下底部栏固定、主体内容滚动，不被错误遮挡 |
+| 设置页超宽浅色截图 | `.codex-tmp/ui-audit/settings-design3-light-wide-1920x1040-print-v7.png` | 有效 | PrintWindow release 截图，证明超宽窗口下内容区居中且 `MaxWidth` 约束生效 |
 | 设置页 Slider 拖动前 | `.codex-tmp/ui-audit/settings-slider-before-drag.png` | 有效 | release 设置页拖动前截图，透明度 `100%`、字号 `12 pt`、背景遮罩 `55%` |
 | 设置页 Slider 拖动后 | `.codex-tmp/ui-audit/settings-slider-after-drag.png` | 有效 | release 设置页拖动后截图，透明度 `51%`、字号 `14 pt`，证明通用 Slider 可拖动 |
 | 设置页背景遮罩拖动后 | `.codex-tmp/ui-audit/settings-slider-overlay-after-drag.png` | 有效 | release 设置页背景遮罩 Slider 拖动后截图，遮罩透明度变为 `58%` |
@@ -212,8 +215,8 @@
 
 - 设置页对照 `design-3-dark.png` 的默认尺寸截图。
 - 设置页对照 `design-3-light.png` 的默认尺寸截图。
-- 设置页最大化截图。
-- 设置页最小尺寸截图。
+- 设置页最大化/超宽截图已补齐 PrintWindow release 证据。
+- 设置页最小尺寸截图已补齐 PrintWindow release 证据。
 - 主面板对照 `resign-2-dark.png` 的默认尺寸截图。
 - 主面板对照 `resign-2-light.png` 的默认尺寸截图，重点复核黄历摘要“宜/忌”裸字、倒数日/年进度说明行完整显示和番茄钟标题不被环形进度遮挡。
 - 主面板最大尺寸截图已补齐 v8 release 证据。
