@@ -61,11 +61,11 @@
 - 设置页主题选择卡的背景、文字、边框和色块已改为随当前主题与选中状态动态更新，不再依赖硬编码卡面色造成深浅主题割裂。
 - 设置页主题选择卡已按 `design-3` 深浅稿细化状态：深色设置页中浅色卡保留浅底深字的浅色预览；浅色设置页中深色卡不整块变成深色面板，只用深色色块表达主题，当前选中态统一靠蓝色边框和勾选表达。
 - 设置页通用 Slider 模板已修复交互命中：保留 4px 细轨道视觉，但控件高度统一为 22px，并在代码层用 `AddHandler(..., handledEventsToo: true)` 绑定三条实际 Slider；内部轨道按钮不再抢占点击，thumb 保留原生拖动路径，窗口透明度、字号大小、背景遮罩透明度都进入同一套拖动处理。
-- 设置页 Slider 已完成 release 运行态拖动复测：`settings-slider-before-drag.png` 到 `settings-slider-after-drag.png` 证明窗口透明度从 `100%` 变为 `51%`、字号从 `12 pt` 变为 `14 pt`；`settings-slider-overlay-after-drag.png` 证明背景遮罩透明度从 `55%` 变为 `58%`。本轮又补充 `settings-slider-overlay-enabled-release-v14.png` 和 UI Automation 状态，确认背景遮罩 Slider 在默认毛玻璃模式下也是 `Enabled=True`、`ReadOnly=False`；抓取 thumb 中心拖动的 release 复测证明背景遮罩值可从 `55` 拖到 `85`。
+- 设置页 Slider 已完成 release 运行态拖动复测：`settings-slider-before-drag.png` 到 `settings-slider-after-drag.png` 证明窗口透明度从 `100%` 变为 `51%`、字号从 `12 pt` 变为 `14 pt`；`settings-slider-overlay-after-drag.png` 证明背景遮罩透明度从 `55%` 变为 `58%`。本轮又补充 `settings-slider-overlay-enabled-release-v14.png` 和 UI Automation 状态，确认背景遮罩 Slider 在默认毛玻璃模式下也是 `Enabled=True`、`ReadOnly=False`；抓取 thumb 中心拖动的 release 复测证明背景遮罩值可从 `55` 拖到 `85`。追加 `settings-slider-overlay-track-drag-release-v15.png` 证明从轨道空白处按下并拖动也可把背景遮罩从 `55` 改到 `67`。
 - 设置页“摸鱼收入助手”在最小窗口宽度下已修复输入框单位裁切：`settings-design3-light-min-income-release-v10.png` 证明 release 浅色 `1180 x 760` 状态下“每月工作天数”显示为完整 `22 天`，“每日工作小时”显示为完整 `8 小时`。
 - 设置页浅色主题字体颜色字段已改为显示实际生效颜色：当旧配置保存了 `#FFFFFF` 这类在浅色背景下不可读的颜色时，设置页会显示主面板实际回退使用的浅色主题默认深灰蓝，而不是继续误导性显示白色自定义值；保存时不会把这个回退显示值写成新的自定义色。
 - 版本常量已经统一到 `AppConstants.Version = 2.0.22`，设置页运行时会使用该常量覆盖 XAML 初始文本。
-- 最新一轮已重新生成 `release/Floatly-Setup-2.0.22.exe` 和 `release/Floatly-2.0.22-win-x64.zip`，产物时间为 `2026-06-13 13:25` 左右；安装包和 zip 已包含设置页 Slider 直接拖拽补强、背景遮罩 Slider 默认启用、收入助手输入框最小尺寸修复、番茄钟主按钮圆角修复和 v10 主面板玻璃可读性修复。
+- 最新一轮已重新生成 `release/Floatly-Setup-2.0.22.exe` 和 `release/Floatly-2.0.22-win-x64.zip`，产物时间为 `2026-06-13 13:41` 左右；安装包和 zip 已包含设置页 Slider 轨道拖动命中层、背景遮罩 Slider 默认启用、收入助手输入框最小尺寸修复、番茄钟主按钮圆角修复和 v10 主面板玻璃可读性修复。
 
 仍未完成或证据不足的部分：
 
@@ -122,7 +122,7 @@
 
 ### 2.2 当前风险
 
-- 设置页已接入浅色动态资源，且 `Floatly.exe --settings` 启动冒烟测试已通过；已补 `settings-design3-dark-release-v3.png`、`settings-design3-light-release-v4.png` 作为最新 release 深浅截图，且窗口透明度、字号大小、背景遮罩透明度 Slider 已完成 release 拖动复测；本轮又补了代码层拖动绑定与背景遮罩默认启用，避免背景遮罩进度条看得见但无法拖。后续还需要继续做逐项运行截图对比。
+- 设置页已接入浅色动态资源，且 `Floatly.exe --settings` 启动冒烟测试已通过；已补 `settings-design3-dark-release-v3.png`、`settings-design3-light-release-v4.png` 作为最新 release 深浅截图，且窗口透明度、字号大小、背景遮罩透明度 Slider 已完成 release 拖动复测；本轮又补了代码层拖动绑定、背景遮罩默认启用和透明命中层，避免背景遮罩进度条看得见但无法从轨道拖动。后续还需要继续做逐项运行截图对比。
 - XAML 初始版本文本已改为 `版本`，但需要继续确保 release 文档和截图中的版本展示跟 `AppConstants.Version` 同步。
 - `ContentScrollViewer` 内部内容已居中，并保持 `MaxWidth="1464"`，超宽屏下不再向左贴边。
 - 设置页已补齐 release 尺寸状态证据：`settings-design3-light-min-1180x760-print-v7.png` 证明最小尺寸下底部栏固定、主体内容滚动；`settings-design3-light-wide-1920x1040-print-v7.png` 证明超宽窗口下内容仍按 `MaxWidth="1464"` 居中，不会无限横向拉伸。
@@ -139,7 +139,7 @@
 3. 检查列表项在深浅背景下是否仍有原生/第三方割裂感。
 4. 继续用超宽截图复核内容区居中和最大宽度表现。
 5. 检查保存、应用、取消、恢复默认、导航跳转、主题切换、皮肤模式、模块显示开关是否仍可用。
-6. 设置页 Slider 已复测通过并补强：窗口透明度、字号大小、背景遮罩透明度都支持拖动 thumb；背景遮罩 Slider 在默认毛玻璃模式下也保持可写。轨道任意位置按住拖动仍需人工回归确认，不能只依赖脚本模拟鼠标。
+6. 设置页 Slider 已复测通过并补强：窗口透明度、字号大小、背景遮罩透明度都支持拖动 thumb；背景遮罩 Slider 在默认毛玻璃模式下也保持可写。`settings-slider-overlay-track-drag-release-v15.png` 已证明从轨道空白位置按下拖动也能更新数值。
 
 ## 3. 主桌面小组件现状
 
@@ -212,6 +212,7 @@
 | 设置页 Slider 拖动后 | `.codex-tmp/ui-audit/settings-slider-after-drag.png` | 有效 | release 设置页拖动后截图，透明度 `51%`、字号 `14 pt`，证明通用 Slider 可拖动 |
 | 设置页背景遮罩拖动后 | `.codex-tmp/ui-audit/settings-slider-overlay-after-drag.png` | 有效 | release 设置页背景遮罩 Slider 拖动后截图，遮罩透明度变为 `58%` |
 | 设置页背景遮罩启用状态 | `.codex-tmp/ui-audit/settings-slider-overlay-enabled-release-v14.png` | 有效 | release 设置页截图和 UI Automation 复核，第三条背景遮罩 Slider 为启用、可写、非只读；thumb 拖动复测可从 `55` 变为 `85` |
+| 设置页背景遮罩轨道拖动 | `.codex-tmp/ui-audit/settings-slider-overlay-track-drag-release-v15.png` | 有效 | release 设置页从背景遮罩 Slider 轨道空白处按下并拖动，数值从 `55` 变为 `67`，证明轨道命中层生效 |
 | 主面板浅色截图 | `.codex-tmp/ui-audit/widget-resign2-light-glass-density-v6.png` | 有效源码验证 | Debug 构建截图，证明浅色主容器仍为圆角半透明玻璃，没有黑色方底；背景文档穿透比 v5 下降 |
 | 主面板深色截图 | `.codex-tmp/ui-audit/widget-resign2-dark-glass-density-v6.png` | 有效源码验证 | Debug 构建截图，证明深色主容器和卡片提高雾面密度后仍保持半透明，不回到额外背板或实心块 |
 | 主面板浅色 release 截图 | `.codex-tmp/ui-audit/widget-release-light-glass-density-v6.png` | 有效 | 最新 release 截图，证明 v6 雾面密度调整已进入安装包/zip 产物，浅色无黑色方底 |
