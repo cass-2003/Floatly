@@ -13,8 +13,8 @@ namespace DeskLite;
 
 public partial class MainWindow : Window
 {
-    private const double DefaultWindowWidth = 540;
-    private const double DefaultWindowHeight = 960;
+    private const double DefaultWindowWidth = 608;
+    private const double DefaultWindowHeight = 1080;
     private const double MaxWindowWidth = 720;
     private const double MaxWindowHeight = 1280;
     private const double WidgetAspectRatio = DefaultWindowWidth / DefaultWindowHeight;

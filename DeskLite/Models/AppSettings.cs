@@ -43,8 +43,8 @@ public sealed class AppSettings
     public string City { get; set; } = "北京";
     public double Left { get; set; } = 100;
     public double Top { get; set; } = 100;
-    public double WindowWidth { get; set; } = 720;
-    public double WindowHeight { get; set; } = 1280;
+    public double WindowWidth { get; set; } = 608;
+    public double WindowHeight { get; set; } = 1080;
     public bool UserCustomSize { get; set; }
     /// <summary>uniform | free</summary>
     public string ResizeMode { get; set; } = "uniform";
