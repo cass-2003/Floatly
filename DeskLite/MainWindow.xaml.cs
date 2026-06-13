@@ -204,8 +204,11 @@ public partial class MainWindow : Window
         ClickThroughToggle.IsChecked = _settings.ClickThrough;
         ThemeToggleIcon.Source = DashboardIconLoader.Load(
             AppThemePalette.Parse(_settings.Theme) == ThemeMode.Light ? "taiyang" : "yueliang");
+        ThemeToggleBtn.Background = Brush(_palette.HuangLiMutedButton);
         ToolbarPinBtn.Foreground = Topmost ? Brush(FloatlyDesignTokens.AccentBlue) : Brush(_palette.TextSecondary);
         QuickSettingsText.Foreground = Brush(_palette.TextSecondary);
+        OpacityValueText.Foreground = Brush(_palette.TextSecondary);
+        FontSizeValueText.Foreground = Brush(_palette.TextSecondary);
         ClickThroughLabel.Foreground = Brush(_palette.TextSecondary);
         SyncClickThroughSwitch();
     }
@@ -232,7 +235,7 @@ public partial class MainWindow : Window
     {
         ClickThroughSwitch.Background = _settings.ClickThrough
             ? Brush(FloatlyDesignTokens.AccentBlue)
-            : Brush(0x30, 0xE8, 0xF4, 0xFF);
+            : Brush(_palette.HuangLiMutedButton);
         ClickThroughKnob.HorizontalAlignment = _settings.ClickThrough
             ? System.Windows.HorizontalAlignment.Right
             : System.Windows.HorizontalAlignment.Left;
@@ -1523,7 +1526,7 @@ public partial class MainWindow : Window
         {
             Text = "查看全部  ›",
             FontSize = FontScaleHelper.CalSize(11, _settings.FontScale),
-            Foreground = Brush(0xCC, 0xDD, 0xE8, 0xFF),
+            Foreground = Brush(_palette.TodoLink),
             VerticalAlignment = VerticalAlignment.Center
         };
         Grid.SetColumn(viewAll, 1);
@@ -1575,7 +1578,7 @@ public partial class MainWindow : Window
         {
             Text = text,
             FontSize = FontScaleHelper.CalSize(12, _settings.FontScale),
-            Foreground = Brush(0xD8, 0xE8, 0xF1, 0xFF),
+            Foreground = Brush(_palette.TextSecondary),
             TextTrimming = TextTrimming.CharacterEllipsis,
             VerticalAlignment = VerticalAlignment.Center
         };
@@ -1584,8 +1587,8 @@ public partial class MainWindow : Window
 
         return new Border
         {
-            Background = Brush(0x34, 0xE8, 0xF4, 0xFF),
-            BorderBrush = Brush(0x18, 0xE4, 0xF0, 0xFF),
+            Background = Brush(_palette.TodoCardBackground),
+            BorderBrush = Brush(_palette.TodoCardBorder),
             BorderThickness = new Thickness(1),
             CornerRadius = new CornerRadius(9),
             Padding = new Thickness(10, 7, 12, 7),
