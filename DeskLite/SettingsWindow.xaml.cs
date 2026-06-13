@@ -74,6 +74,7 @@ public partial class SettingsWindow : Window
     private bool _isInitializing = true;
     private System.Windows.Controls.TextBox? _recordingHotkeyBox;
     private string? _selectedFontColor;
+    private bool _fontColorUsesThemeDefault;
     private IReadOnlyList<string> _availableFontFamilies = [];
 
     public AppSettings? Result { get; private set; }
@@ -407,6 +408,8 @@ public partial class SettingsWindow : Window
 
     private static WpfColor Color(byte a, byte r, byte g, byte b) => WpfColor.FromArgb(a, r, g, b);
 
+    private static string ToHex(WpfColor color) => $"#{color.R:X2}{color.G:X2}{color.B:X2}";
+
     private void SetBrush(string key, WpfColor color)
     {
         Resources[key] = new SolidColorBrush(color);
@@ -571,7 +574,13 @@ public partial class SettingsWindow : Window
     private void LoadFontColorSettings(AppSettings s)
     {
         FontColorPalette.Children.Clear();
-        _selectedFontColor = FontColorHelper.NormalizeHex(s.PrimaryTextColor);
+        var themeMode = AppThemePalette.Parse(s.Theme);
+        var themeDefault = AppThemePalette.For(themeMode).TextPrimary;
+        var savedColor = FontColorHelper.NormalizeHex(s.PrimaryTextColor);
+        var effectiveColor = FontColorHelper.ResolvePrimary(themeDefault, savedColor, themeMode);
+        var effectiveHex = ToHex(effectiveColor);
+        _fontColorUsesThemeDefault = savedColor is null || !string.Equals(savedColor, effectiveHex, StringComparison.OrdinalIgnoreCase);
+        _selectedFontColor = _fontColorUsesThemeDefault ? null : savedColor;
 
         foreach (var hex in FontColorHelper.PresetHexColors)
         {
@@ -594,7 +603,7 @@ public partial class SettingsWindow : Window
             FontColorPalette.Children.Add(btn);
         }
 
-        TxtCustomFontColor.Text = _selectedFontColor ?? "#FFFFFF";
+        TxtCustomFontColor.Text = effectiveHex;
         UpdateFontColorSelection();
     }
 
@@ -620,6 +629,7 @@ public partial class SettingsWindow : Window
         }
 
         _selectedFontColor = hex;
+        _fontColorUsesThemeDefault = false;
         TxtCustomFontColor.Text = hex;
         UpdateFontColorSelection();
     }
@@ -627,6 +637,7 @@ public partial class SettingsWindow : Window
     private void BtnClearFontColor_Click(object sender, RoutedEventArgs e)
     {
         _selectedFontColor = null;
+        _fontColorUsesThemeDefault = true;
         TxtCustomFontColor.Text = string.Empty;
         UpdateFontColorSelection();
     }
@@ -1036,7 +1047,7 @@ public partial class SettingsWindow : Window
         s.FontScale = FontScaleHelper.PtToScale(fontPt);
         s.FontFamily = FontFamilyHelper.ResolveName(CmbFontFamily.Text);
         var customColor = FontColorHelper.NormalizeHex(TxtCustomFontColor.Text);
-        s.PrimaryTextColor = string.IsNullOrWhiteSpace(TxtCustomFontColor.Text)
+        s.PrimaryTextColor = _fontColorUsesThemeDefault || string.IsNullOrWhiteSpace(TxtCustomFontColor.Text)
             ? null
             : customColor ?? _selectedFontColor;
         s.SkinMode = RbSkinVideo.IsChecked == true
