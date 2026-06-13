@@ -606,11 +606,11 @@
                                 <Grid x:Name="PomodoroPanel" Visibility="Collapsed">
                                     <Grid.RowDefinitions>
                                         <RowDefinition Height="Auto" />
-                                        <RowDefinition Height="138" />
+                                        <RowDefinition Height="156" />
                                         <RowDefinition Height="Auto" />
                                         <RowDefinition Height="Auto" />
                                     </Grid.RowDefinitions>
-                                    <Grid Grid.Row="0" Margin="0,0,0,4">
+                                    <Grid Grid.Row="0" Margin="0,0,0,8">
                                         <TextBlock x:Name="PomodoroPhaseText" Text="番茄钟" Style="{StaticResource CardTitle}" />
                                         <TextBlock x:Name="PomodoroSessionText" Text="准备开始" FontSize="10" Foreground="#8B95A5"
                                                    HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,28,0" />
@@ -620,7 +620,7 @@
                                                 HorizontalAlignment="Right" VerticalAlignment="Center"
                                                 ToolTip="番茄钟设置" />
                                     </Grid>
-                                    <Grid Grid.Row="1" Width="148" Height="148" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,-4,0,-2">
+                                    <Grid Grid.Row="1" Width="148" Height="148" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,0,4">
                                         <Path x:Name="PomodoroRingTrack" Stroke="#28FFFFFF" StrokeThickness="8" Fill="Transparent"
                                               StrokeStartLineCap="Round" StrokeEndLineCap="Round" />
                                         <Path x:Name="PomodoroRingProgress" Stroke="#5C8DFF" StrokeThickness="8" Fill="Transparent"
@@ -637,7 +637,7 @@
                                             Click="PomodoroStart_Click" Background="#5C8DFF" Foreground="White"
                                             BorderThickness="0" Cursor="Hand" FontSize="15" FontWeight="SemiBold" HorizontalAlignment="Center" />
                                     <TextBlock x:Name="PomodoroHintText" Grid.Row="3" Text="专注更高效，休息更放松" FontSize="11" Foreground="#8B95A5"
-                                               HorizontalAlignment="Center" Margin="0,6,0,0" />
+                                               HorizontalAlignment="Center" Margin="0,5,0,0" />
                                     <Button x:Name="PomodoroResetBtn" Grid.Row="3" Content="重置" Height="22" Padding="0" Margin="0,6,0,0"
                                             Click="PomodoroReset_Click" Background="Transparent" Foreground="#8B95A5"
                                             BorderThickness="0" Cursor="Hand" FontSize="10" HorizontalAlignment="Right" VerticalAlignment="Top"
