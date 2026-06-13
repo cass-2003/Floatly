@@ -273,8 +273,9 @@ public partial class MainWindow : Window
 
     private void ApplyTheme()
     {
-        _palette = AppThemePalette.For(AppThemePalette.Parse(_settings.Theme));
-        var textPrimary = FontColorHelper.ResolvePrimary(_palette.TextPrimary, _settings.PrimaryTextColor);
+        var themeMode = AppThemePalette.Parse(_settings.Theme);
+        _palette = AppThemePalette.For(themeMode);
+        var textPrimary = FontColorHelper.ResolvePrimary(_palette.TextPrimary, _settings.PrimaryTextColor, themeMode);
         var cardBorder = CreateGlassBorderBrush();
 
         MainBorder.Background = CreateMainPanelBackground();
@@ -1481,7 +1482,7 @@ public partial class MainWindow : Window
             {
                 Text = noteText,
                 FontSize = FontScaleHelper.CalSize(12, _settings.FontScale),
-                Foreground = Brush(0xD8, 0xE8, 0xF1, 0xFF),
+                Foreground = Brush(_palette.TextSecondary),
                 TextTrimming = TextTrimming.CharacterEllipsis,
                 VerticalAlignment = VerticalAlignment.Center
             };
@@ -1490,8 +1491,8 @@ public partial class MainWindow : Window
 
             WeekAgendaPanel.Children.Add(new Border
             {
-                Background = Brush(0x34, 0xE8, 0xF4, 0xFF),
-                BorderBrush = Brush(0x18, 0xE4, 0xF0, 0xFF),
+                Background = Brush(_palette.TodoCardBackground),
+                BorderBrush = Brush(_palette.TodoCardBorder),
                 BorderThickness = new Thickness(1),
                 CornerRadius = new CornerRadius(9),
                 Padding = new Thickness(10, 7, 12, 7),

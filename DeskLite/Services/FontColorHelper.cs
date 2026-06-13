@@ -53,4 +53,43 @@ public static class FontColorHelper
     {
         return TryParseHex(overrideHex) ?? themeDefault;
     }
+
+    public static WpfColor ResolvePrimary(WpfColor themeDefault, string? overrideHex, ThemeMode themeMode)
+    {
+        var custom = TryParseHex(overrideHex);
+        if (custom is null)
+        {
+            return themeDefault;
+        }
+
+        var background = themeMode == ThemeMode.Light
+            ? WpfColor.FromRgb(0xFF, 0xFF, 0xFF)
+            : WpfColor.FromRgb(0x0B, 0x1C, 0x30);
+
+        return ContrastRatio(custom.Value, background) >= 3.0
+            ? custom.Value
+            : themeDefault;
+    }
+
+    private static double ContrastRatio(WpfColor a, WpfColor b)
+    {
+        var lighter = Math.Max(RelativeLuminance(a), RelativeLuminance(b));
+        var darker = Math.Min(RelativeLuminance(a), RelativeLuminance(b));
+        return (lighter + 0.05) / (darker + 0.05);
+    }
+
+    private static double RelativeLuminance(WpfColor color)
+    {
+        static double Channel(byte value)
+        {
+            var normalized = value / 255.0;
+            return normalized <= 0.03928
+                ? normalized / 12.92
+                : Math.Pow((normalized + 0.055) / 1.055, 2.4);
+        }
+
+        return 0.2126 * Channel(color.R) +
+               0.7152 * Channel(color.G) +
+               0.0722 * Channel(color.B);
+    }
 }
