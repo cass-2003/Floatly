@@ -29,7 +29,7 @@
 - 主窗口默认深浅主题背景已改为均匀半透明圆角容器：浅色约 `0xD8` 白色玻璃底，深色约 `0xDE` 暗蓝玻璃底，避免主容器径向亮区透过卡片后看起来像卡片偏光。
 - 主窗口视频皮肤 `MediaElement` 已从常驻 XAML 树移除，改为视频模式按需动态创建，规避透明 WPF 窗口被媒体层撑出黑色方形背板。
 - 主窗口深色主题已压低 `GlassSheen` 白色叠层，并移除默认主容器径向高光，避免出现突兀白色聚光块或所有卡片同向偏光。
-- 主窗口深色主容器和模块卡片已进一步提高雾面密度，减少复杂网页/表格背景直透，避免看起来像一层灰色透明薄膜。
+- 主窗口深色主容器和模块卡片已进一步提高雾面密度，减少复杂网页/表格背景直透，避免看起来像一层灰色透明薄膜；`widget-resign2-dark-current-v5.png` 暴露出背景文档文字仍严重穿透后，已用均匀 alpha 小幅加密为 v6 状态，保持半透明玻璃但让待办、番茄钟、日历等文字区域更稳定。
 - 主窗口默认主容器已从径向渐变收敛为单一暗蓝半透明底；模块卡片继续使用均匀半透明色，贴近 `resign-2-dark.png` 的稳定暗蓝玻璃底。
 - 主窗口普通模块卡片和底部工具条已移除方向性 `LinearGradientBrush`，统一改为均匀半透明玻璃面；外层 `GlassSheen` 也已置为透明，避免卡片出现偏光/扫光。
 - 主窗口图片类卡片的遮罩层也已移除方向性渐变：每日一句、浅色薪水遮罩和默认卡片/工具条 fallback 都改为均匀半透明 tint。
@@ -159,8 +159,8 @@
 - 窗口默认缩放后视觉密度比设计图更紧凑，需要用最新运行截图确认是否仍足够可读；新增自由缩放模式后，还需确认低高度窗口可垂直滚动且关键文字不遮挡。
 - `MainWindow.ApplyModuleOrder()` 当前保留固定视觉网格，设置页只表达模块显示；若未来要支持真实排序，需要重新设计主面板栅格规则，不能简单按列表重排。
 - 主窗口最大尺寸已与内部 `720 x 1280` 设计画布一致，且 XAML 顶层最大值也已同步；后续重点转为默认 `540 x 960` 的可读性和窄尺寸表现。
-- 当前浅色主窗口已去掉 XAML 深色默认底、常驻媒体层和默认主容器径向亮区，黄历摘要行首样式与“农历”标签、双进度卡说明裁切、主文字自定义白色回退、待办/番茄钟 action 按钮、番茄钟环形轨道、番茄钟标题遮挡、周历日程占位和底部工具条局部控件也已按主题 palette 修正；release 包需要用新截图复核是否彻底消除黑色方形背板、卡片偏光、局部深色残留和文字遮挡。
-- 当前深色主窗口同样改为半透明圆角容器，不再依赖窗口级或媒体层背板；白色聚光感和默认主容器径向亮区已移除，普通卡片和图片卡片遮罩偏光均已移除，仍需继续按设计图控制卡片层次和稳定可读性。
+- 当前浅色主窗口已去掉 XAML 深色默认底、常驻媒体层和默认主容器径向亮区，黄历摘要行首样式与“农历”标签、双进度卡说明裁切、主文字自定义白色回退、待办/番茄钟 action 按钮、番茄钟环形轨道、番茄钟标题遮挡、周历日程占位和底部工具条局部控件也已按主题 palette 修正；v6 截图显示浅色玻璃壳不再有黑色方底，但仍保留设计图的白色半透明圆角容器。
+- 当前深色主窗口同样改为半透明圆角容器，不再依赖窗口级或媒体层背板；白色聚光感和默认主容器径向亮区已移除，普通卡片和图片卡片遮罩偏光均已移除。v6 截图显示深色面板不再像实心背板，但背景文字穿透已比 v5 明显下降，后续仍需继续按设计图控制卡片层次和稳定可读性。
 - 背景素材不作为本轮阻塞项，但文本遮罩和可读性仍必须验收。
 - `OffWorkCard`、`SalaryPanel`、`DailyQuoteBanner` 已改为由 `ApplyWorkStateTheme()` 按深浅主题切换遮罩、文字、分割线和标签胶囊；浅色截图已证明不再残留大面积深色卡片。
 
@@ -191,8 +191,10 @@
 | 设置页可见截图 | `.codex-tmp/ui-audit/screen-dark-settings-visible.png` | 作废 | 截到资源管理器/浏览器，不是 Floatly 设置页 |
 | 设置页深色截图 | `.codex-tmp/ui-audit/settings-design3-dark-current-v2.png` | 有效 | 可证明设置页深色主题能启动并渲染 Floatly 设置面板 |
 | 设置页浅色截图 | `.codex-tmp/ui-audit/settings-design3-light-current-v2.png` | 有效 | 可证明设置页浅色主题资源已生效 |
-| 主面板浅色截图 | `.codex-tmp/ui-audit/widget-release-light-no-hwnd-backdrop.png` | 需刷新 | 旧截图只能证明窗口级 Acrylic 背板已移除，不能证明本轮媒体层、初始背景和主容器径向亮区移除后的状态 |
-| 主面板深色截图 | `.codex-tmp/ui-audit/widget-release-dark-no-hwnd-backdrop.png` | 需刷新 | 旧截图只能证明窗口级 Acrylic 背板已移除，不能证明本轮媒体层、初始背景和主容器径向亮区移除后的状态 |
+| 主面板浅色截图 | `.codex-tmp/ui-audit/widget-resign2-light-glass-density-v6.png` | 有效源码验证 | Debug 构建截图，证明浅色主容器仍为圆角半透明玻璃，没有黑色方底；背景文档穿透比 v5 下降 |
+| 主面板深色截图 | `.codex-tmp/ui-audit/widget-resign2-dark-glass-density-v6.png` | 有效源码验证 | Debug 构建截图，证明深色主容器和卡片提高雾面密度后仍保持半透明，不回到额外背板或实心块 |
+| 主面板浅色 release 截图 | `.codex-tmp/ui-audit/widget-release-light-no-hwnd-backdrop.png` | 需刷新 | 旧截图只能证明窗口级 Acrylic 背板已移除，不能证明本轮 v6 雾面密度调整后的 release 状态 |
+| 主面板深色 release 截图 | `.codex-tmp/ui-audit/widget-release-dark-no-hwnd-backdrop.png` | 需刷新 | 旧截图只能证明窗口级 Acrylic 背板已移除，不能证明本轮 v6 雾面密度调整后的 release 状态 |
 | 主面板自动窗口截图 | `.codex-tmp/ui-audit/floatly-release-card-glare-check.png` | 未生成有效证据 | 当前会话下 `MainWindowHandle=0`，`EnumWindows` 未枚举到 Floatly 顶层窗口，不能作为验收截图 |
 | 主面板最大尺寸截图 | `.codex-tmp/ui-audit/widget-resign2-light-current-v4.png`、`.codex-tmp/ui-audit/widget-resign2-dark-current-v4.png` | 需刷新 | 旧截图可证明黄历摘要默认态、双列模块、工作状态、每日一句、周历/月历和底部工具条的整体结构；本轮 XAML 最大尺寸上限已从 `664 x 1180` 补齐到 `720 x 1280`，需要重新采集最大尺寸截图 |
 
