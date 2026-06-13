@@ -344,7 +344,6 @@ public partial class MainWindow : Window
         RefreshScratch();
         SyncBottomToolbar();
 
-        PomodoroRingTrack.Stroke = Brush(0x34, 0xE8, 0xF4, 0xFF);
         CountdownFill.Background = new SolidColorBrush(FloatlyDesignTokens.AccentOrange);
 
         Resources["TodoTextBrush"] = Brush(_palette.TodoText);
@@ -1238,6 +1237,7 @@ public partial class MainWindow : Window
         PomodoroCenterStatusText.Foreground = Brush(_palette.TextSecondary);
         PomodoroHintText.Foreground = Brush(_palette.TextSubtle);
         PomodoroTrack.Background = Brush(_palette.ProgressTrack);
+        PomodoroRingTrack.Stroke = Brush(_palette.ProgressTrack);
         PomodoroStartBtn.Background = Brush(_palette.TodoAccentButton);
         PomodoroStartBtn.Foreground = System.Windows.Media.Brushes.White;
         PomodoroSettingsBtn.Foreground = Brush(_palette.TextSecondary);
