@@ -279,7 +279,7 @@ public partial class MainWindow : Window
 
         MainBorder.Background = CreateMainPanelBackground();
         MainBorder.BorderBrush = cardBorder;
-        WidgetScaleBox.Stretch = IsFreeResizeMode() ? Stretch.Fill : Stretch.Uniform;
+        ApplyResizeModeLayout();
         ApplySkinVideo();
         ApplySkinOverlay();
         DividerBorder.Background = new SolidColorBrush(_palette.Divider);
@@ -978,6 +978,22 @@ public partial class MainWindow : Window
 
     private bool IsFreeResizeMode() =>
         ResizeModeHelper.Normalize(_settings.ResizeMode) == ResizeModeHelper.Free;
+
+    private void ApplyResizeModeLayout()
+    {
+        var freeResize = IsFreeResizeMode();
+        WidgetScaleBox.Stretch = Stretch.Uniform;
+        WidgetScaleBox.HorizontalAlignment = System.Windows.HorizontalAlignment.Stretch;
+        WidgetScaleBox.VerticalAlignment = freeResize
+            ? System.Windows.VerticalAlignment.Top
+            : System.Windows.VerticalAlignment.Stretch;
+        WidgetScrollViewer.VerticalScrollBarVisibility = freeResize
+            ? ScrollBarVisibility.Auto
+            : ScrollBarVisibility.Disabled;
+        WidgetScrollViewer.PanningMode = freeResize
+            ? PanningMode.VerticalOnly
+            : PanningMode.None;
+    }
 
     private void OnWindowSizeChanged(object sender, SizeChangedEventArgs e)
     {

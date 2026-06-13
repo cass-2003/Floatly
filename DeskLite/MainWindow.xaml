@@ -92,11 +92,17 @@
         </Style>
     </Window.Resources>
 
+    <Grid>
+    <ScrollViewer x:Name="WidgetScrollViewer"
+                  HorizontalScrollBarVisibility="Disabled"
+                  VerticalScrollBarVisibility="Disabled"
+                  PanningMode="VerticalOnly"
+                  Background="Transparent">
     <Viewbox x:Name="WidgetScaleBox"
              Stretch="Uniform"
              StretchDirection="Both"
              HorizontalAlignment="Stretch"
-             VerticalAlignment="Stretch">
+             VerticalAlignment="Top">
     <Border x:Name="MainBorder"
             Width="720"
             Height="1280"
@@ -941,19 +947,20 @@
                             Click="AddTodo_Click" Background="#5C8DFF" Foreground="White" BorderThickness="0" Cursor="Hand" FontSize="11" />
                 </Grid>
             </Grid>
-
-            <Grid x:Name="ResizeGripLayer">
-                <Thumb Style="{StaticResource ResizeGripThumb}" Width="12" HorizontalAlignment="Left" Cursor="SizeWE" DragDelta="ResizeLeft_DragDelta" />
-                <Thumb Style="{StaticResource ResizeGripThumb}" Width="12" HorizontalAlignment="Right" Cursor="SizeWE" DragDelta="ResizeRight_DragDelta" />
-                <Thumb Style="{StaticResource ResizeGripThumb}" Height="12" VerticalAlignment="Top" Cursor="SizeNS" DragDelta="ResizeTop_DragDelta" />
-                <Thumb Style="{StaticResource ResizeGripThumb}" Height="12" VerticalAlignment="Bottom" Cursor="SizeNS" DragDelta="ResizeBottom_DragDelta" />
-                <Thumb Style="{StaticResource ResizeGripThumb}" Width="18" Height="18" HorizontalAlignment="Left" VerticalAlignment="Top" Cursor="SizeNWSE" DragDelta="ResizeTopLeft_DragDelta" />
-                <Thumb Style="{StaticResource ResizeGripThumb}" Width="18" Height="18" HorizontalAlignment="Right" VerticalAlignment="Top" Cursor="SizeNESW" DragDelta="ResizeTopRight_DragDelta" />
-                <Thumb Style="{StaticResource ResizeGripThumb}" Width="18" Height="18" HorizontalAlignment="Left" VerticalAlignment="Bottom" Cursor="SizeNESW" DragDelta="ResizeBottomLeft_DragDelta" />
-                <Thumb Style="{StaticResource ResizeGripThumb}" Width="18" Height="18" HorizontalAlignment="Right" VerticalAlignment="Bottom" Cursor="SizeNWSE" DragDelta="ResizeBottomRight_DragDelta" />
-            </Grid>
         </Grid>
     </Border>
     </Viewbox>
+    </ScrollViewer>
+    <Grid x:Name="ResizeGripLayer">
+        <Thumb Style="{StaticResource ResizeGripThumb}" Width="12" HorizontalAlignment="Left" Cursor="SizeWE" DragDelta="ResizeLeft_DragDelta" />
+        <Thumb Style="{StaticResource ResizeGripThumb}" Width="12" HorizontalAlignment="Right" Cursor="SizeWE" DragDelta="ResizeRight_DragDelta" />
+        <Thumb Style="{StaticResource ResizeGripThumb}" Height="12" VerticalAlignment="Top" Cursor="SizeNS" DragDelta="ResizeTop_DragDelta" />
+        <Thumb Style="{StaticResource ResizeGripThumb}" Height="12" VerticalAlignment="Bottom" Cursor="SizeNS" DragDelta="ResizeBottom_DragDelta" />
+        <Thumb Style="{StaticResource ResizeGripThumb}" Width="18" Height="18" HorizontalAlignment="Left" VerticalAlignment="Top" Cursor="SizeNWSE" DragDelta="ResizeTopLeft_DragDelta" />
+        <Thumb Style="{StaticResource ResizeGripThumb}" Width="18" Height="18" HorizontalAlignment="Right" VerticalAlignment="Top" Cursor="SizeNESW" DragDelta="ResizeTopRight_DragDelta" />
+        <Thumb Style="{StaticResource ResizeGripThumb}" Width="18" Height="18" HorizontalAlignment="Left" VerticalAlignment="Bottom" Cursor="SizeNESW" DragDelta="ResizeBottomLeft_DragDelta" />
+        <Thumb Style="{StaticResource ResizeGripThumb}" Width="18" Height="18" HorizontalAlignment="Right" VerticalAlignment="Bottom" Cursor="SizeNWSE" DragDelta="ResizeBottomRight_DragDelta" />
+    </Grid>
+    </Grid>
 </Window>
 
