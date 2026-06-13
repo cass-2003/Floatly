@@ -72,6 +72,40 @@
                 </Setter.Value>
             </Setter>
         </Style>
+        <Style x:Key="PomodoroPrimaryButton" TargetType="Button">
+            <Setter Property="Padding" Value="0" />
+            <Setter Property="BorderThickness" Value="0" />
+            <Setter Property="Foreground" Value="White" />
+            <Setter Property="Background" Value="#5C8DFF" />
+            <Setter Property="Cursor" Value="Hand" />
+            <Setter Property="FontSize" Value="15" />
+            <Setter Property="FontWeight" Value="SemiBold" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="Chrome"
+                                Background="{TemplateBinding Background}"
+                                CornerRadius="10"
+                                SnapsToDevicePixels="True">
+                            <ContentPresenter HorizontalAlignment="Center"
+                                              VerticalAlignment="Center"
+                                              RecognizesAccessKey="True" />
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="Chrome" Property="Opacity" Value="0.92" />
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter TargetName="Chrome" Property="Opacity" Value="0.82" />
+                            </Trigger>
+                            <Trigger Property="IsEnabled" Value="False">
+                                <Setter TargetName="Chrome" Property="Opacity" Value="0.48" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
         <Style x:Key="HeroCard" TargetType="Border">
             <Setter Property="Background" Value="Transparent" />
             <Setter Property="BorderBrush" Value="Transparent" />
@@ -633,9 +667,9 @@
                                     <Border x:Name="PomodoroTrack" Height="0" Width="0" Visibility="Collapsed">
                                         <Border x:Name="PomodoroFill" Width="0" />
                                     </Border>
-                                    <Button x:Name="PomodoroStartBtn" Grid.Row="2" Content="开始专注" Height="34" Padding="0" Width="216"
-                                            Click="PomodoroStart_Click" Background="#5C8DFF" Foreground="White"
-                                            BorderThickness="0" Cursor="Hand" FontSize="15" FontWeight="SemiBold" HorizontalAlignment="Center" />
+                                    <Button x:Name="PomodoroStartBtn" Grid.Row="2" Content="开始专注" Height="34" Width="216"
+                                            Click="PomodoroStart_Click" Style="{StaticResource PomodoroPrimaryButton}"
+                                            HorizontalAlignment="Center" />
                                     <TextBlock x:Name="PomodoroHintText" Grid.Row="3" Text="专注更高效，休息更放松" FontSize="11" Foreground="#8B95A5"
                                                HorizontalAlignment="Center" Margin="0,5,0,0" />
                                     <Button x:Name="PomodoroResetBtn" Grid.Row="3" Content="重置" Height="22" Padding="0" Margin="0,6,0,0"
