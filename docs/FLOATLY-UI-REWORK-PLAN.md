@@ -58,11 +58,11 @@
 - 设置页模块列表的排序 handle 已从误导性的图标字符改为轻量 `...`，行高从 22 调为 24，更接近 `design-3` 的列表节奏。
 - 设置页主题选择卡的背景、文字、边框和色块已改为随当前主题与选中状态动态更新，不再依赖硬编码卡面色造成深浅主题割裂。
 - 设置页主题选择卡已按 `design-3` 深浅稿细化状态：深色设置页中浅色卡保留浅底深字的浅色预览；浅色设置页中深色卡不整块变成深色面板，只用深色色块表达主题，当前选中态统一靠蓝色边框和勾选表达。
-- 设置页通用 Slider 模板已修复交互命中：保留 4px 细轨道视觉，但外层提供 22px 透明命中区，`Track`、`Thumb` 和两侧 `RepeatButton` 重新按标准 Slider 命令目标工作；窗口透明度、字号大小、背景遮罩透明度等进度条可以拖动，点击轨道也能定位数值。
+- 设置页通用 Slider 模板已修复交互命中：保留 4px 细轨道视觉，但外层提供 22px 透明命中区；`SettingsSlider` 统一接管 `PreviewMouseLeftButtonDown` / `PreviewMouseMove` / `PreviewMouseLeftButtonUp`，按鼠标在整条轨道上的位置实时计算数值，窗口透明度、字号大小、背景遮罩透明度都支持从轨道任意位置按住拖动。
 - 设置页 Slider 已完成 release 运行态拖动复测：`settings-slider-before-drag.png` 到 `settings-slider-after-drag.png` 证明窗口透明度从 `100%` 变为 `51%`、字号从 `12 pt` 变为 `14 pt`；`settings-slider-overlay-after-drag.png` 证明背景遮罩透明度从 `55%` 变为 `58%`，覆盖用户点名的背景遮罩进度条。
 - 设置页浅色主题字体颜色字段已改为显示实际生效颜色：当旧配置保存了 `#FFFFFF` 这类在浅色背景下不可读的颜色时，设置页会显示主面板实际回退使用的浅色主题默认深灰蓝，而不是继续误导性显示白色自定义值；保存时不会把这个回退显示值写成新的自定义色。
 - 版本常量已经统一到 `AppConstants.Version = 2.0.22`，设置页运行时会使用该常量覆盖 XAML 初始文本。
-- 上一轮已重新生成 `release/Floatly-Setup-2.0.22.exe` 和 `release/Floatly-2.0.22-win-x64.zip`；在本轮底部工具条、周历占位、黄历“农历”标签、卡片右上角 action 按钮、番茄钟环形轨道主题化和番茄钟遮挡修复代码提交后，需要再次刷新 release 包，确保安装包包含最新浅色主题与布局修复。
+- 最新一轮已重新生成 `release/Floatly-Setup-2.0.22.exe` 和 `release/Floatly-2.0.22-win-x64.zip`，产物时间为 `2026-06-13 12:17` 左右；安装包和 zip 已包含设置页整条 Slider 轨道拖拽修复。
 
 仍未完成或证据不足的部分：
 
@@ -119,7 +119,7 @@
 
 ### 2.2 当前风险
 
-- 设置页已接入浅色动态资源，且 `Floatly.exe --settings` 启动冒烟测试已通过；已补 `settings-design3-dark-release-v3.png`、`settings-design3-light-release-v4.png` 作为最新 release 深浅截图，且窗口透明度、字号大小、背景遮罩透明度 Slider 已完成 release 拖动复测；后续还需要继续做逐项运行截图对比。
+- 设置页已接入浅色动态资源，且 `Floatly.exe --settings` 启动冒烟测试已通过；已补 `settings-design3-dark-release-v3.png`、`settings-design3-light-release-v4.png` 作为最新 release 深浅截图，且窗口透明度、字号大小、背景遮罩透明度 Slider 已完成 release 拖动复测；本轮又补了统一轨道拖拽处理，避免只能点定位、按住拖动不连续的问题。后续还需要继续做逐项运行截图对比。
 - XAML 初始版本文本已改为 `版本`，但需要继续确保 release 文档和截图中的版本展示跟 `AppConstants.Version` 同步。
 - `ContentScrollViewer` 内部内容已居中，并保持 `MaxWidth="1464"`，超宽屏下不再向左贴边。
 - 设置页已补齐 release 尺寸状态证据：`settings-design3-light-min-1180x760-print-v7.png` 证明最小尺寸下底部栏固定、主体内容滚动；`settings-design3-light-wide-1920x1040-print-v7.png` 证明超宽窗口下内容仍按 `MaxWidth="1464"` 居中，不会无限横向拉伸。
@@ -135,7 +135,7 @@
 3. 检查列表项在深浅背景下是否仍有原生/第三方割裂感。
 4. 继续用超宽截图复核内容区居中和最大宽度表现。
 5. 检查保存、应用、取消、恢复默认、导航跳转、主题切换、皮肤模式、模块显示开关是否仍可用。
-6. 设置页 Slider 已复测通过：窗口透明度、字号大小、背景遮罩透明度都支持拖动 thumb；后续只需在做最终设置页验收时顺带确认禁用态清晰显示。
+6. 设置页 Slider 已复测通过并补强：窗口透明度、字号大小、背景遮罩透明度都支持拖动 thumb；当前实现还支持从轨道任意位置按住拖动，后续只需在做最终设置页验收时顺带确认禁用态清晰显示。
 
 ## 3. 主桌面小组件现状
 
