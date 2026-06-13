@@ -301,6 +301,9 @@
                                     </Thumb>
                                 </Track.Thumb>
                             </Track>
+                            <Border x:Name="SliderInteractionLayer"
+                                    Background="Transparent"
+                                    Cursor="Hand" />
                         </Grid>
                         <ControlTemplate.Triggers>
                             <Trigger Property="IsEnabled" Value="False">
