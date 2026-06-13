@@ -606,7 +606,7 @@
                                 <Grid x:Name="PomodoroPanel" Visibility="Collapsed">
                                     <Grid.RowDefinitions>
                                         <RowDefinition Height="Auto" />
-                                        <RowDefinition Height="156" />
+                                        <RowDefinition Height="132" />
                                         <RowDefinition Height="Auto" />
                                         <RowDefinition Height="Auto" />
                                     </Grid.RowDefinitions>
@@ -620,13 +620,13 @@
                                                 HorizontalAlignment="Right" VerticalAlignment="Center"
                                                 ToolTip="番茄钟设置" />
                                     </Grid>
-                                    <Grid Grid.Row="1" Width="148" Height="148" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,0,4">
+                                    <Grid Grid.Row="1" Width="128" Height="128" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,0,4">
                                         <Path x:Name="PomodoroRingTrack" Stroke="#28FFFFFF" StrokeThickness="8" Fill="Transparent"
                                               StrokeStartLineCap="Round" StrokeEndLineCap="Round" />
                                         <Path x:Name="PomodoroRingProgress" Stroke="#5C8DFF" StrokeThickness="8" Fill="Transparent"
                                               StrokeStartLineCap="Round" StrokeEndLineCap="Round" />
                                         <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
-                                            <TextBlock x:Name="PomodoroCountdownText" Text="25:00" FontSize="32" FontWeight="SemiBold" Foreground="#FFFFFF" HorizontalAlignment="Center" />
+                                            <TextBlock x:Name="PomodoroCountdownText" Text="25:00" FontSize="30" FontWeight="SemiBold" Foreground="#FFFFFF" HorizontalAlignment="Center" />
                                             <TextBlock x:Name="PomodoroCenterStatusText" Text="准备开始" FontSize="11" Foreground="#A6FFFFFF" HorizontalAlignment="Center" Margin="0,2,0,0" />
                                         </StackPanel>
                                     </Grid>
