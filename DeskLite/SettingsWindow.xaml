@@ -241,42 +241,48 @@
             <Setter Property="Minimum" Value="0" />
             <Setter Property="Maximum" Value="100" />
             <Setter Property="Height" Value="20" />
+            <Setter Property="IsMoveToPointEnabled" Value="True" />
+            <Setter Property="LargeChange" Value="1" />
             <Setter Property="VerticalAlignment" Value="Center" />
             <Setter Property="Margin" Value="0,0,12,0" />
             <Setter Property="Foreground" Value="{DynamicResource SettingsAccent}" />
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="Slider">
-                        <Grid Height="22" VerticalAlignment="Center">
+                        <Grid x:Name="SliderHitArea" Height="22" VerticalAlignment="Center" Background="Transparent" SnapsToDevicePixels="True">
                             <Border Height="4"
                                     Margin="7,0"
                                     CornerRadius="2"
                                     Background="{DynamicResource SettingsSliderTrack}"
                                     VerticalAlignment="Center" />
-                            <Track x:Name="PART_Track" Margin="7,0">
+                            <Track x:Name="PART_Track" Margin="7,0" Height="22" VerticalAlignment="Center">
                                 <Track.DecreaseRepeatButton>
                                     <RepeatButton Command="Slider.DecreaseLarge"
+                                                  CommandTarget="{Binding RelativeSource={RelativeSource TemplatedParent}}"
                                                   BorderThickness="0"
                                                   Background="{DynamicResource SettingsAccent}"
                                                   IsTabStop="False">
                                         <RepeatButton.Template>
                                             <ControlTemplate TargetType="RepeatButton">
-                                                <Border Height="4"
-                                                        Background="{TemplateBinding Background}"
-                                                        CornerRadius="2"
-                                                        VerticalAlignment="Center" />
+                                                <Grid Background="Transparent">
+                                                    <Border Height="4"
+                                                            Background="{TemplateBinding Background}"
+                                                            CornerRadius="2"
+                                                            VerticalAlignment="Center" />
+                                                </Grid>
                                             </ControlTemplate>
                                         </RepeatButton.Template>
                                     </RepeatButton>
                                 </Track.DecreaseRepeatButton>
                                 <Track.IncreaseRepeatButton>
                                     <RepeatButton Command="Slider.IncreaseLarge"
+                                                  CommandTarget="{Binding RelativeSource={RelativeSource TemplatedParent}}"
                                                   BorderThickness="0"
                                                   Background="Transparent"
                                                   IsTabStop="False">
                                         <RepeatButton.Template>
                                             <ControlTemplate TargetType="RepeatButton">
-                                                <Border Background="Transparent" />
+                                                <Grid Background="Transparent" />
                                             </ControlTemplate>
                                         </RepeatButton.Template>
                                     </RepeatButton>
@@ -292,6 +298,11 @@
                                 </Track.Thumb>
                             </Track>
                         </Grid>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsEnabled" Value="False">
+                                <Setter TargetName="SliderHitArea" Property="Opacity" Value="0.45" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>
