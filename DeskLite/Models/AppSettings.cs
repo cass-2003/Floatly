@@ -13,7 +13,7 @@ public sealed class AppSettings
     public bool AutoLocateCity { get; set; } = true;
     public bool ShowWeekStrip { get; set; } = true;
     public bool ShowHuangLi { get; set; } = true;
-    public bool HuangLiCollapsed { get; set; }
+    public bool HuangLiCollapsed { get; set; } = true;
     public bool ShowYearProgress { get; set; } = true;
     public bool ShowCountdown { get; set; } = true;
     public bool ShowDailyQuote { get; set; } = true;
@@ -43,9 +43,11 @@ public sealed class AppSettings
     public string City { get; set; } = "北京";
     public double Left { get; set; } = 100;
     public double Top { get; set; } = 100;
-    public double WindowWidth { get; set; } = 720;
-    public double WindowHeight { get; set; } = 1280;
+    public double WindowWidth { get; set; } = 608;
+    public double WindowHeight { get; set; } = 1080;
     public bool UserCustomSize { get; set; }
+    /// <summary>uniform | free</summary>
+    public string ResizeMode { get; set; } = "uniform";
     public double FontScale { get; set; } = 1.0;
     /// <summary>UI font size in pt (10-16). Null in older settings files migrates from <see cref="FontScale"/>.</summary>
     public int? FontSizePt { get; set; }

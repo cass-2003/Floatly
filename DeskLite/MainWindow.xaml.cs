@@ -13,10 +13,10 @@ namespace DeskLite;
 
 public partial class MainWindow : Window
 {
-    private const double DefaultWindowWidth = 540;
-    private const double DefaultWindowHeight = 960;
-    private const double MaxWindowWidth = 664;
-    private const double MaxWindowHeight = 1180;
+    private const double DefaultWindowWidth = 608;
+    private const double DefaultWindowHeight = 1080;
+    private const double MaxWindowWidth = 720;
+    private const double MaxWindowHeight = 1280;
     private const double WidgetAspectRatio = DefaultWindowWidth / DefaultWindowHeight;
     private const double LegacyForcedMinWidth = 880;
     private const double LegacyForcedMinHeight = 900;
@@ -38,6 +38,7 @@ public partial class MainWindow : Window
     private GlobalHotkeyService? _hotkeyService;
     private AppThemePalette _palette = AppThemePalette.For(ThemeMode.Dark);
     private bool _suppressSizePersist;
+    private MediaElement? _skinVideo;
     private TodoListWindow? _todoListWindow;
     private ScratchPadWindow? _scratchPadWindow;
     private SettingsWindow? _settingsWindow;
@@ -107,7 +108,7 @@ public partial class MainWindow : Window
 
     private void Window_SourceInitialized(object? sender, EventArgs e)
     {
-        WindowHelper.EnableGlassBackdrop(this);
+        WindowHelper.ApplyRoundedRegion(this, 22);
         WindowHelper.EnableBorderlessResize(this);
         WindowHelper.SetClickThrough(this, _settings.ClickThrough);
         if (_settings.EnableGlobalHotkey)
@@ -130,6 +131,7 @@ public partial class MainWindow : Window
 
     private void ApplySettings()
     {
+        _settings.ResizeMode = ResizeModeHelper.Normalize(_settings.ResizeMode);
         Topmost = _settings.AlwaysOnTop;
         Left = _settings.Left;
         Top = _settings.Top;
@@ -202,7 +204,12 @@ public partial class MainWindow : Window
         ClickThroughToggle.IsChecked = _settings.ClickThrough;
         ThemeToggleIcon.Source = DashboardIconLoader.Load(
             AppThemePalette.Parse(_settings.Theme) == ThemeMode.Light ? "taiyang" : "yueliang");
+        ThemeToggleBtn.Background = Brush(_palette.HuangLiMutedButton);
         ToolbarPinBtn.Foreground = Topmost ? Brush(FloatlyDesignTokens.AccentBlue) : Brush(_palette.TextSecondary);
+        QuickSettingsText.Foreground = Brush(_palette.TextSecondary);
+        OpacityValueText.Foreground = Brush(_palette.TextSecondary);
+        FontSizeValueText.Foreground = Brush(_palette.TextSecondary);
+        ClickThroughLabel.Foreground = Brush(_palette.TextSecondary);
         SyncClickThroughSwitch();
     }
 
@@ -228,7 +235,7 @@ public partial class MainWindow : Window
     {
         ClickThroughSwitch.Background = _settings.ClickThrough
             ? Brush(FloatlyDesignTokens.AccentBlue)
-            : Brush(0x30, 0xE8, 0xF4, 0xFF);
+            : Brush(_palette.HuangLiMutedButton);
         ClickThroughKnob.HorizontalAlignment = _settings.ClickThrough
             ? System.Windows.HorizontalAlignment.Right
             : System.Windows.HorizontalAlignment.Left;
@@ -269,14 +276,16 @@ public partial class MainWindow : Window
 
     private void ApplyTheme()
     {
-        _palette = AppThemePalette.For(AppThemePalette.Parse(_settings.Theme));
-        var textPrimary = FontColorHelper.ResolvePrimary(_palette.TextPrimary, _settings.PrimaryTextColor);
+        var themeMode = AppThemePalette.Parse(_settings.Theme);
+        _palette = AppThemePalette.For(themeMode);
+        var textPrimary = FontColorHelper.ResolvePrimary(_palette.TextPrimary, _settings.PrimaryTextColor, themeMode);
+        var cardBorder = CreateGlassBorderBrush();
 
         MainBorder.Background = CreateMainPanelBackground();
-        MainBorder.BorderBrush = Brush(FloatlyDesignTokens.CardBorder);
+        MainBorder.BorderBrush = cardBorder;
+        ApplyResizeModeLayout();
         ApplySkinVideo();
         ApplySkinOverlay();
-        ApplyContentBackdrop();
         DividerBorder.Background = new SolidColorBrush(_palette.Divider);
 
         ClockText.Foreground = Brush(textPrimary);
@@ -287,11 +296,12 @@ public partial class MainWindow : Window
         HeaderBlock.Background = System.Windows.Media.Brushes.Transparent;
         HeaderBlock.BorderBrush = System.Windows.Media.Brushes.Transparent;
         ApplyModuleCardTheme();
-        BottomToolbar.Background = System.Windows.Media.Brushes.Transparent;
-        QuickSettingsPill.Background = CreateToolbarBrush();
-        QuickSettingsPill.BorderBrush = Brush(FloatlyDesignTokens.CardBorder);
-        QuickActionsPill.Background = CreateToolbarBrush();
-        QuickActionsPill.BorderBrush = Brush(FloatlyDesignTokens.CardBorder);
+        BottomToolbar.Background = CreateToolbarBrush();
+        BottomToolbar.BorderBrush = cardBorder;
+        QuickSettingsPill.Background = System.Windows.Media.Brushes.Transparent;
+        QuickSettingsPill.BorderBrush = System.Windows.Media.Brushes.Transparent;
+        QuickActionsPill.Background = System.Windows.Media.Brushes.Transparent;
+        QuickActionsPill.BorderBrush = System.Windows.Media.Brushes.Transparent;
         ApplyHuangLiTheme();
         WeatherTempText.Foreground = Brush(textPrimary);
         WeatherDescText.Foreground = Brush(textPrimary);
@@ -304,9 +314,11 @@ public partial class MainWindow : Window
         PinBtn.Foreground = Topmost ? Brush(FloatlyDesignTokens.AccentBlue) : Brush(_palette.TextSecondary);
         ApplyProgressTheme(textPrimary);
         ApplySalaryTheme();
+        ApplyWorkStateTheme(textPrimary);
         ApplyPomodoroTheme(textPrimary);
-        DailyQuoteText.Foreground = Brush(_palette.TextPrimary);
         TodoTitleText.Foreground = Brush(_palette.TextMuted);
+        TodoAddBtn.Background = Brush(_palette.HuangLiMutedButton);
+        TodoAddBtn.Foreground = Brush(_palette.Accent);
         EmptyTodoText.Foreground = Brush(_palette.TextEmpty);
         TodoCountBadge.Background = Brush(_palette.TodoCountBadge);
         TodoCountText.Foreground = Brush(_palette.Accent);
@@ -332,7 +344,6 @@ public partial class MainWindow : Window
         RefreshScratch();
         SyncBottomToolbar();
 
-        PomodoroRingTrack.Stroke = Brush(0x34, 0xE8, 0xF4, 0xFF);
         CountdownFill.Background = new SolidColorBrush(FloatlyDesignTokens.AccentOrange);
 
         Resources["TodoTextBrush"] = Brush(_palette.TodoText);
@@ -363,22 +374,11 @@ public partial class MainWindow : Window
         SkinOverlay.Visibility = Visibility.Visible;
     }
 
-    private void ApplyContentBackdrop()
-    {
-        var skinMode = SkinService.NormalizeMode(_settings.SkinMode);
-        var useBackdrop = skinMode is SkinService.ModeDefault or SkinService.ModeSolid;
-        ContentBackdrop.Visibility = useBackdrop ? Visibility.Visible : Visibility.Collapsed;
-        if (useBackdrop)
-        {
-            ContentBackdrop.Background = CreateContentBackdropBrush();
-        }
-    }
-
     private void ApplyModuleCardTheme()
     {
         var cardBg = CreateGlassCardBrush();
-        var cardBorder = Brush(FloatlyDesignTokens.CardBorder);
-        var trackBg = Brush(FloatlyDesignTokens.ProgressTrack);
+        var cardBorder = CreateGlassBorderBrush();
+        var trackBg = Brush(_palette.ProgressTrack);
 
         Resources["WidgetGlassCardBrush"] = cardBg;
         Resources["WidgetGlassBorderBrush"] = cardBorder;
@@ -410,11 +410,22 @@ public partial class MainWindow : Window
 
     private void ApplyWidgetGlassResources()
     {
-        Resources["TodoCardBgBrush"] = Brush(0x24, 0xE8, 0xF4, 0xFF);
-        Resources["TodoCardBorderBrush"] = Brush(0x2E, 0xE4, 0xF0, 0xFF);
-        TodoOverflowBtn.Background = Brush(0x24, 0xE8, 0xF4, 0xFF);
-        TodoCountBadge.Background = Brush(0x24, 0x5C, 0x8D, 0xFF);
-        ScratchCountBadge.Background = Brush(0x24, 0x5C, 0x8D, 0xFF);
+        var isLight = IsLightTheme();
+        Resources["TodoCardBgBrush"] = isLight
+            ? Brush(0xB8, 0xFF, 0xFF, 0xFF)
+            : Brush(0x24, 0xE8, 0xF4, 0xFF);
+        Resources["TodoCardBorderBrush"] = isLight
+            ? Brush(0x24, 0x15, 0x23, 0x42)
+            : Brush(0x2E, 0xE4, 0xF0, 0xFF);
+        TodoOverflowBtn.Background = isLight
+            ? Brush(0x70, 0xF8, 0xFA, 0xFC)
+            : Brush(0x24, 0xE8, 0xF4, 0xFF);
+        TodoCountBadge.Background = isLight
+            ? Brush(0x16, 0x25, 0x63, 0xEB)
+            : Brush(0x24, 0x5C, 0x8D, 0xFF);
+        ScratchCountBadge.Background = isLight
+            ? Brush(0x16, 0x25, 0x63, 0xEB)
+            : Brush(0x24, 0x5C, 0x8D, 0xFF);
     }
 
     private System.Windows.Media.Brush CreateMainPanelBackground()
@@ -431,121 +442,79 @@ public partial class MainWindow : Window
 
         if (skinMode is SkinService.ModeSolid or SkinService.ModeVideo)
         {
-            var solid = FloatlyDesignTokens.PanelBackground;
-            return Brush(solid.A, solid.R, solid.G, solid.B);
+            return IsLightTheme()
+                ? Brush(0xD8, 0xFF, 0xFF, 0xFF)
+                : Brush(0xE0, 0x0A, 0x1B, 0x31);
         }
 
-        return new RadialGradientBrush
-        {
-            RadiusX = 1.05,
-            RadiusY = 0.92,
-            Center = new System.Windows.Point(0.34, 0.05),
-            GradientOrigin = new System.Windows.Point(0.28, -0.05),
-            GradientStops =
-            {
-                new GradientStop(FloatlyDesignTokens.PanelGlow, 0.0),
-                new GradientStop(FloatlyDesignTokens.PanelBackground, 0.38),
-                new GradientStop(System.Windows.Media.Color.FromArgb(0xE0, 0x07, 0x14, 0x25), 1.0)
-            }
-        };
+        return IsLightTheme()
+            ? Brush(0xEE, 0xFF, 0xFF, 0xFF)
+            : Brush(0xF0, 0x0B, 0x1C, 0x30);
     }
 
-    private static System.Windows.Media.Brush CreateContentBackdropBrush() =>
-        CreateLinearBrush(
-            [
-                new GradientStop(FloatlyDesignTokens.ContentBackdrop, 0.0),
-                new GradientStop(System.Windows.Media.Color.FromArgb(0x08, 0xFF, 0xFF, 0xFF), 0.18),
-                new GradientStop(System.Windows.Media.Color.FromArgb(0x14, 0x12, 0x2A, 0x45), 0.58),
-                new GradientStop(System.Windows.Media.Color.FromArgb(0x32, 0x07, 0x15, 0x27), 1.0)
-            ],
-            new System.Windows.Point(0, 0),
-            new System.Windows.Point(1, 1));
+    private System.Windows.Media.Brush CreateGlassCardBrush() =>
+        IsLightTheme()
+            ? Brush(0xF0, 0xFF, 0xFF, 0xFF)
+            : Brush(0x92, 0x10, 0x24, 0x3A);
 
-    private static System.Windows.Media.Brush CreateGlassCardBrush() =>
-        CreateLinearBrush(
-            [
-                new GradientStop(FloatlyDesignTokens.CardHighlight, 0.0),
-                new GradientStop(FloatlyDesignTokens.CardBackground, 0.22),
-                new GradientStop(FloatlyDesignTokens.CardBackgroundMid, 0.58),
-                new GradientStop(FloatlyDesignTokens.CardBackgroundDeep, 1.0)
-            ],
-            new System.Windows.Point(0, 0),
-            new System.Windows.Point(1, 1));
+    private System.Windows.Media.Brush CreateToolbarBrush() =>
+        IsLightTheme()
+            ? Brush(0xEC, 0xFF, 0xFF, 0xFF)
+            : Brush(0x86, 0x10, 0x24, 0x3A);
 
-    private static System.Windows.Media.Brush CreateToolbarBrush() =>
-        CreateLinearBrush(
-            [
-                new GradientStop(FloatlyDesignTokens.ToolbarBackground, 0.0),
-                new GradientStop(System.Windows.Media.Color.FromArgb(0x4C, 0x0F, 0x20, 0x35), 1.0)
-            ],
-            new System.Windows.Point(0, 0),
-            new System.Windows.Point(1, 0));
+    private System.Windows.Media.Brush CreateGlassBorderBrush() =>
+        IsLightTheme()
+            ? Brush(0x20, 0x15, 0x23, 0x42)
+            : Brush(0x30, 0xE4, 0xF0, 0xFF);
 
-    private static LinearGradientBrush CreateLinearBrush(
-        IEnumerable<GradientStop> stops,
-        System.Windows.Point start,
-        System.Windows.Point end)
-    {
-        var brush = new LinearGradientBrush
-        {
-            StartPoint = start,
-            EndPoint = end
-        };
-
-        foreach (var stop in stops)
-        {
-            brush.GradientStops.Add(stop);
-        }
-
-        return brush;
-    }
+    private bool IsLightTheme() => AppThemePalette.Parse(_settings.Theme) == ThemeMode.Light;
 
     private void ApplySkinVideo()
     {
         var isVideoMode = SkinService.NormalizeMode(_settings.SkinMode) == SkinService.ModeVideo;
         if (!isVideoMode)
         {
-            SkinVideo.Stop();
-            SkinVideo.Source = null;
-            SkinVideo.Visibility = Visibility.Collapsed;
+            RemoveSkinVideo();
             return;
         }
 
         var path = SkinService.ResolveVideoPath(_settings.SkinVideoPath);
         if (path is null)
         {
-            SkinVideo.Stop();
-            SkinVideo.Source = null;
-            SkinVideo.Visibility = Visibility.Collapsed;
+            RemoveSkinVideo();
             return;
         }
 
+        var skinVideo = EnsureSkinVideo();
         var uri = new Uri(path, UriKind.Absolute);
-        if (!Equals(SkinVideo.Source, uri))
+        if (!Equals(skinVideo.Source, uri))
         {
-            SkinVideo.Source = uri;
+            skinVideo.Source = uri;
         }
 
-        SkinVideo.Visibility = Visibility.Visible;
+        SkinVideoHost.Visibility = Visibility.Visible;
+        skinVideo.Visibility = Visibility.Visible;
         UpdateSkinVideoPlayback();
     }
 
     private void UpdateSkinVideoPlayback()
     {
+        var skinVideo = _skinVideo;
         if (SkinService.NormalizeMode(_settings.SkinMode) != SkinService.ModeVideo ||
-            SkinVideo.Visibility != Visibility.Visible ||
-            SkinVideo.Source is null)
+            skinVideo is null ||
+            SkinVideoHost.Visibility != Visibility.Visible ||
+            skinVideo.Source is null)
         {
             return;
         }
 
         if (IsVisible)
         {
-            SkinVideo.Play();
+            skinVideo.Play();
         }
         else
         {
-            SkinVideo.Pause();
+            skinVideo.Pause();
         }
     }
 
@@ -553,8 +522,53 @@ public partial class MainWindow : Window
 
     private void SkinVideo_MediaEnded(object sender, RoutedEventArgs e)
     {
-        SkinVideo.Position = TimeSpan.Zero;
-        SkinVideo.Play();
+        if (_skinVideo is null)
+        {
+            return;
+        }
+
+        _skinVideo.Position = TimeSpan.Zero;
+        _skinVideo.Play();
+    }
+
+    private MediaElement EnsureSkinVideo()
+    {
+        if (_skinVideo is not null)
+        {
+            return _skinVideo;
+        }
+
+        var skinVideo = new MediaElement
+        {
+            LoadedBehavior = MediaState.Manual,
+            UnloadedBehavior = MediaState.Stop,
+            IsMuted = true,
+            Volume = 0,
+            Stretch = Stretch.UniformToFill,
+            Visibility = Visibility.Collapsed,
+            IsHitTestVisible = false
+        };
+        skinVideo.Loaded += SkinVideo_Loaded;
+        skinVideo.MediaEnded += SkinVideo_MediaEnded;
+        SkinVideoHost.Children.Add(skinVideo);
+        _skinVideo = skinVideo;
+        return skinVideo;
+    }
+
+    private void RemoveSkinVideo()
+    {
+        SkinVideoHost.Visibility = Visibility.Collapsed;
+        if (_skinVideo is null)
+        {
+            return;
+        }
+
+        _skinVideo.Stop();
+        _skinVideo.Source = null;
+        _skinVideo.Loaded -= SkinVideo_Loaded;
+        _skinVideo.MediaEnded -= SkinVideo_MediaEnded;
+        SkinVideoHost.Children.Clear();
+        _skinVideo = null;
     }
 
     private void UpdateCalendarModeButtons()
@@ -821,18 +835,22 @@ public partial class MainWindow : Window
     {
         var border = Brush(_palette.HuangLiBorder);
         HuangLiPanel.Background = CreateGlassCardBrush();
-        HuangLiPanel.BorderBrush = Brush(FloatlyDesignTokens.CardBorder);
+        HuangLiPanel.BorderBrush = CreateGlassBorderBrush();
+        HeroLunarStrip.Background = IsLightTheme()
+            ? Brush(0xD8, 0xFF, 0xFF, 0xFF)
+            : Brush(0x6A, 0x1F, 0x38, 0x55);
+        HeroLunarStrip.BorderBrush = CreateGlassBorderBrush();
+        HuangLiStripDivider.Background = Brush(_palette.Divider);
         HuangLiSolarDate.Foreground = Brush(_palette.TextEmpty);
         HuangLiCollapseBtn.Foreground = Brush(_palette.TextEmpty);
+        HuangLiLunarLabelText.Foreground = Brush(_palette.TextSecondary);
         HuangLiLunarLarge.Foreground = Brush(_palette.HuangLiAccent);
         HuangLiMetaLineStrip.Foreground = Brush(_palette.TextEmpty);
         HuangLiDetailNavLine.Foreground = Brush(_palette.TextEmpty);
         HuangLiPrevBtn.Foreground = Brush(_palette.HuangLiAccent);
         HuangLiNextBtn.Foreground = Brush(_palette.HuangLiAccent);
-        HuangLiYiCircle.Background = Brush(_palette.HuangLiYiChipBg);
-        HuangLiJiCircle.Background = Brush(_palette.HuangLiJiChipBg);
-        HuangLiYiCircleText.Foreground = Brush(_palette.HuangLiYi);
-        HuangLiJiCircleText.Foreground = Brush(_palette.HuangLiJi);
+        HuangLiYiMarkText.Foreground = Brush(_palette.HuangLiYi);
+        HuangLiJiMarkText.Foreground = Brush(_palette.HuangLiJi);
         HuangLiCurrentYiCircle.Background = Brush(_palette.HuangLiYiCircle);
         HuangLiCurrentJiCircle.Background = Brush(_palette.HuangLiJiCircle);
         HuangLiCurrentZhiCircle.Background = Brush(_palette.HuangLiAccent);
@@ -938,10 +956,12 @@ public partial class MainWindow : Window
 
     private double NormalizeWindowWidth(double width)
     {
-        if (!_settings.UserCustomSize ||
-            width >= LegacyForcedMinWidth ||
-            width > MaxWindowWidth ||
-            _settings.WindowHeight >= LegacyForcedMinHeight)
+        if (!_settings.UserCustomSize)
+        {
+            return DefaultWindowWidth;
+        }
+
+        if (width > MaxWindowWidth || IsLegacyForcedSize(width, _settings.WindowHeight))
         {
             return DefaultWindowWidth;
         }
@@ -951,12 +971,12 @@ public partial class MainWindow : Window
 
     private double NormalizeWindowHeight(double height, double? normalizedWidth = null)
     {
-        if (height >= LegacyForcedMinHeight || height > MaxWindowHeight)
+        if (height > MaxWindowHeight)
         {
             return DefaultWindowHeight;
         }
 
-        if (normalizedWidth is { } width)
+        if (!IsFreeResizeMode() && normalizedWidth is { } width)
         {
             return Math.Clamp(width / WidgetAspectRatio, MinHeight, MaxWindowHeight);
         }
@@ -964,8 +984,32 @@ public partial class MainWindow : Window
         return Math.Clamp(height, MinHeight, MaxWindowHeight);
     }
 
+    private static bool IsLegacyForcedSize(double width, double height) =>
+        width >= LegacyForcedMinWidth && height >= LegacyForcedMinHeight;
+
+    private bool IsFreeResizeMode() =>
+        ResizeModeHelper.Normalize(_settings.ResizeMode) == ResizeModeHelper.Free;
+
+    private void ApplyResizeModeLayout()
+    {
+        var freeResize = IsFreeResizeMode();
+        WidgetScaleBox.Stretch = Stretch.Uniform;
+        WidgetScaleBox.HorizontalAlignment = System.Windows.HorizontalAlignment.Stretch;
+        WidgetScaleBox.VerticalAlignment = freeResize
+            ? System.Windows.VerticalAlignment.Top
+            : System.Windows.VerticalAlignment.Stretch;
+        WidgetScrollViewer.VerticalScrollBarVisibility = freeResize
+            ? ScrollBarVisibility.Auto
+            : ScrollBarVisibility.Disabled;
+        WidgetScrollViewer.PanningMode = freeResize
+            ? PanningMode.VerticalOnly
+            : PanningMode.None;
+    }
+
     private void OnWindowSizeChanged(object sender, SizeChangedEventArgs e)
     {
+        WindowHelper.ApplyRoundedRegion(this, 22);
+
         if (_suppressSizePersist || !IsLoaded)
         {
             return;
@@ -1120,6 +1164,76 @@ public partial class MainWindow : Window
         SalaryWorkDurationText.Foreground = Brush(0xE6, 0xFF, 0xF5, 0xD6);
     }
 
+    private void ApplyWorkStateTheme(System.Windows.Media.Color textPrimary)
+    {
+        var isLight = AppThemePalette.Parse(_settings.Theme) == ThemeMode.Light;
+        if (isLight)
+        {
+            OffWorkImageLayer.Opacity = 0.16;
+            OffWorkTintOverlay.Background = Brush(0xD6, 0xFF, 0xFF, 0xFF);
+            OffWorkLabel.Foreground = Brush(_palette.TextSecondary);
+            OffWorkMainText.Foreground = Brush(textPrimary);
+            OffWorkCaption.Foreground = Brush(_palette.TextSubtle);
+            OffWorkDetail.Foreground = Brush(_palette.TextSubtle);
+            OffWorkModePillBorder.Background = Brush(0x68, 0xF8, 0xFA, 0xFC);
+            OffWorkModePillBorder.BorderBrush = Brush(0x42, 0x94, 0xA3, 0xB8);
+            OffWorkModePill.Foreground = Brush(_palette.TextSubtle);
+            OffWorkTrack.Background = Brush(_palette.ProgressTrack);
+
+            SalaryImageLayer.Opacity = 0.86;
+            SalaryTintOverlay.Background = Brush(0xD8, 0xFF, 0xFB, 0xEB);
+            SalaryIconBadge.Background = Brush(0x18, 0xD9, 0x77, 0x06);
+            SalaryIconBadge.BorderBrush = Brush(0x9A, 0xF5, 0x9E, 0x0B);
+            SalaryLabel.Foreground = Brush(_palette.TextPrimary);
+            SalaryAmount.Foreground = Brush(0xFF, 0xF6, 0xA1, 0x13);
+            SalarySubtitle.Foreground = Brush(_palette.SalaryGoldMuted);
+            SalaryPerSecondText.Foreground = Brush(0xFF, 0x4B, 0x8F, 0x2B);
+            SalaryDivider.Background = Brush(0x28, 0xD9, 0x77, 0x06);
+            SalaryHourlyValueText.Foreground = Brush(_palette.TextSecondary);
+            SalaryWorkDurationText.Foreground = Brush(_palette.TextSecondary);
+
+            DailyQuoteImageLayer.Opacity = 0.32;
+            DailyQuoteTintOverlay.Background = Brush(0xE8, 0xFF, 0xFF, 0xFF);
+            DailyQuoteMarkText.Foreground = Brush(0xFF, 0x5C, 0x8D, 0xFF);
+            DailyQuoteTitleText.Foreground = Brush(_palette.TextPrimary);
+            DailyQuoteText.Foreground = Brush(_palette.TextPrimary);
+            DailyQuoteSourceText.Foreground = Brush(_palette.TextSubtle);
+            DailyQuoteRefreshText.Foreground = Brush(_palette.TextSubtle);
+            return;
+        }
+
+        OffWorkImageLayer.Opacity = 0.40;
+        OffWorkTintOverlay.Background = Brush(0x95, 0x10, 0x24, 0x3B);
+        OffWorkLabel.Foreground = Brush(_palette.TextMuted);
+        OffWorkMainText.Foreground = Brush(textPrimary);
+        OffWorkCaption.Foreground = Brush(0xA6, 0xFF, 0xFF, 0xFF);
+        OffWorkDetail.Foreground = Brush(_palette.TextSubtle);
+        OffWorkModePillBorder.Background = Brush(0x1A, 0xFF, 0xFF, 0xFF);
+        OffWorkModePillBorder.BorderBrush = Brush(0x12, 0xFF, 0xFF, 0xFF);
+        OffWorkModePill.Foreground = Brush(0xFF, 0xC9, 0xD3, 0xE6);
+        OffWorkTrack.Background = Brush(_palette.ProgressTrack);
+
+        SalaryImageLayer.Opacity = 0.62;
+        SalaryTintOverlay.Background = Brush(0x7A, 0x15, 0x10, 0x0C);
+        SalaryIconBadge.Background = Brush(0x26, 0xF8, 0xC3, 0x4A);
+        SalaryIconBadge.BorderBrush = Brush(0xDD, 0xF8, 0xC3, 0x4A);
+        SalaryLabel.Foreground = Brush(0xDD, 0xE8, 0xEC, 0xF4);
+        SalaryAmount.Foreground = Brush(0xFF, 0xF8, 0xC3, 0x4A);
+        SalarySubtitle.Foreground = Brush(_palette.SalaryGoldMuted);
+        SalaryPerSecondText.Foreground = Brush(0xFF, 0xF4, 0xD8, 0x72);
+        SalaryDivider.Background = Brush(0x30, 0xF8, 0xD4, 0x6A);
+        SalaryHourlyValueText.Foreground = Brush(0xE6, 0xFF, 0xF5, 0xD6);
+        SalaryWorkDurationText.Foreground = Brush(0xE6, 0xFF, 0xF5, 0xD6);
+
+        DailyQuoteImageLayer.Opacity = 0.78;
+        DailyQuoteTintOverlay.Background = Brush(0xC8, 0x12, 0x21, 0x37);
+        DailyQuoteMarkText.Foreground = Brush(0xFF, 0x9B, 0xA8, 0xFF);
+        DailyQuoteTitleText.Foreground = Brush(0xFF, 0xDD, 0xE8, 0xFF);
+        DailyQuoteText.Foreground = Brush(0xFF, 0xFF, 0xFF, 0xFF);
+        DailyQuoteSourceText.Foreground = Brush(0xFF, 0xB8, 0xC4, 0xD9);
+        DailyQuoteRefreshText.Foreground = Brush(0xFF, 0xDD, 0xE8, 0xFF);
+    }
+
     private void ApplyPomodoroTheme(System.Windows.Media.Color textPrimary)
     {
         PomodoroPhaseText.Foreground = Brush(_palette.TextMuted);
@@ -1128,8 +1242,10 @@ public partial class MainWindow : Window
         PomodoroCenterStatusText.Foreground = Brush(_palette.TextSecondary);
         PomodoroHintText.Foreground = Brush(_palette.TextSubtle);
         PomodoroTrack.Background = Brush(_palette.ProgressTrack);
+        PomodoroRingTrack.Stroke = Brush(_palette.ProgressTrack);
         PomodoroStartBtn.Background = Brush(_palette.TodoAccentButton);
         PomodoroStartBtn.Foreground = System.Windows.Media.Brushes.White;
+        PomodoroSettingsBtn.Foreground = Brush(_palette.TextSecondary);
         PomodoroResetBtn.Foreground = Brush(_palette.TodoLink);
         PomodoroResetBtn.BorderBrush = Brush(_palette.InputBorder);
         RefreshPomodoroUi();
@@ -1205,8 +1321,8 @@ public partial class MainWindow : Window
 
         PomodoroFill.Background = Brush(fillColor);
         PomodoroRingProgress.Stroke = Brush(fillColor);
-        PomodoroRingHelper.UpdateOpenArc(PomodoroRingTrack, 100, 148, 8);
-        PomodoroRingHelper.UpdateOpenArc(PomodoroRingProgress, ringProgress, 148, 8);
+        PomodoroRingHelper.UpdateOpenArc(PomodoroRingTrack, 100, 128, 8);
+        PomodoroRingHelper.UpdateOpenArc(PomodoroRingProgress, ringProgress, 128, 8);
     }
 
     private void OnPomodoroCompleted(PomodoroPhase phase)
@@ -1378,7 +1494,7 @@ public partial class MainWindow : Window
             {
                 Text = noteText,
                 FontSize = FontScaleHelper.CalSize(12, _settings.FontScale),
-                Foreground = Brush(0xD8, 0xE8, 0xF1, 0xFF),
+                Foreground = Brush(_palette.TextSecondary),
                 TextTrimming = TextTrimming.CharacterEllipsis,
                 VerticalAlignment = VerticalAlignment.Center
             };
@@ -1387,8 +1503,8 @@ public partial class MainWindow : Window
 
             WeekAgendaPanel.Children.Add(new Border
             {
-                Background = Brush(0x34, 0xE8, 0xF4, 0xFF),
-                BorderBrush = Brush(0x18, 0xE4, 0xF0, 0xFF),
+                Background = Brush(_palette.TodoCardBackground),
+                BorderBrush = Brush(_palette.TodoCardBorder),
                 BorderThickness = new Thickness(1),
                 CornerRadius = new CornerRadius(9),
                 Padding = new Thickness(10, 7, 12, 7),
@@ -1419,7 +1535,7 @@ public partial class MainWindow : Window
         {
             Text = "查看全部  ›",
             FontSize = FontScaleHelper.CalSize(11, _settings.FontScale),
-            Foreground = Brush(0xCC, 0xDD, 0xE8, 0xFF),
+            Foreground = Brush(_palette.TodoLink),
             VerticalAlignment = VerticalAlignment.Center
         };
         Grid.SetColumn(viewAll, 1);
@@ -1471,7 +1587,7 @@ public partial class MainWindow : Window
         {
             Text = text,
             FontSize = FontScaleHelper.CalSize(12, _settings.FontScale),
-            Foreground = Brush(0xD8, 0xE8, 0xF1, 0xFF),
+            Foreground = Brush(_palette.TextSecondary),
             TextTrimming = TextTrimming.CharacterEllipsis,
             VerticalAlignment = VerticalAlignment.Center
         };
@@ -1480,8 +1596,8 @@ public partial class MainWindow : Window
 
         return new Border
         {
-            Background = Brush(0x34, 0xE8, 0xF4, 0xFF),
-            BorderBrush = Brush(0x18, 0xE4, 0xF0, 0xFF),
+            Background = Brush(_palette.TodoCardBackground),
+            BorderBrush = Brush(_palette.TodoCardBorder),
             BorderThickness = new Thickness(1),
             CornerRadius = new CornerRadius(9),
             Padding = new Thickness(10, 7, 12, 7),
@@ -1556,7 +1672,7 @@ public partial class MainWindow : Window
             FontSize = dayFontSize,
             FontWeight = isPreview ? FontWeights.SemiBold : FontWeights.Normal,
             Foreground = !inMonth
-                ? Brush(0x4B, 0x55, 0x63)
+                ? Brush(_palette.TextEmpty)
                 : dayForeground,
             HorizontalAlignment = System.Windows.HorizontalAlignment.Center,
             Margin = new Thickness(0, 0, 0, 0)
@@ -1621,7 +1737,7 @@ public partial class MainWindow : Window
         {
             Width = 5 * calScale,
             Height = 5 * calScale,
-            Fill = Brush(0xA7, 0x8B, 0xFA),
+            Fill = Brush(_palette.Accent),
             HorizontalAlignment = System.Windows.HorizontalAlignment.Right,
             VerticalAlignment = VerticalAlignment.Top,
             Margin = new Thickness(0, 1, 1, 0),
@@ -1969,7 +2085,7 @@ public partial class MainWindow : Window
 
         TodoList.ItemsSource = shown;
         EmptyTodoPanel.Visibility = shown.Count == 0 ? Visibility.Visible : Visibility.Collapsed;
-        TodoCountText.Text = $"{shown.Count}/{allToday.Count}";
+        TodoCountText.Text = allToday.Count.ToString();
 
         if (hidden > 0)
         {
@@ -2485,6 +2601,7 @@ public partial class MainWindow : Window
         _settings.SkinImagePath = next.SkinImagePath;
         _settings.SkinVideoPath = next.SkinVideoPath;
         _settings.SkinOverlayOpacity = next.SkinOverlayOpacity;
+        _settings.ResizeMode = ResizeModeHelper.Normalize(next.ResizeMode);
         _settings.City = next.City;
         _settings.CalendarMode = next.CalendarMode;
         _settings.Left = left;
@@ -2705,7 +2822,8 @@ public partial class MainWindow : Window
 
     private void Grid_PreviewMouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
     {
-        if (IsInteractiveElement(e.OriginalSource as DependencyObject))
+        var source = e.OriginalSource as DependencyObject;
+        if (IsInteractiveElement(source) || !IsInHeaderArea(source))
         {
             return;
         }
@@ -2774,20 +2892,32 @@ public partial class MainWindow : Window
         var oldHeight = ActualHeight > 0 ? ActualHeight : Height;
         var rawWidth = oldWidth + rightDelta - leftDelta;
         var rawHeight = oldHeight + bottomDelta - topDelta;
-        var widthDriven = Math.Abs(rightDelta - leftDelta) >= Math.Abs(bottomDelta - topDelta);
-        var targetWidth = widthDriven
-            ? Math.Clamp(rawWidth, MinWidth, MaxWindowWidth)
-            : Math.Clamp(rawHeight * WidgetAspectRatio, MinWidth, MaxWindowWidth);
-        var targetHeight = targetWidth / WidgetAspectRatio;
-        if (targetHeight < MinHeight)
+        var freeResize = IsFreeResizeMode();
+        var targetWidth = Math.Clamp(rawWidth, MinWidth, MaxWindowWidth);
+        var targetHeight = Math.Clamp(rawHeight, MinHeight, MaxWindowHeight);
+
+        if (!freeResize)
         {
-            targetHeight = MinHeight;
-            targetWidth = targetHeight * WidgetAspectRatio;
-        }
-        else if (targetHeight > MaxWindowHeight)
-        {
-            targetHeight = MaxWindowHeight;
-            targetWidth = targetHeight * WidgetAspectRatio;
+            var horizontalResize = Math.Abs(leftDelta) > double.Epsilon || Math.Abs(rightDelta) > double.Epsilon;
+            if (horizontalResize)
+            {
+                targetHeight = targetWidth / WidgetAspectRatio;
+            }
+            else
+            {
+                targetWidth = targetHeight * WidgetAspectRatio;
+            }
+
+            if (targetHeight < MinHeight)
+            {
+                targetHeight = MinHeight;
+                targetWidth = targetHeight * WidgetAspectRatio;
+            }
+            else if (targetHeight > MaxWindowHeight)
+            {
+                targetHeight = MaxWindowHeight;
+                targetWidth = targetHeight * WidgetAspectRatio;
+            }
         }
 
         if (Math.Abs(leftDelta) > double.Epsilon)
@@ -2829,6 +2959,15 @@ public partial class MainWindow : Window
                 case System.Windows.Controls.TextBox:
                 case System.Windows.Controls.Button:
                 case System.Windows.Controls.CheckBox:
+                case System.Windows.Controls.Primitives.ToggleButton:
+                case System.Windows.Controls.Primitives.Thumb:
+                case System.Windows.Controls.Slider:
+                case System.Windows.Controls.Primitives.ScrollBar:
+                case System.Windows.Controls.Primitives.Selector:
+                    return true;
+                case FrameworkElement { Cursor: not null } element
+                    when element.Cursor == System.Windows.Input.Cursors.Hand ||
+                         element.Cursor == System.Windows.Input.Cursors.IBeam:
                     return true;
                 case StackPanel { Tag: DateTime }:
                     return true;

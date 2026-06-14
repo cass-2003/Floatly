@@ -1,0 +1,304 @@
+# Floatly UI 对齐审计与重构计划
+
+> 更新时间：2026-06-13  
+> 审计范围：`docs/设计图/` 三套深浅设计稿，`DeskLite/MainWindow.xaml`、`DeskLite/MainWindow.xaml.cs`、`DeskLite/SettingsWindow.xaml`、`DeskLite/SettingsWindow.xaml.cs`、`DeskLite/Services/AppConstants.cs`，以及当前 `.codex-tmp/ui-audit/` 运行截图证据。<br>
+> 目标：以 `docs/设计图` 下三套深浅稿为唯一视觉基准，记录当前 UI 真实状态，避免计划文档继续停留在旧版问题描述。背景图素材不进入本轮阻塞范围。
+
+## 0. 审计结论
+
+当前项目已经不再是“旧结构套新皮肤”的状态。设置面板和主桌面小组件都已经完成了核心骨架重构，但还不能宣称“完全按设计图一致”。本次重新审计确认：目标只收敛到 `design-3`、`resign-2`、`resign-1` 三套深浅图；其中 `design-3` 与 `resign-2` 是本轮 P0，`resign-1` 只作为基础模块回归参考。
+
+本次审计校正：之前把设计图截图下方的蓝色桌面/背景误读成 Floatly 自身的面板或卡片层级，这是错误前提。后续所有 UI 判断必须只看圆角主容器、模块卡片、文字遮罩和控件本身；截图拍摄时露出的桌面颜色不参与面板色、背板或卡片实底判断，也不能成为新增矩形背板、深色方底或浅色实心卡片的理由。
+
+已经完成的核心方向：
+
+- 设置面板已切换为深色自绘窗口外壳，具备标题栏、最小化、最大化、关闭按钮。
+- 设置面板已改成大尺寸三列配置布局，右侧外观配置区域成为主区域，底部操作栏固定。
+- 设置面板主要控件已经有 Floatly 风格模板，包括 Toggle、Slider、ComboBox、RadioButton、CheckBox、ListBox、分段按钮、色块按钮。
+- 设置面板已经接入深浅主题动态资源，主题卡切换时会同步更新窗口背景、卡片、输入框、分割线、底部栏和预览面板。
+- 设置面板主题资源已经改为替换 `SolidColorBrush` 实例，避免 WPF 冻结资源在启动时被原地修改导致 `Floatly.exe --settings` 崩溃。
+- 设置面板源码中的版本文本已经清掉旧硬编码，运行时使用 `AppConstants.Version = 2.0.22`。
+- 设置面板模块区文案已收敛为“显示模块”，不再承诺主面板会按列表顺序重排，避免和 `resign-2` 固定视觉网格冲突。
+- 主桌面小组件已建立宽版仪表盘基线，使用 `720 x 1280` 内部设计画布，经 `Viewbox` 缩放到默认窗口尺寸。
+- 主桌面小组件已包含 Hero、黄历条、双列卡片、今日待办、番茄钟、下班倒计时、今日已赚薪水、每日一句、周历/月历、底部快捷设置。
+- 底部快捷设置已经改成与 `resign-2` 一致的整条横向玻璃工具轨，左侧快捷设置和右侧主题/置顶/鼠标穿透都收进同一个圆角容器；透明度和字号滑块默认隐藏。
+- 主窗口 `OffWorkCard`、`SalaryPanel`、`DailyQuoteBanner` 已抽出主题化遮罩、文字、分割线和胶囊样式，浅色主题不再依赖固定深色遮罩与白字。
+- 主窗口浅色主题已把外壳、普通模块卡、黄历条、待办项、进度轨道和底部工具条切到浅色玻璃资源，不再套用深色 `FloatlyDesignTokens`。
+- 主窗口已移除 HWND 级 `EnableGlassBackdrop()` 深色 Acrylic 背板，避免深浅主题外层出现方形暗底；半透明玻璃质感保留在圆角 `MainBorder` 与内部卡片层。
+- 主窗口 XAML 初始外壳已改为 `Transparent`，避免浅色主题启动或重绘时先露出深色矩形默认底。
+- 主窗口默认深浅主题背景已改为均匀半透明圆角容器：浅色约 `0xD8` 白色玻璃底，深色约 `0xDE` 暗蓝玻璃底，避免主容器径向亮区透过卡片后看起来像卡片偏光。
+- 主窗口视频皮肤 `MediaElement` 已从常驻 XAML 树移除，改为视频模式按需动态创建，规避透明 WPF 窗口被媒体层撑出黑色方形背板。
+- 主窗口深色主题已压低 `GlassSheen` 白色叠层，并移除默认主容器径向高光，避免出现突兀白色聚光块或所有卡片同向偏光。
+- 主窗口深色主容器和模块卡片已进一步提高雾面密度，减少复杂网页/表格背景直透，避免看起来像一层灰色透明薄膜；`widget-resign2-dark-current-v5.png` 暴露出背景文档文字仍严重穿透后，已用均匀 alpha 小幅加密为 v6 状态，保持半透明玻璃但让待办、番茄钟、日历等文字区域更稳定。
+- 主窗口默认主容器已从径向渐变收敛为单一暗蓝半透明底；模块卡片继续使用均匀半透明色，贴近 `resign-2-dark.png` 的稳定暗蓝玻璃底。
+- 主窗口 v10 再次小幅提高默认玻璃雾面密度：浅色主容器从 `0xE6` 提到 `0xEE`，深色主容器从 `0xE4` 提到 `0xEA`，深色普通卡片从 `0x66` 提到 `0x82`，深色底部工具条从 `0x60` 提到 `0x78`；仍保持均匀半透明玻璃，不引入额外矩形背板或方向性偏光。
+- 主窗口普通模块卡片和底部工具条已移除方向性 `LinearGradientBrush`，统一改为均匀半透明玻璃面；外层 `GlassSheen` 也已置为透明，避免卡片出现偏光/扫光。
+- 主窗口图片类卡片的遮罩层也已移除方向性渐变：每日一句、浅色薪水遮罩和默认卡片/工具条 fallback 都改为均匀半透明 tint。
+- 主窗口黄历摘要条右侧已按 `resign-2` 设计图改为直接显示绿色“宜”和红色“忌”文字，不再使用额外胶囊色块。
+- 主窗口黄历摘要条左侧“农历”标签已补入主题化前景色，浅色模式下与 `resign-2-light.png` 一样使用深灰蓝文本，不再残留深色主题白字。
+- 主窗口倒数日和年进度卡已收紧内部垂直间距，默认字号下底部说明行不再被卡片高度裁切。
+- 主窗口今日待办标题徽标已按 `resign-2` 改为单个待办数量，不再显示 `已展示/总数` 的比例文本；溢出待办仍保留 `+ N 条待办` 行。
+- 主窗口今日待办右上角加号和番茄钟右上角设置按钮已补入命名控件并由主题 palette 控制颜色；浅色模式下不再残留深色稿的偏白按钮文字。
+- 主窗口番茄钟环形进度轨道已改为跟随 `_palette.ProgressTrack`，不再在浅色模式下被 `ApplyTheme()` 末尾固定写回深色稿的浅蓝白轨道色。
+- 主窗口番茄钟卡片已修复标题区与环形进度重叠：移除圆环负 margin，圆环尺寸从 148 收敛到 128，并同步 `PomodoroRingHelper` 绘制参数，避免顶部标题和底部按钮被挤压或遮挡。
+- 主窗口番茄钟主按钮已补齐局部圆角模板：`PomodoroStartBtn` 不再使用 WPF 默认硬矩形 Button chrome，按钮圆角、hover/pressed 和禁用透明度由 `PomodoroPrimaryButton` 控制，更接近 `resign-2` 中的圆角蓝色主按钮。
+- 主窗口浅色主题已给自定义字体色增加可读性回退：如果用户保存的主文字色（例如 `#FFFFFF`）与浅色背景对比不足，会自动使用浅色主题默认深灰蓝主文字；周历日程行也改为跟随主题 palette，不再硬编码浅色文字和白色半透明底。
+- 主窗口周历占位日程和“查看全部”入口已继续收敛到主题 palette，不再使用固定浅蓝白字与白色半透明占位底；浅色模式下该区域不应再出现深色主题残留。
+- 主窗口底部快捷设置工具条的主题切换按钮、鼠标穿透关闭态、透明度数值和字号数值已改为跟随当前主题 palette，避免浅色模式下从工具栏局部露出固定深色按钮或白字。
+- 主窗口底部快捷设置已从左右两个分离胶囊收敛为一条连续玻璃工具轨，贴近 `resign-2` 底部结构。
+- 主窗口最大尺寸已放开到 `720 x 1280`，与内部设计画布一致；默认尺寸已从 `540 x 960` 提升到 `608 x 1080`，用于降低 `resign-2` 默认态的文字和日历密度。
+- 主窗口 XAML 顶层 `MaxWidth` / `MaxHeight` 已补齐到 `720 x 1280`，与运行时 `MaxWindowWidth` / `MaxWindowHeight` 常量和内部设计画布一致，避免最大化/拖拽验收被旧上限 `664 x 1180` 卡住。
+- 主窗口启动时的尺寸规范化逻辑已修正：旧版超大尺寸回退保护不再把合法的 `720 x 1280` 最大尺寸误判为旧异常尺寸，release v8 最大尺寸截图已证明窗口能完整填满内部设计画布。
+- 主窗口四角拖拽已稳定等比模式的宽高计算，不再在角拖拽时按横向/纵向 delta 来回切换主导方向；设置页新增“缩放方式”，支持“等比缩放”和“自由缩放”。自由缩放不是压扁界面，而是保持内容按宽度等比缩放，高度不足时按当前窗口高度显示并允许垂直滚动。
+- 主窗口拖动命中已收窄到 Header 空白区域，内容区不再整体显示移动光标；待办、番茄钟、底部栏、便签、黄历更多等交互控件不再被 `DragMove()` 抢占点击。
+- 设置页工作时间控件已从 HandyControl `TimePicker` 替换为项目自有 `SettingsTextBox`，浅色主题不再出现第三方黑色时间输入框。
+- 设置页已移除 HandyControl 主题资源合并，设置页表面控件不再受第三方默认皮肤影响。
+- 待办编辑弹窗的提醒时间控件已改为项目自有文本输入，项目已移除 HandyControl 包依赖，减少第三方控件视觉漂移和 release 体积。
+- 设置页 ComboBox 下拉项已补齐 Floatly 风格模板，展开项的 hover/selected 状态不再回落到系统默认样式。
+- 设置页已补齐作用域内 ScrollBar 模板，滚动区域使用细轨道和主题化 thumb，不再显示系统默认滚动条。
+- 设置页内容区已在 `MaxWidth="1464"` 约束下居中，超宽窗口不再偏左。
+- 设置页模块列表的排序 handle 已从误导性的图标字符改为轻量 `...`，行高从 22 调为 24，更接近 `design-3` 的列表节奏。
+- 设置页主题选择卡的背景、文字、边框和色块已改为随当前主题与选中状态动态更新，不再依赖硬编码卡面色造成深浅主题割裂。
+- 设置页主题选择卡已按 `design-3` 深浅稿细化状态：深色设置页中浅色卡保留浅底深字的浅色预览；浅色设置页中深色卡不整块变成深色面板，只用深色色块表达主题，当前选中态统一靠蓝色边框和勾选表达。
+- 设置页通用 Slider 模板已修复交互命中：保留 4px 细轨道视觉，但控件高度统一为 22px，并在代码层用 `AddHandler(..., handledEventsToo: true)` 绑定三条实际 Slider；内部轨道按钮不再抢占点击，thumb 保留原生拖动路径，窗口透明度、字号大小、背景遮罩透明度都进入同一套拖动处理。
+- 设置页 Slider 已完成 release 运行态拖动复测：`settings-slider-before-drag.png` 到 `settings-slider-after-drag.png` 证明窗口透明度从 `100%` 变为 `51%`、字号从 `12 pt` 变为 `14 pt`；`settings-slider-overlay-after-drag.png` 证明背景遮罩透明度从 `55%` 变为 `58%`。本轮又补充 `settings-slider-overlay-enabled-release-v14.png` 和 UI Automation 状态，确认背景遮罩 Slider 在默认毛玻璃模式下也是 `Enabled=True`、`ReadOnly=False`；抓取 thumb 中心拖动的 release 复测证明背景遮罩值可从 `55` 拖到 `85`。追加 `settings-slider-overlay-track-drag-release-v15.png` 证明从轨道空白处按下并拖动也可把背景遮罩从 `55` 改到 `67`。
+- 设置页“摸鱼收入助手”在最小窗口宽度下已修复输入框单位裁切：`settings-design3-light-min-income-release-v10.png` 证明 release 浅色 `1180 x 760` 状态下“每月工作天数”显示为完整 `22 天`，“每日工作小时”显示为完整 `8 小时`。
+- 设置页浅色主题字体颜色字段已改为显示实际生效颜色：当旧配置保存了 `#FFFFFF` 这类在浅色背景下不可读的颜色时，设置页会显示主面板实际回退使用的浅色主题默认深灰蓝，而不是继续误导性显示白色自定义值；保存时不会把这个回退显示值写成新的自定义色。
+- 版本常量已经统一到 `AppConstants.Version = 2.0.22`，设置页运行时会使用该常量覆盖 XAML 初始文本。
+- 最新一轮已重新生成 `release/Floatly-Setup-2.0.22.exe` 和 `release/Floatly-2.0.22-win-x64.zip`，产物时间为 `2026-06-13 14:06` 左右；安装包和 zip 已包含主窗口默认尺寸 `608 x 1080`、深色主窗口雾面密度补强、设置页 Slider 轨道拖动命中层、背景遮罩 Slider 默认启用、收入助手输入框最小尺寸修复、番茄钟主按钮圆角修复和 v10 主面板玻璃可读性修复。
+
+仍未完成或证据不足的部分：
+
+- 当前的目标设计图来自 `docs/设计图/`，但这些图片在当前 worktree 中仍是未跟踪文件；需要后续决定是否纳入版本管理，否则无法作为团队可复现验收依据。
+- 主窗口目标稿实际尺寸是 `941 x 1672`，当前内部设计画布与最大窗口均为 `720 x 1280`，真实默认窗口已提升到 `608 x 1080`；仍需继续确认该默认缩放是否在桌面常驻和设计稿密度之间取得合适平衡。
+- 主窗口的模块列表设置当前定位为“显示模块”；`MainWindow.ApplyModuleOrder()` 保持固定视觉网格，以维护 `resign-2` 的信息层级和两列/整行节奏。
+- 主窗口浅色和深色 release 截图已证明不再有窗口级深色方形 Acrylic 背板；但截图混在真实桌面背景上，只能证明背板根因修复，不能替代最终设计图像素对照。
+- 当前线程尝试用 `Process.MainWindowHandle`、`EnumWindows` 和 `PrintWindow` 抓取 release 主窗口截图时，Floatly 进程可启动且响应，但没有可枚举主窗口句柄；因此本轮不能把自动截图作为主面板验收证据，需要在可见桌面会话中手动或用其他工具重新采集。
+- `.codex-tmp/ui-audit/screen-dark-settings.png` 与 `screen-dark-settings-visible.png` 当前不是 Floatly 设置页截图，而是浏览器/资源管理器画面，必须作废，不能进入验收结论。
+- 还缺设置页深浅、旧主面板深浅、新主面板深浅这三套目标的逐项截图验收；目前只能按源码、设计图和部分运行截图审计，不能宣称完全一致。
+
+## 1. 设计基准
+
+本轮 UI 对齐只认 `C:/Users/Administrator/Desktop/tool/docs/设计图/` 下三套深浅稿：
+
+| 设计稿 | 文件 | 定位 | 当前优先级 |
+| --- | --- | --- | --- |
+| 设置页 | `design-3-dark.png`、`design-3-light.png` | 设置窗口最终目标，要求深浅主题都对齐 | P0 |
+| 主面板旧版 | `resign-1-dark.png`、`resign-1-light.png` | 旧主面板目标，保留 Hero、黄历、待办、便签、周历/月历、底部展开滑块等基础参考 | P2 |
+| 主面板新版 | `resign-2-dark.png`、`resign-2-light.png` | 新主面板最终目标，在旧版基础上加入下班倒计时、今日已赚薪水、每日一句 banner、折叠快捷设置 | P0 |
+
+冲突处理规则：
+
+- 设置页只按 `design-3` 深浅稿验收。
+- 主面板以 `resign-2` 深浅稿为最终目标。
+- `resign-1` 只用于核对旧版基础模块和早期布局，不应覆盖 `resign-2` 的新增工作状态模块与底部折叠工具条。
+- 背景图素材不作为本轮阻塞项；但布局、层级、遮罩、可读性、深浅主题质感仍必须对齐。
+- 六张目标稿当前文件尺寸为：设置页深色 `1520 x 980`、设置页浅色 `1561 x 1007`、主面板三套 `941 x 1672`。后续截图验收应按这些比例做同屏对比。
+- 如果运行截图与设计图背景不一致，不作为失败项；只检查背景之上的容器层级、文字可读性、遮罩、卡片比例和主题质感。
+- 设计图截图里的桌面/底图颜色不能被当作 Floatly 自身面板颜色或背板需求；禁止因为截图下方刚好是蓝色、深色或浅色背景，就给主窗口额外加矩形背板或把卡片改成实心底。
+- 采样深浅主题时，只允许采样 Floatly 圆角主容器、模块卡片、工具条、遮罩和文字区域；主容器外或截图底层露出的环境色一律视为拍摄背景，不进入实现依据。
+- 若设计图中的半透明卡片叠在蓝色、白色或深色桌面上，只保留“半透明玻璃层 + 弱边框 + 无方向性偏光”的意图，不反推为需要额外底板、统一实底或窗口级背板。
+
+本轮 UI 对齐优先级：
+
+1. 设置面板目标：深色玻璃设置窗口、左侧导航、三列配置区、右侧外观主配置、底部固定操作栏。
+2. 主小组件目标：以 `resign-2` 为准的今日信息浮窗，不做后台管理面板；时间和天气是第一视觉焦点，其次是黄历、待办、番茄钟和工作状态。
+3. 背景图资源不作为本轮阻塞项。只要 banner 和图片卡片保留视觉层级、遮罩和可读性，具体背景素材后续再单独替换。
+4. 深浅主题要保持同一套结构和信息层级，不用简单反色代替主题设计。
+
+## 2. 设置面板现状
+
+### 2.1 已完成
+
+代码证据：
+
+- `SettingsWindow.xaml` 顶层窗口已设置 `Width="1520"`、`Height="980"`、`MinWidth="1180"`、`MinHeight="760"`。
+- `SettingsWindow.xaml` 已使用 `WindowStyle="None"` 与 `WindowChrome`，不再依赖系统原生标题栏。
+- `TitleBar` 位于根布局 Row 0，并包含标题、最小化、最大化、关闭按钮。
+- 主体内容使用 `ContentScrollViewer`，内部网格 `MaxWidth="1464"`，避免无限横向拉伸。
+- 内容区为三列布局：左列窗口/工作/时钟/天气，中列快捷键/收入/日历，右列主题/透明度/字体/皮肤/窗口大小/模块。
+- 底部操作栏位于 Row 2，包含恢复默认、关于、版本、取消、应用、保存设置。
+- `SettingsWindow.xaml.cs` 构造函数里执行 `VersionText.Text = $"版本 {AppConstants.Version}"`。
+
+### 2.2 当前风险
+
+- 设置页已接入浅色动态资源，且 `Floatly.exe --settings` 启动冒烟测试已通过；已补 `settings-design3-dark-release-v3.png`、`settings-design3-light-release-v4.png` 作为最新 release 深浅截图，且窗口透明度、字号大小、背景遮罩透明度 Slider 已完成 release 拖动复测；本轮又补了代码层拖动绑定、背景遮罩默认启用和透明命中层，避免背景遮罩进度条看得见但无法从轨道拖动。后续还需要继续做逐项运行截图对比。
+- XAML 初始版本文本已改为 `版本`，但需要继续确保 release 文档和截图中的版本展示跟 `AppConstants.Version` 同步。
+- `ContentScrollViewer` 内部内容已居中，并保持 `MaxWidth="1464"`，超宽屏下不再向左贴边。
+- 设置页已补齐 release 尺寸状态证据：`settings-design3-light-min-1180x760-print-v7.png` 证明最小尺寸下底部栏固定、主体内容滚动；`settings-design3-light-wide-1920x1040-print-v7.png` 证明超宽窗口下内容仍按 `MaxWidth="1464"` 居中，不会无限横向拉伸。
+- 设置页收入助手输入框已补齐 release 最小尺寸证据：`settings-design3-light-min-income-release-v10.png` 证明单位文字改为输入框内叠层后不再挤压数值，不再出现 `2.` 或只剩 `小时` 的裁切。
+- 设置页目前是单页滚动 + 锚点导航，不是真正分页。这个行为可接受，但文档和验收不能写成多页 Tab。
+- 工作时间输入与待办提醒时间输入均已换为项目自有控件，HandyControl 依赖已移除，ComboBox 弹层项、滚动条、模块列表排序 handle、主题选择卡和 Slider 命中区也已主题化；仍需继续检查列表项在深浅背景下是否完全融入 Floatly 风格。
+- 主题卡验收要同时看 `design-3-dark.png` 和 `design-3-light.png`：深色页里的“浅色”卡必须保留浅底深字；浅色页里的“深色”卡不能整块变成深色大色块，只保留深色色块预览和选中边框。
+- 旧的 `.codex-tmp/ui-audit/screen-dark-settings*.png` 设置页截图证据无效，已保留为作废记录；固定坐标截到浏览器的 `settings-design3-light-min-1180x760-v6/v7.png`、`settings-design3-dark-min-1180x760-v6.png` 也必须作废；后续以 `settings-design3-dark-release-v3.png`、`settings-design3-light-release-v4.png`、`settings-design3-light-fontcolor-v5.png` 和 `*-print-v7.png` 为准。
+
+### 2.3 下一步设置页任务
+
+1. 以 `design-3-dark.png` 和 `design-3-light.png` 建立设置页逐项对照表。
+2. 设置页深色默认、浅色默认、最小尺寸、超宽尺寸截图已补齐；收入助手最小尺寸输入框不裁切也已补齐 release 证据，后续只需继续做逐项对照和交互回归。
+3. 检查列表项在深浅背景下是否仍有原生/第三方割裂感。
+4. 继续用超宽截图复核内容区居中和最大宽度表现。
+5. 检查保存、应用、取消、恢复默认、导航跳转、主题切换、皮肤模式、模块显示开关是否仍可用。
+6. 设置页 Slider 已复测通过并补强：窗口透明度、字号大小、背景遮罩透明度都支持拖动 thumb；背景遮罩 Slider 在默认毛玻璃模式下也保持可写。`settings-slider-overlay-track-drag-release-v15.png` 已证明从轨道空白位置按下拖动也能更新数值。
+
+## 3. 主桌面小组件现状
+
+### 3.1 已完成
+
+代码证据：
+
+- `MainWindow.xaml` 外层真实窗口默认 `Width="608"`、`Height="1080"`，内部设计画布为 `Width="720"`、`Height="1280"`，通过 `Viewbox` 缩放。
+- 顶部已是无标题栏透明窗口，使用 `WindowStyle="None"`、`AllowsTransparency="True"`、`Topmost="True"`。
+- Hero 区包含时间、秒、日期、天气、日出日落、明日天气和右上角操作按钮。
+- `HeroLunarStrip` 已作为黄历摘要条存在，并支持展开/收起详细黄历。
+- 倒数日和年进度已是双列卡片。
+- 今日待办和番茄钟已是双列卡片，番茄钟使用环形进度。
+- `OffWorkCard` 和 `SalaryPanel` 已作为工作状态双列模块展示，主数字使用等宽字体以减少跳动。
+- `DailyQuoteBanner` 已是 full-width banner，而不是普通文本行。
+- `CalendarSection` 已把周历和月历放到双列底部区域。
+- `BottomToolbar` 已改为整条横向玻璃工具轨，默认隐藏透明度/字号滑块。
+- `Window_SourceInitialized()` 不再调用 `WindowHelper.EnableGlassBackdrop(this)`；主面板玻璃效果由圆角 `MainBorder`、`GlassSheen` 和各模块卡片负责，避免窗口透明区域出现矩形暗底。
+- 默认 `AppSettings.HuangLiCollapsed = true`，新用户初始状态与 `resign-2` 的黄历摘要条节奏一致。
+
+### 3.2 当前风险
+
+- 主窗口当前应按 `resign-2-dark.png` 和 `resign-2-light.png` 做最终验收，`resign-1` 不再代表最终主面板。
+- 旧版 `resign-1` 里的“速记便签”和展开式透明度/字号滑块，在新版 `resign-2` 中分别让位给工作状态模块和折叠快捷设置；不能再把它们当作最终缺失项。
+- 窗口默认缩放后视觉密度比设计图更紧凑，需要用最新运行截图确认是否仍足够可读；新增自由缩放模式后，还需确认低高度窗口可垂直滚动且关键文字不遮挡。
+- `MainWindow.ApplyModuleOrder()` 当前保留固定视觉网格，设置页只表达模块显示；若未来要支持真实排序，需要重新设计主面板栅格规则，不能简单按列表重排。
+- 主窗口最大尺寸已与内部 `720 x 1280` 设计画布一致，且 XAML 顶层最大值和启动规范化逻辑都已同步；v8 release 截图证明最大尺寸不再回落到旧默认尺寸。后续重点转为默认 `608 x 1080` 的可读性和窄尺寸滚动体验。
+- 主窗口默认尺寸已从 `540 x 960` 提升到 `608 x 1080`，release v16 深浅截图证明默认桌面小组件尺寸下整体结构不裁切，顶部黄历、番茄钟、底部周历/月历比 v11 的 75% 压缩态更接近 `resign-2` 的扫读密度；仍需继续观察桌面常驻占屏是否可接受。
+- 主窗口深色默认态已再次提高现有玻璃面的均匀雾面密度：主容器、普通模块卡片和底部工具条分别小幅提高 alpha，只改变已有圆角半透明面，不新增矩形背板、不加渐变偏光；`widget-release-dark-default-608x1080-v17.png` 证明复杂网页背景文字穿透比 v16 下降。
+- 当前浅色主窗口已去掉 XAML 深色默认底、常驻媒体层和默认主容器径向亮区，黄历摘要行首样式与“农历”标签、双进度卡说明裁切、主文字自定义白色回退、待办/番茄钟 action 按钮、番茄钟环形轨道、番茄钟标题遮挡、周历日程占位和底部工具条局部控件也已按主题 palette 修正；v6 截图显示浅色玻璃壳不再有黑色方底，但仍保留设计图的白色半透明圆角容器。
+- 番茄钟主按钮已从默认硬矩形系统 Button 修正为圆角蓝色主按钮模板；后续默认尺寸截图需要继续确认按钮圆角、宽度和卡片内留白是否与 `resign-2` 更接近。
+- 当前深色主窗口同样改为半透明圆角容器，不再依赖窗口级或媒体层背板；白色聚光感和默认主容器径向亮区已移除，普通卡片和图片卡片遮罩偏光均已移除。v6 截图显示深色面板不再像实心背板，但背景文字穿透已比 v5 明显下降，后续仍需继续按设计图控制卡片层次和稳定可读性。
+- v17 截图显示主容器和深色卡片比 v16 更稳定，番茄钟、待办和日历区背景文字穿透下降；但在高对比网页背景上仍能看到少量背景文字，后续还需要继续寻找“不加背板、不实心化”的可读性方案。
+- 背景素材不作为本轮阻塞项，但文本遮罩和可读性仍必须验收。
+- `OffWorkCard`、`SalaryPanel`、`DailyQuoteBanner` 已改为由 `ApplyWorkStateTheme()` 按深浅主题切换遮罩、文字、分割线和标签胶囊；浅色截图已证明不再残留大面积深色卡片。
+
+### 3.3 下一步主窗口任务
+
+1. 以 `resign-2-dark.png` 和 `resign-2-light.png` 建立新版主面板逐项对照表。
+2. 用 `resign-1-dark.png` 和 `resign-1-light.png` 复核基础模块：Hero、黄历、倒数日、年进度、待办、番茄钟、周历/月历。
+3. 继续用截图复核 `resign-2-light.png` 细节：确认无黑色方形背板，并检查字号密度、黄历条“宜/忌”裸字、倒数日/年进度底部说明、待办空态、番茄钟标题不被圆环遮挡和底部整条玻璃工具轨对比度。
+4. 获取主窗口默认尺寸、最大尺寸、窄尺寸、浅色主题、深色主题运行截图，并与 `resign-2` 做同屏对比。
+5. 默认窗口尺寸已调整为 `608 x 1080`；后续需要基于 v16 深浅截图继续判断是否还要微调字体层级或保留当前默认密度。最大尺寸已可达到 `720 x 1280` 设计画布。
+6. 若后续仍要支持模块排序，先设计不破坏 `resign-2` 信息层级的栅格规则，再实现真实排序。
+7. 检查秒级刷新模块：时间、下班倒计时、薪水金额，确认不会造成布局跳动。
+8. 分别验证窗口缩放方式：等比缩放下四边/四角拖拽不抖动；自由缩放下内容按宽度等比显示，窗口高度不足时能滚动查看剩余内容。
+9. 逐项点击主窗口交互区：今日待办勾选/置顶/查看全部、番茄钟开始/重置/设置、底部主题/置顶/鼠标穿透、便签展开、黄历展开，确认不会误触发窗口拖动。
+
+## 4. 当前验收清单
+
+必须通过的工程检查：
+
+- `dotnet build DeskLite/DeskLite.csproj`：本轮底部工具条、周历占位、黄历“农历”标签、卡片 action 按钮、番茄钟环形轨道主题化、番茄钟遮挡修复与设置页 Slider 命中区修复后已通过，后续每轮 UI 修改后必须重跑。
+- `Floatly.exe --settings`：已通过启动冒烟测试，后续采集设置页截图时必须再次验证。
+
+当前证据状态：
+
+| 证据 | 文件/来源 | 状态 | 结论 |
+| --- | --- | --- | --- |
+| 设置页深色截图 | `.codex-tmp/ui-audit/screen-dark-settings.png` | 作废 | 截到浏览器页面，不是 Floatly 设置页 |
+| 设置页可见截图 | `.codex-tmp/ui-audit/screen-dark-settings-visible.png` | 作废 | 截到资源管理器/浏览器，不是 Floatly 设置页 |
+| 设置页深色截图 | `.codex-tmp/ui-audit/settings-design3-dark-release-v3.png` | 有效 | 最新 release 深色设置页截图，尺寸 `1520 x 980`，可直接对照 `design-3-dark.png` |
+| 设置页浅色截图 | `.codex-tmp/ui-audit/settings-design3-light-release-v4.png` | 有效 | 最新 release 浅色设置页截图，已重新定位到主屏完整裁剪，尺寸 `1520 x 980` |
+| 设置页当前深色 release 截图 | `.codex-tmp/ui-audit/settings-design3-dark-release-current-v12.png` | 有效 | 最新 release 默认尺寸截图，尺寸 `1520 x 980`，用于对照 `design-3-dark.png` 当前实物状态 |
+| 设置页当前浅色 release 截图 | `.codex-tmp/ui-audit/settings-design3-light-release-current-v12.png` | 有效 | 最新 release 默认尺寸截图，尺寸 `1520 x 980`，用于对照 `design-3-light.png` 当前实物状态 |
+| 设置页浅色字体色截图 | `.codex-tmp/ui-audit/settings-design3-light-fontcolor-v5.png` | 有效源码验证 | Debug 构建截图，证明旧配置 `#FFFFFF` 在浅色设置页显示为实际生效的深灰蓝默认色 |
+| 设置页最小尺寸浅色截图 | `.codex-tmp/ui-audit/settings-design3-light-min-1180x760-print-v7.png` | 有效 | PrintWindow release 截图，证明 `1180 x 760` 最小尺寸下底部栏固定、主体内容滚动，不被错误遮挡 |
+| 设置页收入助手最小尺寸截图 | `.codex-tmp/ui-audit/settings-design3-light-min-income-release-v10.png` | 有效 | PrintWindow release 截图，证明 `1180 x 760` 浅色最小尺寸下 `22 天` 与 `8 小时` 完整显示，不再被单位文字遮挡或裁切 |
+| 设置页超宽浅色截图 | `.codex-tmp/ui-audit/settings-design3-light-wide-1920x1040-print-v7.png` | 有效 | PrintWindow release 截图，证明超宽窗口下内容区居中且 `MaxWidth` 约束生效 |
+| 设置页 Slider 拖动前 | `.codex-tmp/ui-audit/settings-slider-before-drag.png` | 有效 | release 设置页拖动前截图，透明度 `100%`、字号 `12 pt`、背景遮罩 `55%` |
+| 设置页 Slider 拖动后 | `.codex-tmp/ui-audit/settings-slider-after-drag.png` | 有效 | release 设置页拖动后截图，透明度 `51%`、字号 `14 pt`，证明通用 Slider 可拖动 |
+| 设置页背景遮罩拖动后 | `.codex-tmp/ui-audit/settings-slider-overlay-after-drag.png` | 有效 | release 设置页背景遮罩 Slider 拖动后截图，遮罩透明度变为 `58%` |
+| 设置页背景遮罩启用状态 | `.codex-tmp/ui-audit/settings-slider-overlay-enabled-release-v14.png` | 有效 | release 设置页截图和 UI Automation 复核，第三条背景遮罩 Slider 为启用、可写、非只读；thumb 拖动复测可从 `55` 变为 `85` |
+| 设置页背景遮罩轨道拖动 | `.codex-tmp/ui-audit/settings-slider-overlay-track-drag-release-v15.png` | 有效 | release 设置页从背景遮罩 Slider 轨道空白处按下并拖动，数值从 `55` 变为 `67`，证明轨道命中层生效 |
+| 主面板浅色截图 | `.codex-tmp/ui-audit/widget-resign2-light-glass-density-v6.png` | 有效源码验证 | Debug 构建截图，证明浅色主容器仍为圆角半透明玻璃，没有黑色方底；背景文档穿透比 v5 下降 |
+| 主面板深色截图 | `.codex-tmp/ui-audit/widget-resign2-dark-glass-density-v6.png` | 有效源码验证 | Debug 构建截图，证明深色主容器和卡片提高雾面密度后仍保持半透明，不回到额外背板或实心块 |
+| 主面板浅色 release 截图 | `.codex-tmp/ui-audit/widget-release-light-glass-density-v6.png` | 有效 | 最新 release 截图，证明 v6 雾面密度调整已进入安装包/zip 产物，浅色无黑色方底 |
+| 主面板深色 release 截图 | `.codex-tmp/ui-audit/widget-release-dark-glass-density-v6.png` | 有效 | 最新 release 截图，证明 v6 雾面密度调整已进入安装包/zip 产物，深色仍为半透明玻璃而非实心背板 |
+| 主面板自动窗口截图 | `.codex-tmp/ui-audit/floatly-release-card-glare-check.png` | 未生成有效证据 | 当前会话下 `MainWindowHandle=0`，`EnumWindows` 未枚举到 Floatly 顶层窗口，不能作为验收截图 |
+| 主面板当前浅色 release 截图 | `.codex-tmp/ui-audit/widget-release-light-current-v9.png` | 有效 | 最新 release 截图，尺寸 `720 x 1280`，证明番茄钟主按钮圆角模板已进入 release；截图背景仍有文字穿透，后续需继续复核玻璃雾面密度与可读性 |
+| 主面板当前深色 release 截图 | `.codex-tmp/ui-audit/widget-release-dark-current-v9.png` | 有效 | 最新 release 截图，尺寸 `720 x 1280`，证明深色模式下番茄钟主按钮圆角和主面板结构进入 release；背景文字穿透仍需作为后续半透明密度验收点 |
+| 主面板玻璃可读性浅色截图 | `.codex-tmp/ui-audit/widget-release-light-glass-readability-v10.png` | 有效 | 最新 release 截图，尺寸 `720 x 1280`，证明浅色主容器提高雾面密度后仍保持圆角半透明玻璃，没有新增方形背板 |
+| 主面板玻璃可读性深色截图 | `.codex-tmp/ui-audit/widget-release-dark-glass-readability-v10.png` | 有效 | 最新 release 截图，尺寸 `720 x 1280`，证明深色普通卡片和工具条提高雾面密度后可读性改善，但极端网页背景文字仍有穿透，需继续跟进 |
+| 主面板默认尺寸浅色截图 | `.codex-tmp/ui-audit/widget-release-light-default-540x960-v11.png` | 有效 | 最新 release 截图，尺寸 `540 x 960`，证明默认桌面小组件尺寸下结构完整、无裁切；但顶部黄历和底部日历文字密度偏高，需要继续做默认尺寸可读性对齐 |
+| 主面板默认尺寸深色截图 | `.codex-tmp/ui-audit/widget-release-dark-default-540x960-v11.png` | 有效 | 最新 release 截图，尺寸 `540 x 960`，证明深色默认尺寸下结构完整、无裁切；背景穿透在高对比网页背景下仍可见，且小字号区域需要继续复核 |
+| 主面板默认尺寸浅色截图 | `.codex-tmp/ui-audit/widget-release-light-default-608x1080-v16.png` | 有效 | 最新 release 截图，尺寸 `608 x 1080`，证明默认尺寸提升后结构完整、无裁切，黄历、番茄钟和底部日历密度较 v11 改善 |
+| 主面板默认尺寸深色截图 | `.codex-tmp/ui-audit/widget-release-dark-default-608x1080-v16.png` | 有效 | 最新 release 截图，尺寸 `608 x 1080`，证明深色默认尺寸下仍为半透明圆角玻璃容器，没有新增背板或裁切 |
+| 主面板深色可读性截图 | `.codex-tmp/ui-audit/widget-release-dark-default-608x1080-v17.png` | 有效 | 最新 release 截图，尺寸 `608 x 1080`，证明深色主容器、普通卡片和底部工具条提高均匀雾面密度后仍保持半透明玻璃，没有新增方形背板或方向性偏光 |
+| 主面板最大尺寸浅色截图 | `.codex-tmp/ui-audit/widget-release-light-max-720x1280-v8.png` | 有效 | 最新 release 截图，证明合法 `720 x 1280` 最大尺寸不再被启动规范化回落到默认尺寸 |
+| 主面板最大尺寸深色截图 | `.codex-tmp/ui-audit/widget-release-dark-max-720x1280-v8.png` | 有效 | 最新 release 截图，证明深色主题最大尺寸完整填满内部设计画布 |
+| 主面板自由低高度浅色截图 | `.codex-tmp/ui-audit/widget-release-light-free-540x620-v8.png` | 有效 | 最新 release 截图，证明自由缩放低高度下内容按宽度等比显示，不被纵向压扁，剩余内容通过垂直滚动查看 |
+| 主面板自由低高度深色截图 | `.codex-tmp/ui-audit/widget-release-dark-free-540x620-v8.png` | 有效 | 最新 release 截图，证明深色自由缩放低高度下仍保持玻璃层次和垂直滚动预期 |
+
+必须补齐的视觉验收：
+
+- 设置页对照 `design-3-dark.png` 的默认尺寸截图已补齐 v12 release 证据；后续需要继续逐项比对控件密度、模块列表和右侧主题卡细节。
+- 设置页对照 `design-3-light.png` 的默认尺寸截图已补齐 v12 release 证据；后续需要继续逐项比对控件密度、模块列表和右侧主题卡细节。
+- 设置页最大化/超宽截图已补齐 PrintWindow release 证据。
+- 设置页最小尺寸截图已补齐 PrintWindow release 证据。
+- 主面板对照 `resign-2-dark.png` 的默认尺寸截图已补齐 v17 release 证据；默认尺寸已从 `540 x 960` 调整为 `608 x 1080`，深色玻璃面密度也已小幅提高，后续继续看极端背景穿透和小字号可读性。
+- 主面板对照 `resign-2-light.png` 的默认尺寸截图已补齐 v16 release 证据，重点仍是黄历摘要“宜/忌”裸字、倒数日/年进度说明行完整显示、番茄钟标题不被环形进度遮挡，以及底部周历/月历在默认尺寸下的可读性。
+- 主面板最大尺寸截图已补齐 v8 release 证据。
+- 主面板窄尺寸/低高度自由缩放截图已补齐 v8 release 证据。
+- 主面板对照 `resign-1-dark.png`、`resign-1-light.png` 的基础模块复核截图。
+
+必须手动确认的交互：
+
+- 设置窗口标题栏拖拽、最小化、最大化、关闭。
+- 左侧导航跳转。
+- 取消、应用、保存设置。
+- 主题切换。
+- 透明度、字号、字体、字体颜色；透明度与字号 Slider 已用 release 截图证明可拖动。
+- 皮肤模式与遮罩透明度；背景遮罩透明度 Slider 已用 release 截图证明可拖动。
+- 模块显示开关与番茄钟配置。
+- 主窗口置顶、鼠标穿透、主题切换。
+- 待办、番茄钟、黄历展开、日历切换。
+
+## 5. 推荐执行顺序
+
+### 阶段 A：文档和证据收敛
+
+1. 确认 `docs/设计图/` 下六张目标设计图是否需要纳入版本管理。
+2. 清理或移动误放的运行截图，避免把非 Floatly 页面当成验收证据；当前两个 settings 截图必须作废。
+3. 建立固定截图命名规则，例如：
+   - `settings-design3-dark-current.png`
+   - `settings-design3-light-current.png`
+   - `widget-resign2-dark-current.png`
+   - `widget-resign2-light-current.png`
+   - `widget-resign1-basic-check.png`
+   - `widget-narrow-check.png`
+
+### 阶段 B：低风险源码修正
+
+1. 先补齐设置页深浅主题截图，因为设置页之前的截图证据无效。
+2. 截图复核主面板深色主题和不同尺寸：确认半透明主容器没有造成深色回退、浅色黑色方底残留、突兀白色聚光、背景内容过度直透或卡片方向性偏光；本轮已从源码移除默认主容器径向亮区，后续重点转为截图验收。
+3. 若未来重新开放模块排序，先补充新的主面板栅格规则和验收截图。
+4. 用超宽截图复核设置页内容区居中和最大宽度表现。
+
+### 阶段 C：视觉细调
+
+1. 根据最新截图调主窗口字体密度、卡片高度、模块间距。
+2. 根据最新截图调设置页控件状态和列表项细节。
+3. 分别检查深色与浅色主题。
+
+### 阶段 D：完成验收
+
+1. 构建通过。
+2. 截图齐全。
+3. 交互清单通过。
+4. UI 对齐差异只剩背景素材或可接受的工程化近似。
+
+## 6. 已知工作区状态
+
+截至本次审计，工作区存在未跟踪文档、设计图、截图和素材文件。后续提交时应按任务范围逐文件暂存，避免把无关截图或临时资源混入 UI 代码提交。
+
+本计划文档本身应随 UI 对齐工作持续更新：每完成一次实际 UI 修复，需要同步更新“当前风险”和“下一步任务”，不要只更新发布说明。
+
+本次追加审计后的提交要求：
+
+- 每次修改后必须单独提交，避免 UI 代码修复、截图证据和计划文档混在一个提交里。
+- 背景图素材替换不进入本轮阻塞范围，也不应因为背景素材未完全一致而阻塞 `design-3` / `resign-2` 的布局和主题验收。
+- 未跟踪的 `docs/设计图/`、`docs/images/`、`.codex-tmp/` 是否入库需要单独决策；默认不随 UI 代码修复一起提交。

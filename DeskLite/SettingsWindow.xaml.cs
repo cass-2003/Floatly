@@ -72,8 +72,10 @@ public partial class SettingsWindow : Window
     private bool _syncFontSize;
     private bool _syncSkinOverlay;
     private bool _isInitializing = true;
+    private Slider? _draggingSettingsSlider;
     private System.Windows.Controls.TextBox? _recordingHotkeyBox;
     private string? _selectedFontColor;
+    private bool _fontColorUsesThemeDefault;
     private IReadOnlyList<string> _availableFontFamilies = [];
 
     public AppSettings? Result { get; private set; }
@@ -97,7 +99,11 @@ public partial class SettingsWindow : Window
         RbSkinVideo.Checked += (_, _) => UpdateSkinControls();
         RbAutoLocate.Checked += (_, _) => UpdateCityControls();
         RbManualCity.Checked += (_, _) => UpdateCityControls();
+        RegisterSettingsSliderHandlers(SliderOpacity);
+        RegisterSettingsSliderHandlers(SliderFontSize);
+        RegisterSettingsSliderHandlers(SliderSkinOverlay);
         LoadFromSettings(_original);
+        ApplySettingsThemeResources(AppThemePalette.Parse(_original.Theme));
         _isInitializing = false;
     }
 
@@ -136,25 +142,123 @@ public partial class SettingsWindow : Window
         MaximizeIcon.Text = WindowState == WindowState.Maximized ? "\uE923" : "\uE922";
     }
 
+    private void RegisterSettingsSliderHandlers(Slider slider)
+    {
+        slider.AddHandler(PreviewMouseLeftButtonDownEvent, new MouseButtonEventHandler(SettingsSlider_PreviewMouseLeftButtonDown), true);
+        slider.AddHandler(PreviewMouseMoveEvent, new System.Windows.Input.MouseEventHandler(SettingsSlider_PreviewMouseMove), true);
+        slider.AddHandler(PreviewMouseLeftButtonUpEvent, new MouseButtonEventHandler(SettingsSlider_PreviewMouseLeftButtonUp), true);
+    }
+
+    private void SettingsSlider_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+    {
+        var slider = ResolveSettingsSlider(sender, e.OriginalSource);
+        if (slider is null || !slider.IsEnabled)
+        {
+            return;
+        }
+
+        _draggingSettingsSlider = slider;
+        slider.CaptureMouse();
+        UpdateSettingsSliderFromPointer(slider, e.GetPosition(slider));
+        e.Handled = true;
+    }
+
+    private void SettingsSlider_PreviewMouseMove(object sender, System.Windows.Input.MouseEventArgs e)
+    {
+        var slider = ResolveSettingsSlider(sender, e.OriginalSource);
+        if (slider is null || _draggingSettingsSlider != slider || e.LeftButton != MouseButtonState.Pressed)
+        {
+            return;
+        }
+
+        UpdateSettingsSliderFromPointer(slider, e.GetPosition(slider));
+        e.Handled = true;
+    }
+
+    private void SettingsSlider_PreviewMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+    {
+        var slider = ResolveSettingsSlider(sender, e.OriginalSource);
+        if (slider is null || _draggingSettingsSlider != slider)
+        {
+            return;
+        }
+
+        UpdateSettingsSliderFromPointer(slider, e.GetPosition(slider));
+        slider.ReleaseMouseCapture();
+        _draggingSettingsSlider = null;
+        e.Handled = true;
+    }
+
+    private void SettingsSlider_LostMouseCapture(object sender, System.Windows.Input.MouseEventArgs e)
+    {
+        if (sender == _draggingSettingsSlider)
+        {
+            _draggingSettingsSlider = null;
+        }
+    }
+
+    private static Slider? ResolveSettingsSlider(object sender, object originalSource)
+    {
+        if (sender is Slider slider)
+        {
+            return slider;
+        }
+
+        if (originalSource is not DependencyObject source)
+        {
+            return null;
+        }
+
+        while (source is not null)
+        {
+            if (source is Slider sourceSlider)
+            {
+                return sourceSlider;
+            }
+
+            source = VisualTreeHelper.GetParent(source);
+        }
+
+        return null;
+    }
+
+    private static void UpdateSettingsSliderFromPointer(Slider slider, System.Windows.Point position)
+    {
+        var minimum = slider.Minimum;
+        var maximum = slider.Maximum;
+        var width = Math.Max(1, slider.ActualWidth);
+        var horizontalInset = width > 14 ? 7.0 : 0.0;
+        var usableWidth = Math.Max(1, width - horizontalInset * 2);
+        var ratio = Math.Clamp((position.X - horizontalInset) / usableWidth, 0.0, 1.0);
+        var value = minimum + ratio * (maximum - minimum);
+
+        if (slider.IsSnapToTickEnabled && slider.TickFrequency > 0)
+        {
+            value = minimum + Math.Round((value - minimum) / slider.TickFrequency) * slider.TickFrequency;
+        }
+
+        slider.Value = Math.Clamp(value, minimum, maximum);
+    }
+
     private void SetupModuleListTemplate()
     {
         var template = new DataTemplate();
 
         var row = new FrameworkElementFactory(typeof(DockPanel));
-        row.SetValue(FrameworkElement.HeightProperty, 22.0);
+        row.SetValue(FrameworkElement.HeightProperty, 24.0);
         row.SetValue(FrameworkElement.MarginProperty, new Thickness(0));
         row.SetValue(DockPanel.LastChildFillProperty, true);
 
-        var handle = new FrameworkElementFactory(typeof(TextBlock));
-        handle.SetValue(TextBlock.TextProperty, "\uE712");
-        handle.SetValue(TextBlock.FontFamilyProperty, new System.Windows.Media.FontFamily("Segoe MDL2 Assets"));
-        handle.SetValue(TextBlock.FontSizeProperty, 9.0);
-        handle.SetValue(TextBlock.ForegroundProperty, FindResource("SettingsMuted"));
-        handle.SetValue(FrameworkElement.VerticalAlignmentProperty, System.Windows.VerticalAlignment.Center);
-        handle.SetValue(FrameworkElement.HorizontalAlignmentProperty, System.Windows.HorizontalAlignment.Center);
-        handle.SetValue(FrameworkElement.WidthProperty, 16.0);
-        handle.SetValue(DockPanel.DockProperty, Dock.Left);
-        row.AppendChild(handle);
+        var visibilityMark = new FrameworkElementFactory(typeof(TextBlock));
+        visibilityMark.SetValue(TextBlock.TextProperty, "...");
+        visibilityMark.SetValue(TextBlock.FontFamilyProperty, new System.Windows.Media.FontFamily("Microsoft YaHei UI"));
+        visibilityMark.SetValue(TextBlock.FontSizeProperty, 11.0);
+        visibilityMark.SetValue(TextBlock.ForegroundProperty, FindResource("SettingsMuted"));
+        visibilityMark.SetValue(FrameworkElement.VerticalAlignmentProperty, System.Windows.VerticalAlignment.Center);
+        visibilityMark.SetValue(FrameworkElement.HorizontalAlignmentProperty, System.Windows.HorizontalAlignment.Center);
+        visibilityMark.SetValue(FrameworkElement.WidthProperty, 16.0);
+        visibilityMark.SetValue(DockPanel.DockProperty, Dock.Left);
+        row.AppendChild(visibilityMark);
 
         var checkbox = new FrameworkElementFactory(typeof(System.Windows.Controls.CheckBox));
         checkbox.SetBinding(System.Windows.Controls.CheckBox.IsCheckedProperty, new System.Windows.Data.Binding(nameof(ModuleOrderItem.IsVisible))
@@ -196,19 +300,29 @@ public partial class SettingsWindow : Window
         return JsonSerializer.Deserialize<AppSettings>(json) ?? new AppSettings();
     }
 
-    private static void SetTimePickerValue(HandyControl.Controls.TimePicker picker, string value, string fallback)
+    private static void SetTimeTextBoxValue(System.Windows.Controls.TextBox textBox, string value, string fallback)
     {
         var normalized = OffWorkService.TryParseTime(value, out var time)
             ? time
             : OffWorkService.TryParseTime(fallback, out var fallbackTime)
                 ? fallbackTime
                 : new TimeOnly(9, 0);
-        picker.SelectedTime = DateTime.Today.Add(normalized.ToTimeSpan());
+        textBox.Text = normalized.ToString("HH:mm", CultureInfo.InvariantCulture);
     }
 
-    private static string ReadTimePickerValue(HandyControl.Controls.TimePicker picker)
+    private static string ReadTimeTextBoxValue(System.Windows.Controls.TextBox textBox, string fallback)
     {
-        return (picker.SelectedTime ?? DateTime.Today).ToString("HH:mm", CultureInfo.InvariantCulture);
+        if (OffWorkService.TryParseTime(textBox.Text, out var time))
+        {
+            return time.ToString("HH:mm", CultureInfo.InvariantCulture);
+        }
+
+        if (OffWorkService.TryParseTime(fallback, out var fallbackTime))
+        {
+            return fallbackTime.ToString("HH:mm", CultureInfo.InvariantCulture);
+        }
+
+        return "09:00";
     }
 
     private void LoadFromSettings(AppSettings s)
@@ -219,8 +333,8 @@ public partial class SettingsWindow : Window
         ChkGlobalHotkey.IsChecked = s.EnableGlobalHotkey;
         TxtHotkeyShowHide.Text = HotkeyComboHelper.Sanitize(s.HotkeyShowHide, HotkeyComboHelper.DefaultShowHide);
         TxtHotkeyQuickTodo.Text = HotkeyComboHelper.Sanitize(s.HotkeyQuickTodo, HotkeyComboHelper.DefaultQuickTodo);
-        SetTimePickerValue(WorkStartTimePicker, s.WorkStartTime, "09:00");
-        SetTimePickerValue(WorkEndTimePicker, s.WorkEndTime, "18:00");
+        SetTimeTextBoxValue(TxtWorkStartTime, s.WorkStartTime, "09:00");
+        SetTimeTextBoxValue(TxtWorkEndTime, s.WorkEndTime, "18:00");
         ChkOffWorkWeekdaysOnly.IsChecked = s.OffWorkWeekdaysOnly;
         TxtMonthlySalary.Text = s.MonthlySalary > 0 ? s.MonthlySalary.ToString("0.##", CultureInfo.InvariantCulture) : string.Empty;
         TxtWorkDaysPerMonth.Text = s.WorkDaysPerMonth.ToString();
@@ -257,6 +371,14 @@ public partial class SettingsWindow : Window
         LoadFontFamilies(s.FontFamily);
         LoadFontColorSettings(s);
         LoadSkinSettings(s);
+        if (ResizeModeHelper.Normalize(s.ResizeMode) == ResizeModeHelper.Free)
+        {
+            RbResizeFree.IsChecked = true;
+        }
+        else
+        {
+            RbResizeUniform.IsChecked = true;
+        }
 
         ChkShowWeather.IsChecked = s.ShowWeather;
         ChkShowCityName.IsChecked = s.ShowCityName;
@@ -297,25 +419,102 @@ public partial class SettingsWindow : Window
     {
         RbThemeDark.IsChecked = true;
         UpdateThemeCards();
+        ApplySettingsThemeResources(ThemeMode.Dark);
     }
 
     private void ThemeLightCard_Click(object sender, MouseButtonEventArgs e)
     {
         RbThemeLight.IsChecked = true;
         UpdateThemeCards();
+        ApplySettingsThemeResources(ThemeMode.Light);
     }
 
     private void UpdateThemeCards()
     {
-        var dark = RbThemeDark.IsChecked == true;
-        ThemeDarkCard.BorderBrush = dark
-            ? (System.Windows.Media.Brush)FindResource("SettingsAccent")
-            : (System.Windows.Media.Brush)FindResource("SettingsBorder");
-        ThemeLightCard.BorderBrush = dark
-            ? (System.Windows.Media.Brush)FindResource("SettingsBorder")
-            : (System.Windows.Media.Brush)FindResource("SettingsAccent");
-        ThemeDarkCheck.Visibility = dark ? Visibility.Visible : Visibility.Collapsed;
-        ThemeLightCheck.Visibility = dark ? Visibility.Collapsed : Visibility.Visible;
+        var selectedDark = RbThemeDark.IsChecked == true;
+        var currentWindowDark = selectedDark;
+        var border = (System.Windows.Media.Brush)FindResource("SettingsBorder");
+        var accent = (System.Windows.Media.Brush)FindResource("SettingsAccent");
+        var lightCardBackground = currentWindowDark
+            ? Color(0xFF, 0xF7, 0xF9, 0xFC)
+            : Color(0xEE, 0xFF, 0xFF, 0xFF);
+
+        ThemeDarkCard.BorderBrush = selectedDark
+            ? accent
+            : border;
+        ThemeDarkCard.Background = currentWindowDark
+            ? new SolidColorBrush(Color(0xFF, 0x17, 0x22, 0x38))
+            : new SolidColorBrush(lightCardBackground);
+        ThemeLightCard.BorderBrush = selectedDark
+            ? border
+            : accent;
+        ThemeLightCard.Background = new SolidColorBrush(lightCardBackground);
+        ThemeDarkText.Foreground = currentWindowDark
+            ? System.Windows.Media.Brushes.White
+            : new SolidColorBrush(Color(0xFF, 0x1F, 0x29, 0x37));
+        ThemeLightText.Foreground = new SolidColorBrush(Color(0xFF, 0x1F, 0x29, 0x37));
+        ThemeDarkSwatch.Background = new SolidColorBrush(Color(0xFF, 0x0F, 0x17, 0x2A));
+        ThemeLightSwatch.Background = new SolidColorBrush(Color(0xFF, 0xFF, 0xFF, 0xFF));
+        ThemeDarkCheck.Visibility = selectedDark ? Visibility.Visible : Visibility.Collapsed;
+        ThemeLightCheck.Visibility = selectedDark ? Visibility.Collapsed : Visibility.Visible;
+    }
+
+    private void ApplySettingsThemeResources(ThemeMode mode)
+    {
+        var light = mode == ThemeMode.Light;
+
+        SetBrush("SettingsBg", light ? Color(0xFF, 0xF8, 0xFB, 0xFF) : Color(0xFF, 0x0B, 0x11, 0x1A));
+        SetBrush("SettingsShellBg", light ? Color(0xF8, 0xFF, 0xFF, 0xFF) : Color(0xF0, 0x12, 0x1A, 0x28));
+        SetBrush("SettingsSidebarBg", light ? Color(0xF0, 0xF4, 0xF8, 0xFF) : Color(0xC0, 0x11, 0x19, 0x27));
+        SetBrush("SettingsCardBg", light ? Color(0xE9, 0xFF, 0xFF, 0xFF) : Color(0xC2, 0x1A, 0x23, 0x32));
+        SetBrush("SettingsCardBorder", light ? Color(0x70, 0xD8, 0xE0, 0xEC) : Color(0x1E, 0xFF, 0xFF, 0xFF));
+        SetBrush("SettingsText", light ? Color(0xFF, 0x1E, 0x29, 0x3B) : Color(0xFF, 0xF7, 0xFA, 0xFF));
+        SetBrush("SettingsMuted", light ? Color(0xFF, 0x6B, 0x78, 0x8D) : Color(0xFF, 0x9E, 0xAC, 0xC0));
+        SetBrush("SettingsInputBg", light ? Color(0xEE, 0xFF, 0xFF, 0xFF) : Color(0xF0, 0x1A, 0x24, 0x35));
+        SetBrush("SettingsBorder", light ? Color(0xFF, 0xD7, 0xDF, 0xEA) : Color(0x32, 0xFF, 0xFF, 0xFF));
+        SetBrush("SettingsAccent", Color(0xFF, 0x4D, 0x82, 0xFF));
+        SetBrush("SettingsAccentDim", light ? Color(0x18, 0x4D, 0x82, 0xFF) : Color(0x23, 0x4D, 0x82, 0xFF));
+        SetBrush("SettingsGreen", Color(0xFF, 0x55, 0xD3, 0x8A));
+        SetBrush("SettingsRecord", Color(0xFF, 0xF0, 0x52, 0x52));
+        SetBrush("SettingsTitleBarBg", light ? Color(0xEA, 0xFF, 0xFF, 0xFF) : Color(0xB8, 0x0D, 0x15, 0x21));
+        SetBrush("SettingsFooterBg", light ? Color(0xEA, 0xFF, 0xFF, 0xFF) : Color(0xB8, 0x0D, 0x15, 0x21));
+        SetBrush("SettingsShellBorder", light ? Color(0xFF, 0xDE, 0xE6, 0xF7) : Color(0x26, 0xFF, 0xFF, 0xFF));
+        SetBrush("SettingsDivider", light ? Color(0xFF, 0xE5, 0xEA, 0xF2) : Color(0x14, 0xFF, 0xFF, 0xFF));
+        SetBrush("SettingsSecondaryBg", light ? Color(0xF2, 0xFF, 0xFF, 0xFF) : Color(0xB5, 0x1D, 0x27, 0x36));
+        SetBrush("SettingsSecondaryHoverBg", light ? Color(0xFF, 0xF2, 0xF6, 0xFC) : Color(0xC2, 0x1F, 0x2A, 0x3D));
+        SetBrush("SettingsSecondaryPressedBg", light ? Color(0xFF, 0xE8, 0xEF, 0xFA) : Color(0xD7, 0x1A, 0x23, 0x33));
+        SetBrush("SettingsToggleOffBg", light ? Color(0xFF, 0xEC, 0xF1, 0xF7) : Color(0xFF, 0x2A, 0x31, 0x40));
+        SetBrush("SettingsToggleOffBorder", light ? Color(0xFF, 0xD7, 0xDF, 0xEA) : Color(0x33, 0xFF, 0xFF, 0xFF));
+        SetBrush("SettingsCheckboxBg", light ? Color(0xFF, 0xF8, 0xFB, 0xFF) : Color(0xFF, 0x1C, 0x27, 0x37));
+        SetBrush("SettingsCheckboxBorder", light ? Color(0xFF, 0xC7, 0xD2, 0xE0) : Color(0xFF, 0x5A, 0x6A, 0x7F));
+        SetBrush("SettingsSliderTrack", light ? Color(0xFF, 0xE1, 0xE8, 0xF2) : Color(0xFF, 0x35, 0x41, 0x54));
+        SetBrush("SettingsRadioBg", light ? Color(0xFF, 0xF8, 0xFB, 0xFF) : Color(0xFF, 0x16, 0x21, 0x31));
+        SetBrush("SettingsRadioBorder", light ? Color(0xFF, 0xA8, 0xB4, 0xC6) : Color(0xFF, 0x6A, 0x77, 0x8D));
+        SetBrush("SettingsListBg", light ? Color(0xCC, 0xFF, 0xFF, 0xFF) : Color(0x5C, 0x17, 0x22, 0x34));
+        SetBrush("SettingsListBorder", light ? Color(0xFF, 0xE4, 0xE9, 0xF2) : Color(0x18, 0xFF, 0xFF, 0xFF));
+        SetBrush("SettingsListItemBorder", light ? Color(0xFF, 0xEA, 0xEE, 0xF5) : Color(0x12, 0xFF, 0xFF, 0xFF));
+        SetBrush("SettingsListSelectedBg", light ? Color(0xFF, 0xEA, 0xF1, 0xFF) : Color(0xFF, 0x22, 0x31, 0x49));
+        SetBrush("SettingsListHoverBg", light ? Color(0xFF, 0xF3, 0xF7, 0xFC) : Color(0xFF, 0x1B, 0x2A, 0x40));
+        SetBrush("SettingsInnerPanelBg", light ? Color(0xB8, 0xF8, 0xFB, 0xFF) : Color(0x30, 0x14, 0x1D, 0x2B));
+        SetBrush("SettingsTitleIcon", light ? Color(0xFF, 0x4D, 0x82, 0xFF) : Color(0xFF, 0xD8, 0xE5, 0xFF));
+        SetBrush("SettingsWarning", light ? Color(0xFF, 0xC2, 0x66, 0x15) : Color(0xFF, 0xFF, 0xB8, 0x6C));
+        SetBrush("SettingsPreviewBg", light ? Color(0xE8, 0xFF, 0xFF, 0xFF) : Color(0xFF, 0x12, 0x18, 0x20));
+        SetBrush("SettingsPreviewBorder", light ? Color(0xFF, 0xC8, 0xD2, 0xE2) : Color(0x44, 0xFF, 0xFF, 0xFF));
+
+        Background = (System.Windows.Media.Brush)Resources["SettingsBg"];
+        Foreground = (System.Windows.Media.Brush)Resources["SettingsText"];
+        UpdateThemeCards();
+        UpdateSkinToggles();
+        SetupModuleListTemplate();
+    }
+
+    private static WpfColor Color(byte a, byte r, byte g, byte b) => WpfColor.FromArgb(a, r, g, b);
+
+    private static string ToHex(WpfColor color) => $"#{color.R:X2}{color.G:X2}{color.B:X2}";
+
+    private void SetBrush(string key, WpfColor color)
+    {
+        Resources[key] = new SolidColorBrush(color);
     }
 
     private void SkinToggle_Click(object sender, RoutedEventArgs e)
@@ -477,7 +676,13 @@ public partial class SettingsWindow : Window
     private void LoadFontColorSettings(AppSettings s)
     {
         FontColorPalette.Children.Clear();
-        _selectedFontColor = FontColorHelper.NormalizeHex(s.PrimaryTextColor);
+        var themeMode = AppThemePalette.Parse(s.Theme);
+        var themeDefault = AppThemePalette.For(themeMode).TextPrimary;
+        var savedColor = FontColorHelper.NormalizeHex(s.PrimaryTextColor);
+        var effectiveColor = FontColorHelper.ResolvePrimary(themeDefault, savedColor, themeMode);
+        var effectiveHex = ToHex(effectiveColor);
+        _fontColorUsesThemeDefault = savedColor is null || !string.Equals(savedColor, effectiveHex, StringComparison.OrdinalIgnoreCase);
+        _selectedFontColor = _fontColorUsesThemeDefault ? null : savedColor;
 
         foreach (var hex in FontColorHelper.PresetHexColors)
         {
@@ -490,7 +695,7 @@ public partial class SettingsWindow : Window
             var btn = new System.Windows.Controls.Button
             {
                 Background = new SolidColorBrush(color.Value),
-                BorderBrush = new SolidColorBrush(WpfColor.FromArgb(0x40, 0xFF, 0xFF, 0xFF)),
+                BorderBrush = (System.Windows.Media.Brush)FindResource("SettingsBorder"),
                 BorderThickness = new Thickness(1),
                 Tag = hex,
                 ToolTip = hex,
@@ -500,7 +705,7 @@ public partial class SettingsWindow : Window
             FontColorPalette.Children.Add(btn);
         }
 
-        TxtCustomFontColor.Text = _selectedFontColor ?? "#FFFFFF";
+        TxtCustomFontColor.Text = effectiveHex;
         UpdateFontColorSelection();
     }
 
@@ -526,6 +731,7 @@ public partial class SettingsWindow : Window
         }
 
         _selectedFontColor = hex;
+        _fontColorUsesThemeDefault = false;
         TxtCustomFontColor.Text = hex;
         UpdateFontColorSelection();
     }
@@ -533,6 +739,7 @@ public partial class SettingsWindow : Window
     private void BtnClearFontColor_Click(object sender, RoutedEventArgs e)
     {
         _selectedFontColor = null;
+        _fontColorUsesThemeDefault = true;
         TxtCustomFontColor.Text = string.Empty;
         UpdateFontColorSelection();
     }
@@ -569,15 +776,14 @@ public partial class SettingsWindow : Window
     {
         var imageMode = RbSkinImage.IsChecked == true;
         var videoMode = RbSkinVideo.IsChecked == true;
-        var mediaOverlay = imageMode || videoMode;
         TxtSkinImagePath.IsEnabled = imageMode;
         BtnBrowseSkin.IsEnabled = imageMode;
         TxtSkinVideoPath.IsEnabled = videoMode;
         BtnBrowseSkinVideo.IsEnabled = videoMode;
         SkinImagePathRow.Visibility = imageMode ? Visibility.Visible : Visibility.Collapsed;
         SkinVideoPathRow.Visibility = videoMode ? Visibility.Visible : Visibility.Collapsed;
-        SliderSkinOverlay.IsEnabled = mediaOverlay;
-        TxtSkinOverlay.IsEnabled = mediaOverlay;
+        SliderSkinOverlay.IsEnabled = true;
+        TxtSkinOverlay.IsEnabled = true;
     }
 
     private void SetSkinOverlayUi(int percent)
@@ -926,8 +1132,8 @@ public partial class SettingsWindow : Window
             s.HotkeyQuickTodo = HotkeyComboHelper.DefaultQuickTodo;
         }
 
-        s.WorkStartTime = ReadTimePickerValue(WorkStartTimePicker);
-        s.WorkEndTime = ReadTimePickerValue(WorkEndTimePicker);
+        s.WorkStartTime = ReadTimeTextBoxValue(TxtWorkStartTime, "09:00");
+        s.WorkEndTime = ReadTimeTextBoxValue(TxtWorkEndTime, "18:00");
         s.OffWorkWeekdaysOnly = ChkOffWorkWeekdaysOnly.IsChecked == true;
         s.MonthlySalary = ReadMonthlySalary(TxtMonthlySalary.Text);
         s.WorkDaysPerMonth = ReadPositiveInt(TxtWorkDaysPerMonth.Text, 22, 1, 31);
@@ -942,7 +1148,7 @@ public partial class SettingsWindow : Window
         s.FontScale = FontScaleHelper.PtToScale(fontPt);
         s.FontFamily = FontFamilyHelper.ResolveName(CmbFontFamily.Text);
         var customColor = FontColorHelper.NormalizeHex(TxtCustomFontColor.Text);
-        s.PrimaryTextColor = string.IsNullOrWhiteSpace(TxtCustomFontColor.Text)
+        s.PrimaryTextColor = _fontColorUsesThemeDefault || string.IsNullOrWhiteSpace(TxtCustomFontColor.Text)
             ? null
             : customColor ?? _selectedFontColor;
         s.SkinMode = RbSkinVideo.IsChecked == true
@@ -952,6 +1158,9 @@ public partial class SettingsWindow : Window
                 : RbSkinSolid.IsChecked == true
                     ? SkinService.ModeSolid
                     : SkinService.ModeDefault;
+        s.ResizeMode = RbResizeFree.IsChecked == true
+            ? ResizeModeHelper.Free
+            : ResizeModeHelper.Uniform;
         s.SkinOverlayOpacity = ReadSkinOverlayPercent() / 100.0;
         if (s.SkinMode != SkinService.ModeImage)
         {

@@ -5,7 +5,17 @@ obj/
 *.suo
 *.cache
 *.log
+*_wpftmp.csproj
 publish/
 .cursor/
 .claude/
 release/
+
+# Local Codex workspace artifacts
+.codex/
+.codex-tmp/
+
+# Local design/reference scratch assets
+coins.png
+star-sky-dark.png
+icon_*.zip

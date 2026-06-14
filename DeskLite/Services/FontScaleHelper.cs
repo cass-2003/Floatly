@@ -121,8 +121,8 @@ public static class FontScaleHelper
         window.HuangLiNextBtn.FontSize = 20 * scale;
         Set(window.HuangLiMetaLineStrip, 12, scale);
         Set(window.HuangLiDetailNavLine, 10, scale);
-        Set(window.HuangLiYiCircleText, 12, scale);
-        Set(window.HuangLiJiCircleText, 12, scale);
+        Set(window.HuangLiYiMarkText, 12, scale);
+        Set(window.HuangLiJiMarkText, 12, scale);
         Set(window.HuangLiYiText, 12, scale);
         Set(window.HuangLiJiText, 12, scale);
         Set(window.HuangLiWuXingLabel, 10, scale);
@@ -155,8 +155,6 @@ public static class FontScaleHelper
         Set(window.HuangLiCurrentJiText, 11, scale);
         Set(window.HuangLiMoreText, 11, scale);
 
-        window.HuangLiYiCircle.Width = window.HuangLiYiCircle.Height = 18 * scale;
-        window.HuangLiJiCircle.Width = window.HuangLiJiCircle.Height = 18 * scale;
         window.HuangLiCurrentYiCircle.Width = window.HuangLiCurrentYiCircle.Height = 16 * scale;
         window.HuangLiCurrentJiCircle.Width = window.HuangLiCurrentJiCircle.Height = 16 * scale;
         window.HuangLiCurrentZhiCircle.Width = window.HuangLiCurrentZhiCircle.Height = 40 * scale;

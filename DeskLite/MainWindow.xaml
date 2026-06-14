@@ -5,10 +5,10 @@
         Title="Floatly"
         MinWidth="360"
         MinHeight="640"
-        MaxWidth="664"
-        MaxHeight="1180"
-        Width="540"
-        Height="960"
+        MaxWidth="720"
+        MaxHeight="1280"
+        Width="608"
+        Height="1080"
         WindowStyle="None"
         AllowsTransparency="True"
         Background="Transparent"
@@ -29,16 +29,8 @@
         <SolidColorBrush x:Key="TodoMutedBrush" Color="#8B95A5" />
         <SolidColorBrush x:Key="TodoEmptyBrush" Color="#6B7280" />
         <SolidColorBrush x:Key="TodoAccentBrush" Color="#5C8DFF" />
-        <LinearGradientBrush x:Key="WidgetGlassCardBrush" StartPoint="0,0" EndPoint="1,1">
-            <GradientStop Color="#22FFFFFF" Offset="0" />
-            <GradientStop Color="#32223C5A" Offset="0.22" />
-            <GradientStop Color="#3A132A44" Offset="0.58" />
-            <GradientStop Color="#5E08182D" Offset="1" />
-        </LinearGradientBrush>
-        <LinearGradientBrush x:Key="WidgetGlassToolbarBrush" StartPoint="0,0" EndPoint="1,0">
-            <GradientStop Color="#30162A43" Offset="0" />
-            <GradientStop Color="#240A1728" Offset="1" />
-        </LinearGradientBrush>
+        <SolidColorBrush x:Key="WidgetGlassCardBrush" Color="#4210243A" />
+        <SolidColorBrush x:Key="WidgetGlassToolbarBrush" Color="#4210243A" />
         <SolidColorBrush x:Key="WidgetGlassBorderBrush" Color="#42E4F0FF" />
 
         <Style x:Key="FloatlyCard" TargetType="Border">
@@ -80,6 +72,40 @@
                 </Setter.Value>
             </Setter>
         </Style>
+        <Style x:Key="PomodoroPrimaryButton" TargetType="Button">
+            <Setter Property="Padding" Value="0" />
+            <Setter Property="BorderThickness" Value="0" />
+            <Setter Property="Foreground" Value="White" />
+            <Setter Property="Background" Value="#5C8DFF" />
+            <Setter Property="Cursor" Value="Hand" />
+            <Setter Property="FontSize" Value="15" />
+            <Setter Property="FontWeight" Value="SemiBold" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="Chrome"
+                                Background="{TemplateBinding Background}"
+                                CornerRadius="10"
+                                SnapsToDevicePixels="True">
+                            <ContentPresenter HorizontalAlignment="Center"
+                                              VerticalAlignment="Center"
+                                              RecognizesAccessKey="True" />
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="Chrome" Property="Opacity" Value="0.92" />
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter TargetName="Chrome" Property="Opacity" Value="0.82" />
+                            </Trigger>
+                            <Trigger Property="IsEnabled" Value="False">
+                                <Setter TargetName="Chrome" Property="Opacity" Value="0.48" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
         <Style x:Key="HeroCard" TargetType="Border">
             <Setter Property="Background" Value="Transparent" />
             <Setter Property="BorderBrush" Value="Transparent" />
@@ -100,16 +126,22 @@
         </Style>
     </Window.Resources>
 
+    <Grid>
+    <ScrollViewer x:Name="WidgetScrollViewer"
+                  HorizontalScrollBarVisibility="Disabled"
+                  VerticalScrollBarVisibility="Disabled"
+                  PanningMode="VerticalOnly"
+                  Background="Transparent">
     <Viewbox x:Name="WidgetScaleBox"
              Stretch="Uniform"
              StretchDirection="Both"
              HorizontalAlignment="Stretch"
-             VerticalAlignment="Stretch">
+             VerticalAlignment="Top">
     <Border x:Name="MainBorder"
             Width="720"
             Height="1280"
-            Background="#D80A1B31"
-            CornerRadius="16"
+            Background="Transparent"
+            CornerRadius="22"
             BorderBrush="#2EE4F0FF"
             BorderThickness="1"
             ClipToBounds="True">
@@ -132,26 +164,19 @@
             </ContextMenu>
         </Border.ContextMenu>
         <Grid>
-            <MediaElement x:Name="SkinVideo"
-                          LoadedBehavior="Manual" UnloadedBehavior="Stop" IsMuted="True" Volume="0"
-                          Stretch="UniformToFill" Visibility="Collapsed" IsHitTestVisible="False"
-                          MediaEnded="SkinVideo_MediaEnded" Loaded="SkinVideo_Loaded" />
-            <Border x:Name="SkinOverlay" Background="#8C000000" CornerRadius="16" Visibility="Collapsed" IsHitTestVisible="False" />
+            <Grid x:Name="SkinVideoHost"
+                  Visibility="Collapsed"
+                  ClipToBounds="True"
+                  IsHitTestVisible="False" />
+            <Border x:Name="SkinOverlay" Background="#8C000000" CornerRadius="22" Visibility="Collapsed" IsHitTestVisible="False" />
 
-            <Border x:Name="ContentBackdrop" Background="#400C1D31" CornerRadius="14" Margin="8"
-                    IsHitTestVisible="False" Visibility="Visible" />
-            <Border x:Name="GlassSheen" CornerRadius="14" Margin="8" IsHitTestVisible="False">
+            <Border x:Name="GlassSheen" CornerRadius="22" IsHitTestVisible="False">
                 <Border.Background>
-                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
-                        <GradientStop Color="#18FFFFFF" Offset="0" />
-                        <GradientStop Color="#04FFFFFF" Offset="0.18" />
-                        <GradientStop Color="#00000000" Offset="0.5" />
-                        <GradientStop Color="#10000000" Offset="1" />
-                    </LinearGradientBrush>
+                    <SolidColorBrush Color="#00000000" />
                 </Border.Background>
             </Border>
 
-            <Grid x:Name="ContentRoot" Margin="30,40,30,16" PreviewMouseLeftButtonDown="Grid_PreviewMouseLeftButtonDown" Cursor="SizeAll">
+            <Grid x:Name="ContentRoot" Margin="30,40,30,16" PreviewMouseLeftButtonDown="Grid_PreviewMouseLeftButtonDown">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="*" MinHeight="200" />
@@ -283,14 +308,14 @@
                                        VerticalAlignment="Center" HorizontalAlignment="Center" />
                                 <StackPanel Grid.Column="1" VerticalAlignment="Center">
                                     <StackPanel Orientation="Horizontal">
-                                        <TextBlock Text="农历 " FontSize="15" Foreground="#A6FFFFFF" VerticalAlignment="Center" />
+                                        <TextBlock x:Name="HuangLiLunarLabelText" Text="农历 " FontSize="15" Foreground="#A6FFFFFF" VerticalAlignment="Center" />
                                         <TextBlock x:Name="HuangLiLunarLarge" Text="四月廿六" FontSize="21" FontWeight="SemiBold"
                                                    Foreground="#FF8A72" VerticalAlignment="Center" />
                                     </StackPanel>
                                     <TextBlock x:Name="HuangLiMetaLineStrip" Text="丙午年 甲午月 戊申日" FontSize="14"
                                                Foreground="#8B95A5" Margin="0,2,0,0" TextTrimming="CharacterEllipsis" />
                                 </StackPanel>
-                                <Border Grid.Column="2" Width="1" Background="#22FFFFFF" Margin="10,0,22,0" />
+                                <Border x:Name="HuangLiStripDivider" Grid.Column="2" Width="1" Background="#22FFFFFF" Margin="10,0,22,0" />
                                 <Grid Grid.Column="3" VerticalAlignment="Center" Margin="0,0,16,0">
                                     <Grid.RowDefinitions>
                                         <RowDefinition Height="Auto" />
@@ -301,9 +326,8 @@
                                             <ColumnDefinition Width="Auto" />
                                             <ColumnDefinition Width="*" />
                                         </Grid.ColumnDefinitions>
-                                        <Border x:Name="HuangLiYiCircle" CornerRadius="5" Padding="6,2" Margin="0,0,10,0" Background="#2255D38A">
-                                            <TextBlock x:Name="HuangLiYiCircleText" Text="宜" FontSize="14" FontWeight="SemiBold" Foreground="#55D38A" />
-                                        </Border>
+                                        <TextBlock x:Name="HuangLiYiMarkText" Text="宜" FontSize="14" FontWeight="SemiBold"
+                                                   Foreground="#55D38A" Margin="0,0,10,0" VerticalAlignment="Center" />
                                         <TextBlock x:Name="HuangLiYiText" Grid.Column="1" FontSize="14" Foreground="#DDE8FF"
                                                    TextTrimming="CharacterEllipsis" VerticalAlignment="Center" />
                                     </Grid>
@@ -312,9 +336,8 @@
                                             <ColumnDefinition Width="Auto" />
                                             <ColumnDefinition Width="*" />
                                         </Grid.ColumnDefinitions>
-                                        <Border x:Name="HuangLiJiCircle" CornerRadius="5" Padding="6,2" Margin="0,0,10,0" Background="#22FF8A72">
-                                            <TextBlock x:Name="HuangLiJiCircleText" Text="忌" FontSize="14" FontWeight="SemiBold" Foreground="#FF8A72" />
-                                        </Border>
+                                        <TextBlock x:Name="HuangLiJiMarkText" Text="忌" FontSize="14" FontWeight="SemiBold"
+                                                   Foreground="#FF8A72" Margin="0,0,10,0" VerticalAlignment="Center" />
                                         <TextBlock x:Name="HuangLiJiText" Grid.Column="1" FontSize="14" Foreground="#DDE8FF"
                                                    TextTrimming="CharacterEllipsis" VerticalAlignment="Center" />
                                     </Grid>
@@ -473,27 +496,27 @@
                                 <ColumnDefinition Width="14" />
                                 <ColumnDefinition Width="*" />
                             </Grid.ColumnDefinitions>
-                            <Border Grid.Column="0" x:Name="CountdownCard" Style="{StaticResource FloatlyCard}" Padding="18,16">
+                            <Border Grid.Column="0" x:Name="CountdownCard" Style="{StaticResource FloatlyCard}" Padding="18,12">
                                 <StackPanel x:Name="CountdownPanel" Visibility="Collapsed">
-                                    <StackPanel Orientation="Horizontal" Margin="0,0,0,8">
+                                    <StackPanel Orientation="Horizontal" Margin="0,0,0,6">
                                         <Image x:Name="CountdownIcon" Width="16" Height="16" VerticalAlignment="Center" Margin="0,0,8,0" />
                                         <TextBlock x:Name="CountdownLabel" Text="距离 618" Style="{StaticResource CardTitle}" VerticalAlignment="Center" />
                                     </StackPanel>
-                                    <TextBlock x:Name="CountdownDays" Text="12 天" FontSize="30" FontWeight="Bold" Foreground="#FFFFFF" Margin="0,0,0,8" />
-                                    <Border x:Name="CountdownTrack" Height="8" CornerRadius="4" Background="#38FFFFFF" ClipToBounds="True" Margin="0,0,0,8">
+                                    <TextBlock x:Name="CountdownDays" Text="12 天" FontSize="30" FontWeight="Bold" Foreground="#FFFFFF" Margin="0,0,0,6" />
+                                    <Border x:Name="CountdownTrack" Height="8" CornerRadius="4" Background="#38FFFFFF" ClipToBounds="True" Margin="0,0,0,6">
                                         <Border x:Name="CountdownFill" HorizontalAlignment="Left" CornerRadius="4" Background="#FF8A72" Width="0" />
                                     </Border>
                                     <TextBlock x:Name="CountdownHint" Text="目标日期" FontSize="12" Foreground="#8B95A5" />
                                 </StackPanel>
                             </Border>
-                            <Border Grid.Column="2" x:Name="YearProgressCard" Style="{StaticResource FloatlyCard}" Padding="18,16">
+                            <Border Grid.Column="2" x:Name="YearProgressCard" Style="{StaticResource FloatlyCard}" Padding="18,12">
                                 <StackPanel x:Name="YearProgressPanel" Visibility="Collapsed">
-                                    <StackPanel Orientation="Horizontal" Margin="0,0,0,8">
+                                    <StackPanel Orientation="Horizontal" Margin="0,0,0,6">
                                         <Image x:Name="YearProgressIcon" Width="17" Height="17" VerticalAlignment="Center" Margin="0,0,8,0" />
                                         <TextBlock x:Name="YearProgressLabel" Text="2026 年进度" Style="{StaticResource CardTitle}" VerticalAlignment="Center" />
                                     </StackPanel>
-                                    <TextBlock x:Name="YearProgressPercent" Text="44.1%" FontSize="30" FontWeight="Bold" Foreground="#FFFFFF" Margin="0,0,0,8" />
-                                    <Border x:Name="YearProgressTrack" Height="8" CornerRadius="4" Background="#38FFFFFF" ClipToBounds="True" Margin="0,0,0,8">
+                                    <TextBlock x:Name="YearProgressPercent" Text="44.1%" FontSize="30" FontWeight="Bold" Foreground="#FFFFFF" Margin="0,0,0,6" />
+                                    <Border x:Name="YearProgressTrack" Height="8" CornerRadius="4" Background="#38FFFFFF" ClipToBounds="True" Margin="0,0,0,6">
                                         <Border x:Name="YearProgressFill" HorizontalAlignment="Left" CornerRadius="4" Background="#5C8DFF" Width="0" />
                                     </Border>
                                     <TextBlock x:Name="YearProgressDetail" Text="已过 162 天 / 365 天" FontSize="12" Foreground="#8B95A5" />
@@ -525,7 +548,7 @@
                                                 <TextBlock x:Name="TodoCountText" Text="0" FontSize="10" Foreground="#5C8DFF" FontWeight="SemiBold" />
                                             </Border>
                                         </StackPanel>
-                                        <Button Content="+" Width="28" Height="28" HorizontalAlignment="Right" VerticalAlignment="Center"
+                                        <Button x:Name="TodoAddBtn" Content="+" Width="28" Height="28" HorizontalAlignment="Right" VerticalAlignment="Center"
                                                 Click="AddTodo_Click" Background="#20E8F4FF" BorderThickness="0"
                                                 Foreground="#DDE8FF" Cursor="Hand" FontSize="20" />
                                     </Grid>
@@ -617,38 +640,38 @@
                                 <Grid x:Name="PomodoroPanel" Visibility="Collapsed">
                                     <Grid.RowDefinitions>
                                         <RowDefinition Height="Auto" />
-                                        <RowDefinition Height="138" />
+                                        <RowDefinition Height="132" />
                                         <RowDefinition Height="Auto" />
                                         <RowDefinition Height="Auto" />
                                     </Grid.RowDefinitions>
-                                    <Grid Grid.Row="0" Margin="0,0,0,4">
+                                    <Grid Grid.Row="0" Margin="0,0,0,8">
                                         <TextBlock x:Name="PomodoroPhaseText" Text="番茄钟" Style="{StaticResource CardTitle}" />
                                         <TextBlock x:Name="PomodoroSessionText" Text="准备开始" FontSize="10" Foreground="#8B95A5"
                                                    HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,28,0" />
-                                        <Button Content="⚙" Width="24" Height="24" Padding="0"
+                                        <Button x:Name="PomodoroSettingsBtn" Content="⚙" Width="24" Height="24" Padding="0"
                                                 Click="OpenSettings_Click" Background="Transparent" BorderThickness="0"
                                                 Foreground="#BFD0EA" Cursor="Hand" FontSize="14"
                                                 HorizontalAlignment="Right" VerticalAlignment="Center"
                                                 ToolTip="番茄钟设置" />
                                     </Grid>
-                                    <Grid Grid.Row="1" Width="148" Height="148" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,-4,0,-2">
+                                    <Grid Grid.Row="1" Width="128" Height="128" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,0,4">
                                         <Path x:Name="PomodoroRingTrack" Stroke="#28FFFFFF" StrokeThickness="8" Fill="Transparent"
                                               StrokeStartLineCap="Round" StrokeEndLineCap="Round" />
                                         <Path x:Name="PomodoroRingProgress" Stroke="#5C8DFF" StrokeThickness="8" Fill="Transparent"
                                               StrokeStartLineCap="Round" StrokeEndLineCap="Round" />
                                         <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
-                                            <TextBlock x:Name="PomodoroCountdownText" Text="25:00" FontSize="32" FontWeight="SemiBold" Foreground="#FFFFFF" HorizontalAlignment="Center" />
+                                            <TextBlock x:Name="PomodoroCountdownText" Text="25:00" FontSize="30" FontWeight="SemiBold" Foreground="#FFFFFF" HorizontalAlignment="Center" />
                                             <TextBlock x:Name="PomodoroCenterStatusText" Text="准备开始" FontSize="11" Foreground="#A6FFFFFF" HorizontalAlignment="Center" Margin="0,2,0,0" />
                                         </StackPanel>
                                     </Grid>
                                     <Border x:Name="PomodoroTrack" Height="0" Width="0" Visibility="Collapsed">
                                         <Border x:Name="PomodoroFill" Width="0" />
                                     </Border>
-                                    <Button x:Name="PomodoroStartBtn" Grid.Row="2" Content="开始专注" Height="34" Padding="0" Width="216"
-                                            Click="PomodoroStart_Click" Background="#5C8DFF" Foreground="White"
-                                            BorderThickness="0" Cursor="Hand" FontSize="15" FontWeight="SemiBold" HorizontalAlignment="Center" />
+                                    <Button x:Name="PomodoroStartBtn" Grid.Row="2" Content="开始专注" Height="34" Width="216"
+                                            Click="PomodoroStart_Click" Style="{StaticResource PomodoroPrimaryButton}"
+                                            HorizontalAlignment="Center" />
                                     <TextBlock x:Name="PomodoroHintText" Grid.Row="3" Text="专注更高效，休息更放松" FontSize="11" Foreground="#8B95A5"
-                                               HorizontalAlignment="Center" Margin="0,6,0,0" />
+                                               HorizontalAlignment="Center" Margin="0,5,0,0" />
                                     <Button x:Name="PomodoroResetBtn" Grid.Row="3" Content="重置" Height="22" Padding="0" Margin="0,6,0,0"
                                             Click="PomodoroReset_Click" Background="Transparent" Foreground="#8B95A5"
                                             BorderThickness="0" Cursor="Hand" FontSize="10" HorizontalAlignment="Right" VerticalAlignment="Top"
@@ -666,14 +689,14 @@
                             </Grid.ColumnDefinitions>
                             <Border Grid.Column="0" x:Name="OffWorkCard" Style="{StaticResource FloatlyCard}" Padding="0">
                                 <Grid>
-                                    <Border CornerRadius="18" Opacity="0.40" IsHitTestVisible="False">
+                                    <Border x:Name="OffWorkImageLayer" CornerRadius="18" Opacity="0.40" IsHitTestVisible="False">
                                         <Border.Background>
                                             <ImageBrush ImageSource="Assets/CardBackgrounds/star-sky-dark.png"
                                                         Stretch="UniformToFill"
                                                         RenderOptions.BitmapScalingMode="HighQuality" />
                                         </Border.Background>
                                     </Border>
-                                    <Border CornerRadius="18" Background="#9510243B" />
+                                    <Border x:Name="OffWorkTintOverlay" CornerRadius="18" Background="#9510243B" />
                                     <Border Padding="18,14,18,14">
                                         <Grid x:Name="OffWorkPanel" Visibility="Collapsed">
                                             <Grid.RowDefinitions>
@@ -700,7 +723,7 @@
                                                 </Grid.ColumnDefinitions>
                                                 <TextBlock x:Name="OffWorkDetail" Text="下班时间 18:00" FontSize="11" Foreground="#8B95A5"
                                                            VerticalAlignment="Center" TextTrimming="CharacterEllipsis" />
-                                                <Border Grid.Column="1" CornerRadius="12" Padding="9,3" Background="#1AFFFFFF" BorderBrush="#12FFFFFF" BorderThickness="1">
+                                                <Border x:Name="OffWorkModePillBorder" Grid.Column="1" CornerRadius="12" Padding="9,3" Background="#1AFFFFFF" BorderBrush="#12FFFFFF" BorderThickness="1">
                                                     <TextBlock x:Name="OffWorkModePill" Text="工作日模式" FontSize="10" Foreground="#C9D3E6" />
                                                 </Border>
                                             </Grid>
@@ -710,14 +733,14 @@
                             </Border>
                             <Border Grid.Column="2" x:Name="SalaryPanel" Style="{StaticResource FloatlyCard}" Padding="0" Visibility="Collapsed">
                                 <Grid>
-                                    <Border CornerRadius="18" Opacity="0.62" IsHitTestVisible="False">
+                                    <Border x:Name="SalaryImageLayer" CornerRadius="18" Opacity="0.62" IsHitTestVisible="False">
                                         <Border.Background>
                                             <ImageBrush ImageSource="Assets/CardBackgrounds/coins.png"
                                                         Stretch="UniformToFill"
                                                         RenderOptions.BitmapScalingMode="HighQuality" />
                                         </Border.Background>
                                     </Border>
-                                    <Border CornerRadius="18" Background="#7A15100C" />
+                                    <Border x:Name="SalaryTintOverlay" CornerRadius="18" Background="#7A15100C" />
                                     <Border Padding="20,15,20,15">
                                         <Grid>
                                             <Grid.RowDefinitions>
@@ -726,7 +749,7 @@
                                                 <RowDefinition Height="Auto" />
                                             </Grid.RowDefinitions>
                                             <StackPanel Grid.Row="0" Orientation="Horizontal" VerticalAlignment="Center">
-                                                <Border Width="18" Height="18" CornerRadius="9" Background="#26F8C34A" BorderBrush="#DDF8C34A" BorderThickness="1" Margin="0,0,8,0">
+                                                <Border x:Name="SalaryIconBadge" Width="18" Height="18" CornerRadius="9" Background="#26F8C34A" BorderBrush="#DDF8C34A" BorderThickness="1" Margin="0,0,8,0">
                                                     <Image x:Name="SalaryIcon" Width="12" Height="12"
                                                            HorizontalAlignment="Center" VerticalAlignment="Center" />
                                                 </Border>
@@ -748,7 +771,7 @@
                                                     <RowDefinition Height="1" />
                                                     <RowDefinition Height="Auto" />
                                                 </Grid.RowDefinitions>
-                                                <Border Background="#30F8D46A" />
+                                                <Border x:Name="SalaryDivider" Background="#30F8D46A" />
                                                 <Grid Grid.Row="1" Margin="0,8,0,0">
                                                     <Grid.ColumnDefinitions>
                                                         <ColumnDefinition Width="*" />
@@ -768,7 +791,7 @@
 
                         <Border x:Name="DailyQuoteBanner" Style="{StaticResource FloatlyCard}" Margin="0,0,0,10" Padding="0" Height="118" Visibility="Collapsed">
                             <Grid>
-                                <Border CornerRadius="18" Opacity="0.78" IsHitTestVisible="False">
+                                <Border x:Name="DailyQuoteImageLayer" CornerRadius="18" Opacity="0.78" IsHitTestVisible="False">
                                     <Border.Background>
                                         <ImageBrush ImageSource="Assets/CardBackgrounds/star-sky-dark.png"
                                                     Stretch="UniformToFill"
@@ -776,13 +799,9 @@
                                                     RenderOptions.BitmapScalingMode="HighQuality" />
                                     </Border.Background>
                                 </Border>
-                                <Border CornerRadius="18">
+                                <Border x:Name="DailyQuoteTintOverlay" CornerRadius="18">
                                     <Border.Background>
-                                        <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
-                                            <GradientStop Color="#E40D1A2C" Offset="0" />
-                                            <GradientStop Color="#C0122137" Offset="0.58" />
-                                            <GradientStop Color="#24122137" Offset="1" />
-                                        </LinearGradientBrush>
+                                        <SolidColorBrush Color="#C8122137" />
                                     </Border.Background>
                                 </Border>
                                 <Grid Margin="24,14,22,14">
@@ -796,8 +815,8 @@
                                         <RowDefinition Height="Auto" />
                                     </Grid.RowDefinitions>
                                     <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="0,0,0,8">
-                                            <TextBlock Text="❝" FontSize="19" Foreground="#9BA8FF" FontWeight="Bold" VerticalAlignment="Center" Margin="0,0,8,0" />
-                                            <TextBlock Text="每日一句" FontSize="15" FontWeight="SemiBold" Foreground="#DDE8FF" VerticalAlignment="Center" />
+                                            <TextBlock x:Name="DailyQuoteMarkText" Text="❝" FontSize="19" Foreground="#9BA8FF" FontWeight="Bold" VerticalAlignment="Center" Margin="0,0,8,0" />
+                                            <TextBlock x:Name="DailyQuoteTitleText" Text="每日一句" FontSize="15" FontWeight="SemiBold" Foreground="#DDE8FF" VerticalAlignment="Center" />
                                     </StackPanel>
                                     <TextBlock x:Name="DailyQuoteText" Grid.Row="1" FontSize="19" Foreground="#FFFFFF" FontWeight="SemiBold"
                                                TextWrapping="Wrap" Visibility="Collapsed" MaxWidth="460"
@@ -805,7 +824,7 @@
                                     <TextBlock x:Name="DailyQuoteSourceText" Grid.Row="2" Text="—— 坚持，是比努力更重要的能力。" FontSize="12"
                                                Foreground="#B8C4D9" MaxWidth="460"
                                                HorizontalAlignment="Left" TextAlignment="Left" TextTrimming="CharacterEllipsis" />
-                                    <TextBlock Grid.Column="1" Grid.Row="0" Text="↻ 换一句" FontSize="11" Foreground="#DDE8FF"
+                                    <TextBlock x:Name="DailyQuoteRefreshText" Grid.Column="1" Grid.Row="0" Text="↻ 换一句" FontSize="11" Foreground="#DDE8FF"
                                                HorizontalAlignment="Right" VerticalAlignment="Top" Opacity="0.9" />
                                 </Grid>
                             </Grid>
@@ -891,18 +910,18 @@
                 </ScrollViewer>
 
                 <!-- Bottom toolbar -->
-                <Border Grid.Row="2" x:Name="BottomToolbar" Background="Transparent" Padding="0" Margin="0,8,0,4">
+                <Border Grid.Row="2" x:Name="BottomToolbar" CornerRadius="18" Padding="14,4" Margin="0,8,0,4"
+                        Background="#4210243A" BorderBrush="#2EE4F0FF" BorderThickness="1">
                     <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="Auto" />
                             <ColumnDefinition Width="*" />
                             <ColumnDefinition Width="Auto" />
                         </Grid.ColumnDefinitions>
-                        <Border x:Name="QuickSettingsPill" CornerRadius="18" Padding="14,7" Background="#96162A43"
-                                BorderBrush="#2EE4F0FF" BorderThickness="1">
+                        <Border x:Name="QuickSettingsPill" CornerRadius="14" Padding="0">
                             <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                                 <Image x:Name="QuickSettingsIcon" Width="13" Height="13" VerticalAlignment="Center" Margin="0,0,8,0" />
-                                <TextBlock Text="快捷设置" FontSize="12" Foreground="#DDE8FF" VerticalAlignment="Center" />
+                                <TextBlock x:Name="QuickSettingsText" Text="快捷设置" FontSize="12" Foreground="#DDE8FF" VerticalAlignment="Center" />
                             </StackPanel>
                         </Border>
                         <StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Center" Visibility="Collapsed">
@@ -915,8 +934,7 @@
                                     ValueChanged="FontSizeSlider_ValueChanged" Margin="8,0,10,0" />
                             <TextBlock x:Name="FontSizeValueText" Text="12px" FontSize="10" Foreground="#A6FFFFFF" VerticalAlignment="Center" />
                         </StackPanel>
-                        <Border x:Name="QuickActionsPill" Grid.Column="2" CornerRadius="18" Padding="9,4"
-                                Background="#96162A43" BorderBrush="#2EE4F0FF" BorderThickness="1">
+                        <Border x:Name="QuickActionsPill" Grid.Column="2" CornerRadius="14" Padding="0">
                             <Grid>
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="Auto" />
@@ -937,7 +955,7 @@
                                     </StackPanel>
                                 </Button>
                                 <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center" Margin="8,0,0,0">
-                                    <TextBlock Text="鼠标穿透" FontSize="11" Foreground="#A6FFFFFF" VerticalAlignment="Center" Margin="0,0,8,0" />
+                                    <TextBlock x:Name="ClickThroughLabel" Text="鼠标穿透" FontSize="11" Foreground="#A6FFFFFF" VerticalAlignment="Center" Margin="0,0,8,0" />
                                     <Border x:Name="ClickThroughSwitch" Width="36" Height="22" CornerRadius="11"
                                             Background="#5C8DFF" Cursor="Hand" MouseLeftButtonUp="ClickThroughSwitch_Click">
                                         <Border x:Name="ClickThroughKnob" Width="18" Height="18" CornerRadius="9"
@@ -963,19 +981,20 @@
                             Click="AddTodo_Click" Background="#5C8DFF" Foreground="White" BorderThickness="0" Cursor="Hand" FontSize="11" />
                 </Grid>
             </Grid>
-
-            <Grid x:Name="ResizeGripLayer">
-                <Thumb Style="{StaticResource ResizeGripThumb}" Width="12" HorizontalAlignment="Left" Cursor="SizeWE" DragDelta="ResizeLeft_DragDelta" />
-                <Thumb Style="{StaticResource ResizeGripThumb}" Width="12" HorizontalAlignment="Right" Cursor="SizeWE" DragDelta="ResizeRight_DragDelta" />
-                <Thumb Style="{StaticResource ResizeGripThumb}" Height="12" VerticalAlignment="Top" Cursor="SizeNS" DragDelta="ResizeTop_DragDelta" />
-                <Thumb Style="{StaticResource ResizeGripThumb}" Height="12" VerticalAlignment="Bottom" Cursor="SizeNS" DragDelta="ResizeBottom_DragDelta" />
-                <Thumb Style="{StaticResource ResizeGripThumb}" Width="18" Height="18" HorizontalAlignment="Left" VerticalAlignment="Top" Cursor="SizeNWSE" DragDelta="ResizeTopLeft_DragDelta" />
-                <Thumb Style="{StaticResource ResizeGripThumb}" Width="18" Height="18" HorizontalAlignment="Right" VerticalAlignment="Top" Cursor="SizeNESW" DragDelta="ResizeTopRight_DragDelta" />
-                <Thumb Style="{StaticResource ResizeGripThumb}" Width="18" Height="18" HorizontalAlignment="Left" VerticalAlignment="Bottom" Cursor="SizeNESW" DragDelta="ResizeBottomLeft_DragDelta" />
-                <Thumb Style="{StaticResource ResizeGripThumb}" Width="18" Height="18" HorizontalAlignment="Right" VerticalAlignment="Bottom" Cursor="SizeNWSE" DragDelta="ResizeBottomRight_DragDelta" />
-            </Grid>
         </Grid>
     </Border>
     </Viewbox>
+    </ScrollViewer>
+    <Grid x:Name="ResizeGripLayer">
+        <Thumb Style="{StaticResource ResizeGripThumb}" Width="12" HorizontalAlignment="Left" Cursor="SizeWE" DragDelta="ResizeLeft_DragDelta" />
+        <Thumb Style="{StaticResource ResizeGripThumb}" Width="12" HorizontalAlignment="Right" Cursor="SizeWE" DragDelta="ResizeRight_DragDelta" />
+        <Thumb Style="{StaticResource ResizeGripThumb}" Height="12" VerticalAlignment="Top" Cursor="SizeNS" DragDelta="ResizeTop_DragDelta" />
+        <Thumb Style="{StaticResource ResizeGripThumb}" Height="12" VerticalAlignment="Bottom" Cursor="SizeNS" DragDelta="ResizeBottom_DragDelta" />
+        <Thumb Style="{StaticResource ResizeGripThumb}" Width="18" Height="18" HorizontalAlignment="Left" VerticalAlignment="Top" Cursor="SizeNWSE" DragDelta="ResizeTopLeft_DragDelta" />
+        <Thumb Style="{StaticResource ResizeGripThumb}" Width="18" Height="18" HorizontalAlignment="Right" VerticalAlignment="Top" Cursor="SizeNESW" DragDelta="ResizeTopRight_DragDelta" />
+        <Thumb Style="{StaticResource ResizeGripThumb}" Width="18" Height="18" HorizontalAlignment="Left" VerticalAlignment="Bottom" Cursor="SizeNESW" DragDelta="ResizeBottomLeft_DragDelta" />
+        <Thumb Style="{StaticResource ResizeGripThumb}" Width="18" Height="18" HorizontalAlignment="Right" VerticalAlignment="Bottom" Cursor="SizeNWSE" DragDelta="ResizeBottomRight_DragDelta" />
+    </Grid>
+    </Grid>
 </Window>
 
