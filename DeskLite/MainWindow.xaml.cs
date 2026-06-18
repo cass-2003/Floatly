@@ -2150,6 +2150,19 @@ public partial class MainWindow : Window
         _todoListWindow?.RefreshFromOutside();
     }
 
+    private void PromptCreateTodo()
+    {
+        var result = TodoEditPrompt.Show("新增待办", "添加今日待办与可选提醒：", palette: _palette);
+        if (result is null || string.IsNullOrWhiteSpace(result.Title))
+        {
+            return;
+        }
+
+        _todoStore.Add(result.Title, result.ReminderTime, result.DueDate);
+        RefreshTodos();
+        _todoListWindow?.RefreshFromOutside();
+    }
+
     private void RefreshScratch()
     {
         if (!_settings.ShowScratch)
@@ -2980,6 +2993,8 @@ public partial class MainWindow : Window
     }
 
     private void AddTodo_Click(object sender, RoutedEventArgs e) => AddTodoFromInput();
+
+    private void TodoAddBtn_Click(object sender, RoutedEventArgs e) => PromptCreateTodo();
 
     private void NewTodoBox_KeyDown(object sender, System.Windows.Input.KeyEventArgs e)
     {
