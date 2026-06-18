@@ -69,7 +69,7 @@ public sealed class PomodoroService
     {
         if (Phase == PomodoroPhase.Idle)
         {
-            BeginPhase(PomodoroPhase.Working);
+            BeginPhase(PomodoroPhase.Working, autoStart: true);
             return;
         }
 
